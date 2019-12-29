@@ -5,6 +5,7 @@
     "esModuleInterop": true,
     "isolatedModules": true,
     "strictFunctionTypes": false,
+    "resolveJsonModule": true,
     "jsx": "react",
     "lib": [
       "es6",
@@ -16,6 +17,8 @@
     "noEmit": true,
     "strict": false,
     "target": "esnext",
+    "checkJs": false,
+    "module": "commonjs",
     "baseUrl": "./",
     "paths": {
       "@src/*": [
@@ -27,7 +30,7 @@
         "src/modules/*"
       ],
       "@pages/*": [
-        "src/pages/index",
+        "src/pages/*/index",
         "src/pages/*"
       ]
     },
