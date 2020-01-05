@@ -99,3 +99,22 @@ export const ScrollDiv = styled.ScrollView`
     }
   }}
 `
+
+export const Text = styled.Text`
+  margin: ${({ mar, _margin }) => mar || _margin || '0px'};
+  padding: ${({ padd, _padding }) => padd || _padding || '0px'};
+  letter-spacing: ${({ letterSpacing }) => letterSpacing || '0px'};
+  font-size: ${({ sizeType, size }) => {
+    if (size) {
+      return size
+    } else if (sizeType === 'title' || sizeType === 'h1') {
+      return '16px'
+    } else if (sizeType === 'h2' || sizeType === 'body') {
+      return '14px'
+    } else {
+      return '13px'
+    }
+  }};
+  color: ${({ color }) => color || colors.primaryText};
+  text-align: ${({ textAlign }) => textAlign || 'left'};
+  `
