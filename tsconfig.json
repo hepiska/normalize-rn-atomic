@@ -25,6 +25,10 @@
         "src/*/index",
         "src/*"
       ],
+      "@components/*": [
+        "src/components/*/index",
+        "src/components/*"
+      ],
       "@modules/*": [
         "src/modules/*/index",
         "src/modules/*"
@@ -32,6 +36,14 @@
       "@pages/*": [
         "src/pages/*/index",
         "src/pages/*"
+      ],
+      "@utils/*": [
+        "src/utils/*/index",
+        "src/utils/*"
+      ],
+      "@assets/*": [
+        "src/assets/*/index",
+        "src/assets/*"
       ]
     },
   },

@@ -1,11 +1,12 @@
 import * as React from 'react'
-import * as Redux from 'redux'
 import { createStore, applyMiddleware, compose } from 'redux'
 import { Provider } from 'react-redux'
 import { routerMiddleware } from 'react-router-redux'
 import { NativeRouter, MemoryRouter, BackButton } from 'react-router-native'
 const createHistory = require('history').createMemoryHistory
 import rootReducer from '@modules/index'
+import apiMidleware from '@modules/middleware/api'
+import multidipacerMidleware from '@modules/middleware/multi'
 import Pages from '@pages/index'
 
 export const history = createHistory()
@@ -17,6 +18,8 @@ const initialState = {}
 const enhancers = []
 const middleware = [
   routerMiddleware(history),
+  apiMidleware,
+  multidipacerMidleware
 ]
 
 if (process.env.NODE_ENV === 'development') {
