@@ -10,8 +10,8 @@
 ## project setting checklist
 - [x] set up basic atomic
 - [x] set up page structure
-- [] setup redux
-- [] set up diverent env (stage, prod)
-- [] push notif
-- [] facebook auth
-- [] google auth
+- [ ] setup redux
+- [ ] set up diverent env (stage, prod)
+- [ ] push notif
+- [ ] facebook auth
+- [ ] google auth
