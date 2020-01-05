@@ -1,4 +1,4 @@
-# shoonet mobile
+# shonet mobile
 
 ## how to run
 1. npm i 
