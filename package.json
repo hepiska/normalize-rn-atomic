@@ -23,6 +23,7 @@
     "react-router-redux": "^4.0.8",
     "redux": "^4.0.4",
     "redux-observable": "^1.2.0",
+    "rxjs": "^6.5.4",
     "seamless-immutable": "^7.1.4",
     "styled-components": "^4.4.1"
   },

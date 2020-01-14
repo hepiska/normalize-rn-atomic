@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { createEpicMiddleware } from 'redux-observable';
 import { createStore, applyMiddleware, compose } from 'redux'
 import { Provider } from 'react-redux'
 import { routerMiddleware } from 'react-router-redux'
@@ -7,9 +8,11 @@ const createHistory = require('history').createMemoryHistory
 import rootReducer from '@modules/index'
 import apiMidleware from '@modules/middleware/api'
 import multidipacerMidleware from '@modules/middleware/multi'
+import rootEpic from '@modules/rootEpic'
 import Pages from '@pages/index'
 
 export const history = createHistory()
+const epicMiddleware = createEpicMiddleware();
 
 
 
@@ -17,6 +20,7 @@ export const history = createHistory()
 const initialState = {}
 const enhancers = []
 const middleware = [
+  epicMiddleware,
   routerMiddleware(history),
   apiMidleware,
   multidipacerMidleware
@@ -34,23 +38,26 @@ const composedEnhancers = compose(
   applyMiddleware(...middleware),
   ...enhancers,
 )
-const store = createStore(
-  rootReducer,
-  initialState,
-  composedEnhancers,
-)
 
 class InitStore extends React.Component<any, any>{
   constructor(props) {
     super(props)
     this.state = {
       isLoading: true,
-      store,
+      store: null,
     }
   }
 
   async componentDidMount() {
+    const store = createStore(
+      rootReducer,
+      initialState,
+      composedEnhancers,
+    )
+    epicMiddleware.run(rootEpic);
+
     this.setState({ store, isLoading: false })
+
   }
 
   render() {

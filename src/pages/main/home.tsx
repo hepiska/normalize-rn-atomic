@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { View, Text } from 'react-native'
+import HorizontalListLookBook from '@components/organism/horzontal-list-lookbook'
 
 class HomePage extends React.Component<any, any>{
   state = {
@@ -9,7 +10,7 @@ class HomePage extends React.Component<any, any>{
   render() {
     return (
       <View>
-        <Text>home pages</Text>
+        <HorizontalListLookBook />
       </View>
     )
   }

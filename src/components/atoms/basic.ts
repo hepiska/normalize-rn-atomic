@@ -33,9 +33,9 @@ export const Div = styled.View`
 
 
 export const Image = styled.Image`
-  border-radius: ${({ radius, borderRadius }) => borderRadius || radius || '0px'};
+  border-radius: ${({ radius, borderRadius, _borderRadius }) => _borderRadius || borderRadius || radius || '0px'};
   margin: ${({ mar, _margin }) => mar || _margin || '0px'};
-  resize-mode: ${({ resizeMode }) => resizeMode || 'cover'};
+  resize-mode: ${({ _resizeMode, resizeMode }) => _resizeMode || resizeMode || 'cover'};
   padding: ${({ padd, _padding }) => padd || _padding || '0px'};
   ${({ _width, wdth }) => _width ? `width:${_width};` : wdth ? `width:${wdth};` : ''}
   ${({ _height, hght }) => _height ? `height:${_height};` : hght ? `height:${hght};` : ''}
@@ -100,10 +100,15 @@ export const ScrollDiv = styled.ScrollView`
   }}
 `
 
+export const FlatList = styled.FlatList`
+
+`
+
 export const Text = styled.Text`
   margin: ${({ mar, _margin }) => mar || _margin || '0px'};
   padding: ${({ padd, _padding }) => padd || _padding || '0px'};
   letter-spacing: ${({ letterSpacing }) => letterSpacing || '0px'};
+  line-height:  ${({ lineHeight, _lineHeight }) => _lineHeight || lineHeight || '0px'};
   font-size: ${({ sizeType, size }) => {
     if (size) {
       return size

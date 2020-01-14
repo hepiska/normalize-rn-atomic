@@ -28,11 +28,15 @@ const api = ({ dispatch, getState }) => next => action => {
 
   const { requestParams = { url: '/', method: 'get', }, success, schema, label, startNetwork, endNetwork } = action.payload;
 
-  dispatch(startNetwork(label));
+  if (startNetwork) {
+    dispatch(startNetwork(label));
+  }
 
 
-  request.request(requestParams)
-    .then()
+  return request.request(requestParams)
+    .then(data => {
+      console.log("data", data)
+    })
 
   // fetch(url)
   //   .then(response => response.json())
