@@ -31,7 +31,7 @@ const lookbookReducer: Reducer<LookBookState> = (state: any = initialState, acti
       return newState
     case lookbookActionType.FETCH_FINISH:
       newState.loading = false
-      console.log('newState.order.length', newState.order.length)
+      // console.log('newState.order.length', newState.order.length)
       if (!newState.order.length ||
         action.payload.pagination.total &&
         newState.order < action.payload.pagination.total) {

@@ -23,6 +23,7 @@
     "react-router-redux": "^4.0.8",
     "redux": "^4.0.4",
     "redux-observable": "^1.2.0",
+    "redux-thunk": "^2.3.0",
     "rxjs": "^6.5.4",
     "seamless-immutable": "^7.1.4",
     "styled-components": "^4.4.1"
@@ -40,7 +41,9 @@
     "eslint": "6.7.1",
     "jest": "24.9.0",
     "metro-react-native-babel-preset": "0.56.3",
-    "react-test-renderer": "16.9.0"
+    "react-test-renderer": "16.9.0",
+    "reactotron-react-native": "^4.0.3",
+    "redux-devtools-extension": "^2.13.8"
   },
   "jest": {
     "preset": "react-native"
