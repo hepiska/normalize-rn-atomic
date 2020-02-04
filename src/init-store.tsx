@@ -11,17 +11,14 @@ import apiMidleware from '@modules/middleware/api';
 import { PersistGate } from 'redux-persist/integration/react';
 import multidipacerMidleware from '@modules/middleware/multi';
 import { persistStore } from 'redux-persist';
-import rootEpic from '@modules/rootEpic';
 import Pages from '@pages/index';
 
 export const history = createHistory();
-const epicMiddleware = createEpicMiddleware();
 
 // initial store
 const initialState = {};
 const enhancers = [];
 const middleware = [
-  epicMiddleware,
   routerMiddleware(history),
   apiMidleware,
   multidipacerMidleware,
@@ -51,8 +48,6 @@ class InitStore extends React.Component<any, any> {
   async componentDidMount() {
     const store = createStore(rootReducer, initialState, composedEnhancers);
     const persistor = persistStore(store);
-    epicMiddleware.run(rootEpic);
-
     this.setState({ store, persistor, isLoading: false });
   }
 

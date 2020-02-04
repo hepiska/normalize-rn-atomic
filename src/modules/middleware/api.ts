@@ -23,6 +23,7 @@ const api = ({ dispatch, getState }) => next => action => {
     dispatch(startNetwork(label));
   }
 
+  console.log('=====', requestParams);
   return request
     .request({ url, ...requestParams })
     .then(res => {

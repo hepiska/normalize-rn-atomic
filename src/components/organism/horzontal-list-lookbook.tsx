@@ -10,7 +10,7 @@ import {
   Div,
 } from '@components/atoms/basic';
 import ListItemLookBook from '@components/molecules/list-item-lookbook';
-import { fetchLookbook } from '@modules/lookbook/action';
+import { fetchLookbook, lookBookApi } from '@modules/lookbook/action';
 
 const { width } = Dimensions.get('window');
 
@@ -43,7 +43,7 @@ const dummyData = [
 
 class HorizontalListLookBook extends React.Component<any, any> {
   componentDidMount() {
-    this.props.fetchLookbook({ offset: 0, limit: 30, sort: -1 });
+    this.props.lookBookApi({ offset: 0, limit: 30, sort: -1 });
   }
 
   _renderItem = ({ item, index }) => {
@@ -80,6 +80,7 @@ const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
       fetchLookbook,
+      lookBookApi,
     },
     dispatch,
   );

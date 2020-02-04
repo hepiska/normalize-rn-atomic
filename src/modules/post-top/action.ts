@@ -17,7 +17,7 @@ export const PostTopApi = params => ({
   type: API,
   payload: {
     url: '/posts/top',
-    requestParams: { ...params },
+    requestParams: { params },
     schema: [schema.post],
     success: (data, { pagination }) => [
       setPostData(data.entities.post),
