@@ -52,8 +52,8 @@ const mapDispatchToProps = dispatch =>
 
 const mapStateToProps = (state, ownProps) => ({
   topPost:
-    state.topPost[ownProps.category_id] &&
-    state.topPost[ownProps.category_id].map(id => state.post.data[id]),
+    state.topPost.data[ownProps.category_id] &&
+    state.topPost.data[ownProps.category_id].map(id => state.post.data[id]),
   loading: state.topPost.loading,
   error: state.topPost.error,
 });

@@ -5,8 +5,6 @@ import lookbookReducer from './lookbook/reducer';
 import postReducer from './post/reducer';
 import topPostReducer from './post-top/reducer';
 
-console.log('topPostReducer', topPostReducer);
-
 const combinedReducer: Reducer<any> = combineReducers({
   router: routerReducer,
   user: userReducer,

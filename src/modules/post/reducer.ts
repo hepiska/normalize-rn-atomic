@@ -1,7 +1,9 @@
 import { AnyAction, Reducer } from 'redux';
 import Immutable from 'seamless-immutable';
 import { ErrorType } from '@utils/globalInterface';
+import { persistReducer } from 'redux-persist';
 import { postActionType } from './action';
+import AsyncStorage from '@react-native-community/async-storage';
 
 interface PostType {}
 
@@ -46,4 +48,9 @@ const postreducer: Reducer<PostState> = (
   }
 };
 
-export default postreducer;
+const postPersistConfig = {
+  key: 'post',
+  storage: AsyncStorage,
+};
+
+export default persistReducer(postPersistConfig, postreducer);
