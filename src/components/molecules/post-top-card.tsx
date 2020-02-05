@@ -31,7 +31,7 @@ class PostTopCard extends React.PureComponent<ListItemLookBookProps, any> {
     const {
       post: { image_url, id, user, title, ...post },
     } = this.props;
-
+    console.log('image_url', image_url);
     return (
       <TouchableWithoutFeedback onPress={this._onPress} display="flex">
         <Div
@@ -49,7 +49,7 @@ class PostTopCard extends React.PureComponent<ListItemLookBookProps, any> {
             _height="150px"
             _flex="2"
             radius="8px"
-            source={{ url: image_url }}
+            source={{ uri: image_url }}
           />
           <Div _direction="column" overflow="hidden" _flex="1">
             <PostAuthor author={user} />
