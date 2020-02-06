@@ -2,7 +2,8 @@ import * as React from 'react';
 import { createStore, applyMiddleware, compose } from 'redux';
 import { Provider } from 'react-redux';
 import { routerMiddleware } from 'react-router-redux';
-import { NativeRouter, MemoryRouter, BackButton } from 'react-router-native';
+import { NavigationContainer } from '@react-navigation/native';
+
 const createHistory = require('history').createMemoryHistory;
 import rootReducer from '@modules/index';
 import { composeWithDevTools } from 'redux-devtools-extension';
@@ -55,11 +56,9 @@ class InitStore extends React.Component<any, any> {
     return isLoading ? null : (
       <Provider store={this.state.store}>
         <PersistGate loading={null} persistor={this.state.persistor}>
-          <MemoryRouter initialEntries={['/']} initialIndex={0}>
-            <BackButton>
-              <Pages />
-            </BackButton>
-          </MemoryRouter>
+          <NavigationContainer>
+            <Pages />
+          </NavigationContainer>
         </PersistGate>
       </Provider>
     );
