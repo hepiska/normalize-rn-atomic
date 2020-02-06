@@ -165,6 +165,6 @@ export const Text = styled.Text`
       return '13px';
     }
   }};
-  color: ${({ color }) => color || colors.primaryText};
+  color: ${({ color }) => color || colors.font2};
   text-align: ${({ textAlign }) => textAlign || 'left'};
 `;

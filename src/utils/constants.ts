@@ -11,21 +11,27 @@ export const shadows = {
   shadow-radius: 8;
   elevation: 5;
 `,
-}
+};
 export const colors = {
-  white: '#ffffff',
-  black: '#000000',
-  pomonaBlue: '#37a0f4',
-  pomonaOrange: '#f48c37',
-  primaryText: '#6a7c95',
-  disableText: 'rgba(106, 124, 149, 0.4)',
-  yellowCaution: '#fed330',
-  greenApprove: '#26de81',
-  redError: '#eb4e3b',
-  pbShade1: '#a5d4fa',
-  pbShade2: '#f7fbff',
-  pbShade3: '#eff8ff',
-  background: '#fbfdff',
-  facebook: '#4460a0',
-  line: 'rgba(0, 0, 0, 0.12)'
-}
+  font1: '#1A1A1A',
+  font2: '#454545',
+  gray1: '#333333',
+  gray2: '#4F4F4F',
+  gray3: '#737373',
+  gray4: '#828282',
+  gray5: '#BDBDBD',
+  gray6: '#E0E0E0',
+  gray7: '#F2F2F2',
+  red: '#EB5757',
+  orange: '#F2994A',
+  yellow: '#F2C94C',
+  green1: '#219653',
+  green2: '#27AE60',
+  green3: '#6FCF97',
+  blue1: '#2F80ED',
+  blue2: '#2D9CDB',
+  blue3: '#56CCF2',
+  purple1: '#9B51E0',
+  purple2: '#BB6BD9',
+  white: '#FFFFFF',
+};
