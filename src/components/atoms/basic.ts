@@ -148,12 +148,12 @@ export const ScrollDiv = styled.ScrollView`
 
 export const FlatList = styled.FlatList``;
 
-export const Text = styled.Text`
+export const Font = styled.Text`
   margin: ${({ mar, _margin }) => mar || _margin || '0px'};
   padding: ${({ padd, _padding }) => padd || _padding || '0px'};
   letter-spacing: ${({ letterSpacing }) => letterSpacing || '0px'};
-  line-height: ${({ lineHeight, _lineHeight }) =>
-    _lineHeight || lineHeight || '0px'};
+  ${({ lineHeight, _lineHeight }) =>
+    `line-height:${_lineHeight}` || `line-height:${lineHeight}`};
   font-size: ${({ sizeType, size }) => {
     if (size) {
       return size;

@@ -1,10 +1,10 @@
 import React from 'react';
-import { Div, Text } from '@components/atoms/basic';
+import { Div, Font } from '@components/atoms/basic';
 
 const NotificationPage = () => {
   return (
     <Div>
-      <Text>Notification Page</Text>
+      <Font>Notification Page</Font>
     </Div>
   );
 };

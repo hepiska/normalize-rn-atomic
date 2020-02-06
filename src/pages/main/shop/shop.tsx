@@ -1,10 +1,10 @@
 import React from 'react';
-import { Div, Text } from '@components/atoms/basic';
+import { Div, Font } from '@components/atoms/basic';
 
 const ShopPage = () => {
   return (
     <Div>
-      <Text>shop Page</Text>
+      <Font>shop Page</Font>
     </Div>
   );
 };

@@ -1,10 +1,10 @@
 import React from 'react';
-import { Div, Text } from '@components/atoms/basic';
+import { Div, Font } from '@components/atoms/basic';
 
 const ProfilPage = () => {
   return (
     <Div>
-      <Text>Profil page</Text>
+      <Font>Profil page</Font>
     </Div>
   );
 };
