@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import {
   PressAbbleDiv,
   Image,
-  Text,
+  Font,
   FlatList,
   Div,
 } from '@components/atoms/basic';
@@ -52,7 +52,13 @@ class HorizontalListLookBook extends React.Component<any, any> {
         id={item.slug}
         slug={item.slug}
         title={item.index}
-        imageUri={{ uri: item.image_url }}
+        imageUri={
+          item.image_url
+            ? {
+                uri: item.image_url,
+              }
+            : require('../../assets/placeholder/placeholder.png')
+        }
       />
     );
   };

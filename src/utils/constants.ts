@@ -1,12 +1,16 @@
+import DeviceInfo from 'react-native-device-info'
+const hasNotch = DeviceInfo.hasNotch();
+
+
 export const shadows = {
   idle: `shadow-color: #000;
-      shadow-offset: 0px 2px;
+      shadow-offset: {width: 0, height: 2};
       shadow-opacity: 0.1;
       shadow-radius: 8;
       elevation: 2;
   `,
   focused: `shadow-color: #000;
-  shadow-offset: 0px 2px;
+  shadow-offset:{width: 0, height: 2};
   shadow-opacity: 0.16  ;
   shadow-radius: 8;
   elevation: 5;
@@ -31,7 +35,13 @@ export const colors = {
   blue1: '#2F80ED',
   blue2: '#2D9CDB',
   blue3: '#56CCF2',
+  background: '#FFF',
   purple1: '#9B51E0',
   purple2: '#BB6BD9',
   white: '#FFFFFF',
 };
+
+export const globalDimention = {
+  headerHeight: hasNotch ? 88 : 56,
+  firstComponentMargin: hasNotch ? '22px 0px 0px' : '0ps'
+}

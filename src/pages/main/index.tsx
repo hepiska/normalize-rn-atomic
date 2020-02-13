@@ -3,6 +3,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { colors } from '@utils/constants';
 import CenterButton from '@components/atoms/tab-bar-center-button';
+import initialPageConfig from '@pages/page-initial.config'
 import ShopPage from './shop/index';
 import DiscoverPage from './discover/index';
 import NotificationPage from './notifications/index';
@@ -17,10 +18,10 @@ class MainPages extends React.Component<any, any> {
   render() {
     return (
       <Tab.Navigator
+        initialRouteName={initialPageConfig.main}
         tabBarOptions={{
           activeTintColor: colors.purple1,
           inactiveTintColor: colors.gray3,
-          style: { height: 40 },
         }}>
         <Tab.Screen
           name="Discover"

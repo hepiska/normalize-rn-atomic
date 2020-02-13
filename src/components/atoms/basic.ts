@@ -8,7 +8,7 @@ export const Div = styled.View`
   display: ${({ disp, _display }) => disp || _display || 'flex'};
   position: ${({ pos, _position }) => pos || _position || 'relative'};
   ${({ flx, _flex }) => (flx || _flex ? `flex:${flx || _flex};` : '')}
-  ${({ brdr, _border }) => (brdr ? `border:${brdr || _border};` : '')}
+  ${({ brdr, _border }) => (brdr || _border ? `border:${brdr || _border};` : '')}
   ${({ _height }) => (_height ? `height:${_height};` : '')}
   ${({ maxHeight }) => (maxHeight ? `max-height:${maxHeight};` : '')}
   ${({ _width, wdth }) =>
@@ -130,9 +130,6 @@ export const ScrollDiv = styled.ScrollView`
   border-radius: ${({ radius }) => radius || '8px'};
   flex-direction: ${({ flexDirection, _direction }) =>
     flexDirection || _direction || 'column'};
-  align-items: ${({ align, alignItems }) => alignItems || align || 'center'};
-  justify-content: ${({ justify, justifyContent }) =>
-    justifyContent || justify || 'center'};
   background: ${({ bg, _background }) => bg || _background || 'transparent'};
   ${({ shadow }) => {
     switch (shadow) {
@@ -148,6 +145,15 @@ export const ScrollDiv = styled.ScrollView`
 
 export const FlatList = styled.FlatList``;
 
+const fontTypeRegex = {
+  regular: /Regular|regular/,
+  light: /Light|light/,
+  demi: /Demi|demi/,
+  book: /Book|book/,
+  bold: /Bold|bold/,
+  thin: /Thin|thin/,
+}
+
 export const Font = styled.Text`
   margin: ${({ mar, _margin }) => mar || _margin || '0px'};
   padding: ${({ padd, _padding }) => padd || _padding || '0px'};
@@ -162,7 +168,36 @@ export const Font = styled.Text`
     } else if (sizeType === 'h2' || sizeType === 'body') {
       return '14px';
     } else {
-      return '13px';
+      return '12px';
+    }
+  }};
+  ${({ type, weight, fontFamily }) => {
+    if (fontFamily) {
+      return 'font-family:' + fontFamily
+    }
+    switch (type) {
+      case 'HelveticaNeue':
+        if (weight) {
+          return `font-family: HelveticaNeue-${weight}`
+        }
+        return `font-family: HelveticaNeue`
+      case 'Futura':
+        if (weight) {
+          return `font-family: Futura-${weight}`
+        }
+        return `font-family: Futura`
+      case 'text':
+        return `font-family: HelveticaNeue`
+      case 'meta':
+        return `font-family: HelveticaNeue-Thin`
+      case 'title':
+        return `font-family: HelveticaNeue-Bold`
+      case 'titleRegular':
+        return `font-family: HelveticaNeue`
+      case 'heading':
+        return `font-family: FuturaDemi`
+      default:
+        return 'font-family: HelveticaNeue'
     }
   }};
   color: ${({ color }) => color || colors.font2};
