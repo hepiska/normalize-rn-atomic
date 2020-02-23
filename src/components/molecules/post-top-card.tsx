@@ -4,7 +4,7 @@ import {
   Div,
   TouchableWithoutFeedback,
   Image,
-  Text,
+  Font
 } from '@components/atoms/basic';
 import { ImageSource } from '@utils/globalInterface';
 import PostAuthor from './post-author-icon';
@@ -31,7 +31,6 @@ class PostTopCard extends React.PureComponent<ListItemLookBookProps, any> {
     const {
       post: { image_url, id, user, title, ...post },
     } = this.props;
-    console.log('image_url', image_url);
     return (
       <TouchableWithoutFeedback onPress={this._onPress} display="flex">
         <Div
@@ -53,9 +52,9 @@ class PostTopCard extends React.PureComponent<ListItemLookBookProps, any> {
           />
           <Div _direction="column" overflow="hidden" _flex="1">
             <PostAuthor author={user} />
-            <Text fontSize="1.5rem" color="#333" _margin="4px 0px">
+            <Font fontSize="1.5rem" color="#333" _margin="4px 0px">
               {title}
-            </Text>
+            </Font>
           </Div>
         </Div>
       </TouchableWithoutFeedback>

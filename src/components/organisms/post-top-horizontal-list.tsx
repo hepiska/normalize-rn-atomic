@@ -3,9 +3,6 @@ import { Dimensions } from 'react-native';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import {
-  PressAbbleDiv,
-  Image,
-  Text,
   FlatList,
   Div,
 } from '@components/atoms/basic';

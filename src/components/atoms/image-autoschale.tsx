@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect, } from 'react';
-import { Image, FlatList } from 'react-native'
+import { Image, FlatList, ViewStyle } from 'react-native'
 import { Div, Font } from '@components/atoms/basic'
 
 
@@ -11,11 +11,12 @@ interface ImageType {
 interface ImageAutoSchaleType {
   source: ImageType,
   width?: number,
-  height?: number
+  height?: number,
+  style?: ViewStyle
 }
 
 
-const ImageAutoSchale = ({ source, width, height }: ImageAutoSchaleType) => {
+const ImageAutoSchale = ({ source, width, height,style }: ImageAutoSchaleType) => {
   let [size, setSize] = useState(null)
   useEffect(() => {
     Image.getSize(source.uri, (newWidth, newHeight) => {
@@ -34,7 +35,7 @@ const ImageAutoSchale = ({ source, width, height }: ImageAutoSchaleType) => {
     }, () => { })
 
   }, [])
-  return size ? <Image source={source} style={{ ...size }} /> : null
+  return size ? <Image source={source} style={{ ...size, ...style }} /> : null
 }
 
 

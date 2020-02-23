@@ -2,7 +2,6 @@ import React from 'react'
 import { Div, PressAbbleDiv, Image } from '@components/atoms/basic'
 import { useHistory } from 'react-router-native'
 import { Dimensions } from 'react-native'
-import { SvgUri } from 'react-native-svg'
 import styled from 'styled-components/native'
 
 

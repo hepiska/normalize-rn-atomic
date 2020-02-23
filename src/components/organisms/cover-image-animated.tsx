@@ -1,11 +1,8 @@
 import React, { Component } from 'react';
 import {
-  Image, StyleSheet, Dimensions, Button
+  StyleSheet
 } from "react-native";
-import ImagesWithPreviews from '@components/organisms/images-with-preview'
-import Modal from 'react-native-modal';
 import Animated, { exp } from "react-native-reanimated";
-import ImageZoom from 'react-native-image-pan-zoom';
 
 const { interpolate, Extrapolate } = Animated;
 

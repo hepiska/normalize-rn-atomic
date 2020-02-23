@@ -35,6 +35,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
+  padd: {
+    paddingBottom: 56
+  },
   artist: {
     textAlign: "center",
     color: "white",
@@ -64,8 +67,12 @@ const ImageCoverContentLayout = ({ y, children, dimentionConstant }) => {
   });
 
   return (
-    <ScrollDiv as={Animated.ScrollView} _width='100%' scrollEventThrottle={2} style={{ paddingTop: globalDimention.headerHeight + 20 }} onScroll={onScroll({ y })}>
-      <View style={[styles.cover, { height: dimentionConstant.imageHeight }]}>
+    <ScrollDiv
+      as={Animated.ScrollView}
+      _width='100%'
+      scrollEventThrottle={2}
+      style={{ paddingTop: globalDimention.headerHeight + 20 }} onScroll={onScroll({ y })}>
+      <View style={[styles.cover, { height: dimentionConstant.imageHeight - globalDimention.headerHeight }]}>
         <Animated.View
           style={[styles.gradient, { height }]}
         >

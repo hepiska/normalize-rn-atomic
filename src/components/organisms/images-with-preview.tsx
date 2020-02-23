@@ -4,7 +4,7 @@ import { Div, Font } from '@components/atoms/basic'
 import styled from 'styled-components/native'
 import Icon from 'react-native-vector-icons/EvilIcons'
 import ImageAutoSchale from '@components/atoms/image-autoschale'
-import flastlistItemHoc from '@hocs/flast-list-item'
+import flastlistItemHoc from '@src/hocs/flatlist-item'
 import ImageView from "react-native-image-viewing";
 import { colors, globalDimention } from '@src/utils/constants';
 
@@ -49,8 +49,10 @@ class ImagesWithPreviews extends React.Component<ImagesWithPreviewsType, any> {
   _flatImates = images => images.map(im => typeof im === 'string' ? { uri: im } : im)
 
   _closeModal = () => this.setState({ isVisible: false })
-  _renderItem = ({ item, index }) => <ImageItem id={index} key={index} onPress={this._onOpenImage} source={item} width={this.props.size.width} height={this.props.size.height} />
-  _keyExtractor = (item, index) => item.uri + index;
+  _renderItem = ({ item, index }) => <ImageItem id={index} onPress={this._onOpenImage} source={item} width={this.props.size.width} height={this.props.size.height} />
+  _keyExtractor = (item, index) => {
+    return item.uri + index
+  }
   _footerComp = (props) => <Div _width='100%' _height='56px' >
     <IndDiv><Font color={colors.white}>{props.imageIndex + 1} / {this.props.images.length}</Font></IndDiv>
   </Div>
@@ -62,6 +64,7 @@ class ImagesWithPreviews extends React.Component<ImagesWithPreviewsType, any> {
 
   render() {
     const { size, images } = this.props
+    console.log('images', images)
     const { isVisible, selectedImage } = this.state
     return (
       <Div _width={size.width} _height={size.height}>

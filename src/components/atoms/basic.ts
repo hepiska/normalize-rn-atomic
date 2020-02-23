@@ -1,5 +1,5 @@
-import styled from 'styled-components/native';
-import { colors, shadows } from '@utils/constants';
+import styled from 'styled-components/native'
+import { colors, shadows } from '@utils/constants'
 
 export const Div = styled.View`
   /* width:${({ _width }) => _width || 'null'}; */
@@ -8,7 +8,8 @@ export const Div = styled.View`
   display: ${({ disp, _display }) => disp || _display || 'flex'};
   position: ${({ pos, _position }) => pos || _position || 'relative'};
   ${({ flx, _flex }) => (flx || _flex ? `flex:${flx || _flex};` : '')}
-  ${({ brdr, _border }) => (brdr || _border ? `border:${brdr || _border};` : '')}
+  ${({ brdr, _border }) =>
+    brdr || _border ? `border:${brdr || _border};` : ''}
   ${({ _height }) => (_height ? `height:${_height};` : '')}
   ${({ maxHeight }) => (maxHeight ? `max-height:${maxHeight};` : '')}
   ${({ _width, wdth }) =>
@@ -26,14 +27,14 @@ export const Div = styled.View`
   ${({ shadow }) => {
     switch (shadow) {
       case 'idle':
-        return shadows.idle;
+        return shadows.idle
       case 'focus':
-        return shadows.focused;
+        return shadows.focused
       default:
-        return '';
+        return ''
     }
   }}
-`;
+`
 
 export const Image = styled.Image`
   border-radius: ${({ radius, borderRadius, _borderRadius }) =>
@@ -46,7 +47,7 @@ export const Image = styled.Image`
     _width ? `width:${_width};` : wdth ? `width:${wdth};` : ''}
   ${({ _height, hght }) =>
     _height ? `height:${_height};` : hght ? `height:${hght};` : ''}
-`;
+`
 
 export const PressAbbleDiv = styled.TouchableOpacity`
   padding:${({ padd, _padding }) => padd || _padding || '0px'};
@@ -72,14 +73,14 @@ export const PressAbbleDiv = styled.TouchableOpacity`
   ${({ shadow }) => {
     switch (shadow) {
       case 'idle':
-        return shadows.idle;
+        return shadows.idle
       case 'focus':
-        return shadows.focused;
+        return shadows.focused
       default:
-        return '';
+        return ''
     }
   }}
-`;
+`
 
 export const TouchableWithoutFeedback = styled.TouchableWithoutFeedback`
   padding:${({ padd, _padding }) => padd || _padding || '0px'};
@@ -105,14 +106,14 @@ export const TouchableWithoutFeedback = styled.TouchableWithoutFeedback`
   ${({ shadow }) => {
     switch (shadow) {
       case 'idle':
-        return shadows.idle;
+        return shadows.idle
       case 'focus':
-        return shadows.focused;
+        return shadows.focused
       default:
-        return '';
+        return ''
     }
   }}
-`;
+`
 
 export const ScrollDiv = styled.ScrollView`
   padding:${({ padd, _padding }) => padd || _padding || '0px'};
@@ -134,16 +135,16 @@ export const ScrollDiv = styled.ScrollView`
   ${({ shadow }) => {
     switch (shadow) {
       case 'idle':
-        return shadows.idle;
+        return shadows.idle
       case 'focus':
-        return shadows.focused;
+        return shadows.focused
       default:
-        return '';
+        return ''
     }
   }}
-`;
+`
 
-export const FlatList = styled.FlatList``;
+export const FlatList = styled.FlatList``
 
 const fontTypeRegex = {
   regular: /Regular|regular/,
@@ -162,18 +163,19 @@ export const Font = styled.Text`
     `line-height:${_lineHeight}` || `line-height:${lineHeight}`};
   font-size: ${({ sizeType, size }) => {
     if (size) {
-      return size;
-    } else if (sizeType === 'title' || sizeType === 'h1') {
-      return '16px';
-    } else if (sizeType === 'h2' || sizeType === 'body') {
-      return '14px';
-    } else {
-      return '12px';
+      return size
     }
+    if (sizeType === 'title' || sizeType === 'h1') {
+      return '16px'
+    }
+    if (sizeType === 'h2' || sizeType === 'body') {
+      return '14px'
+    }
+    return '12px'
   }};
   ${({ type, weight, fontFamily }) => {
     if (fontFamily) {
-      return 'font-family:' + fontFamily
+      return `font-family:${fontFamily}`
     }
     switch (type) {
       case 'HelveticaNeue':
@@ -202,4 +204,4 @@ export const Font = styled.Text`
   }};
   color: ${({ color }) => color || colors.font2};
   text-align: ${({ textAlign }) => textAlign || 'left'};
-`;
+`

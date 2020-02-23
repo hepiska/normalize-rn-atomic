@@ -1,0 +1,61 @@
+{
+  "root": true,
+    "env": {
+        "browser": true,
+        "es6": true,
+        "node": true
+    },
+    "parser": "babel-eslint",
+    "parserOptions": {
+      "ecmaFeatures": {
+          "jsx": true
+      },
+      "ecmaVersion": 2018,
+      "jsx": true,
+      "useJSXTextNode": true,
+      "sourceType": "module"
+  },
+    "globals": {
+        "Atomics": "readonly",
+        "SharedArrayBuffer": "readonly"
+    },
+    "extends": [
+      "plugin:react/recommended",
+      "plugin:prettier/recommended"
+    ],
+    "plugins": [
+        "react"
+    ],
+    "rules": {
+    },
+    "overrides": [
+      {
+        "files":[
+          "**/*.ts",
+          "**/*.tsx"
+        ],
+        "parser": "@typescript-eslint/parser",
+        "parserOptions": {
+          "project": "./tsconfig.json"
+        },
+        "extends": [
+          "plugin:react/recommended",
+          "prettier/@typescript-eslint", 
+          "plugin:import/typescript",
+          "plugin:prettier/recommended"
+        ],
+        "plugins": [ "@typescript-eslint" ],
+        "rules": {
+          "react/prop-types": "off",
+          "@typescript-eslint/no-unused-vars": "warn",
+          "react/self-closing-comp": "error"
+        }
+      }
+    ]
+    // "settings": {
+    //   "import/resolver": {
+    //     "babel-module": {}
+    //   }
+    // }
+    
+}
