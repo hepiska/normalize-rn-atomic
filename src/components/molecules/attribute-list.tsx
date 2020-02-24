@@ -1,8 +1,19 @@
 import React, { useState } from 'react'
 import { Div, Font, PressAbbleDiv, ScrollDiv } from '@components/atoms/basic'
 import { colors } from '@utils/constants'
-import { formatRupiah } from '@utils/helpers'
 import { futuraTitleFont, helveticaNormalFont } from '../commont-styles'
+
+// export interface AtributeValueType {
+//   label: String
+//   id: String
+//   metadata: string
+// }
+
+// export interface AttributeType {
+//   id: number | string
+//   label: string
+//   values: [AtributeValueType]
+// }
 
 interface ColorPaletteCardType {
   attribute: any
@@ -11,7 +22,6 @@ interface ColorPaletteCardType {
 }
 
 const getAntributesItem = (label: string, data: any, isSelected?: boolean) => {
-  console.log('isSelected', isSelected)
   switch (label.toLowerCase()) {
     case 'color':
       return (
@@ -49,15 +59,18 @@ const useAtributes = props => {
   const [selectedAttribute, setselectedAttribute] = useState(defaultAtribute)
   const changeAtribute = attribute => () => {
     let newAttribute: any = {}
-    if (attribute.id === selectedAttribute.id) {
-      newAttribute = {}
-    } else {
-      newAttribute = { ...attribute }
-    }
+    // if (attribute.id === selectedAttribute.id) {
+    //   newAttribute = {}
+    // } else {
+    //   newAttribute = { ...attribute }
+    // }
+
+    newAttribute = { ...attribute }
+
     setselectedAttribute(newAttribute)
     props.onAttributesChanged({
       attribute_id: props.attribute.id,
-      attributes_value_id: attribute.id,
+      attribute_value_id: attribute.id,
     })
   }
 
@@ -76,7 +89,7 @@ const AtributesList = ({
 
   const { values, label, id } = attribute
   return (
-    <Div width="100%" align="flex-start" padd="16px 0px">
+    <Div width="100%" align="flex-start" padd="14px 0px">
       <Div _direction="row" align="flex-end" _margin="8px 0px">
         <Font {...futuraTitleFont} _margin="0px 8px 0px 0px">
           {label}

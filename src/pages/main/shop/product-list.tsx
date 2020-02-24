@@ -16,6 +16,7 @@ import ImageCoverContentLayout from '@src/components/layouts/image-cover-animate
 import ProductOverviewCard from '@src/components/molecules/product-overview-card-body'
 import AttributeList from '@src/components/molecules/attribute-list'
 import ProductGroup from '@components/organisms/product-group'
+import ProductAttributes from '@components/organisms/product-attributes'
 import ProductGroupList from '@components/organisms/product-group-list'
 import ProductCard from '@components/molecules/product-card'
 import Animated from 'react-native-reanimated'
@@ -87,12 +88,12 @@ const productMock: any = {
       id: 1,
       attributeValues: [
         {
-          attributeId: 1,
-          attributeValueId: 1,
+          attribute_id: 1,
+          attribute_value_id: 1,
         },
         {
-          attributeId: 2,
-          attributeValueId: 3,
+          attribute_id: 2,
+          attribute_value_id: 3,
         },
       ],
       sku: 'SUL-F1001',
@@ -125,12 +126,12 @@ const productMock: any = {
       id: 2,
       attributeValues: [
         {
-          attributeId: 1,
-          attributeValueId: 1,
+          attribute_id: 1,
+          attribute_value_id: 1,
         },
         {
-          attributeId: 2,
-          attributeValueId: 4,
+          attribute_id: 2,
+          attribute_value_id: 4,
         },
       ],
       sku: 'SUL-F1002',
@@ -161,14 +162,14 @@ const productMock: any = {
     },
     {
       id: 3,
-      attributeValues: [
+      attribute_values: [
         {
-          attributeId: 1,
-          attributeValueId: 2,
+          attribute_id: 1,
+          attribute_value_id: 2,
         },
         {
-          attributeId: 2,
-          attributeValueId: 3,
+          attribute_id: 2,
+          attribute_value_id: 3,
         },
       ],
       sku: 'SUL-F1003',
@@ -181,7 +182,7 @@ const productMock: any = {
         {
           id: 7,
           url:
-            'https://theshonet.imgix.net/images/0bf2a8d5-b75a-4074-b71d-976540b7ac89-1576043746.jpeg',
+            'https://shonet.imgix.net/filemanager/shared/072b030b_Renato%20Abati%20%282%29.jpg?q=75&auto=compress,format&w=800',
           isPrimary: true,
         },
         {
@@ -200,14 +201,14 @@ const productMock: any = {
     },
     {
       id: 4,
-      attributeValues: [
+      attribute_values: [
         {
-          attributeId: 1,
-          attributeValueId: 2,
+          attribute_id: 1,
+          attribute_value_id: 2,
         },
         {
-          attributeId: 2,
-          attributeValueId: 4,
+          attribute_id: 2,
+          attribute_value_id: 4,
         },
       ],
       sku: 'SUL-F1004',
@@ -242,10 +243,13 @@ const productMock: any = {
 const { Value } = Animated
 const { width } = Dimensions.get('screen')
 
+const y = new Value(0)
+
 class ProductListPage extends React.Component<any, any> {
   state = {
     product: productMock,
     selectedVariant: 1,
+    isUserSelectVariant: false,
   }
 
   getVariantData = id => {
@@ -257,6 +261,29 @@ class ProductListPage extends React.Component<any, any> {
     imageHeight: width * (3 / 2),
   }
 
+  _selectVariant = attributes => {
+    const { product } = this.state
+    const variant = product.variants.find(_variant => {
+      _variant.attribute_values =
+        _variant.attribute_values || _variant.attributeValues
+      const ismatch = _variant.attribute_values.reduce((acc, _att) => {
+        const sellectedAtt = attributes.find(
+          _attribute =>
+            _attribute.attribute_id === _att.attribute_id &&
+            _attribute.attribute_value_id === _att.attribute_value_id,
+        )
+        if (!sellectedAtt) {
+          return acc && false
+        }
+        return acc && true
+      }, true)
+      return ismatch
+    })
+    if (variant) {
+      this.setState({ selectedVariant: variant.id, isUserSelectVariant: true })
+    }
+  }
+
   static navigationOptions = {
     headerTransparent: true,
     // headerShown: false
@@ -264,11 +291,10 @@ class ProductListPage extends React.Component<any, any> {
 
   render() {
     const { navigation } = this.props
-    const y = new Value(0)
     const { product, selectedVariant } = this.state
     const varianData = this.getVariantData(selectedVariant)
     navigation.setOptions({
-      header: ({ scene, previous, navigation }) => {
+      header: () => {
         return (
           <NavbarTopAnimated
             parentDim={{ coverheight: this.dimentionConstant.imageHeight }}
@@ -287,6 +313,10 @@ class ProductListPage extends React.Component<any, any> {
         <CoverImageAnimated
           y={y}
           width={width}
+          images={varianData.photos.map(photo => ({
+            ...photo,
+            uri: photo.url,
+          }))}
           height={this.dimentionConstant.imageHeight}>
           <ImagesWithPreviews
             size={{ width, height: this.dimentionConstant.imageHeight }}
@@ -301,15 +331,10 @@ class ProductListPage extends React.Component<any, any> {
           dimentionConstant={this.dimentionConstant}>
           <Div bg="white" _width="100%" padd="0px 16px 96px">
             <ProductOverviewCard product={{ ...product, ...varianData }} />
-            <AttributeList
-              onAttributesChanged={() => {}}
-              attribute={product.attributes[1]}
+            <ProductAttributes
+              attributes={product.attributes}
+              onAllAttributesSelected={this._selectVariant}
             />
-            <AttributeList
-              onAttributesChanged={() => {}}
-              attribute={product.attributes[0]}
-            />
-
             {/* <ContentExpandable title='Size & Fit' content="ssaasa" id='expanable' isFirst />
             <ProductGroup title='What Your Friends are Looking Now' products={[product, product, product, product]}></ProductGroup>
 

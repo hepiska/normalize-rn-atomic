@@ -1,6 +1,5 @@
 import DeviceInfo from 'react-native-device-info'
-const hasNotch = DeviceInfo.hasNotch();
-
+const hasNotch = DeviceInfo.hasNotch()
 
 export const shadows = {
   idle: `shadow-color: #000;
@@ -15,7 +14,7 @@ export const shadows = {
   shadow-radius: 8;
   elevation: 5;
 `,
-};
+}
 export const colors = {
   font1: '#1A1A1A',
   font2: '#454545',
@@ -35,17 +34,17 @@ export const colors = {
   blue1: '#2F80ED',
   blue2: '#2D9CDB',
   blue3: '#56CCF2',
-  blue50: "#455BE3",
+  blue50: '#455BE3',
   background: '#FFF',
   purple1: '#9B51E0',
   purple2: '#BB6BD9',
   white: '#FFFFFF',
   black50: '#EFEFEF',
-  black90: "#949494",
-  black100:'#1A1A1A'
-};
+  black90: '#949494',
+  black100: '#1A1A1A',
+}
 
 export const globalDimention = {
   headerHeight: hasNotch ? 88 : 56,
-  firstComponentMargin: hasNotch ? '22px 0px 0px' : '0ps'
+  firstComponentMargin: hasNotch ? '22px 0px 0px' : '0px',
 }
