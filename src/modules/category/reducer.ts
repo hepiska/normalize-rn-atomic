@@ -2,14 +2,12 @@ import { AnyAction, Reducer } from 'redux'
 import Immutable from 'seamless-immutable'
 import { ErrorType } from '@utils/globalInterface'
 import { persistReducer } from 'redux-persist'
-import { postActionType } from './action'
+import { categoryActionType } from './action'
 import AsyncStorage from '@react-native-community/async-storage'
-
-interface PostType {}
 
 interface PostState {
   readonly data: Object
-  readonly order: Object
+  readonly order: Array<number>
   readonly loading: Boolean
   readonly error?: ErrorType
 }
@@ -21,16 +19,16 @@ const initialState: any = {
   error: null,
 }
 
-const postreducer: Reducer<PostState> = (
-  state: any = initialState,
+const categoryReducer: Reducer<PostState> = (
+  state: PostState = initialState,
   action: AnyAction,
 ) => {
   const newState = { ...state }
   switch (action.type) {
-    case postActionType.SET_POST_DATA:
+    case categoryActionType.SET_CATEGORY_DATA:
       newState.data = Immutable.merge(newState.data, action.payload)
       return newState
-    case postActionType.SET_POST_ORDER:
+    case categoryActionType.SET_CATEGORY_ORDER:
       if (
         !newState.order.length ||
         (action.payload.pagination.total &&
@@ -39,7 +37,7 @@ const postreducer: Reducer<PostState> = (
         newState.order = newState.order.concat(Immutable(action.payload.order))
       }
       return newState
-    case postActionType.SET_POST_LOADING:
+    case categoryActionType.SET_CATEGORY_LOADING:
       newState.loading = action.payload
       return newState
     default:
@@ -47,9 +45,9 @@ const postreducer: Reducer<PostState> = (
   }
 }
 
-const postPersistConfig = {
-  key: 'post',
+const categoryersistConfig = {
+  key: 'category',
   storage: AsyncStorage,
 }
 
-export default persistReducer(postPersistConfig, postreducer)
+export default persistReducer(categoryersistConfig, categoryReducer)

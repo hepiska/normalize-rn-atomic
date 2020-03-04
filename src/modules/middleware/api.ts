@@ -1,11 +1,11 @@
-import { normalize } from 'normalizr';
-import { request } from '@utils/services';
+import { normalize } from 'normalizr'
+import { request } from '@utils/services'
 
-import * as actions from '../action-types';
+import * as actions from '../action-types'
 
 const api = ({ dispatch, getState }) => next => action => {
   if (action.type !== actions.API) {
-    return next(action);
+    return next(action)
   }
 
   const {
@@ -17,28 +17,27 @@ const api = ({ dispatch, getState }) => next => action => {
     error,
     startNetwork,
     endNetwork,
-  } = action.payload;
+  } = action.payload
 
   if (startNetwork) {
-    dispatch(startNetwork(label));
+    dispatch(startNetwork(label))
   }
 
-  console.log('=====', requestParams);
   return request
     .request({ url, ...requestParams })
     .then(res => {
-      const normalizeData = normalize(res.data.data, schema);
+      const normalizeData = normalize(res.data.data, schema)
 
       if (success) {
-        dispatch(success(normalizeData, res.data));
+        dispatch(success(normalizeData, res.data))
       }
-      dispatch(endNetwork(label));
+      dispatch(endNetwork(label))
     })
     .catch(err => {
       if (error) {
-        dispatch(error(err));
+        dispatch(error(err))
       }
-    });
-};
+    })
+}
 
-export default api;
+export default api

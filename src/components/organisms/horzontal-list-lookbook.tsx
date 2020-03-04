@@ -1,18 +1,18 @@
-import React from 'react';
-import { Dimensions } from 'react-native';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import React from 'react'
+import { Dimensions } from 'react-native'
+import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux'
 import {
   PressAbbleDiv,
   Image,
   Font,
   FlatList,
   Div,
-} from '@components/atoms/basic';
-import ListItemLookBook from '@components/molecules/list-item-lookbook';
-import { fetchLookbook, lookBookApi } from '@modules/lookbook/action';
+} from '@components/atoms/basic'
+import ListItemLookBook from '@components/molecules/list-item-lookbook'
+import { fetchLookbook, lookBookApi } from '@modules/lookbook/action'
 
-const { width } = Dimensions.get('window');
+const { width } = Dimensions.get('window')
 
 const dummyData = [
   {
@@ -39,11 +39,11 @@ const dummyData = [
     image_url:
       'https://theshonet.imgix.net/lookbook/man-january-2020/theshonet-lookbook-man-january-2020-1.jpg',
   },
-];
+]
 
 class HorizontalListLookBook extends React.Component<any, any> {
   componentDidMount() {
-    this.props.lookBookApi({ offset: 0, limit: 30, sort: -1 });
+    this.props.lookBookApi({ offset: 0, limit: 30, sort: -1 })
   }
 
   _renderItem = ({ item, index }) => {
@@ -60,10 +60,10 @@ class HorizontalListLookBook extends React.Component<any, any> {
             : require('../../assets/placeholder/placeholder.png')
         }
       />
-    );
-  };
+    )
+  }
 
-  _keyExtractor = item => item.slug;
+  _keyExtractor = item => item.slug
   render() {
     return (
       <Div _height="330px">
@@ -78,7 +78,7 @@ class HorizontalListLookBook extends React.Component<any, any> {
           renderItem={this._renderItem}
         />
       </Div>
-    );
+    )
   }
 }
 
@@ -89,14 +89,14 @@ const mapDispatchToProps = dispatch =>
       lookBookApi,
     },
     dispatch,
-  );
+  )
 
 const mapStateToProps = state => ({
   lookbooks: state.lookbooks.order.map(id => state.lookbooks.data[id]),
   loading: state.lookbooks.loading,
   error: state.lookbooks.error,
-});
+})
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(HorizontalListLookBook);
+)(HorizontalListLookBook)

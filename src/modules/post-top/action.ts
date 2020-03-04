@@ -1,9 +1,9 @@
-import { QueryParams } from '@utils/globalInterface';
-import { API } from '../action-types';
-import { setPostData } from '../post/action';
-import { setUserData } from '../user/action';
+import { QueryParams } from '@utils/globalInterface'
+import { API } from '../action-types'
+import { setPostData } from '../post/action'
+import { setUserData } from '../user/action'
 
-import * as schema from '@modules/normalize-schema';
+import * as schema from '@modules/normalize-schema'
 
 export const topPostActionType = {
   SET_TOP_POST_DATA: 'top-post/SET_TOP_POST_DATA',
@@ -11,7 +11,7 @@ export const topPostActionType = {
   FETCH_START: 'top-post/FETCH_START',
   SET_TOP_POST_LOADING: 'top-post/SET_TOP_POST_LOADING',
   ERROR: 'top-post/ERROR',
-};
+}
 
 export const PostTopApi = params => ({
   type: API,
@@ -25,9 +25,9 @@ export const PostTopApi = params => ({
       setUserData(data.entities.user),
     ],
   },
-});
+})
 
 export const setTopPostData = (data: any) => ({
   type: topPostActionType.SET_TOP_POST_DATA,
   payload: data,
-});
+})

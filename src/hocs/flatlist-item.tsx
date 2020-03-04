@@ -1,8 +1,5 @@
-import React from 'react';
+import React from 'react'
 import { TouchableWithoutFeedback, TouchableOpacity, View } from 'react-native'
-
-
-
 
 function flatlistitemHoc(WrappedComponent) {
   return class ImageItem extends React.PureComponent<any> {

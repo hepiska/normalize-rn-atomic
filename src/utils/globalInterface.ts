@@ -1,5 +1,5 @@
 export interface ImageSource {
-  uri?: String,
+  uri?: String
 }
 
 export interface ErrorType {
@@ -7,7 +7,7 @@ export interface ErrorType {
 }
 
 export interface QueryParams {
-  limit?: Number,
-  offset?: Number,
+  limit?: Number
+  offset?: Number
   sort?: Number
 }

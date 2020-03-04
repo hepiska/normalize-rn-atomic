@@ -2,44 +2,47 @@ import { AnyAction, Reducer } from 'redux'
 import Immutable from 'seamless-immutable'
 import { ErrorType } from '@utils/globalInterface'
 import { persistReducer } from 'redux-persist'
-import { postActionType } from './action'
+import { productActionType } from './action'
 import AsyncStorage from '@react-native-community/async-storage'
 
-interface PostType {}
-
-interface PostState {
+interface ProductState {
   readonly data: Object
-  readonly order: Object
-  readonly loading: Boolean
+  readonly order: Array<number>
+  pagination: Object
+  loading: Boolean
   readonly error?: ErrorType
 }
 
 const initialState: any = {
   data: Immutable({}),
   order: Immutable([]),
+  pagination: {},
   loading: false,
   error: null,
 }
 
-const postreducer: Reducer<PostState> = (
-  state: any = initialState,
+const productReducer: Reducer<ProductState> = (
+  state: ProductState = initialState,
   action: AnyAction,
 ) => {
   const newState = { ...state }
   switch (action.type) {
-    case postActionType.SET_POST_DATA:
+    case productActionType.SET_PRODUCT_DATA:
       newState.data = Immutable.merge(newState.data, action.payload)
       return newState
-    case postActionType.SET_POST_ORDER:
+    case productActionType.SET_PRODUCT_ORDER:
       if (
-        !newState.order.length ||
-        (action.payload.pagination.total &&
-          newState.order < action.payload.pagination.total)
+        action.payload.pagination.offset &&
+        action.payload.pagination.total &&
+        newState.order.length < action.payload.pagination.total
       ) {
         newState.order = newState.order.concat(Immutable(action.payload.order))
+      } else {
+        newState.order = Immutable(action.payload.order)
       }
+      newState.pagination = action.payload.pagination
       return newState
-    case postActionType.SET_POST_LOADING:
+    case productActionType.SET_PRODUCT_LOADING:
       newState.loading = action.payload
       return newState
     default:
@@ -48,8 +51,8 @@ const postreducer: Reducer<PostState> = (
 }
 
 const postPersistConfig = {
-  key: 'post',
+  key: 'product',
   storage: AsyncStorage,
 }
 
-export default persistReducer(postPersistConfig, postreducer)
+export default persistReducer(postPersistConfig, productReducer)
