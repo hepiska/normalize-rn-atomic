@@ -1,31 +1,50 @@
+import DeviceInfo from 'react-native-device-info'
+const hasNotch = DeviceInfo.hasNotch()
+
 export const shadows = {
   idle: `shadow-color: #000;
-      shadow-offset: 0px 2px;
+      shadow-offset: {width: 0, height: 2};
       shadow-opacity: 0.1;
       shadow-radius: 8;
       elevation: 2;
   `,
   focused: `shadow-color: #000;
-  shadow-offset: 0px 2px;
+  shadow-offset:{width: 0, height: 2};
   shadow-opacity: 0.16  ;
   shadow-radius: 8;
   elevation: 5;
 `,
 }
 export const colors = {
-  white: '#ffffff',
-  black: '#000000',
-  pomonaBlue: '#37a0f4',
-  pomonaOrange: '#f48c37',
-  primaryText: '#6a7c95',
-  disableText: 'rgba(106, 124, 149, 0.4)',
-  yellowCaution: '#fed330',
-  greenApprove: '#26de81',
-  redError: '#eb4e3b',
-  pbShade1: '#a5d4fa',
-  pbShade2: '#f7fbff',
-  pbShade3: '#eff8ff',
-  background: '#fbfdff',
-  facebook: '#4460a0',
-  line: 'rgba(0, 0, 0, 0.12)'
+  font1: '#1A1A1A',
+  font2: '#454545',
+  gray1: '#333333',
+  gray2: '#4F4F4F',
+  gray3: '#737373',
+  gray4: '#828282',
+  gray5: '#BDBDBD',
+  gray6: '#E0E0E0',
+  gray7: '#F2F2F2',
+  red: '#EB5757',
+  orange: '#F2994A',
+  yellow: '#F2C94C',
+  green1: '#219653',
+  green2: '#27AE60',
+  green3: '#6FCF97',
+  blue1: '#2F80ED',
+  blue2: '#2D9CDB',
+  blue3: '#56CCF2',
+  blue50: '#455BE3',
+  background: '#FFF',
+  purple1: '#9B51E0',
+  purple2: '#BB6BD9',
+  white: '#FFFFFF',
+  black50: '#EFEFEF',
+  black90: '#949494',
+  black100: '#1A1A1A',
+}
+
+export const globalDimention = {
+  headerHeight: hasNotch ? 88 : 56,
+  firstComponentMargin: hasNotch ? '22px 0px 0px' : '0px',
 }

@@ -1,10 +1,8 @@
 import * as React from 'react'
 import { View, Text } from 'react-native'
 
-class SettingsPage extends React.Component<any, any>{
-  state = {
-
-  }
+class SettingsPage extends React.Component<any, any> {
+  state = {}
 
   render() {
     return (
@@ -13,8 +11,6 @@ class SettingsPage extends React.Component<any, any>{
       </View>
     )
   }
-
 }
-
 
 export default SettingsPage

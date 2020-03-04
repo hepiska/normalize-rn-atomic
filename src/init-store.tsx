@@ -2,75 +2,70 @@ import * as React from 'react'
 import { createStore, applyMiddleware, compose } from 'redux'
 import { Provider } from 'react-redux'
 import { routerMiddleware } from 'react-router-redux'
-import { NativeRouter, MemoryRouter, BackButton } from 'react-router-native'
+import { NavigationContainer } from '@react-navigation/native'
+
 const createHistory = require('history').createMemoryHistory
 import rootReducer from '@modules/index'
+import { composeWithDevTools } from 'redux-devtools-extension'
 import apiMidleware from '@modules/middleware/api'
+import { PersistGate } from 'redux-persist/integration/react'
 import multidipacerMidleware from '@modules/middleware/multi'
+import { persistStore } from 'redux-persist'
 import Pages from '@pages/index'
 
 export const history = createHistory()
 
-
-
-// initial store 
+// initial store
 const initialState = {}
 const enhancers = []
 const middleware = [
   routerMiddleware(history),
   apiMidleware,
-  multidipacerMidleware
+  multidipacerMidleware,
 ]
 
-if (process.env.NODE_ENV === 'development') {
-  // const { devToolsExtension } = window
+export let presist = null
 
-  // if (typeof devToolsExtension === 'function') {
-  //   enhancers.push(devToolsExtension())
-  // }
+let composedEnhancers
+if (__DEV__) {
+  composedEnhancers = composeWithDevTools(
+    applyMiddleware(...middleware),
+    ...enhancers,
+  )
+  // composedEnhancers = compose(applyMiddleware(...middleware), ...enhancers);
+} else {
+  composedEnhancers = compose(applyMiddleware(...middleware), ...enhancers)
 }
 
-const composedEnhancers = compose(
-  applyMiddleware(...middleware),
-  ...enhancers,
-)
-const store = createStore(
-  rootReducer,
-  initialState,
-  composedEnhancers,
-)
-
-class InitStore extends React.Component<any, any>{
+class InitStore extends React.Component<any, any> {
   constructor(props) {
     super(props)
     this.state = {
       isLoading: true,
-      store,
+      store: null,
+      persistor: null,
     }
   }
 
   async componentDidMount() {
-    this.setState({ store, isLoading: false })
+    const store = createStore(rootReducer, initialState, composedEnhancers)
+    const persistor = persistStore(store)
+    presist = persistor
+    this.setState({ store, persistor, isLoading: false })
   }
 
   render() {
     const { isLoading } = this.state
     return isLoading ? null : (
       <Provider store={this.state.store}>
-        <MemoryRouter
-          initialEntries={["/"]}
-          initialIndex={0}
-        >
-          <BackButton>
+        <PersistGate loading={null} persistor={this.state.persistor}>
+          <NavigationContainer>
             <Pages />
-          </BackButton>
-        </MemoryRouter>
+          </NavigationContainer>
+        </PersistGate>
       </Provider>
-
     )
   }
-
 }
-
 
 export default InitStore

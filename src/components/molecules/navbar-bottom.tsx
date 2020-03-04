@@ -1,9 +1,11 @@
 import React from 'react'
 import { Div, PressAbbleDiv, Image } from '@components/atoms/basic'
 import { useHistory } from 'react-router-native'
-import { SvgUri } from 'react-native-svg'
+import { Dimensions } from 'react-native'
 import styled from 'styled-components/native'
 
+
+const { width } = Dimensions.get('screen')
 
 const AbsDiv = styled(Div)`
   bottom: 0;
@@ -54,7 +56,7 @@ const NavbarBottom: React.SFC<NavbarBottomProps> = ({ style }) => {
   ]
 
   return (
-    <AbsDiv _direction='row' _position='absolute' {...style} _width='100%'>
+    <AbsDiv _direction='row' _position='absolute' {...style} _width={width}>
       {navItemData.map((item, index) => (<NavItem key={index} {...item} />))}
     </AbsDiv>
   )

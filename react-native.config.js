@@ -3,6 +3,6 @@ module.exports = {
     ios: {},
     android: {},
   },
-  assets: ['./assets/fonts/'],
+  assets: ['./src/assets/fonts/'],
   dependencies: {}, // make sure this deps are all valid installed packages or empty if you don't need it
 };
