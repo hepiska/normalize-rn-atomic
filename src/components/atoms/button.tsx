@@ -1,6 +1,7 @@
 import React, { useState, useEffect, ReactType, ReactElement } from 'react'
 import { Image, ViewStyle, TextStyle, StyleSheet } from 'react-native'
 import { Div, Font, ScrollDiv, PressAbbleDiv } from '@components/atoms/basic'
+import { colors } from '@src/utils/constants'
 
 interface ButtonType {
   title: string
@@ -9,6 +10,7 @@ interface ButtonType {
   rightIcon?: ReactElement
   style?: ViewStyle
   onPress: Function
+  disabled?: boolean
 }
 
 const styles = StyleSheet.create({
@@ -20,6 +22,10 @@ const styles = StyleSheet.create({
   fill: {
     borderRadius: 8,
     backgroundColor: 'white',
+  },
+  disabled: {
+    borderRadius: 8,
+    backgroundColor: colors.black50,
   },
 })
 
@@ -53,13 +59,14 @@ export const Button = ({
   leftIcon,
   onPress,
   rightIcon,
+  disabled = false,
 }: ButtonType) => {
   return (
     <PressAbbleDiv
       padd="8px"
       _direction="row"
-      style={[styles.fill, style]}
-      onPress={onPress}>
+      style={!disabled ? [styles.fill, style] : [style, styles.disabled]}
+      onPress={!disabled ? onPress : null}>
       {leftIcon && leftIcon}
       <Font family="HelveticaNeue" size="14px" style={fontStyle}>
         {title}

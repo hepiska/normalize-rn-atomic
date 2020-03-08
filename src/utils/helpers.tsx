@@ -24,3 +24,13 @@ export const formatCur = value => {
   }
   return `${currencyNum(String(value))}`
 }
+
+export const moveToFront = (a: any, fn: Function) => {
+  let non_matches = []
+  var matches = a.filter(function(e: any, i: any, a: any) {
+    let match = fn(e, i, a)
+    if (!match) non_matches.push(e)
+    return match
+  })
+  return matches.concat(non_matches)
+}

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Dimensions, Button } from 'react-native'
+import { Dimensions } from 'react-native'
 import {
   Div,
   Font,
@@ -7,6 +7,7 @@ import {
   ScrollDiv,
   PressAbbleDiv,
 } from '@components/atoms/basic'
+import { Button } from '@components/atoms/button'
 import NavbarTopAnimated from '@components/molecules/navbar-top-animated'
 import CoverImageAnimated from '@src/components/organisms/cover-image-animated'
 import Icon from 'react-native-vector-icons/FontAwesome'
@@ -20,6 +21,7 @@ import ProductAttributes from '@components/organisms/product-attributes'
 import ProductGroupList from '@components/organisms/product-group-list'
 import ProductCard from '@components/molecules/product-card'
 import Animated from 'react-native-reanimated'
+import { colors } from '@src/utils/constants'
 
 const productMock: any = {
   id: 1,
@@ -289,6 +291,14 @@ class ProductListPage extends React.Component<any, any> {
     // headerShown: false
   }
 
+  openCartModal = () => {
+    const { navigation } = this.props
+    const { product } = this.state
+    navigation.navigate('CartModal', {
+      product,
+    })
+  }
+
   render() {
     const { navigation } = this.props
     const { product, selectedVariant } = this.state
@@ -334,6 +344,19 @@ class ProductListPage extends React.Component<any, any> {
             <ProductAttributes
               attributes={product.attributes}
               onAllAttributesSelected={this._selectVariant}
+            />
+            <Button
+              title="Add to cart"
+              onPress={this.openCartModal}
+              fontStyle={{
+                color: colors.white,
+                fontSize: 14,
+              }}
+              style={{
+                width: '100%',
+                height: 46,
+                backgroundColor: '#8131E2',
+              }}
             />
             {/* <ContentExpandable title='Size & Fit' content="ssaasa" id='expanable' isFirst />
             <ProductGroup title='What Your Friends are Looking Now' products={[product, product, product, product]}></ProductGroup>

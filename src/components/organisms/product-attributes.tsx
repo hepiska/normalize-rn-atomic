@@ -3,6 +3,7 @@ import { Div, Font, PressAbbleDiv, ScrollDiv } from '@components/atoms/basic'
 import { colors } from '@utils/constants'
 import AttributeList from '@src/components/molecules/attribute-list'
 import { futuraTitleFont, helveticaNormalFont } from '../commont-styles'
+import { moveToFront } from '@utils/helpers'
 
 interface ProductAttributesPropsType {
   attributes: any
@@ -32,11 +33,13 @@ class ProductAttributes extends Component<ProductAttributesPropsType, any> {
       }
     })
   }
+
   render() {
     const { attributes } = this.props
+    const data = moveToFront(attributes, (e: any) => e.label === 'Color')
     return (
       <>
-        {attributes.map(attribute => (
+        {data.map(attribute => (
           <AttributeList
             key={attribute.id}
             onAttributesChanged={this.onSelectAttributes}
