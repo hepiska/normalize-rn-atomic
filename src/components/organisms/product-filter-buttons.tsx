@@ -5,7 +5,7 @@ import { Div, Font, ScrollDiv } from '@components/atoms/basic'
 import { Button, OutlineButton } from '@components/atoms/button'
 import { colors } from '@utils/constants'
 import Field from '@components/atoms/field'
-import { changeValue } from '@modules/product-filter/action'
+import { changeValue, openFilter } from '@modules/product-filter/action'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 
 const FilterButton = ({ title, onPress }) => {
@@ -70,9 +70,18 @@ const FilterTriger = (props: any) => {
             />
           }
         />
-        <FilterButton title="Brands" onPress={() => {}} />
-        <FilterButton title="Categories" onPress={() => {}} />
-        <FilterButton title="Prices" onPress={() => {}} />
+        <FilterButton
+          title="Brands"
+          onPress={() => props.openFilter('brand')}
+        />
+        <FilterButton
+          title="Categories"
+          onPress={() => props.openFilter('category')}
+        />
+        <FilterButton
+          title="Prices"
+          onPress={() => props.openFilter('price')}
+        />
       </ScrollDiv>
     </Div>
   )
@@ -82,6 +91,7 @@ const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
       changeValue,
+      openFilter,
     },
     dispatch,
   )

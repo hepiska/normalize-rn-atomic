@@ -1,5 +1,5 @@
 import React, { Component, useState, memo } from 'react'
-import { Dimensions, FlatList, Modal } from 'react-native'
+import { Dimensions, FlatList, Modal, StyleSheet } from 'react-native'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { Div, Font, TouchableWithoutFeedback } from '@components/atoms/basic'
@@ -7,24 +7,79 @@ import styled from 'styled-components/native'
 import { Button, OutlineButton } from '@components/atoms/button'
 import BottomSheet from 'reanimated-bottom-sheet'
 import { colors } from '@utils/constants'
-import Field from '@components/atoms/field'
-import Icon from 'react-native-vector-icons/FontAwesome5'
 import { changeValue } from '@modules/product-filter/action'
+import FilterPriceOrg from '@src/components/organisms/filter-price'
+import FilterCategoryOrg from '@src/components/organisms/filter-category'
+import FilterBrandOrg from '@src/components/organisms/filter-brand'
 
-const { height } = Dimensions.get('screen')
+import TabMenu from '@src/components/layouts/tab-menu'
 
-const FilterContent = () => {
+const { height, width } = Dimensions.get('screen')
+
+const styles = StyleSheet.create({
+  bottomSheetHeader: {
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+  },
+  tab: {
+    paddingHorizontal: 16,
+  },
+})
+
+const TabMenuData = [
+  {
+    name: 'category',
+    title: 'Category',
+    Component: <FilterCategoryOrg key="category" />,
+  },
+  {
+    name: 'brand',
+    title: 'Brand',
+    Component: <FilterBrandOrg key="brand" />,
+  },
+  {
+    name: 'price',
+    title: 'Price',
+    Component: <FilterPriceOrg key="price" />,
+  },
+]
+
+const mapStateToProps = (state: any) => ({ ...state.productFilter })
+
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      changeValue,
+    },
+    dispatch,
+  )
+
+const FilterContent = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(props => {
   console.log('===')
   return (
-    <Div _width="100%" _background="white" _height="100%">
-      <Font>sasa</Font>
+    <Div
+      _width="100%"
+      _background="white"
+      _height="100%"
+      _padding="0px 16px"
+      justify="flex-start">
+      <TabMenu
+        items={TabMenuData}
+        selectedItem={props.section}
+        onChangeTab={selectedItem => {
+          props.changeValue({ key: 'section', value: selectedItem.name })
+        }}
+      />
     </Div>
   )
-}
+})
 
 const Header = () => {
   return (
-    <Div _height="40px" radius="20 0 0 20" _background="white">
+    <Div _height="40px" _background="white" style={styles.bottomSheetHeader}>
       <Div
         _width="40px"
         _height="4px"
@@ -43,26 +98,16 @@ const FilterBottomSheet = props => {
         onCloseEnd={() => props.changeValue({ key: 'isOpen', value: false })}
         initialSnap={0}
         renderHeader={Header}
-        snapPoints={[450, 300, 0]}
-        renderContent={FilterContent}
+        snapPoints={[496, 316, 0]}
+        renderContent={() => <FilterContent />}
       />
       <TouchableWithoutFeedback
         onPress={() => props.changeValue({ key: 'isOpen', value: false })}>
-        <Div bg="rgba(0,0,0,0.7)" _height={height} />
+        <Div bg="rgba(0,0,0,0.7)" _height={height} _width="100%" />
       </TouchableWithoutFeedback>
     </Modal>
   )
 }
-
-const mapStateToProps = (state: any) => ({ ...state.productFilter })
-
-const mapDispatchToProps = dispatch =>
-  bindActionCreators(
-    {
-      changeValue,
-    },
-    dispatch,
-  )
 
 export default memo(
   connect(mapStateToProps, mapDispatchToProps)(FilterBottomSheet),

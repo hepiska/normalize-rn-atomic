@@ -7,6 +7,13 @@ export const futuraTitleFont = {
   color: colors.black100,
 }
 
+export const futuraBoldFont16 = {
+  size: 16,
+  type: 'Futura',
+  weight: 'bold',
+  color: colors.black100,
+}
+
 export const helveticaNormalFont = {
   size: 14,
   type: 'HelveticaNeue',
