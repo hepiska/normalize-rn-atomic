@@ -1,15 +1,17 @@
 import React from 'react'
+import { useNavigation } from '@react-navigation/native'
 import DeviceInfo from 'react-native-device-info'
-import { Dimensions } from 'react-native'
+import { Dimensions, Platform } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
-import { Div, PressAbbleDiv, Image } from '@components/atoms/basic'
+import { Div, PressAbbleDiv, Font } from '@components/atoms/basic'
+import { helveticaBlackBold } from '@components/commont-styles'
 import styled from 'styled-components/native'
 
 let hasNotch = DeviceInfo.hasNotch()
 
 const LeftDiv = styled(Div)`
   position: absolute;
-  padding: 42px 16px 12px;
+  padding: ${({ padd }) => padd || '42px 16px 12px'};
   flex: 1;
   left: 0px;
 `
@@ -23,16 +25,15 @@ const RightDiv = styled(Div)`
 
 const { width } = Dimensions.get('screen')
 
-interface NavbarBottomProps {
+interface NavbarTopProps {
   style?: any
 }
 
-const NavbarTop: React.SFC<NavbarBottomProps> = ({ style, children }) => {
+const NavbarTop: React.SFC<NavbarTopProps> = ({ style, children }) => {
   return (
     <Div
       bg="#FFF"
       _height={hasNotch ? '88px' : '55px'}
-      _position="absolute"
       zIndex="10"
       _width={width}
       _direction="row"
@@ -54,6 +55,42 @@ const NavbarTop: React.SFC<NavbarBottomProps> = ({ style, children }) => {
           <Icon name="shopping-cart" size={20} color="black" />
         </PressAbbleDiv>
       </RightDiv>
+    </Div>
+  )
+}
+
+interface NavbarTopProps {
+  title?: any
+  style?: any
+}
+
+export const NavbarTopModal: React.FC<NavbarTopProps> = ({ title, style }) => {
+  const navigation = useNavigation()
+  return (
+    <Div
+      bg="#FFF"
+      _height={hasNotch ? '88px' : '55px'}
+      zIndex="10"
+      _width={width}
+      _direction="row"
+      padd={Platform.OS === 'ios' ? '42px 16px 12px' : '0px 16px'}
+      justify="flex-start"
+      style={{
+        borderBottomColor: '#eee',
+        borderBottomWidth: 1,
+        ...style,
+      }}
+      align="center">
+      <LeftDiv zIndex="2" padd={Platform.OS === 'ios' ? null : '0px 16px'}>
+        <PressAbbleDiv onPress={() => navigation.goBack()}>
+          <Icon name="close" size={22} color="black" />
+        </PressAbbleDiv>
+      </LeftDiv>
+      <Div justify="center" _width="100%">
+        <Font {...helveticaBlackBold} size={18}>
+          {title}
+        </Font>
+      </Div>
     </Div>
   )
 }

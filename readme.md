@@ -15,3 +15,7 @@
 - [ ] push notif
 - [ ] facebook auth
 - [ ] google auth
+
+## FIGMA
+
+- [SHOP PAGE](https://www.figma.com/file/h924cbVT4t5sgR7vjFM8Dq/Shop?node-id=0%3A1)

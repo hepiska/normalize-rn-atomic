@@ -25,7 +25,8 @@ export const colors = {
   gray5: '#BDBDBD',
   gray6: '#E0E0E0',
   gray7: '#F2F2F2',
-  red: '#EB5757',
+  red1: '#EB5757',
+  red2: '#FF5252',
   orange: '#F2994A',
   yellow: '#F2C94C',
   green1: '#219653',
@@ -40,8 +41,15 @@ export const colors = {
   purple2: '#BB6BD9',
   white: '#FFFFFF',
   black50: '#EFEFEF',
+  black60: '#949494',
+  black70: '#737373',
+  black80: '#454545',
   black90: '#949494',
   black100: '#1A1A1A',
+}
+
+export const images = {
+  product: require('@assets/placeholder/placeholder2.jpg'),
 }
 
 export const globalDimention = {

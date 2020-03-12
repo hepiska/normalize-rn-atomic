@@ -7,6 +7,7 @@ interface ImageType {
 
 interface ImageAutoSchaleType {
   source: any
+  onError?: any
   width?: number
   height?: number
   style?: ViewStyle
@@ -14,6 +15,7 @@ interface ImageAutoSchaleType {
 
 const ImageAutoSchale = ({
   source,
+  onError,
   width,
   height,
   style,
@@ -42,7 +44,9 @@ const ImageAutoSchale = ({
         (newWidth, newHeight) => {
           calculateSize(newWidth, newHeight)
         },
-        () => {},
+        err => {
+          onError(err)
+        },
       )
     } else {
       const { width: newWidth, height: newHeight } = Image.resolveAssetSource(
@@ -51,7 +55,8 @@ const ImageAutoSchale = ({
       calculateSize(newWidth, newHeight)
     }
     return () => {}
-  }, [width])
+  }, [width, source])
+
   return size ? <Image source={source} style={{ ...size, ...style }} /> : null
 }
 
