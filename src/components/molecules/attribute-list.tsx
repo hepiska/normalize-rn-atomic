@@ -89,9 +89,12 @@ const AtributesList = ({
 
   const { values, label, id } = attribute
   return (
-    <Div width="100%" align="flex-start" padd="14px 0px">
+    <Div width="100%" align="flex-start" padd="0px 0px 16px">
       <Div _direction="row" align="flex-end" _margin="8px 0px">
-        <Font {...futuraTitleFont} _margin="0px 8px 0px 0px">
+        <Font
+          {...futuraTitleFont}
+          style={{ fontWeight: '500' }}
+          _margin="0px 8px 0px 0px">
           {label}
         </Font>
         <Font {...helveticaNormalFont}>{selectedAttribute.label}</Font>
