@@ -9,7 +9,7 @@ class HomePage extends React.Component<any, any> {
   render() {
     return (
       <View>
-        <HorizontalListLookBook />
+        {/* <HorizontalListLookBook /> */}
         <PostTopHorizontalList category_id="6" />
       </View>
     )

@@ -40,7 +40,7 @@ const NavbarTop: React.SFC<NavbarTopProps> = ({ style, children }) => {
       padd="42px 16px 12px"
       justify="flex-start"
       style={style}
-      align="center">
+      align="flex-start">
       <LeftDiv zIndex="2" _height={hasNotch ? 88 : 55}>
         <PressAbbleDiv>
           <Icon name="chevron-left" size={20} color="black" />
