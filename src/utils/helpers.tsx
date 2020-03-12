@@ -34,3 +34,5 @@ export const moveToFront = (a: any, fn: Function) => {
   })
   return matches.concat(non_matches)
 }
+
+export const checkHex = hex => /^#[0-9A-F]{6}$/i.test(hex)

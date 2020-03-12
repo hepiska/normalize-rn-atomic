@@ -6,13 +6,13 @@ import {
   StyleSheet,
   TextInput,
 } from 'react-native'
-import { Div, Font, ScrollDiv, PressAbbleDiv } from '@components/atoms/basic'
+import { Div } from '@components/atoms/basic'
 import { colors } from '@utils/constants'
 
 interface FieldType {
   title?: string
   placeholder?: string
-  onChangeText(): void
+  onChangeText(text: string): void
   value: string
   inputProps?: TextInput
   leftIcon?: ReactElement

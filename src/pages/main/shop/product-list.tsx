@@ -17,7 +17,7 @@ import FilterTriger from '@components/organisms/product-filter-buttons'
 import FilterBottomSheet from '@components/organisms/product-filter'
 const { width } = Dimensions.get('window')
 
-const { Value, interpolate, Extrapolate } = Animated
+const { Value, interpolate } = Animated
 
 const scrollPos = new Value(0)
 
