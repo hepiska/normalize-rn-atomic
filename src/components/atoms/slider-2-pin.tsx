@@ -16,7 +16,7 @@ import {
   TextInput,
 } from 'react-native'
 // import Animated from 'react-native-reanimated'
-import { Div, Font } from '@components/atoms/basic'
+import { Div } from '@components/atoms/basic'
 import { colors } from '@utils/constants'
 
 const { Value } = Animated
@@ -70,14 +70,26 @@ interface SliderPropsType {
 class Slider extends React.Component<SliderPropsType, any> {
   _xLeft = new Value(0)
   _xRight = new Value(0)
-  _rightPos = 0
-  _leftPos = this.props.numberOfPartisions
+  _leftPos = 0
   _boundary = {
     x: 0,
     width: 0,
   }
+  _rightPos = 300
+
   _lastPartision1Pos = 0
   _lastPartision2Pos = this.props.numberOfPartisions
+
+  _timer: any = null
+  componentDidMount() {
+    this._timer = setInterval(() => {
+      this._rightPos = this._boundary.width
+    }, 200)
+  }
+
+  componentWillUnmount() {
+    clearTimeout(this._timer)
+  }
 
   _panResponderPin2 = PanResponder.create({
     onStartShouldSetPanResponder: () => true,
@@ -86,36 +98,33 @@ class Slider extends React.Component<SliderPropsType, any> {
     onMoveShouldSetPanResponderCapture: () => true,
     onPanResponderGrant: () => {
       this.props.changeParentScroll(false)
-      // this._x.setValue(this._lastpost)
     },
     onPanResponderMove: (evt, gestureState) => {
-      const delta = this._boundary.width / this.props.numberOfPartisions
       const newgesture = { ...gestureState }
       const limitRight = this._boundary.x + this._boundary.width - pinWidth
+      const delta = this._boundary.width / this.props.numberOfPartisions
+
       this._rightPos = newgesture.moveX
+
       if (newgesture.moveX <= limitRight && this._rightPos > this._leftPos) {
         this._xRight.setValue(newgesture.moveX)
         if (newgesture.moveX > delta * this._lastPartision2Pos - pinWidth + 1) {
           this._lastPartision2Pos += 1
-          this.props.onMoveRight({
-            value: this._lastPartision2Pos / this.props.numberOfPartisions,
-            position: this._lastPartision2Pos,
-            partision: this.props.numberOfPartisions,
-          })
         } else if (
-          this._boundary.width - newgesture.moveX <
-          delta * this._lastPartision2Pos + 10
+          this._boundary.width - newgesture.moveX >
+          this._boundary.width - delta * this._lastPartision2Pos
         ) {
           this._lastPartision2Pos -= 1
-          this.props.onMoveRight({
-            value: this._lastPartision2Pos / this.props.numberOfPartisions,
-            position: this._lastPartision2Pos,
-            partision: this.props.numberOfPartisions,
-          })
         }
       }
     },
     onPanResponderRelease: () => {
+      this.props.onMoveRight({
+        value: this._lastPartision2Pos / this.props.numberOfPartisions,
+        position: this._lastPartision2Pos,
+        partision: this.props.numberOfPartisions,
+      })
+
       this.props.changeParentScroll(true)
     },
     onPanResponderTerminationRequest: () => true,
@@ -130,31 +139,26 @@ class Slider extends React.Component<SliderPropsType, any> {
       // this._x.setValue(this._lastpost)
     },
     onPanResponderMove: (evt, gestureState) => {
-      const delta = this._boundary.width / this.props.numberOfPartisions
       const newgesture = { ...gestureState }
       this._leftPos = newgesture.moveX
+      const delta = this._boundary.width / this.props.numberOfPartisions
 
       const limitRight = this._boundary.x + this._boundary.width - pinWidth
       if (newgesture.moveX <= limitRight && this._rightPos > this._leftPos) {
         this._xLeft.setValue(newgesture.moveX)
-        if (newgesture.moveX > delta * this._lastPartision1Pos - 10) {
+        if (newgesture.moveX > delta * this._lastPartision1Pos - 20) {
           this._lastPartision1Pos += 1
-          this.props.onMoveLeft({
-            value: this._lastPartision1Pos / this.props.numberOfPartisions,
-            position: this._lastPartision1Pos,
-            partision: this.props.numberOfPartisions,
-          })
-        } else if (newgesture.moveX < delta * this._lastPartision1Pos + 10) {
+        } else if (newgesture.moveX < delta * this._lastPartision1Pos + 20) {
           this._lastPartision1Pos -= 1
-          this.props.onMoveLeft({
-            value: this._lastPartision1Pos / this.props.numberOfPartisions,
-            position: this._lastPartision1Pos,
-            partision: this.props.numberOfPartisions,
-          })
         }
       }
     },
     onPanResponderRelease: () => {
+      this.props.onMoveLeft({
+        value: this._lastPartision1Pos / this.props.numberOfPartisions,
+        position: this._lastPartision1Pos,
+        partision: this.props.numberOfPartisions,
+      })
       this.props.changeParentScroll(true)
     },
     onPanResponderTerminationRequest: () => true,

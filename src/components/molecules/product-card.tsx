@@ -6,9 +6,8 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 import { Div, Font, PressAbbleDiv } from '@components/atoms/basic'
 import Img from '@components/atoms/image'
 import { OutlineButton } from '@components/atoms/button'
-import { formatRupiah } from '@utils/helpers'
+import { formatRupiah, checkHex } from '@utils/helpers'
 import { colors, images } from '@utils/constants'
-import { bool } from 'prop-types'
 
 const AbsDiv = styled(Div)`
   position: absolute;
@@ -161,7 +160,11 @@ const ProductCard = ({ product, style, brand }: ProductCard) => {
             selectedId={
               selectedAttribute ? selectedAttribute.attribute_value_id : null
             }
-            data={product.attributes.filter(x => x.label === 'Color')[0].values}
+            data={
+              product.attributes.filter(x => x.label === 'Color')[0]
+                ? product.attributes.filter(x => x.label === 'Color')[0].values
+                : []
+            }
             onChange={attributeChange}
           />
         )}
@@ -320,7 +323,7 @@ const ColorList = ({ selectedId, data, onChange }: ColorList) => {
               selectedId === item.id ? colors.black90 : colors.black50
             }`}
             radius="20px"
-            _background={item.label.toLowerCase()}
+            _background={checkHex(item.metadata) ? item.metadata : '#FFF'}
           />
         </PressAbbleDiv>
       ))}
