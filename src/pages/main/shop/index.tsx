@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { createStackNavigator } from '@react-navigation/stack'
 import initialPageConfig from '@pages/page-initial.config'
 import ShopPage from './shop'
@@ -12,7 +12,6 @@ function ShopStack() {
   return (
     <Stack.Navigator
       initialRouteName={initialPageConfig.shop}
-      mode="modal"
       screenOptions={{
         cardStyle: {
           backgroundColor: 'white',

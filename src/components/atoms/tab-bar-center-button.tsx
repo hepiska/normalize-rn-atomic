@@ -1,6 +1,6 @@
-import * as React from 'react';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import { Div, PressAbbleDiv, Image } from '@components/atoms/basic';
+import * as React from 'react'
+import Icon from 'react-native-vector-icons/FontAwesome'
+import { Div, PressAbbleDiv, Image } from '@components/atoms/basic'
 
 const AddButton = () => {
   return (
@@ -14,7 +14,7 @@ const AddButton = () => {
         <Icon name="plus-circle" size={32} />
       </PressAbbleDiv>
     </Div>
-  );
-};
+  )
+}
 
-export default AddButton;
+export default AddButton

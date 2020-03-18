@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Dimensions, FlatList, View } from 'react-native'
+import { Dimensions, FlatList, ImageBackground } from 'react-native'
 import Animated from 'react-native-reanimated'
 import { onScroll } from 'react-native-redash'
 import { Div, Font } from '@components/atoms/basic'
@@ -9,15 +9,23 @@ import {
 } from '@components/commont-styles'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
-import { ProductApi } from '@modules/product/action'
+import { productApi } from '@modules/product/action'
 import NavbarTop from '@components/molecules/navbar-top'
 import ProductCard from '@components/molecules/product-card'
 import { productListData } from '@hocs/data/product'
 import FilterTriger from '@components/organisms/product-filter-buttons'
 import FilterBottomSheet from '@components/organisms/product-filter'
+import { futuraTitleFont } from '@components/commont-styles'
+import {
+  addFilterData,
+  clearFilter,
+  setBrandFilter,
+  setFilter,
+  setSelectedCollection,
+} from '@modules/product-filter/action'
 const { width } = Dimensions.get('window')
 
-const { Value, interpolate } = Animated
+const { Value, interpolate, Extrapolate } = Animated
 
 const scrollPos = new Value(0)
 
@@ -29,7 +37,9 @@ const imageHeight = 205
 const height = interpolate(scrollPos, {
   inputRange: [-1, 0, imageHeight],
   outputRange: [imageHeight, imageHeight, 0],
+  extrapolate: Extrapolate.CLAMP,
 })
+
 class Productlist extends Component<any, any> {
   state = {
     skip: 0,
@@ -41,27 +51,59 @@ class Productlist extends Component<any, any> {
   lastskip = 0
 
   componentDidMount() {
-    this.freshfetch()
+    this._setInitialState()
   }
 
-  fetchData = skip => {
-    this.props.ProductApi({ limit: this.limit, offset: skip * this.limit })
+  componentWillUnmount() {
+    this.props.clearFilter()
+  }
+
+  _setInitialState() {
+    const {
+      collection,
+      setFilter,
+      setBrandFilter,
+      setSelectedCollection,
+    } = this.props
+    if (collection) {
+      setFilter({
+        category_ids: collection.categories,
+        prices: {
+          maximum_price: collection.max_price,
+          minimum_price: collection.min_price,
+        },
+      })
+      setSelectedCollection(collection.id)
+      setBrandFilter(collection.brands)
+      this._freshfetch()
+    } else {
+      this._freshfetch()
+    }
+  }
+
+  _fetchData = skip => {
+    const { collection } = this.props
+    const params: any = { limit: this.limit, offset: skip * this.limit }
+
+    if (collection) {
+      params.collection_ids = collection.id
+    }
+
+    this.props.productApi(params)
     // this.setState({ skip: this.state.skip + 1 })
   }
 
-  freshfetch = async () => {
+  _freshfetch = async () => {
     try {
-      await this.props.ProductApi({
-        limit: this.limit,
-        offset: 0,
-      })
+      this._fetchData(0)
       this.lastskip = 0
       this.skip = 0
     } catch (err) {
       console.log(err)
     }
   }
-  fetchMore = () => {
+
+  _fetchMore = () => {
     if (!this.props.loading) {
       const newskip = this.skip + 1
       if (newskip > this.lastskip) {
@@ -71,7 +113,7 @@ class Productlist extends Component<any, any> {
       if (this.props.loading) {
         return
       }
-      this.fetchData(this.skip)
+      this._fetchData(this.skip)
     }
   }
 
@@ -101,7 +143,7 @@ class Productlist extends Component<any, any> {
   }
   render() {
     const { headerName } = this.state
-    const { navigation, products, pagination } = this.props
+    const { navigation, products, pagination, collection } = this.props
     navigation.setOptions({
       header: () => {
         return (
@@ -118,20 +160,33 @@ class Productlist extends Component<any, any> {
     })
     return (
       <Div _width="100%" _flex="1">
-        {this.props.brand && (
+        {collection && (
           <Animated.View
             style={{
               height,
               width: '100%',
-              backgroundColor: 'black',
-            }}
-          />
+              overflow: 'hidden',
+            }}>
+            <ImageBackground
+              style={{
+                width: '100%',
+                height: imageHeight,
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+              source={{ uri: collection.landscape_image_url }}>
+              <Font {...futuraTitleFont} size="24">
+                {collection.title}
+              </Font>
+            </ImageBackground>
+          </Animated.View>
         )}
         <AnimatedFlatList
-          onEndReached={this.fetchMore}
+          onEndReached={this._fetchMore}
           onScroll={onScroll({ y: scrollPos })}
           contentContainerStyle={{
             justifyContent: 'flex-start',
+            // alignItems: 'center',
             marginHorizontal: 16,
           }}
           stickyHeaderIndices={[0]}
@@ -152,16 +207,36 @@ class Productlist extends Component<any, any> {
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
-      ProductApi,
+      productApi,
+      setBrandFilter,
+      setFilter,
+      addFilterData,
+      clearFilter,
+      setSelectedCollection,
     },
     dispatch,
   )
 
-const mapStateToProps = state => ({
-  products: state.products.order,
-  pagination: state.products.pagination,
-  loading: state.products.loading,
-  error: state.products.error,
-})
+const mapStateToProps = (state, { route }) => {
+  if (route.params.collectionId) {
+    const collection =
+      route.params.collectionId &&
+      state.collection.data[route.params.collectionId]
+    return {
+      collection:
+        route.params.collectionId &&
+        state.collection.data[route.params.collectionId],
+      products: state.products.order,
+      pagination: { total: collection.products.length },
+    }
+  }
+
+  return {
+    products: state.products.order,
+    pagination: state.products.pagination,
+    loading: state.products.loading,
+    error: state.products.error,
+  }
+}
 
 export default connect(mapStateToProps, mapDispatchToProps)(Productlist)

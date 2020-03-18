@@ -3,8 +3,11 @@ import { colors, shadows } from '@utils/constants'
 
 export const Div = styled.View`
   /* width:${({ _width }) => _width || 'null'}; */
-  padding:${({ padd, _padding }) => padd || _padding || '0px'};
-  margin: ${({ mar, _margin }) => mar || _margin || '0px'};
+  /* padding:${({ padd, _padding }) => padd || _padding || '0px'}; */
+  ${({ padd, _padding }) =>
+    _padding ? `padding:${_padding};` : padd ? `padding:${padd};` : ''}
+  ${({ _margin, mar }) =>
+    _margin ? `margin:${_margin};` : mar ? `margin:${mar};` : ''}
   display: ${({ disp, _display }) => disp || _display || 'flex'};
   overflow: ${({ overflow }) => overflow || 'hidden'};
   position: ${({ pos, _position }) => pos || _position || 'relative'};

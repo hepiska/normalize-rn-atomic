@@ -82,6 +82,7 @@ const ProductCard = ({ product, style, brand }: ProductCard) => {
   width = composeStyle.wrappermargin
     ? width - composeStyle.wrappermargin
     : width
+
   const isSaved = false
 
   const imageSource = product.image_url
@@ -104,7 +105,7 @@ const ProductCard = ({ product, style, brand }: ProductCard) => {
   }
 
   return (
-    <Div style={{ ...composeStyle, width }}>
+    <Div style={{ ...composeStyle, width }} key={'productcard' + product.id}>
       <Div _margin="0px 0px 8px" _width="100%">
         <AbsDiv zIndex="2">
           <Icon

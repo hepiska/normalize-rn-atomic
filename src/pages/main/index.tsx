@@ -1,19 +1,19 @@
-import * as React from 'react';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import { colors } from '@utils/constants';
-import CenterButton from '@components/atoms/tab-bar-center-button';
+import * as React from 'react'
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
+import Icon from 'react-native-vector-icons/FontAwesome'
+import { colors } from '@utils/constants'
+import CenterButton from '@components/atoms/tab-bar-center-button'
 import initialPageConfig from '@pages/page-initial.config'
-import ShopPage from './shop/index';
-import DiscoverPage from './discover/index';
-import NotificationPage from './notifications/index';
-import CreatePage from './create/index';
-import ProfilPage from './profile/index';
+import ShopPage from './shop/index'
+import DiscoverPage from './discover/index'
+import NotificationPage from './notifications/index'
+import CreatePage from './create/index'
+import ProfilPage from './profile/index'
 
-const Tab = createBottomTabNavigator();
+const Tab = createBottomTabNavigator()
 
 class MainPages extends React.Component<any, any> {
-  state = {};
+  state = {}
 
   render() {
     return (
@@ -72,8 +72,8 @@ class MainPages extends React.Component<any, any> {
           }}
         />
       </Tab.Navigator>
-    );
+    )
   }
 }
 
-export default MainPages;
+export default MainPages

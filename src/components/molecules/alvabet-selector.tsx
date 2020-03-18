@@ -3,14 +3,15 @@ import { Div, Font, ScrollDiv, PressAbbleDiv } from '@components/atoms/basic'
 
 const alvabet = '#abcdefghijklmnopqrstuvwxyz'
 
-const AlvabetSelectorMol = ({ style, onSelect }: any) => {
+const AlvabetSelectorMol = ({ style, onSelect, available }: any) => {
   const _onPress = al => () => {
     onSelect(al)
   }
+  const availSection = available.split('') || alvabet.split('')
   return (
-    <Div style={style} _height={32}>
+    <Div _height={32} style={style}>
       <ScrollDiv horizontal justify="flex-start">
-        {alvabet.split('').map(al => (
+        {availSection.map(al => (
           <PressAbbleDiv key={al} _padding="8px" onPress={_onPress(al)}>
             <Font>{al.toUpperCase()}</Font>
           </PressAbbleDiv>

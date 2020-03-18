@@ -30,7 +30,7 @@ export const setProductLoading = (data: any) => ({
   payload: data,
 })
 
-export const ProductApi = (params, url) => ({
+export const productApi = (params, url) => ({
   type: API,
   payload: {
     url: url || '/products',
