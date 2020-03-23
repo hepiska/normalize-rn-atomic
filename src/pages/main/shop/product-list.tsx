@@ -16,6 +16,7 @@ import { productListData } from '@hocs/data/product'
 import FilterTriger from '@components/organisms/product-filter-buttons'
 import FilterBottomSheet from '@components/organisms/product-filter'
 import { futuraTitleFont } from '@components/commont-styles'
+import { getCollectionBySlug } from '@modules/collection/action'
 import {
   addFilterData,
   clearFilter,
@@ -51,7 +52,11 @@ class Productlist extends Component<any, any> {
   lastskip = 0
 
   componentDidMount() {
-    this._setInitialState()
+    console.log('asa', this.props.collection.slug)
+    if (this.props.collection)
+      this.props.getCollectionBySlug(this.props.collection.slug)
+
+    if (!this.props.isCollectionLoading) this._setInitialState()
   }
 
   componentWillUnmount() {
@@ -211,6 +216,7 @@ const mapDispatchToProps = dispatch =>
       setBrandFilter,
       setFilter,
       addFilterData,
+      getCollectionBySlug,
       clearFilter,
       setSelectedCollection,
     },
@@ -227,6 +233,8 @@ const mapStateToProps = (state, { route }) => {
         route.params.collectionId &&
         state.collection.data[route.params.collectionId],
       products: state.products.order,
+      isCollectionLoading: state.collection.loading,
+      loading: state.products.loading,
       pagination: { total: collection.products.length },
     }
   }

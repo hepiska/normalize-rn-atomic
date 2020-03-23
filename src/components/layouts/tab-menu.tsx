@@ -55,7 +55,6 @@ const TabMenu = ({
     return () => clearTimeout(timer)
   }, [idx])
 
-  console.log('asa', isScrollEnabled)
   const _onChangePage = ({ nativeEvent }) => {
     const idx = Math.ceil(nativeEvent.contentOffset.x / width)
     onChangeTab(items[idx])

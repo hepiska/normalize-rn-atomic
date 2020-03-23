@@ -54,8 +54,10 @@ export const Image = styled.Image`
 `
 
 export const PressAbbleDiv = styled.TouchableOpacity`
-  padding:${({ padd, _padding }) => padd || _padding || '0px'};
-  margin: ${({ mar, _margin }) => mar || _margin || '0px'};
+    ${({ padd, _padding }) =>
+      _padding ? `padding:${_padding};` : padd ? `padding:${padd};` : ''}
+  ${({ _margin, mar }) =>
+    _margin ? `margin:${_margin};` : mar ? `margin:${mar};` : ''}
   display: ${({ disp, _display }) => disp || _display || 'flex'};
   position: ${({ pos, _position }) => pos || _position || 'relative'};
   ${({ flx, _flex }) => (flx ? `flex:${flx || _flex};` : '')}

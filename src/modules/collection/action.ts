@@ -31,6 +31,49 @@ export const setCollectionLoading = (data: any) => ({
   payload: data,
 })
 
+// export const getCollectionBySlug = () => (slug, params) => ({
+//   type: API,
+//   payload: {
+//     url: '/collections/' + slug,
+//     requestParams: { params },
+//     schema: schema.collection,
+//     startNetwork: () => {
+//       return setCollectionLoading(true)
+//     },
+
+//     success: data => {
+//       return [
+//         // setBrandData(data.entities.brand),
+//         // setCategoryData(data.entities.category),
+//         // setProductData(data.entities.product),
+//         // setCollectionData(data.entities.collection),
+//         // setCollectionLoading(false),
+//       ]
+//     },
+//   },
+// })
+
+export const getCollectionBySlug = slug => ({
+  type: API,
+  payload: {
+    url: '/collections/' + slug,
+    schema: schema.collection,
+    startNetwork: () => {
+      return setCollectionLoading(true)
+    },
+
+    success: data => {
+      return [
+        setBrandData(data.entities.brand),
+        setCategoryData(data.entities.category),
+        setProductData(data.entities.product),
+        setCollectionData(data.entities.collection),
+        setCollectionLoading(false),
+      ]
+    },
+  },
+})
+
 export const collectionApi = (params, url) => ({
   type: API,
   payload: {

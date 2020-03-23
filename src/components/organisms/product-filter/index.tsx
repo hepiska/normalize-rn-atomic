@@ -4,13 +4,14 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { Div, Font, TouchableWithoutFeedback } from '@components/atoms/basic'
 import styled from 'styled-components/native'
-import { Button, OutlineButton } from '@components/atoms/button'
+import { Button, OutlineButton, GradientButton } from '@components/atoms/button'
 import BottomSheet from 'reanimated-bottom-sheet'
 import { colors } from '@utils/constants'
 import { changeValue } from '@modules/product-filter/action'
 import FilterPriceOrg from '@src/components/organisms/filter-price'
 import FilterCategoryOrg from '@src/components/organisms/filter-category'
 import FilterBrandOrg from '@src/components/organisms/filter-brand'
+import ProductFilterAction from '@components/molecules/product-filter-action'
 
 import TabMenu from '@src/components/layouts/tab-menu'
 
@@ -21,6 +22,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
   },
+
   tab: {
     paddingHorizontal: 16,
   },
@@ -58,13 +60,12 @@ const FilterContent = connect(
   mapStateToProps,
   mapDispatchToProps,
 )(props => {
-  console.log('===')
   return (
     <Div
       _width="100%"
       _background="white"
       _height="100%"
-      _padding="0px 16px"
+      _padding="0px 16px 80px"
       justify="flex-start">
       <TabMenu
         items={TabMenuData}
@@ -92,15 +93,18 @@ const Header = () => {
 
 const FilterBottomSheet = props => {
   const { isOpen } = props
+  const _snapPoint = [height * 0.6, height * 0.5, 0]
   return (
     <Modal transparent visible={isOpen}>
       <BottomSheet
         onCloseEnd={() => props.changeValue({ key: 'isOpen', value: false })}
         initialSnap={0}
         renderHeader={Header}
-        snapPoints={[496, 316, 0]}
+        snapPoints={_snapPoint}
         renderContent={() => <FilterContent />}
       />
+      <ProductFilterAction />
+
       <TouchableWithoutFeedback
         onPress={() => props.changeValue({ key: 'isOpen', value: false })}>
         <Div bg="rgba(0,0,0,0.7)" _height={height} _width="100%" />

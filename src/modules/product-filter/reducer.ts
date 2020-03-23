@@ -83,7 +83,12 @@ const productFilterReducer: Reducer<any> = (
       return { ...newState }
 
     case productFilterType.CLEAR_FILTER:
-      return initialState
+      newState.selected = {
+        ...initialState.selected,
+        prices: newState.selected.prices,
+        collection_ids: newState.selected.collection_ids,
+      }
+      return newState
 
     default:
       return newState

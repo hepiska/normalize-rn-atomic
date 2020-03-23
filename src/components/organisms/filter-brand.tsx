@@ -115,7 +115,9 @@ const FilterBrandOrg = (props: any) => {
       <SectionList
         style={styles.sectionContainer}
         renderSectionHeader={({ section: { title } }) => (
-          <Font _padding="16px 0px 0px">{title}</Font>
+          <Div _width="100%" bg="white" padd="8px 0px" align="flex-start">
+            <Font _padding="16px 0px 0px">{title}</Font>
+          </Div>
         )}
         sections={brands}
         renderItem={_renderItem}
