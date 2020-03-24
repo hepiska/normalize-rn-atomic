@@ -36,6 +36,7 @@ export const colors = {
   blue2: '#2D9CDB',
   blue3: '#56CCF2',
   blue50: '#455BE3',
+  blue60: '#114CD4',
   background: '#FFF',
   purple1: '#9B51E0',
   purple2: '#BB6BD9',
