@@ -1,12 +1,12 @@
-import React from 'react'
 import { connect } from 'react-redux'
 
 const productListMap = (state, ownProps) => {
   const { productId } = ownProps
   const product = state.products.data[productId]
+  const variants = product.variants || []
   const primary = {
     ...product,
-    ...product.variants.find(_var => _var.is_primary),
+    ...variants.find(_var => _var.is_primary),
   }
   return {
     product: primary,

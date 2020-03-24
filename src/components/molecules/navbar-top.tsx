@@ -30,6 +30,8 @@ interface NavbarTopProps {
 }
 
 const NavbarTop: React.SFC<NavbarTopProps> = ({ style, children }) => {
+  const navigation = useNavigation()
+
   return (
     <Div
       bg="#FFF"
@@ -42,7 +44,7 @@ const NavbarTop: React.SFC<NavbarTopProps> = ({ style, children }) => {
       style={style}
       align="flex-start">
       <LeftDiv zIndex="2" _height={hasNotch ? 88 : 55}>
-        <PressAbbleDiv>
+        <PressAbbleDiv onPress={navigation.goBack}>
           <Icon name="chevron-left" size={20} color="black" />
         </PressAbbleDiv>
       </LeftDiv>

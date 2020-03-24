@@ -9,7 +9,6 @@ import { changeValue } from '@modules/product-filter/action'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 
 const BrandFilterList = () => {
-  console.log('=======')
   return (
     <Div>
       <Font>asa</Font>

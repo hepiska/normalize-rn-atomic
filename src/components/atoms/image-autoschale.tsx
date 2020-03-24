@@ -30,7 +30,13 @@ const ImageAutoSchale = ({
       return setSize({ width: newWidth, height: newHeight })
     }
     if (!height) {
-      return setSize({ width, height: width * (newHeight / newWidth) })
+      const height = Number(newHeight)
+        ? Math.floor(width * (newHeight / newWidth))
+        : width
+      return setSize({
+        width,
+        height,
+      })
     }
     if (!width) {
       return setSize({ width: height * (newWidth / newHeight), height })
@@ -56,7 +62,6 @@ const ImageAutoSchale = ({
     }
     return () => {}
   }, [width, source])
-
   return size ? <Image source={source} style={{ ...size, ...style }} /> : null
 }
 

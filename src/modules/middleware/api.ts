@@ -26,7 +26,10 @@ const api = ({ dispatch, getState }) => next => action => {
   return request
     .request({ url, ...requestParams })
     .then(res => {
-      const normalizeData = normalize(res.data.data, schema)
+      let normalizeData = res.data.data
+      if (schema && normalizeData) {
+        normalizeData = normalize(res.data.data, schema)
+      }
 
       if (success) {
         dispatch(success(normalizeData, res.data))

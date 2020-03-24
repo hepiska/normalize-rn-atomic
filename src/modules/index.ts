@@ -9,6 +9,7 @@ import brandReducer from './brand/reducer'
 import categoryReducer from './brand/reducer'
 import productFilterReducer from './product-filter/reducer'
 import uiInteracrionReducer from './ui-interaction/reducer'
+import collectionReducer from './collection/reducer'
 
 const combinedReducer: Reducer<any> = combineReducers({
   router: routerReducer,
@@ -21,6 +22,7 @@ const combinedReducer: Reducer<any> = combineReducers({
   uiInteraction: uiInteracrionReducer,
   productFilter: productFilterReducer,
   post: postReducer,
+  collection: collectionReducer,
 })
 
 export default combinedReducer

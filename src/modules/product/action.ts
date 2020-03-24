@@ -30,7 +30,7 @@ export const setProductLoading = (data: any) => ({
   payload: data,
 })
 
-export const ProductApi = (params, url) => ({
+export const productApi = (params, url) => ({
   type: API,
   payload: {
     url: url || '/products',
@@ -41,13 +41,16 @@ export const ProductApi = (params, url) => ({
     },
 
     success: (data, { pagination }) => {
-      return [
-        setBrandData(data.entities.brand),
-        setCategoryData(data.entities.category),
-        setProductData(data.entities.product),
-        setProductOrder({ order: data.result, pagination }),
-        setProductLoading(false),
-      ]
+      console.log('====', data)
+      return data
+        ? [
+            setBrandData(data.entities.brand),
+            setCategoryData(data.entities.category),
+            setProductData(data.entities.product),
+            setProductOrder({ order: data.result, pagination }),
+            setProductLoading(false),
+          ]
+        : [setProductOrder({ order: [], pagination }), setProductLoading(false)]
     },
   },
 })
