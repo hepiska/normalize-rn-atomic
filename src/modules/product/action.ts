@@ -41,7 +41,6 @@ export const productApi = (params, url) => ({
     },
 
     success: (data, { pagination }) => {
-      console.log('====', data)
       return data
         ? [
             setBrandData(data.entities.brand),
