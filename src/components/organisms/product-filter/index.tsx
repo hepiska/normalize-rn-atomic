@@ -74,6 +74,7 @@ const FilterContent = connect(
           props.changeValue({ key: 'section', value: selectedItem.name })
         }}
       />
+      <ProductFilterAction />
     </Div>
   )
 })
@@ -93,7 +94,7 @@ const Header = () => {
 
 const FilterBottomSheet = props => {
   const { isOpen } = props
-  const _snapPoint = [height * 0.6, height * 0.5, 0]
+  const _snapPoint = [height * 0.8, height * 0.5, 0]
   return (
     <Modal transparent visible={isOpen}>
       <BottomSheet
@@ -103,8 +104,6 @@ const FilterBottomSheet = props => {
         snapPoints={_snapPoint}
         renderContent={() => <FilterContent />}
       />
-      <ProductFilterAction />
-
       <TouchableWithoutFeedback
         onPress={() => props.changeValue({ key: 'isOpen', value: false })}>
         <Div bg="rgba(0,0,0,0.7)" _height={height} _width="100%" />

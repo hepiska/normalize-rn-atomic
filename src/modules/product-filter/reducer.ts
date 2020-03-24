@@ -17,6 +17,13 @@ const initialState = {
       minimum_price: 0,
     },
   },
+  applied: {
+    collection_ids: '',
+    prices: {
+      maximum_price: 10000000,
+      minimum_price: 0,
+    },
+  },
 }
 
 const productFilterReducer: Reducer<any> = (
@@ -88,8 +95,12 @@ const productFilterReducer: Reducer<any> = (
         prices: newState.selected.prices,
         collection_ids: newState.selected.collection_ids,
       }
+      newState.applied = newState.selected
       return newState
 
+    case productFilterType.SET_APPLIED_FILTER:
+      newState.applied = newState.selected
+      return newState
     default:
       return newState
   }

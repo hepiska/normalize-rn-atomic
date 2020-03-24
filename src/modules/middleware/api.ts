@@ -27,7 +27,7 @@ const api = ({ dispatch, getState }) => next => action => {
     .request({ url, ...requestParams })
     .then(res => {
       let normalizeData = res.data.data
-      if (schema) {
+      if (schema && normalizeData) {
         normalizeData = normalize(res.data.data, schema)
       }
 

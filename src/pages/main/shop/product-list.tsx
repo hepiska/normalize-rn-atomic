@@ -17,6 +17,7 @@ import FilterTriger from '@components/organisms/product-filter-buttons'
 import FilterBottomSheet from '@components/organisms/product-filter'
 import { futuraTitleFont } from '@components/commont-styles'
 import { getCollectionBySlug } from '@modules/collection/action'
+import { deepClone } from '@utils/helpers'
 import {
   addFilterData,
   clearFilter,
@@ -52,11 +53,24 @@ class Productlist extends Component<any, any> {
   lastskip = 0
 
   componentDidMount() {
-    console.log('asa', this.props.collection.slug)
     if (this.props.collection)
       this.props.getCollectionBySlug(this.props.collection.slug)
+  }
 
-    if (!this.props.isCollectionLoading) this._setInitialState()
+  componentDidUpdate(prevProps) {
+    if (
+      this.props.collection &&
+      this.props.isCollectionLoading !== prevProps.isCollectionLoading
+    ) {
+      if (!this.props.isCollectionLoading) this._setInitialState()
+    }
+
+    if (
+      JSON.stringify(this.props.appliedFilters) !==
+      JSON.stringify(prevProps.appliedFilters)
+    ) {
+      if (!this.props.isCollectionLoading) this._setInitialState()
+    }
   }
 
   componentWillUnmount() {
@@ -87,8 +101,12 @@ class Productlist extends Component<any, any> {
   }
 
   _fetchData = skip => {
-    const { collection } = this.props
-    const params: any = { limit: this.limit, offset: skip * this.limit }
+    const { collection, appliedFilters } = this.props
+    const params: any = {
+      limit: this.limit,
+      offset: skip * this.limit,
+      ...appliedFilters,
+    }
 
     if (collection) {
       params.collection_ids = collection.id
@@ -190,8 +208,8 @@ class Productlist extends Component<any, any> {
           onEndReached={this._fetchMore}
           onScroll={onScroll({ y: scrollPos })}
           contentContainerStyle={{
-            justifyContent: 'flex-start',
-            // alignItems: 'center',
+            // justifyContent: 'flex-start',
+            // alignItems: 'flex-start',
             marginHorizontal: 16,
           }}
           stickyHeaderIndices={[0]}
@@ -224,6 +242,9 @@ const mapDispatchToProps = dispatch =>
   )
 
 const mapStateToProps = (state, { route }) => {
+  let appliedFilters = deepClone(state.productFilter.applied)
+  appliedFilters = { ...appliedFilters, ...appliedFilters.prices }
+  delete appliedFilters.prices
   if (route.params.collectionId) {
     const collection =
       route.params.collectionId &&
@@ -234,6 +255,7 @@ const mapStateToProps = (state, { route }) => {
         state.collection.data[route.params.collectionId],
       products: state.products.order,
       isCollectionLoading: state.collection.loading,
+      appliedFilters,
       loading: state.products.loading,
       pagination: { total: collection.products.length },
     }
@@ -242,6 +264,7 @@ const mapStateToProps = (state, { route }) => {
   return {
     products: state.products.order,
     pagination: state.products.pagination,
+    appliedFilters,
     loading: state.products.loading,
     error: state.products.error,
   }

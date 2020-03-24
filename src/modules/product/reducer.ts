@@ -3,6 +3,7 @@ import Immutable from 'seamless-immutable'
 import { ErrorType } from '@utils/globalInterface'
 import { persistReducer } from 'redux-persist'
 import { productActionType } from './action'
+import { deepClone } from '@utils/helpers'
 import AsyncStorage from '@react-native-community/async-storage'
 
 interface ProductState {
@@ -22,7 +23,7 @@ const initialState: any = {
 }
 
 const productReducer: Reducer<ProductState> = (
-  state: ProductState = initialState,
+  state: ProductState = deepClone(initialState),
   action: AnyAction,
 ) => {
   const newState = { ...state }

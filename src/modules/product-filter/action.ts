@@ -14,6 +14,7 @@ export const productFilterType = {
   CLEAR_FILTER: 'product-filter/CLEAR_FILTER',
   SET_BRAND_FILTER: 'product-filter/SET_BRAND_FILTER',
   SET_COUNTED_PRODUCT: 'product-filter/SET_COUNTED_PRODUCT',
+  SET_APPLIED_FILTER: 'product-filter/SET_APPLIED_FILTER',
 }
 
 interface PriceFilter {
@@ -51,7 +52,6 @@ export const fetchCountProduct = params => {
     ...globState.productFilter.selected.prices,
     ...params,
   }
-  console.log(_params, params)
   delete _params.prices
   return {
     type: API,
@@ -76,6 +76,15 @@ export const setSelectedPrice = (data: { type: string; value: number }) => {
     type: productFilterType.SET_SELECTED_PRICE,
     payload: data,
   }
+}
+
+export const applyFilter = () => {
+  return [
+    {
+      type: productFilterType.SET_APPLIED_FILTER,
+    },
+    changeValue({ key: 'isOpen', value: false }),
+  ]
 }
 
 export const changeSelectedBrand = (data: number) => {

@@ -7,7 +7,7 @@ import styled from 'styled-components/native'
 import { Button, OutlineButton, GradientButton } from '@components/atoms/button'
 import BottomSheet from 'reanimated-bottom-sheet'
 import { colors } from '@utils/constants'
-import { clearFilter } from '@modules/product-filter/action'
+import { clearFilter, applyFilter } from '@modules/product-filter/action'
 import { formatCur } from '@utils/helpers'
 import { changeValue } from '@modules/product-filter/action'
 import FilterPriceOrg from '@src/components/organisms/filter-price'
@@ -42,7 +42,11 @@ const styles = StyleSheet.create({
   },
 })
 
-const ProductFilterAction = ({ countedProducts, clearFilter }: any) => {
+const ProductFilterAction = ({
+  countedProducts,
+  clearFilter,
+  applyFilter,
+}: any) => {
   return (
     <Div
       _height="72px"
@@ -71,14 +75,14 @@ const ProductFilterAction = ({ countedProducts, clearFilter }: any) => {
         style={{ ...styles.largeButton, ...styles.buttonStyle }}
         colors={['#3067E4', '#8131E2']}
         fontStyle={styles.whiteFont}
-        onPress={() => {}}
+        onPress={applyFilter}
       />
     </Div>
   )
 }
 
 const mapDispatchToProps = dispatch =>
-  bindActionCreators({ clearFilter }, dispatch)
+  bindActionCreators({ clearFilter, applyFilter }, dispatch)
 
 const mapStateToProps = state => ({
   countedProducts: state.productFilter.countedProducts,
