@@ -111,11 +111,13 @@ const productFilterReducer: Reducer<any> = (
         prices: newState.selected.prices,
         collection_ids: newState.selected.collection_ids,
       }
+      newState.search = ''
       newState.applied = newState.selected
       return newState
 
     case productFilterType.SET_APPLIED_FILTER:
       newState.applied = newState.selected
+      newState.search = ''
       return newState
     default:
       return newState

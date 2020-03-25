@@ -32,7 +32,11 @@ const FilterButton = ({ title, onPress }) => {
   )
 }
 const FilterTriger = (props: any) => {
-  const [searchKey, setSearchKey] = useState('')
+  const [searchKey, setSearchKey] = useState(props.search)
+
+  useEffect(() => {
+    setSearchKey(props.search)
+  }, [props.search])
 
   useEffect(() => {
     timer = setTimeout(() => {

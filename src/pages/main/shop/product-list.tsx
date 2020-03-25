@@ -110,8 +110,11 @@ class Productlist extends Component<any, any> {
     const params: any = {
       limit: this.limit,
       offset: skip * this.limit,
-      search,
       ...appliedFilters,
+    }
+
+    if (search) {
+      params.name = search
     }
 
     if (collection) {
