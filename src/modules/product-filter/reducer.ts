@@ -8,6 +8,7 @@ const initialState = {
     isLoading: false,
     count: 0,
   },
+  search: '',
   section: 'brand',
   data: {},
   selected: {
@@ -37,7 +38,9 @@ const productFilterReducer: Reducer<any> = (
     case productFilterType.CHANGE_VALUE:
       newState[action.payload.key] = action.payload.value
       return newState
-
+    case productFilterType.CHANGE_SEARCH:
+      newState.search = action.payload
+      return newState
     case productFilterType.SET_SELECTED_PRICE:
       newState.selected.prices[action.payload.type] = action.payload.value
       return newState
@@ -73,6 +76,19 @@ const productFilterReducer: Reducer<any> = (
       if (!selected.collection_ids.includes(action.payload)) {
         selected.collection_ids += action.payload + ','
       }
+
+      return newState
+    case productFilterType.CHANGE_SELECTED_CATEGORY:
+      if (!selected.category_ids) {
+        selected.category_ids = ',' + action.payload
+      } else if (selected.category_ids.includes(action.payload)) {
+        const regex = new RegExp(`(,${action.payload})|(${action.payload})`)
+        selected.category_ids = selected.category_ids.replace(regex, '')
+      } else {
+        selected.category_ids += ',' + action.payload
+      }
+      selected.category_ids = selected.category_ids.replace(/(^,)|(,$)/g, '')
+      newState.selected = selected
 
       return newState
 

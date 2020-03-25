@@ -16,6 +16,7 @@ import { productListData } from '@hocs/data/product'
 import FilterTriger from '@components/organisms/product-filter-buttons'
 import FilterBottomSheet from '@components/organisms/product-filter'
 import { futuraTitleFont } from '@components/commont-styles'
+import InviniteLoader from '@components/atoms/loaders/invinite'
 import { getCollectionBySlug } from '@modules/collection/action'
 import { deepClone } from '@utils/helpers'
 import {
@@ -53,8 +54,10 @@ class Productlist extends Component<any, any> {
   lastskip = 0
 
   componentDidMount() {
+    this.props.getCollectionBySlug('rafie-botakksszzzszszszz')
+
     if (this.props.collection)
-      this.props.getCollectionBySlug(this.props.collection.slug)
+      this.props.getCollectionBySlug('rafie-botakksszzzszszszz')
   }
 
   componentDidUpdate(prevProps) {
@@ -65,11 +68,13 @@ class Productlist extends Component<any, any> {
       if (!this.props.isCollectionLoading) this._setInitialState()
     }
 
+    if (this.props.search !== prevProps.search) this._freshfetch()
+
     if (
       JSON.stringify(this.props.appliedFilters) !==
       JSON.stringify(prevProps.appliedFilters)
     ) {
-      if (!this.props.isCollectionLoading) this._setInitialState()
+      if (!this.props.isCollectionLoading) this._freshfetch()
     }
   }
 
@@ -86,7 +91,7 @@ class Productlist extends Component<any, any> {
     } = this.props
     if (collection) {
       setFilter({
-        category_ids: collection.categories,
+        categories: collection.categories,
         prices: {
           maximum_price: collection.max_price,
           minimum_price: collection.min_price,
@@ -101,10 +106,11 @@ class Productlist extends Component<any, any> {
   }
 
   _fetchData = skip => {
-    const { collection, appliedFilters } = this.props
+    const { collection, appliedFilters, search } = this.props
     const params: any = {
       limit: this.limit,
       offset: skip * this.limit,
+      search,
       ...appliedFilters,
     }
 
@@ -113,7 +119,6 @@ class Productlist extends Component<any, any> {
     }
 
     this.props.productApi(params)
-    // this.setState({ skip: this.state.skip + 1 })
   }
 
   _freshfetch = async () => {
@@ -159,7 +164,7 @@ class Productlist extends Component<any, any> {
     )
   }
 
-  _keyExtractor = item => item
+  _keyExtractor = (item, index) => '' + item + index
 
   static navigationOptions = {
     transparent: false,
@@ -182,7 +187,7 @@ class Productlist extends Component<any, any> {
       },
     })
     return (
-      <Div _width="100%" _flex="1">
+      <Div _width="100%" _flex="1" justify="flex-start">
         {collection && (
           <Animated.View
             style={{
@@ -204,23 +209,38 @@ class Productlist extends Component<any, any> {
             </ImageBackground>
           </Animated.View>
         )}
-        <AnimatedFlatList
-          onEndReached={this._fetchMore}
-          onScroll={onScroll({ y: scrollPos })}
-          contentContainerStyle={{
-            // justifyContent: 'flex-start',
-            // alignItems: 'flex-start',
-            marginHorizontal: 16,
-          }}
-          stickyHeaderIndices={[0]}
-          onEndReachedThreshold={0.97}
-          ListHeaderComponent={this._renderHeader}
-          style={{ width: '100%' }}
-          data={products}
-          numColumns={2}
-          renderItem={this._renderItem}
-          keyExtractor={this._keyExtractor}
-        />
+        {this.props.isCollectionLoading ? (
+          <InviniteLoader />
+        ) : (
+          <AnimatedFlatList
+            onEndReached={this._fetchMore}
+            onScroll={onScroll({ y: scrollPos })}
+            contentContainerStyle={{
+              // justifyContent: 'flex-start',
+              // alignItems: 'flex-start',
+              marginHorizontal: 16,
+            }}
+            stickyHeaderIndices={[0]}
+            onEndReachedThreshold={0.97}
+            ListHeaderComponent={this._renderHeader}
+            style={{ width: '100%' }}
+            data={products}
+            numColumns={2}
+            renderItem={this._renderItem}
+            keyExtractor={this._keyExtractor}
+          />
+        )}
+        {this.props.loading && (
+          <Div
+            style={{ position: 'absolute', bottom: 0, left: 0 }}
+            justify="center"
+            _width="100%"
+            _background="rgba(0,0,0,0.3)"
+            _height="64px">
+            <InviniteLoader />
+          </Div>
+        )}
+
         <FilterBottomSheet />
       </Div>
     )
@@ -254,10 +274,11 @@ const mapStateToProps = (state, { route }) => {
         route.params.collectionId &&
         state.collection.data[route.params.collectionId],
       products: state.products.order,
+      search: state.productFilter.search,
       isCollectionLoading: state.collection.loading,
       appliedFilters,
       loading: state.products.loading,
-      pagination: { total: collection.products.length },
+      pagination: { total: collection && collection.products.length },
     }
   }
 

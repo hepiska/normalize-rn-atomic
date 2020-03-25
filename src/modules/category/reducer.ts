@@ -3,6 +3,7 @@ import Immutable from 'seamless-immutable'
 import { ErrorType } from '@utils/globalInterface'
 import { persistReducer } from 'redux-persist'
 import { categoryActionType } from './action'
+import { deepClone } from '@utils/helpers'
 import AsyncStorage from '@react-native-community/async-storage'
 
 interface PostState {
@@ -20,7 +21,7 @@ const initialState: any = {
 }
 
 const categoryReducer: Reducer<PostState> = (
-  state: PostState = initialState,
+  state: PostState = deepClone(initialState),
   action: AnyAction,
 ) => {
   const newState = { ...state }
@@ -50,4 +51,6 @@ const categoryersistConfig = {
   storage: AsyncStorage,
 }
 
-export default persistReducer(categoryersistConfig, categoryReducer)
+// export default persistReducer(categoryersistConfig, categoryReducer)
+
+export default categoryReducer

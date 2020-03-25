@@ -203,7 +203,8 @@ const ProductCardVertical = ({
   onAttributeChange,
 }) => {
   const productName = product.name.replace(/\n|\r/g, '')
-  const colorAttributes = product.attributes.find(x => x.label === 'Color')
+  const colorAttributes =
+    product.attributes && product.attributes.find(x => x.label === 'Color')
   return (
     <Div style={{ ...composeStyle, width }}>
       <Div _margin="0px 0px 8px" _width="100%">

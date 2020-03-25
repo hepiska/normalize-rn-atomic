@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, StyleSheetProperties } from 'react-native'
+import { StyleSheet, ViewStyle, TextStyle } from 'react-native'
 import { colors } from '@utils/constants'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import { Div, Font, PressAbbleDiv } from '@components/atoms/basic'
@@ -14,21 +14,49 @@ const styles = StyleSheet.create({
   },
 })
 
-interface brandFilterItemType {
-  brand: any
-  onPress?: (brand: any) => void
-  style?: StyleSheetProperties
-  isSelected?: boolean
+export enum SelectorShapeType {
+  circle = 'cirle',
+  square = 'square',
 }
 
-class FilterBrandItem extends React.PureComponent<brandFilterItemType, any> {
+export enum sizeType {
+  circle = 'small',
+  square = 'medium',
+}
+
+interface SelectAbleItemType {
+  item: any
+  fontStyle?: TextStyle
+  onPress?: (brand: any) => void
+  style?: ViewStyle
+  isSelected?: boolean
+  selectorShape?: SelectorShapeType
+}
+
+class SelectAbleItem extends React.PureComponent<SelectAbleItemType, any> {
   _onPress = () => {
-    const { brand, onPress } = this.props
-    onPress(brand)
+    const { item, onPress } = this.props
+    onPress(item)
+  }
+
+  getRadius = shape => {
+    switch (shape) {
+      case 'cirle':
+        return '8px'
+
+      default:
+        return '4px'
+    }
   }
 
   render() {
-    const { style, brand, isSelected } = this.props
+    const {
+      style,
+      item,
+      isSelected,
+      selectorShape = 'square',
+      fontStyle,
+    } = this.props
     const composeStyle = { ...styles.container, ...style }
 
     return (
@@ -38,11 +66,11 @@ class FilterBrandItem extends React.PureComponent<brandFilterItemType, any> {
         onPress={this._onPress}
         justify="space-between"
         _direction="row">
-        <Font>{brand.name}</Font>
+        <Font style={fontStyle}>{item && item.name}</Font>
         <Div
           _background={isSelected ? colors.black100 : 'transparent'}
           _border={'1px solid ' + colors.black70}
-          radius="4px"
+          radius={this.getRadius(selectorShape)}
           _width="16px"
           _height="16px">
           {isSelected && <Icon name="check" color="white" />}
@@ -52,25 +80,4 @@ class FilterBrandItem extends React.PureComponent<brandFilterItemType, any> {
   }
 }
 
-// const FilterBrandItem = ({ style, brand, isSelected }: any) => {
-//   const composeStyle = { ...styles.container, ...style }
-//   return (
-//     <PressAbbleDiv
-//       style={composeStyle}
-//       padd="16px 0px"
-//       justify="space-between"
-//       _direction="row">
-//       <Font>{brand.name}</Font>
-//       <Div
-//         _background={isSelected ? colors.black100 : 'transparent'}
-//         _border={'1px solid ' + colors.black70}
-//         radius="4px"
-//         _width="16px"
-//         _height="16px">
-//         {isSelected && <Icon name="check" color="white" />}
-//       </Div>
-//     </PressAbbleDiv>
-//   )
-// }
-
-export default FilterBrandItem
+export default SelectAbleItem
