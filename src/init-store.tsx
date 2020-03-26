@@ -25,6 +25,7 @@ const middleware = [
 ]
 
 export let presist = null
+export let store = null
 
 let composedEnhancers
 if (__DEV__) {
@@ -48,10 +49,11 @@ class InitStore extends React.Component<any, any> {
   }
 
   async componentDidMount() {
-    const store = createStore(rootReducer, initialState, composedEnhancers)
+    const _store = createStore(rootReducer, initialState, composedEnhancers)
+    store = _store
     const persistor = persistStore(store)
     presist = persistor
-    this.setState({ store, persistor, isLoading: false })
+    this.setState({ store: _store, persistor, isLoading: false })
   }
 
   render() {

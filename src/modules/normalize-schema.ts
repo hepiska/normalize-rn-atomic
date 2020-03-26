@@ -15,6 +15,12 @@ export const product = new schema.Entity('product', {
   category: category,
 })
 
+export const collection = new schema.Entity('collection', {
+  brands: [brand],
+  products: [product],
+  categories: [category],
+})
+
 export const post = new schema.Entity('post', {
   comments: [comment],
   user: user,

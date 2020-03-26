@@ -2,11 +2,10 @@ import { AnyAction, Reducer } from 'redux'
 import Immutable from 'seamless-immutable'
 import { ErrorType } from '@utils/globalInterface'
 import { persistReducer } from 'redux-persist'
-import { productActionType } from './action'
-import { deepClone } from '@utils/helpers'
+import { collectionActionType } from './action'
 import AsyncStorage from '@react-native-community/async-storage'
 
-interface ProductState {
+interface CollectionState {
   readonly data: Object
   readonly order: Array<number>
   pagination: Object
@@ -22,16 +21,16 @@ const initialState: any = {
   error: null,
 }
 
-const productReducer: Reducer<ProductState> = (
-  state: ProductState = deepClone(initialState),
+const productReducer: Reducer<CollectionState> = (
+  state: CollectionState = initialState,
   action: AnyAction,
 ) => {
   const newState = { ...state }
   switch (action.type) {
-    case productActionType.SET_PRODUCT_DATA:
+    case collectionActionType.SET_COLLECTION_DATA:
       newState.data = Immutable.merge(newState.data, action.payload)
       return newState
-    case productActionType.SET_PRODUCT_ORDER:
+    case collectionActionType.SET_COLLECTION_ORDER:
       if (
         action.payload.pagination.offset &&
         action.payload.pagination.total &&
@@ -43,7 +42,7 @@ const productReducer: Reducer<ProductState> = (
       }
       newState.pagination = action.payload.pagination
       return newState
-    case productActionType.SET_PRODUCT_LOADING:
+    case collectionActionType.SET_COLLECTION_LOADING:
       newState.loading = action.payload
       return newState
     default:
@@ -52,7 +51,7 @@ const productReducer: Reducer<ProductState> = (
 }
 
 const postPersistConfig = {
-  key: 'product',
+  key: 'collection',
   storage: AsyncStorage,
 }
 

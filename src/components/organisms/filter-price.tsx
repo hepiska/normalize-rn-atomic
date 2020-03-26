@@ -1,4 +1,4 @@
-import React, { Component, useState, memo } from 'react'
+import React, { Component, useState, memo, useEffect } from 'react'
 import { Dimensions, FlatList, Modal, StyleSheet } from 'react-native'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
@@ -8,26 +8,14 @@ import Field from '@components/atoms/field'
 import { colors } from '@utils/constants'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import { changeValue as changeValueUiIneraction } from '@modules/ui-interaction/action'
-import { changePrice } from '@modules/product-filter/action'
+import {
+  setSelectedPrice,
+  fetchCountProduct,
+} from '@modules/product-filter/action'
 
 import Slider from '@components/atoms/slider-2-pin'
 
 const { width } = Dimensions.get('screen')
-
-const useBrandFilter = () => {
-  const [search, setSearch] = useState('')
-  const [filter, setFilter] = useState('')
-  const _onChangeAlvabet = e => {
-    setFilter(e)
-  }
-  const _onSearchChange = e => {
-    setSearch(e)
-  }
-  return [
-    { search, filter },
-    { _onSearchChange, _onChangeAlvabet },
-  ]
-}
 
 const PriceComponent = ({ label, curency = 'Rp', value }: any) => {
   return (
@@ -64,27 +52,36 @@ let timer = null
 
 const FilterPriceOrg = ({
   changeValueUiIneraction,
-  min,
-  max,
-  changePrice,
+  maximum_price,
+  minimum_price,
+  setSelectedPrice,
+  colectionPrices,
+  fetchCountProduct,
 }: any) => {
   // const [
   //   { search, filter },
   //   { _onChangeAlvabet, _onSearchChange },
   // ] = useBrandFilter()
+
+  useEffect(() => {
+    fetchCountProduct({ maximum_price, minimum_price })
+  }, [maximum_price, minimum_price])
+  const delta = colectionPrices.maximum_price - colectionPrices.minimum_price
   const parentScrollDisabled = value => {
     changeValueUiIneraction({ key: 'isScrollEnabled', value: value })
   }
   const onSliderLeftMove = sliderPos => {
-    console.log('sliderPos', sliderPos)
-
-    changePrice({ type: 'min', value: sliderPos.value * 10000000 })
+    setSelectedPrice({
+      type: 'minimum_price',
+      value: colectionPrices.minimum_price + sliderPos.value * delta,
+    })
   }
   const onSliderRightMove = sliderPos => {
-    console.log('sliderPos', sliderPos)
-    changePrice({ type: 'max', value: sliderPos.value * 10000000 })
+    setSelectedPrice({
+      type: 'maximum_price',
+      value: colectionPrices.minimum_price + sliderPos.value * delta,
+    })
   }
-  console.log('price.max', min, max)
   return (
     <Div
       _width={width}
@@ -94,8 +91,8 @@ const FilterPriceOrg = ({
       justify="flex-start"
       align="flex-start">
       <Div _direction="row">
-        <PriceComponent label="Minimum Price " value={min} />
-        <PriceComponent label="Maximum Price " value={max} />
+        <PriceComponent label="Minimum Price " value={minimum_price} />
+        <PriceComponent label="Maximum Price " value={maximum_price} />
       </Div>
       <Slider
         changeParentScroll={parentScrollDisabled}
@@ -111,14 +108,16 @@ const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
       changeValueUiIneraction,
-      changePrice,
+      setSelectedPrice,
+      fetchCountProduct,
     },
     dispatch,
   )
 
 const mapStateToProps = state => ({
-  min: state.productFilter.selected.price.min,
-  max: state.productFilter.selected.price.max,
+  colectionPrices: state.productFilter.data.prices,
+  minimum_price: state.productFilter.selected.prices.minimum_price,
+  maximum_price: state.productFilter.selected.prices.maximum_price,
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(FilterPriceOrg)
