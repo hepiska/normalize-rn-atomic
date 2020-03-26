@@ -11,14 +11,14 @@ let hasNotch = DeviceInfo.hasNotch()
 
 const LeftDiv = styled(Div)`
   position: absolute;
-  padding: ${({ padd }) => padd || '42px 16px 12px'};
+  padding: ${hasNotch ? '42px 16px 12px' : '16px 12px'};
   flex: 1;
   left: 0px;
 `
 
 const RightDiv = styled(Div)`
   position: absolute;
-  padding: 42px 16px 12px;
+  padding: ${hasNotch ? '42px 16px 12px' : '16px 12px'};
   flex: 1;
   right: 0px;
 `
@@ -35,15 +35,15 @@ const NavbarTop: React.SFC<NavbarTopProps> = ({ style, children }) => {
   return (
     <Div
       bg="#FFF"
-      _height={hasNotch ? '88px' : '55px'}
+      // _height={hasNotch ? '88px' : '88px'}
       zIndex="10"
       _width={width}
       _direction="row"
-      padd="42px 16px 12px"
+      padd={hasNotch ? '42px 16px 12px' : '16px 12px'}
       justify="flex-start"
       style={style}
       align="flex-start">
-      <LeftDiv zIndex="2" _height={hasNotch ? 88 : 55}>
+      <LeftDiv zIndex="2">
         <PressAbbleDiv onPress={navigation.goBack}>
           <Icon name="chevron-left" size={20} color="black" />
         </PressAbbleDiv>
