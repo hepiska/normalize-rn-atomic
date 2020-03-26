@@ -65,16 +65,27 @@ class Productlist extends Component<any, any> {
       this.props.collection &&
       this.props.isCollectionLoading !== prevProps.isCollectionLoading
     ) {
-      if (!this.props.isCollectionLoading) this._setInitialState()
+      if (!this.props.isCollectionLoading) {
+        this._setInitialState()
+        return
+      }
     }
 
-    if (this.props.search !== prevProps.search) this._freshfetch()
+    if (this.props.search !== prevProps.search) {
+      this._freshfetch()
+      return ''
+    }
+    if (this.props.sort !== prevProps.sort) {
+      this._freshfetch()
+      return ''
+    }
 
     if (
       JSON.stringify(this.props.appliedFilters) !==
       JSON.stringify(prevProps.appliedFilters)
     ) {
       if (!this.props.isCollectionLoading) this._freshfetch()
+      return
     }
   }
 
@@ -106,10 +117,11 @@ class Productlist extends Component<any, any> {
   }
 
   _fetchData = skip => {
-    const { collection, appliedFilters, search } = this.props
+    const { collection, appliedFilters, search, sort } = this.props
     const params: any = {
       limit: this.limit,
       offset: skip * this.limit,
+      ...sort.value,
       ...appliedFilters,
     }
 
@@ -277,6 +289,7 @@ const mapStateToProps = (state, { route }) => {
         route.params.collectionId &&
         state.collection.data[route.params.collectionId],
       products: state.products.order,
+      sort: state.sort.selected,
       search: state.productFilter.search,
       isCollectionLoading: state.collection.loading,
       appliedFilters,
@@ -289,6 +302,7 @@ const mapStateToProps = (state, { route }) => {
     products: state.products.order,
     pagination: state.products.pagination,
     appliedFilters,
+    sort: state.sort.selected,
     loading: state.products.loading,
     error: state.products.error,
   }

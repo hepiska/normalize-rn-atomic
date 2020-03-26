@@ -63,7 +63,7 @@ const FilterTriger = (props: any) => {
         <Button
           title="Sort"
           onPress={() => {
-            props.changeValue({ key: 'isOpen', value: true })
+            props.openFilter('sort')
           }}
           fontStyle={{ color: colors.white }}
           style={{ marginLeft: 8, backgroundColor: colors.black100 }}

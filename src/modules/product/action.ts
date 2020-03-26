@@ -1,7 +1,7 @@
 import { QueryParams } from '@utils/globalInterface'
 import { setBrandData } from '@modules/brand/action'
 import { setCategoryData } from '@modules/category/action'
-import persistor from './reducer'
+// import persistor from './reducer'
 import { API } from '../action-types'
 
 import * as schema from '@modules/normalize-schema'
