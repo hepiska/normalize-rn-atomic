@@ -1,7 +1,7 @@
 import { QueryParams } from '@utils/globalInterface'
 import { setBrandData } from '@modules/brand/action'
 import { setCategoryData } from '@modules/category/action'
-import persistor from './reducer'
+// import persistor from './reducer'
 import { API } from '../action-types'
 
 import * as schema from '@modules/normalize-schema'
@@ -9,9 +9,9 @@ import * as schema from '@modules/normalize-schema'
 export const productActionType = {
   FETCH: 'product/FETCH',
   SET_PRODUCT_DATA: 'product/SET_PRODUCT_DATA',
-  SET_PRODUCT_ORDER: 'product/SET_USER_ORDER',
+  SET_PRODUCT_ORDER: 'product/SET_PRODUCT_ORDER',
   FETCH_START: 'product/FETCH_START',
-  SET_PRODUCT_LOADING: 'product/SET_USER_LOADING',
+  SET_PRODUCT_LOADING: 'product/SET_PRODUCT_LOADING',
   ERROR: 'product/ERROR',
 }
 
@@ -41,14 +41,13 @@ export const productApi = (params, url) => ({
     },
 
     success: (data, { pagination }) => {
-      console.log('====', data)
       return data
         ? [
-            setBrandData(data.entities.brand),
-            setCategoryData(data.entities.category),
             setProductData(data.entities.product),
             setProductOrder({ order: data.result, pagination }),
             setProductLoading(false),
+            setBrandData(data.entities.brand),
+            setCategoryData(data.entities.category),
           ]
         : [setProductOrder({ order: [], pagination }), setProductLoading(false)]
     },

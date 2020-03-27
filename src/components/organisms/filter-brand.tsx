@@ -80,7 +80,7 @@ const FilterBrandOrg = (props: any) => {
       onPress={brand => props.changeSelectedBrand(brand.id)}
       key={item.id}
       isSelected={props.selectedBrand.includes(item.id)}
-      brand={item}
+      item={item}
     />
   )
 

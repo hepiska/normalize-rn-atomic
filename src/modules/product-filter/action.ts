@@ -5,6 +5,7 @@ import { brand } from '../normalize-schema'
 
 export const productFilterType = {
   CHANGE_VALUE: 'product-filter/CHANGE_VALUE',
+  CHANGE_SEARCH: 'product-filter/CHANGE_SEARCH',
   SET_SELECTED_PRICE: 'product-filter/SET_SELECTED_PRICE',
   SET_SELECTED_COLLECTION: 'product-filter/SET_SELECTED_COLLECTION',
   ADD_DATA: 'product-filter/ADD_DATA',
@@ -15,6 +16,7 @@ export const productFilterType = {
   SET_BRAND_FILTER: 'product-filter/SET_BRAND_FILTER',
   SET_COUNTED_PRODUCT: 'product-filter/SET_COUNTED_PRODUCT',
   SET_APPLIED_FILTER: 'product-filter/SET_APPLIED_FILTER',
+  CHANGE_SELECTED_CATEGORY: 'product-filter/CHANGE_SELECTED_CATEGORY',
 }
 
 interface PriceFilter {
@@ -32,6 +34,11 @@ export const changeValue = (data: any) => ({
   payload: data,
 })
 
+export const changeSearch = (data: any) => ({
+  type: productFilterType.CHANGE_SEARCH,
+  payload: data,
+})
+
 export const setSelectedCollection = data => ({
   type: productFilterType.SET_SELECTED_COLLECTION,
   payload: data,
@@ -45,7 +52,7 @@ const setCountedProducts = (data: any) => {
 }
 
 export const fetchCountProduct = params => {
-  const globState = store.getState()
+  const globState = deepClone(store.getState())
 
   const _params = {
     ...globState.productFilter.selected,
@@ -90,6 +97,13 @@ export const applyFilter = () => {
 export const changeSelectedBrand = (data: number) => {
   return {
     type: productFilterType.CHANGE_SELECTED_BRAND,
+    payload: data,
+  }
+}
+
+export const changeSelectedCategory = (data: number) => {
+  return {
+    type: productFilterType.CHANGE_SELECTED_CATEGORY,
     payload: data,
   }
 }

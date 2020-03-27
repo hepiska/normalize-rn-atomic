@@ -1,7 +1,13 @@
 import React, { Component } from 'react'
-import { Dimensions, FlatList, ImageBackground } from 'react-native'
-import Animated from 'react-native-reanimated'
-import { onScroll } from 'react-native-redash'
+import {
+  Dimensions,
+  FlatList,
+  ImageBackground,
+  StyleSheet,
+  SectionList,
+  View,
+} from 'react-native'
+
 import { Div, Font } from '@components/atoms/basic'
 import {
   helveticaBlackBold,
@@ -16,8 +22,10 @@ import { productListData } from '@hocs/data/product'
 import FilterTriger from '@components/organisms/product-filter-buttons'
 import FilterBottomSheet from '@components/organisms/product-filter'
 import { futuraTitleFont } from '@components/commont-styles'
+import InviniteLoader from '@components/atoms/loaders/invinite'
 import { getCollectionBySlug } from '@modules/collection/action'
 import { deepClone } from '@utils/helpers'
+import { colors } from '@utils/constants'
 import {
   addFilterData,
   clearFilter,
@@ -27,20 +35,27 @@ import {
 } from '@modules/product-filter/action'
 const { width } = Dimensions.get('window')
 
-const { Value, interpolate, Extrapolate } = Animated
-
-const scrollPos = new Value(0)
+const styles = StyleSheet.create({
+  sectionContainer: {
+    width: '100%',
+    // paddingHorizontal: 16,
+    backgroundColor: 'white',
+  },
+  itemFont: {
+    color: colors.black70,
+    fontSize: 14,
+  },
+  sectionHeader: {
+    backgroundColor: 'white',
+  },
+  container: {
+    paddingHorizontal: 16,
+  },
+})
 
 const ProductWithCardHoc = productListData(ProductCard)
-const AnimatedFlatList = Animated.createAnimatedComponent(FlatList)
 
 const imageHeight = 205
-
-const height = interpolate(scrollPos, {
-  inputRange: [-1, 0, imageHeight],
-  outputRange: [imageHeight, imageHeight, 0],
-  extrapolate: Extrapolate.CLAMP,
-})
 
 class Productlist extends Component<any, any> {
   state = {
@@ -53,8 +68,10 @@ class Productlist extends Component<any, any> {
   lastskip = 0
 
   componentDidMount() {
+    this.props.getCollectionBySlug('rafie-botakksszzzszszszz')
+
     if (this.props.collection)
-      this.props.getCollectionBySlug(this.props.collection.slug)
+      this.props.getCollectionBySlug('rafie-botakksszzzszszszz')
   }
 
   componentDidUpdate(prevProps) {
@@ -62,14 +79,27 @@ class Productlist extends Component<any, any> {
       this.props.collection &&
       this.props.isCollectionLoading !== prevProps.isCollectionLoading
     ) {
-      if (!this.props.isCollectionLoading) this._setInitialState()
+      if (!this.props.isCollectionLoading) {
+        this._setInitialState()
+        return
+      }
+    }
+
+    if (this.props.search !== prevProps.search) {
+      this._freshfetch()
+      return ''
+    }
+    if (this.props.sort !== prevProps.sort) {
+      this._freshfetch()
+      return ''
     }
 
     if (
       JSON.stringify(this.props.appliedFilters) !==
       JSON.stringify(prevProps.appliedFilters)
     ) {
-      if (!this.props.isCollectionLoading) this._setInitialState()
+      if (!this.props.isCollectionLoading) this._freshfetch()
+      return
     }
   }
 
@@ -86,7 +116,7 @@ class Productlist extends Component<any, any> {
     } = this.props
     if (collection) {
       setFilter({
-        category_ids: collection.categories,
+        categories: collection.categories,
         prices: {
           maximum_price: collection.max_price,
           minimum_price: collection.min_price,
@@ -101,11 +131,16 @@ class Productlist extends Component<any, any> {
   }
 
   _fetchData = skip => {
-    const { collection, appliedFilters } = this.props
+    const { collection, appliedFilters, search, sort } = this.props
     const params: any = {
       limit: this.limit,
       offset: skip * this.limit,
+      ...sort.value,
       ...appliedFilters,
+    }
+
+    if (search) {
+      params.name = search
     }
 
     if (collection) {
@@ -113,7 +148,6 @@ class Productlist extends Component<any, any> {
     }
 
     this.props.productApi(params)
-    // this.setState({ skip: this.state.skip + 1 })
   }
 
   _freshfetch = async () => {
@@ -140,33 +174,80 @@ class Productlist extends Component<any, any> {
     }
   }
 
-  _renderHeader = (
+  _renderHeader = () => (
     <>
-      <FilterTriger />
+      <FilterTriger style={{ paddingHorizontal: 16 }} />
     </>
   )
 
-  _renderItem = ({ item }) => {
+  _renderItem = ({ item, index }) => {
+    const numColumns = 2
+    if (index % numColumns !== 0) return null
+    const items = []
+
+    for (let i = index; i < index + numColumns; i++) {
+      items.push(
+        <ProductWithCardHoc
+          productId={item}
+          key={'' + item + index}
+          style={{
+            flex: 1,
+            wrappermargin: 16,
+            width: width / 2,
+          }}
+        />,
+      )
+    }
+
     return (
-      <ProductWithCardHoc
-        productId={item}
+      <View
+        key={'' + item + index}
         style={{
-          flex: 1,
-          wrappermargin: 16,
-          width: width / 2,
-        }}
-      />
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+        }}>
+        {items}
+      </View>
     )
   }
 
-  _keyExtractor = item => item
+  _keyExtractor = (item, index) => '' + item + index
 
   static navigationOptions = {
     transparent: false,
   }
+
+  _sectionData = {
+    title: 'asa',
+    data: this.props.products,
+  }
+  _header = (
+    <ImageBackground
+      style={{
+        width: '100%',
+        height: imageHeight,
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+      source={
+        this.props.collection
+          ? { uri: this.props.collection.landscape_image_url }
+          : require('../../../assets/placeholder/placeholder-image.png')
+      }>
+      <Font {...futuraTitleFont} size="24">
+        {this.props.collection && this.props.collection.title}
+      </Font>
+    </ImageBackground>
+  )
   render() {
     const { headerName } = this.state
-    const { navigation, products, pagination, collection } = this.props
+    const { navigation, products, pagination } = this.props
+    const sectionData = [
+      {
+        title: 'asa',
+        data: products,
+      },
+    ]
     navigation.setOptions({
       header: () => {
         return (
@@ -182,45 +263,29 @@ class Productlist extends Component<any, any> {
       },
     })
     return (
-      <Div _width="100%" _flex="1">
-        {collection && (
-          <Animated.View
-            style={{
-              height,
-              width: '100%',
-              overflow: 'hidden',
-            }}>
-            <ImageBackground
-              style={{
-                width: '100%',
-                height: imageHeight,
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-              source={{ uri: collection.landscape_image_url }}>
-              <Font {...futuraTitleFont} size="24">
-                {collection.title}
-              </Font>
-            </ImageBackground>
-          </Animated.View>
-        )}
-        <AnimatedFlatList
-          onEndReached={this._fetchMore}
-          onScroll={onScroll({ y: scrollPos })}
-          contentContainerStyle={{
-            // justifyContent: 'flex-start',
-            // alignItems: 'flex-start',
-            marginHorizontal: 16,
-          }}
-          stickyHeaderIndices={[0]}
+      <Div _width="100%" _flex="1" justify="flex-start">
+        <SectionList
+          ListHeaderComponent={this._header}
+          style={styles.sectionContainer}
           onEndReachedThreshold={0.97}
-          ListHeaderComponent={this._renderHeader}
-          style={{ width: '100%' }}
-          data={products}
-          numColumns={2}
-          renderItem={this._renderItem}
+          onEndReached={this._fetchMore}
           keyExtractor={this._keyExtractor}
+          renderSectionHeader={this._renderHeader}
+          sections={sectionData}
+          stickySectionHeadersEnabled
+          renderItem={this._renderItem}
         />
+        {this.props.loading && (
+          <Div
+            style={{ position: 'absolute', bottom: 0, left: 0 }}
+            justify="center"
+            _width="100%"
+            _background="rgba(0,0,0,0.3)"
+            _height="64px">
+            <InviniteLoader />
+          </Div>
+        )}
+
         <FilterBottomSheet />
       </Div>
     )
@@ -254,10 +319,12 @@ const mapStateToProps = (state, { route }) => {
         route.params.collectionId &&
         state.collection.data[route.params.collectionId],
       products: state.products.order,
+      sort: state.sort.selected,
+      search: state.productFilter.search,
       isCollectionLoading: state.collection.loading,
       appliedFilters,
       loading: state.products.loading,
-      pagination: { total: collection.products.length },
+      pagination: { total: collection && collection.products.length },
     }
   }
 
@@ -265,6 +332,7 @@ const mapStateToProps = (state, { route }) => {
     products: state.products.order,
     pagination: state.products.pagination,
     appliedFilters,
+    sort: state.sort.selected,
     loading: state.products.loading,
     error: state.products.error,
   }

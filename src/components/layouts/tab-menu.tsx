@@ -43,9 +43,9 @@ const TabMenu = ({
     onChangeTab(item)
   }
   const idx = items.findIndex(it => it.name === selectedItem)
+  let timer = null
 
   useEffect(() => {
-    let timer = null
     if (scrolContent) {
       timer = setTimeout(
         () => scrolContent.current.scrollTo({ x: idx * width }),

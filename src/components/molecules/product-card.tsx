@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
 const ProductCard = ({
   product,
   style,
-  brand,
+  brand = {},
   horizontal = false,
 }: ProductCard) => {
   const type = 'med'
@@ -139,24 +139,12 @@ const ProductCardHorizontal = ({
 }) => {
   const productName = product.name.replace(/\n|\r/g, '')
   return (
-<<<<<<< HEAD
-    <Div style={{ ...composeStyle, width }} key={'productcard' + product.id}>
-      <Div _margin="0px 0px 8px" _width="100%">
-        <AbsDiv zIndex="2">
-          <Icon
-            name="bookmark"
-            size={24}
-            color={isSaved ? colors.black50 : colors.black90}
-          />
-        </AbsDiv>
-=======
     <Div
       style={{ ...composeStyle, width: '100%' }}
       _direction="row"
       justify="space-between"
       align="flex-start">
       <Div _width="40%">
->>>>>>> 1470f0be5af6c5d589672e1501f1877bd4e15c1e
         <ImageAutoSchale
           source={image}
           onError={() => {
@@ -215,7 +203,8 @@ const ProductCardVertical = ({
   onAttributeChange,
 }) => {
   const productName = product.name.replace(/\n|\r/g, '')
-  const colorAttributes = product.attributes.find(x => x.label === 'Color')
+  const colorAttributes =
+    product.attributes && product.attributes.find(x => x.label === 'Color')
   return (
     <Div style={{ ...composeStyle, width }}>
       <Div _margin="0px 0px 8px" _width="100%">
