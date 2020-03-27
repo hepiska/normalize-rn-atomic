@@ -1,11 +1,5 @@
-import React, { useState, useEffect, ReactType, ReactElement } from 'react'
-import {
-  Image,
-  ViewStyle,
-  TextStyle,
-  StyleSheet,
-  TextInput,
-} from 'react-native'
+import React, { ReactElement } from 'react'
+import { ViewStyle, StyleSheet, TextInput, Platform } from 'react-native'
 import { Div } from '@components/atoms/basic'
 import { colors } from '@utils/constants'
 
@@ -39,13 +33,15 @@ const Field = ({
 }: FieldType) => {
   return (
     <Div
-      padd="8px"
+      padd={Platform.OS === 'ios' ? '8px' : '0px 8px'}
       _direction="row"
+      overflow="visible"
       justify="flex-start"
       style={[styles.wraper, style]}>
       {leftIcon && leftIcon}
       <TextInput
         value={value}
+        style={{ flex: 1 }}
         onChangeText={onChangeText}
         placeholder={placeholder}
         {...inputProps}

@@ -46,7 +46,7 @@ const FilterTriger = (props: any) => {
   }, [searchKey])
 
   return (
-    <Div _width="100%" bg="white">
+    <Div _width="100%" bg="white" style={props.style}>
       <Div _width="100%" _direction="row" _margin="8px 0px">
         <Field
           value={searchKey}
@@ -76,7 +76,11 @@ const FilterTriger = (props: any) => {
           }
         />
       </Div>
-      <ScrollDiv _width="100%" horizontal _margin="8px 0px">
+      <ScrollDiv
+        _width="100%"
+        horizontal
+        _margin="8px 0px"
+        showsHorizontalScrollIndicator={false}>
         <Button
           title="All Filters"
           onPress={() => {}}

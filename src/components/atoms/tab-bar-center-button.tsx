@@ -10,7 +10,7 @@ const AddButton = () => {
         _height="32px"
         bg="white"
         radius="16px"
-        style={{ top: -8 }}>
+        style={{ top: 0 }}>
         <Icon name="plus-circle" size={32} />
       </PressAbbleDiv>
     </Div>

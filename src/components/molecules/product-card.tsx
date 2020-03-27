@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
 const ProductCard = ({
   product,
   style,
-  brand,
+  brand = {},
   horizontal = false,
 }: ProductCard) => {
   const type = 'med'

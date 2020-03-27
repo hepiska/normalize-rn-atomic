@@ -1,8 +1,7 @@
-import * as React from 'react';
-import MainPage from './main';
-import { createStackNavigator } from '@react-navigation/stack';
-import DeviceInfo from 'react-native-device-info';
-const Stack = createStackNavigator();
+import * as React from 'react'
+import MainPage from './main'
+import { createStackNavigator } from '@react-navigation/stack'
+const Stack = createStackNavigator()
 
 const Pages = () => (
   <Stack.Navigator initialRouteName="Main">
@@ -12,6 +11,6 @@ const Pages = () => (
       options={{ headerShown: false }}
     />
   </Stack.Navigator>
-);
+)
 
-export default Pages;
+export default Pages

@@ -125,7 +125,10 @@ const Header = props => {
 
 const FilterBottomSheet = props => {
   const { isOpen, section } = props
-  const _snapPoint = [height * 0.8, height * 0.5, 0]
+  const _snapPoint =
+    section !== 'sort'
+      ? [height * 0.8, height * 0.5, 0]
+      : [Math.max(360, height * 0.5), 0]
   return (
     <Modal transparent visible={isOpen}>
       <BottomSheet
