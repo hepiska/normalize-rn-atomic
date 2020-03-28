@@ -38,9 +38,11 @@ const productFilterReducer: Reducer<any> = (
     case productFilterType.CHANGE_VALUE:
       newState[action.payload.key] = action.payload.value
       return newState
+
     case productFilterType.CHANGE_SEARCH:
       newState.search = action.payload
       return newState
+
     case productFilterType.SET_SELECTED_PRICE:
       newState.selected.prices[action.payload.type] = action.payload.value
       return newState
@@ -78,6 +80,7 @@ const productFilterReducer: Reducer<any> = (
       }
 
       return newState
+
     case productFilterType.CHANGE_SELECTED_CATEGORY:
       if (!selected.category_ids) {
         selected.category_ids = ',' + action.payload

@@ -5,7 +5,6 @@ import { connect } from 'react-redux'
 import { collectionApi } from '@modules/collection/action'
 import { collectionListData } from '@hocs/data/collection'
 import InviniteLoader from '@components/atoms/loaders/invinite'
-
 import { Div, Font, PressAbbleDiv } from '@components/atoms/basic'
 
 const CollectionItem = ({ collection, onPress }) => {

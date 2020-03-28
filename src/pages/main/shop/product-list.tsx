@@ -323,7 +323,7 @@ const mapStateToProps = (state, { route }) => {
       search: state.productFilter.search,
       isCollectionLoading: state.collection.loading,
       appliedFilters,
-      loading: state.products.loading,
+      loading: state.products.productsLoading,
       pagination: { total: collection && collection.products.length },
     }
   }
@@ -333,7 +333,7 @@ const mapStateToProps = (state, { route }) => {
     pagination: state.products.pagination,
     appliedFilters,
     sort: state.sort.selected,
-    loading: state.products.loading,
+    loading: state.products.productsLoading,
     error: state.products.error,
   }
 }

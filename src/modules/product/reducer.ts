@@ -18,7 +18,8 @@ const initialState: any = {
   data: Immutable({}),
   order: Immutable([]),
   pagination: {},
-  loading: false,
+  productsLoading: false,
+  productLoading: false,
   error: null,
 }
 
@@ -31,6 +32,11 @@ const productReducer: Reducer<ProductState> = (
     case productActionType.SET_PRODUCT_DATA:
       newState.data = Immutable.merge(newState.data, action.payload)
       return newState
+
+    case productActionType.CHANGE_VALUE:
+      newState[action.payload.key] = action.payload.value
+      return newState
+
     case productActionType.SET_PRODUCT_ORDER:
       if (
         action.payload.pagination.offset &&

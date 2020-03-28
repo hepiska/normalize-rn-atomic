@@ -3,7 +3,7 @@ import { createStore, applyMiddleware, compose } from 'redux'
 import { Provider } from 'react-redux'
 import { routerMiddleware } from 'react-router-redux'
 import { NavigationContainer } from '@react-navigation/native'
-
+import { isMountedRef, navigationRef } from './root-navigation'
 const createHistory = require('history').createMemoryHistory
 import rootReducer from '@modules/index'
 import { composeWithDevTools } from 'redux-devtools-extension'
@@ -54,6 +54,7 @@ class InitStore extends React.Component<any, any> {
     const persistor = persistStore(store)
     presist = persistor
     this.setState({ store: _store, persistor, isLoading: false })
+    isMountedRef.current = true
   }
 
   render() {
@@ -61,7 +62,7 @@ class InitStore extends React.Component<any, any> {
     return isLoading ? null : (
       <Provider store={this.state.store}>
         <PersistGate loading={null} persistor={this.state.persistor}>
-          <NavigationContainer>
+          <NavigationContainer ref={navigationRef}>
             <Pages />
           </NavigationContainer>
         </PersistGate>
