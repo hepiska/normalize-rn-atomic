@@ -54,6 +54,6 @@ export const images = {
 }
 
 export const globalDimention = {
-  headerHeight: hasNotch ? 88 : 56,
-  firstComponentMargin: hasNotch ? '22px 0px 0px' : '0px',
+  headerHeight: 56,
+  // firstComponentMargin: hasNotch ? '22px 0px 0px' : '0px',
 }

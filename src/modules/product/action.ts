@@ -12,6 +12,7 @@ export const productActionType = {
   SET_PRODUCT_ORDER: 'product/SET_PRODUCT_ORDER',
   FETCH_START: 'product/FETCH_START',
   SET_PRODUCT_LOADING: 'product/SET_PRODUCT_LOADING',
+  CHANGE_VALUE: 'product/CHANGE_VALUE',
   ERROR: 'product/ERROR',
 }
 
@@ -25,9 +26,28 @@ export const setProductOrder = (data: any) => ({
   payload: data,
 })
 
+const changeValue = (data = { key: 'productLoading', value: false }) => ({
+  type: productActionType.CHANGE_VALUE,
+  payload: data,
+})
 export const setProductLoading = (data: any) => ({
   type: productActionType.SET_PRODUCT_LOADING,
   payload: data,
+})
+
+export const getProductById = id => ({
+  type: API,
+  payload: {
+    url: '/products/' + id,
+    schema: schema.product,
+    startNetwork: () => changeValue({ key: 'productLoading', value: true }),
+    success: data => [
+      setProductData(data.entities.product),
+      changeValue({ key: 'productLoading', value: false }),
+      setBrandData(data.entities.brand),
+      setCategoryData(data.entities.category),
+    ],
+  },
 })
 
 export const productApi = (params, url) => ({

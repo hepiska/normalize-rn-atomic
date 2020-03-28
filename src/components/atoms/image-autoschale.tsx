@@ -51,7 +51,9 @@ const ImageAutoSchale = ({
           calculateSize(newWidth, newHeight)
         },
         err => {
-          onError(err)
+          if (onError) {
+            onError(err)
+          }
         },
       )
     } else {

@@ -1,3 +1,5 @@
+import Config from 'react-native-config'
+
 const currencyNum = inp => {
   const a = inp
     .split('')
@@ -35,6 +37,31 @@ export const moveToFront = (a: any, fn: Function) => {
   return matches.concat(non_matches)
 }
 
+export const capilEachWord = str =>
+  str
+    .split(' ')
+    .map(word => {
+      let firstChar = word[0].toUpperCase()
+
+      return firstChar + word.substring(1, word.length)
+    })
+    .join(' ')
+
 export const checkHex = hex => /^#[0-9A-F]{6}$/i.test(hex)
+
+export const setImage = (uri, size) => {
+  let queryString = `?fit=fillmax&fill=solid&fill-color=white`
+  if (size.width) {
+    queryString += `&width=${size.width}`
+  }
+  if (size.height) {
+    queryString += `&height=${size.height}`
+  }
+
+  const res =
+    uri.replace(Config.SHONET_AWS_IMAGE_BASE, Config.SHONET_IMGIX_IMAGE_BASE) +
+    queryString
+  return res
+}
 
 export const deepClone = obj => JSON.parse(JSON.stringify(obj))

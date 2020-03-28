@@ -8,20 +8,21 @@ import {
   PressAbbleDiv,
 } from '@components/atoms/basic'
 import { Button } from '@components/atoms/button'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 import NavbarTopAnimated from '@components/molecules/navbar-top-animated'
 import CoverImageAnimated from '@src/components/organisms/cover-image-animated'
-import Icon from 'react-native-vector-icons/FontAwesome'
 import ImagesWithPreviews from '@components/organisms/images-with-preview'
 import ContentExpandable from '@components/molecules/content-expandable'
 import ImageCoverContentLayout from '@src/components/layouts/image-cover-animated-content'
 import ProductOverviewCard from '@src/components/molecules/product-overview-card-body'
-import AttributeList from '@src/components/molecules/attribute-list'
-import ProductGroup from '@components/organisms/product-group'
 import ProductAttributes from '@components/organisms/product-attributes'
-import ProductGroupList from '@components/organisms/product-group-list'
-import ProductCard from '@components/molecules/product-card'
 import Animated from 'react-native-reanimated'
 import { colors } from '@src/utils/constants'
+import ButtonGroup from '@components/molecules/button-group'
+import { OutlineButton } from '@components/atoms/button'
+import { getProductById } from '@modules/product/action'
+import { setImage } from '@utils/helpers'
 
 const productMock: any = {
   id: 1,
@@ -243,7 +244,7 @@ const productMock: any = {
 }
 
 const { Value } = Animated
-const { width } = Dimensions.get('screen')
+const { width, height } = Dimensions.get('screen')
 
 const y = new Value(0)
 
@@ -254,13 +255,18 @@ class ProductListPage extends React.Component<any, any> {
     isUserSelectVariant: false,
   }
 
+  componentDidMount() {
+    this.props.getProductById(this.props.route.params?.productI)
+  }
+
   getVariantData = id => {
-    const { product } = this.state
-    return product.variants.find(variant => variant.id === id)
+    const { product } = this.props
+    const varian = product.variants.find(variant => variant.id === id)
+    return varian || product.variants[0]
   }
 
   dimentionConstant = {
-    imageHeight: width * (3 / 2),
+    imageHeight: Math.min(width * (3 / 2), height * 0.7),
   }
 
   _selectVariant = attributes => {
@@ -288,31 +294,34 @@ class ProductListPage extends React.Component<any, any> {
 
   static navigationOptions = {
     headerTransparent: true,
-    // headerShown: false
+    headerShown: false,
   }
 
   openCartModal = () => {
-    const { navigation } = this.props
-    const { product } = this.state
+    const { navigation, product } = this.props
     navigation.navigate('CartModal', {
       product,
     })
   }
 
+  groupButton = [
+    { name: 'Save', icon: 'bookmark', onPress: () => {} },
+    { name: 'Share', icon: 'share', onPress: () => {} },
+  ]
+
   render() {
-    const { navigation } = this.props
-    const { product, selectedVariant } = this.state
+    const { navigation, product } = this.props
+    const { selectedVariant } = this.state
+
     const varianData = this.getVariantData(selectedVariant)
     navigation.setOptions({
       header: () => {
         return (
           <NavbarTopAnimated
             parentDim={{ coverheight: this.dimentionConstant.imageHeight }}
-            LeftMenu={() => (
-              <Icon name="chevron-left" size={20} color="white" />
-            )}
+            onBack={() => {}}
             y={y}
-            Title={this.state.product.name}
+            Title={product.name}
           />
         )
       },
@@ -323,16 +332,14 @@ class ProductListPage extends React.Component<any, any> {
         <CoverImageAnimated
           y={y}
           width={width}
-          images={varianData.photos.map(photo => ({
-            ...photo,
-            uri: photo.url,
+          images={varianData.image_urls.map(url => ({
+            uri: url,
           }))}
           height={this.dimentionConstant.imageHeight}>
           <ImagesWithPreviews
             size={{ width, height: this.dimentionConstant.imageHeight }}
-            images={varianData.photos.map(photo => ({
-              ...photo,
-              uri: photo.url,
+            images={varianData.image_urls.map(url => ({
+              uri: setImage(url, { width: 400, height: 600 }),
             }))}
           />
         </CoverImageAnimated>
@@ -341,9 +348,24 @@ class ProductListPage extends React.Component<any, any> {
           dimentionConstant={this.dimentionConstant}>
           <Div bg="white" _width="100%" padd="0px 16px 96px">
             <ProductOverviewCard product={{ ...product, ...varianData }} />
-            <ProductAttributes
-              attributes={product.attributes}
-              onAllAttributesSelected={this._selectVariant}
+            {product.attributes && (
+              <ProductAttributes
+                attributes={product.attributes}
+                onAllAttributesSelected={this._selectVariant}
+              />
+            )}
+
+            <Button
+              leftIcon="save"
+              title="Available for return or exchange"
+              onPress={() => {}}
+              style={{
+                width: '100%',
+                marginVertical: 12,
+                justifyContent: 'flex-start',
+                height: 32,
+                backgroundColor: 'rgba(26, 26, 26, 0.04)',
+              }}
             />
             <Button
               title="Add to cart"
@@ -355,13 +377,21 @@ class ProductListPage extends React.Component<any, any> {
               style={{
                 width: '100%',
                 height: 46,
+                marginVertical: 12,
                 backgroundColor: '#8131E2',
               }}
             />
-            {/* <ContentExpandable title='Size & Fit' content="ssaasa" id='expanable' isFirst />
-            <ProductGroup title='What Your Friends are Looking Now' products={[product, product, product, product]}></ProductGroup>
 
-            <ProductGroupList onShowAll={() => { }} title='Recently Viewed' products={[product, product, product, product]}></ProductGroupList> */}
+            <ButtonGroup items={this.groupButton} />
+            {product?.details?.map((detail, idx) => (
+              <ContentExpandable
+                title={detail.type}
+                content={detail.content}
+                key={idx}
+                id={'expanable' + idx}
+                isFirst={idx === 0}
+              />
+            ))}
           </Div>
         </ImageCoverContentLayout>
       </Div>
@@ -369,4 +399,13 @@ class ProductListPage extends React.Component<any, any> {
   }
 }
 
-export default ProductListPage
+const mapStateToProps = (state, ownProps) => {
+  return {
+    product: state.products.data[ownProps.route.params?.productId],
+  }
+}
+
+const mapDispatchToProps = dispatch =>
+  bindActionCreators({ getProductById }, dispatch)
+
+export default connect(mapStateToProps, mapDispatchToProps)(ProductListPage)

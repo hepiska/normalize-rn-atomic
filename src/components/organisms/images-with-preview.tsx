@@ -76,13 +76,9 @@ class ImagesWithPreviews extends React.Component<ImagesWithPreviewsType, any> {
       </IndDiv>
     </Div>
   )
-  _headerComp = props => (
+  _headerComp = () => (
     <TouchableWithoutFeedback onPress={this._closeModal}>
-      <Div
-        _width="100%"
-        align="flex-start"
-        _padding="20px"
-        _margin={globalDimention.firstComponentMargin}>
+      <Div _width="100%" align="flex-start" _padding="20px">
         <Icon name="close" size={18} color={colors.gray1} />
       </Div>
     </TouchableWithoutFeedback>

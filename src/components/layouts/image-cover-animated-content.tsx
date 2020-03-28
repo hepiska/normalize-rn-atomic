@@ -68,7 +68,7 @@ const ImageCoverContentLayout = ({ y, children, dimentionConstant }) => {
           styles.cover,
           {
             height:
-              dimentionConstant.imageHeight - globalDimention.headerHeight,
+              dimentionConstant.imageHeight - globalDimention.headerHeight - 32,
           },
         ]}>
         <Animated.View style={[styles.gradient, { height }]}></Animated.View>
