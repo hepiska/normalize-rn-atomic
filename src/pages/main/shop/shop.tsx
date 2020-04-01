@@ -27,7 +27,7 @@ class ShopPage extends React.Component<any, any> {
   render() {
     const { navigation } = this.props
     return (
-      <Div>
+      <Div padd="50px 0px">
         <PressAbbleDiv
           onPress={() =>
             navigation.push('ProductList', {

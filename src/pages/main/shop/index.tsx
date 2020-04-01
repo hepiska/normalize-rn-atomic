@@ -13,6 +13,7 @@ function ShopStack() {
   return (
     <Stack.Navigator
       initialRouteName={initialPageConfig.shop}
+      headerMode="none"
       screenOptions={{
         cardStyle: {
           backgroundColor: 'white',
@@ -21,16 +22,8 @@ function ShopStack() {
       <Stack.Screen name="MainShop" component={ShopPage} />
       <Stack.Screen name="Cart" component={CartPage} />
       <Stack.Screen name="CartModal" component={CartModal} />
-      <Stack.Screen
-        name="ProductDetail"
-        component={ProductDetail}
-        options={ProductDetail.navigationOptions}
-      />
-      <Stack.Screen
-        name="ProductList"
-        options={ProductList.navigationOptions}
-        component={ProductList}
-      />
+      <Stack.Screen name="ProductDetail" component={ProductDetail} />
+      <Stack.Screen name="ProductList" component={ProductList} />
     </Stack.Navigator>
   )
 }

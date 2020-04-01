@@ -134,6 +134,7 @@ class Productlist extends Component<any, any> {
     const { collection, appliedFilters, search, sort } = this.props
     const params: any = {
       limit: this.limit,
+      is_commerce: true,
       offset: skip * this.limit,
       ...sort.value,
       ...appliedFilters,
@@ -248,46 +249,56 @@ class Productlist extends Component<any, any> {
         data: products,
       },
     ]
-    navigation.setOptions({
-      header: () => {
-        return (
-          <NavbarTop>
-            <Div justify="center" _width="100%">
-              <Font {...helveticaBlackBold}>{headerName}</Font>
-              <Font {...{ ...helveticaNormalFont, size: 12 }}>
-                {pagination.total} Items
-              </Font>
-            </Div>
-          </NavbarTop>
-        )
-      },
-    })
+    // navigation.setOptions({
+    //   header: () => {
+    //     return (
+    //       <NavbarTop>
+    //         <Div justify="center" _width="100%">
+    //           <Font {...helveticaBlackBold}>{headerName}</Font>
+    //           <Font {...{ ...helveticaNormalFont, size: 12 }}>
+    //             {pagination.total} Items
+    //           </Font>
+    //         </Div>
+    //       </NavbarTop>
+    //     )
+    //   },
+    // })
     return (
-      <Div _width="100%" _flex="1" justify="flex-start">
-        <SectionList
-          ListHeaderComponent={this._header}
-          style={styles.sectionContainer}
-          onEndReachedThreshold={0.97}
-          onEndReached={this._fetchMore}
-          keyExtractor={this._keyExtractor}
-          renderSectionHeader={this._renderHeader}
-          sections={sectionData}
-          stickySectionHeadersEnabled
-          renderItem={this._renderItem}
-        />
-        {this.props.loading && (
-          <Div
-            style={{ position: 'absolute', bottom: 0, left: 0 }}
-            justify="center"
-            _width="100%"
-            _background="rgba(0,0,0,0.3)"
-            _height="64px">
-            <InviniteLoader />
+      <>
+        <NavbarTop>
+          <Div justify="center" _width="100%">
+            <Font {...helveticaBlackBold}>{headerName}</Font>
+            <Font {...{ ...helveticaNormalFont, size: 12 }}>
+              {pagination.total} Items
+            </Font>
           </Div>
-        )}
+        </NavbarTop>
+        <Div _width="100%" _flex="1" justify="flex-start">
+          <SectionList
+            ListHeaderComponent={this._header}
+            style={styles.sectionContainer}
+            onEndReachedThreshold={0.97}
+            onEndReached={this._fetchMore}
+            keyExtractor={this._keyExtractor}
+            renderSectionHeader={this._renderHeader}
+            sections={sectionData}
+            stickySectionHeadersEnabled
+            renderItem={this._renderItem}
+          />
+          {this.props.loading && (
+            <Div
+              style={{ position: 'absolute', bottom: 0, left: 0 }}
+              justify="center"
+              _width="100%"
+              _background="rgba(0,0,0,0.3)"
+              _height="64px">
+              <InviniteLoader />
+            </Div>
+          )}
 
-        <FilterBottomSheet />
-      </Div>
+          <FilterBottomSheet />
+        </Div>
+      </>
     )
   }
 }
