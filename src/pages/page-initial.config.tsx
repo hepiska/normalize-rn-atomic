@@ -1,5 +1,5 @@
 export default {
   index: 'Main',
-  main: 'Shop',
+  main: 'Profile',
   shop: 'Shop',
 }

@@ -25,6 +25,7 @@ export const colors = {
   gray5: '#BDBDBD',
   gray6: '#E0E0E0',
   gray7: '#F2F2F2',
+  redBookmark: '#E13661',
   red1: '#EB5757',
   red2: '#FF5252',
   orange: '#F2994A',

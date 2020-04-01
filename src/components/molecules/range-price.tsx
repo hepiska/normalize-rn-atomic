@@ -20,7 +20,7 @@ const RangePrice = ({
   to,
   exFrom,
   exTo,
-  withDiscount,
+  withDiscount = false,
   style,
   upTo,
 }: RangePrice) => {
@@ -30,18 +30,31 @@ const RangePrice = ({
   }
   return (
     <Div align="flex-start" _margin="8px 0px 0px 0px">
-      <Font
-        type="HelveticaNeue"
-        size={11}
-        _margin="4px"
-        color={colors.black60}
-        style={{ textDecorationLine: 'line-through' }}>
-        {`${formatRupiah(exFrom)} - ${formatRupiah(exTo)}`}
-      </Font>
+      {withDiscount && (
+        <Font
+          type="HelveticaNeue"
+          size={11}
+          _margin="4px"
+          color={colors.black60}
+          style={{ textDecorationLine: 'line-through' }}>
+          {`${formatRupiah(exFrom)} - ${formatRupiah(exTo)}`}
+        </Font>
+      )}
 
       <Div _direction="row" justify="flex-start" style={{ flexWrap: 'wrap' }}>
         {price.map((x, i) => {
-          if (i !== price.length - 1) {
+          if (!withDiscount) {
+            return (
+              <Font
+                key={i}
+                size={14}
+                type="title"
+                _margin="4px 0px 0px 4px"
+                style={style}>
+                {x}
+              </Font>
+            )
+          } else if (i !== price.length - 1) {
             return (
               <Font
                 key={i}
@@ -54,7 +67,12 @@ const RangePrice = ({
             )
           } else {
             return (
-              <Div key={i} _margin="4px 4px 4px 12px">
+              <Div
+                key={i}
+                _margin="4px 4px 4px 4px"
+                _width="100%"
+                align="flex-start"
+                _height="20px">
                 <Img
                   source={
                     upTo
@@ -64,12 +82,12 @@ const RangePrice = ({
                   style={{
                     position: 'absolute',
                     width: upTo ? 65 : 31,
-                    height: 15,
+                    height: 14,
                   }}
                 />
                 <Font
                   size={8}
-                  _margin="0px 0px 0px 8px"
+                  _margin="0px 0px 0px 11px"
                   color={colors.white}
                   style={{ fontWeight: '500' }}>
                   {upTo ? `UP TO ${x}` : x}

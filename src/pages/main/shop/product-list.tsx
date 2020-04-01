@@ -62,7 +62,7 @@ class Productlist extends Component<any, any> {
     skip: 0,
     headerName: 'Product',
   }
-  limit = 20
+  limit = 15
 
   skip = 0
   lastskip = 0
@@ -321,7 +321,8 @@ const mapStateToProps = (state, { route }) => {
   let appliedFilters = deepClone(state.productFilter.applied)
   appliedFilters = { ...appliedFilters, ...appliedFilters.prices }
   delete appliedFilters.prices
-  if (route.params.collectionId) {
+
+  if (route.params && route.params.collectionId) {
     const collection =
       route.params.collectionId &&
       state.collection.data[route.params.collectionId]

@@ -11,6 +11,9 @@
       "es6",
       "es2015.promise",
       "es2016.array.include",
+      "es2019",
+      "esnext",
+      "esnext.array",
       "dom"
     ],
     "moduleResolution": "node",
@@ -21,35 +24,14 @@
     "module": "commonjs",
     "baseUrl": "./",
     "paths": {
-      "@src/*": [
-        "src/*/index",
-        "src/*"
-      ],
-      "@components/*": [
-        "src/components/*/index",
-        "src/components/*"
-      ],
-      "@hocs/*": [
-        "src/hocs/*/index",
-        "src/hocs/*"
-      ],
-      "@modules/*": [
-        "src/modules/*/index",
-        "src/modules/*"
-      ],
-      "@pages/*": [
-        "src/pages/*/index",
-        "src/pages/*"
-      ],
-      "@utils/*": [
-        "src/utils/*/index",
-        "src/utils/*"
-      ],
-      "@assets/*": [
-        "src/assets/*/index",
-        "src/assets/*"
-      ]
-    },
+      "@src/*": ["src/*/index", "src/*"],
+      "@components/*": ["src/components/*/index", "src/components/*"],
+      "@hocs/*": ["src/hocs/*/index", "src/hocs/*"],
+      "@modules/*": ["src/modules/*/index", "src/modules/*"],
+      "@pages/*": ["src/pages/*/index", "src/pages/*"],
+      "@utils/*": ["src/utils/*/index", "src/utils/*"],
+      "@assets/*": ["src/assets/*/index", "src/assets/*"]
+    }
   },
   "exclude": [
     "node_modules",

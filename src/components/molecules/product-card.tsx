@@ -89,21 +89,34 @@ const ProductCard = ({
 
   const isSaved = false
 
-  const imageSource = product.image_url
+  const imageSource = !product.image_url
     ? {
         uri: chageImageUri(product.image_url, { width: 100, height: 150 }),
       }
     : require('../../assets/placeholder/placeholder2.jpg')
 
   const [image, setImage] = useState(imageSource)
+  const [variantSelected, setVariantSelected] = useState(null)
   const [attributeSelected, setAttributeSelected] = useState(null)
   console.log('brand', brand)
 
-  const onAttributeChange = (attribute, index) => () => {
-    const random = Math.floor(Math.random() * product.image_urls.length)
+  const onAttributeChange = (attribute, data, index) => () => {
+    console.log(attribute)
+    console.log(product)
+    const variant = product.variants.filter(_variant => {
+      const ismatch = _variant.attribute_values.find(item => {
+        return (
+          item.id === data.attribute_id &&
+          item.attribute_value_id === attribute.id
+        )
+      })
+      return ismatch
+    })[0]
+    const random = Math.floor(Math.random() * variant.image_urls.length)
     const selected = product.image_urls[random]
-    setImage({ uri: selected })
+    setVariantSelected(variant)
     setAttributeSelected(attribute)
+    setImage({ uri: selected })
   }
 
   return horizontal ? (
@@ -116,6 +129,7 @@ const ProductCard = ({
       onPress={onPress}
       brand={brand}
       product={product}
+      variantSelected={variantSelected}
       attributeSelected={attributeSelected}
       onAttributeChange={onAttributeChange}
     />
@@ -130,6 +144,7 @@ const ProductCard = ({
       type={type}
       brand={brand}
       product={product}
+      variantSelected={variantSelected}
       attributeSelected={attributeSelected}
       onAttributeChange={onAttributeChange}
     />
@@ -145,6 +160,7 @@ const ProductCardHorizontal = ({
   brand,
   product,
   onPress,
+  variantSelected,
   attributeSelected,
   onAttributeChange,
 }) => {
@@ -213,6 +229,7 @@ const ProductCardVertical = ({
   brand,
   product,
   onPress,
+  variantSelected,
   attributeSelected,
   onAttributeChange,
 }) => {
@@ -263,14 +280,25 @@ const ProductCardVertical = ({
             ellipsizeMode="tail">
             {productName}
           </Font>
-          {/* {product.attributes && (
-          <ColorList
-            selectedId={attributeSelected ? attributeSelected.id : null}
-            data={colorAttributes ? colorAttributes.values : []}
-            onChange={onAttributeChange}
-          />
-        )} */}
-          <Price value={1000} />
+          {product.attributes && (
+            <ColorList
+              selectedId={attributeSelected ? attributeSelected.id : null}
+              data={colorAttributes ? colorAttributes.values : []}
+              onChange={onAttributeChange}
+            />
+          )}
+          {!variantSelected && product.min_price && product.max_price ? (
+            <RangePrice
+              from={product.min_price}
+              to={product.max_price}
+              withDiscount={false}
+            />
+          ) : (
+            <Price
+              value={variantSelected ? variantSelected.price : product.price}
+            />
+          )}
+
           <AddToCartButton />
         </View>
       </Div>

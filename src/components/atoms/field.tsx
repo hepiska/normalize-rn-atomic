@@ -8,7 +8,7 @@ interface FieldType {
   placeholder?: string
   onChangeText(text: string): void
   value: string
-  inputProps?: TextInput
+  inputProps?: TextInputProps
   leftIcon?: ReactElement
   rightIcon?: ReactElement
   style?: ViewStyle
