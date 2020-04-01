@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { collectionApi } from '@modules/collection/action'
 import { collectionListData } from '@hocs/data/collection'
-
+import InviniteLoader from '@components/atoms/loaders/invinite'
 import { Div, Font, PressAbbleDiv } from '@components/atoms/basic'
 
 const CollectionItem = ({ collection, onPress }) => {
@@ -27,8 +27,16 @@ class ShopPage extends React.Component<any, any> {
   render() {
     const { navigation } = this.props
     return (
-      <Div>
-        <Font>shop Page</Font>
+      <Div padd="50px 0px">
+        <PressAbbleDiv
+          onPress={() =>
+            navigation.push('ProductList', {
+              collectionId: 4,
+            })
+          }>
+          <Font>shop Page</Font>
+        </PressAbbleDiv>
+        <InviniteLoader />
         <FlatList
           data={this.props.collections}
           renderItem={({ item }) => (

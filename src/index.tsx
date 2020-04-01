@@ -2,10 +2,7 @@ import * as React from 'react'
 import InitStore from './init-store'
 
 const App: React.FunctionComponent<any> = () => {
-  return (
-    <InitStore />
-  )
+  return <InitStore />
 }
-
 
 export default App

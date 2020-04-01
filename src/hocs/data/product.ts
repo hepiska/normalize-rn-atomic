@@ -1,4 +1,5 @@
 import { connect } from 'react-redux'
+import { navigate } from '@src/root-navigation'
 
 const productListMap = (state, ownProps) => {
   const { productId } = ownProps
@@ -7,6 +8,9 @@ const productListMap = (state, ownProps) => {
   const primary = {
     ...product,
     ...variants.find(_var => _var.is_primary),
+  }
+  ownProps.onPress = () => {
+    navigate('ProductDetail', { productId })
   }
   return {
     product: primary,

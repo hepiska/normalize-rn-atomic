@@ -1,12 +1,18 @@
-import React, { Component, useState } from 'react'
+import React, { Component, useState, useEffect } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { Div, Font, ScrollDiv } from '@components/atoms/basic'
 import { Button, OutlineButton } from '@components/atoms/button'
 import { colors } from '@utils/constants'
 import Field from '@components/atoms/field'
-import { changeValue, openFilter } from '@modules/product-filter/action'
+import {
+  changeValue,
+  openFilter,
+  changeSearch,
+} from '@modules/product-filter/action'
 import Icon from 'react-native-vector-icons/FontAwesome5'
+
+let timer = null
 
 const FilterButton = ({ title, onPress }) => {
   return (
@@ -26,12 +32,26 @@ const FilterButton = ({ title, onPress }) => {
   )
 }
 const FilterTriger = (props: any) => {
+  const [searchKey, setSearchKey] = useState(props.search)
+
+  useEffect(() => {
+    setSearchKey(props.search)
+  }, [props.search])
+
+  useEffect(() => {
+    timer = setTimeout(() => {
+      props.changeSearch(searchKey)
+    }, 500)
+    return () => clearTimeout(timer)
+  }, [searchKey])
+
   return (
-    <Div _width="100%" bg="white">
+    <Div _width="100%" bg="white" style={props.style}>
       <Div _width="100%" _direction="row" _margin="8px 0px">
         <Field
-          value=""
-          onChangeText={() => {}}
+          value={searchKey}
+          placeholder="Search for products..."
+          onChangeText={setSearchKey}
           leftIcon={
             <Icon
               style={{ marginRight: 8 }}
@@ -43,7 +63,7 @@ const FilterTriger = (props: any) => {
         <Button
           title="Sort"
           onPress={() => {
-            props.changeValue({ key: 'isOpen', value: true })
+            props.openFilter('sort')
           }}
           fontStyle={{ color: colors.white }}
           style={{ marginLeft: 8, backgroundColor: colors.black100 }}
@@ -56,7 +76,11 @@ const FilterTriger = (props: any) => {
           }
         />
       </Div>
-      <ScrollDiv _width="100%" horizontal _margin="8px 0px">
+      <ScrollDiv
+        _width="100%"
+        horizontal
+        _margin="8px 0px"
+        showsHorizontalScrollIndicator={false}>
         <Button
           title="All Filters"
           onPress={() => {}}
@@ -87,12 +111,15 @@ const FilterTriger = (props: any) => {
   )
 }
 
+const mapStateToProps = state => ({ search: state.productFilter.search })
+
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
       changeValue,
       openFilter,
+      changeSearch,
     },
     dispatch,
   )
-export default connect(null, mapDispatchToProps)(FilterTriger)
+export default connect(mapStateToProps, mapDispatchToProps)(FilterTriger)

@@ -1,18 +1,12 @@
-import React, { Component, useState, memo } from 'react'
-import { Dimensions, FlatList, Modal, StyleSheet } from 'react-native'
+import React from 'react'
+import { Dimensions, StyleSheet } from 'react-native'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { Div, Font, TouchableWithoutFeedback } from '@components/atoms/basic'
-import styled from 'styled-components/native'
-import { Button, OutlineButton, GradientButton } from '@components/atoms/button'
-import BottomSheet from 'reanimated-bottom-sheet'
+import { Div } from '@components/atoms/basic'
+import { Button, GradientButton } from '@components/atoms/button'
 import { colors } from '@utils/constants'
 import { clearFilter, applyFilter } from '@modules/product-filter/action'
 import { formatCur } from '@utils/helpers'
-import { changeValue } from '@modules/product-filter/action'
-import FilterPriceOrg from '@src/components/organisms/filter-price'
-import FilterCategoryOrg from '@src/components/organisms/filter-category'
-import FilterBrandOrg from '@src/components/organisms/filter-brand'
 
 const { width } = Dimensions.get('screen')
 

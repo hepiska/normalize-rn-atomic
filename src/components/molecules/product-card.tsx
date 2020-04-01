@@ -1,5 +1,10 @@
 import React, { useState } from 'react'
-import { ViewStyle, StyleSheet, View } from 'react-native'
+import {
+  ViewStyle,
+  StyleSheet,
+  View,
+  TouchableWithoutFeedback,
+} from 'react-native'
 import styled from 'styled-components'
 import ImageAutoSchale from '@components/atoms/image-autoschale'
 import Icon from 'react-native-vector-icons/FontAwesome'
@@ -7,7 +12,9 @@ import { Div, Font } from '@components/atoms/basic'
 import { colors, images } from '@utils/constants'
 import Price from '@src/components/atoms/price'
 import AddToCartButton from '@src/components/atoms/button-add-to-cart'
+import { useNavigation } from '@react-navigation/native'
 import RangePrice from '@components/molecules/range-price'
+import { setImage as chageImageUri } from '@utils/helpers'
 import UserSaved from '@components/molecules/user-saved'
 import ColorList from '@components/molecules/color-list'
 
@@ -29,6 +36,7 @@ interface ViewExtend extends ViewStyle {
 interface ProductCard {
   product: any
   brand?: any
+  onPress: () => void
   style?: ViewExtend
   horizontal?: boolean
 }
@@ -65,7 +73,8 @@ const styles = StyleSheet.create({
 const ProductCard = ({
   product,
   style,
-  brand,
+  brand = {},
+  onPress,
   horizontal = false,
 }: ProductCard) => {
   const type = 'med'
@@ -82,14 +91,13 @@ const ProductCard = ({
 
   const imageSource = product.image_url
     ? {
-        uri:
-          product.image_url +
-          '?w=450&h=600&fit=fillmax&fill=solid&fill-color=white',
+        uri: chageImageUri(product.image_url, { width: 100, height: 150 }),
       }
     : require('../../assets/placeholder/placeholder2.jpg')
 
   const [image, setImage] = useState(imageSource)
   const [attributeSelected, setAttributeSelected] = useState(null)
+  console.log('brand', brand)
 
   const onAttributeChange = (attribute, index) => () => {
     const random = Math.floor(Math.random() * product.image_urls.length)
@@ -105,6 +113,7 @@ const ProductCard = ({
       image={image}
       setImage={setImage}
       type={type}
+      onPress={onPress}
       brand={brand}
       product={product}
       attributeSelected={attributeSelected}
@@ -115,6 +124,7 @@ const ProductCard = ({
       composeStyle={composeStyle}
       width={width}
       isSaved={isSaved}
+      onPress={onPress}
       image={image}
       setImage={setImage}
       type={type}
@@ -134,71 +144,62 @@ const ProductCardHorizontal = ({
   type,
   brand,
   product,
+  onPress,
   attributeSelected,
   onAttributeChange,
 }) => {
   const productName = product.name.replace(/\n|\r/g, '')
   return (
-<<<<<<< HEAD
-    <Div style={{ ...composeStyle, width }} key={'productcard' + product.id}>
-      <Div _margin="0px 0px 8px" _width="100%">
-        <AbsDiv zIndex="2">
-          <Icon
-            name="bookmark"
-            size={24}
-            color={isSaved ? colors.black50 : colors.black90}
+    <TouchableWithoutFeedback onPress={onPress}>
+      <Div
+        style={{ ...composeStyle, width: '100%' }}
+        _direction="row"
+        justify="space-between"
+        align="flex-start">
+        <Div _width="40%">
+          <ImageAutoSchale
+            source={image}
+            onError={() => {
+              setImage(images.product)
+            }}
+            width={width}
+            style={styles.image}
           />
-        </AbsDiv>
-=======
-    <Div
-      style={{ ...composeStyle, width: '100%' }}
-      _direction="row"
-      justify="space-between"
-      align="flex-start">
-      <Div _width="40%">
->>>>>>> 1470f0be5af6c5d589672e1501f1877bd4e15c1e
-        <ImageAutoSchale
-          source={image}
-          onError={() => {
-            setImage(images.product)
-          }}
-          width={width}
-          style={styles.image}
-        />
-      </Div>
+        </Div>
 
-      <View
-        style={{
-          width: '60%',
-          paddingHorizontal: composeStyle.paddingHorizontal,
-        }}>
-        <Font
-          type="HelveticaNeue"
-          size={typeDict[type].main}
-          weight="bold"
-          _margin="0px 4px 4px"
-          color={colors.black100}>
-          {brand.name}
-        </Font>
-        <Font
-          size={typeDict[type].sub}
-          _margin="4px"
-          color={colors.black80}
-          numberOfLines={1}
-          ellipsizeMode="tail">
-          {productName}
-        </Font>
-        {/* <UserSaved imageUrl={imageSource} /> */}
-        <RangePrice
-          from={1090900}
-          to={1890000}
-          exFrom={1590000}
-          exTo={2390000}
-          withDiscount={true}
-        />
-        <AddToCartButton />
-      </View>
-    </Div>
+        <View
+          style={{
+            width: '60%',
+            paddingHorizontal: composeStyle.paddingHorizontal,
+          }}>
+          <Font
+            type="HelveticaNeue"
+            size={typeDict[type].main}
+            weight="bold"
+            _margin="0px 4px 4px"
+            color={colors.black100}>
+            {brand.name}
+          </Font>
+          <Font
+            size={typeDict[type].sub}
+            _margin="4px"
+            color={colors.black80}
+            numberOfLines={1}
+            ellipsizeMode="tail">
+            {productName}
+          </Font>
+          {/* <UserSaved imageUrl={imageSource} /> */}
+          <RangePrice
+            from={1090900}
+            to={1890000}
+            exFrom={1590000}
+            exTo={2390000}
+            withDiscount={true}
+          />
+          <AddToCartButton />
+        </View>
+      </Div>
+    </TouchableWithoutFeedback>
   )
 }
 
@@ -211,64 +212,69 @@ const ProductCardVertical = ({
   type,
   brand,
   product,
+  onPress,
   attributeSelected,
   onAttributeChange,
 }) => {
   const productName = product.name.replace(/\n|\r/g, '')
-  const colorAttributes = product.attributes.find(x => x.label === 'Color')
-  return (
-    <Div style={{ ...composeStyle, width }}>
-      <Div _margin="0px 0px 8px" _width="100%">
-        <AbsDiv zIndex="2">
-          <Icon
-            name="bookmark"
-            size={24}
-            color={isSaved ? colors.black50 : colors.black90}
-          />
-        </AbsDiv>
-        <ImageAutoSchale
-          source={image}
-          onError={() => {
-            setImage(images.product)
-          }}
-          width={width}
-          style={styles.image}
-        />
-      </Div>
 
-      <View
-        style={{
-          flex: 1,
-          width: '100%',
-          paddingHorizontal: composeStyle.paddingHorizontal,
-        }}>
-        <Font
-          type="HelveticaNeue"
-          size={typeDict[type].main}
-          weight="bold"
-          _margin="4px"
-          color={colors.black100}>
-          {brand.name}
-        </Font>
-        <Font
-          size={typeDict[type].sub}
-          _margin="4px"
-          color={colors.black80}
-          numberOfLines={2}
-          ellipsizeMode="tail">
-          {productName}
-        </Font>
-        {/* {product.attributes && (
+  const colorAttributes =
+    product.attributes && product.attributes.find(x => x.label === 'Color')
+  return (
+    <TouchableWithoutFeedback onPress={onPress}>
+      <Div style={{ ...composeStyle, width }}>
+        <Div _margin="0px 0px 8px" _width="100%">
+          <AbsDiv zIndex="2">
+            <Icon
+              name="bookmark"
+              size={24}
+              color={isSaved ? colors.black50 : colors.black90}
+            />
+          </AbsDiv>
+          <ImageAutoSchale
+            source={image}
+            onError={() => {
+              setImage(images.product)
+            }}
+            width={width}
+            style={styles.image}
+          />
+        </Div>
+
+        <View
+          style={{
+            flex: 1,
+            width: '100%',
+            paddingHorizontal: composeStyle.paddingHorizontal,
+          }}>
+          <Font
+            type="HelveticaNeue"
+            size={typeDict[type].main}
+            weight="bold"
+            _margin="4px"
+            color={colors.black100}>
+            {brand.name}
+          </Font>
+          <Font
+            size={typeDict[type].sub}
+            _margin="4px"
+            color={colors.black80}
+            numberOfLines={2}
+            ellipsizeMode="tail">
+            {productName}
+          </Font>
+          {/* {product.attributes && (
           <ColorList
             selectedId={attributeSelected ? attributeSelected.id : null}
             data={colorAttributes ? colorAttributes.values : []}
             onChange={onAttributeChange}
           />
         )} */}
-        <Price value={1000} />
-        <AddToCartButton />
-      </View>
-    </Div>
+          <Price value={1000} />
+          <AddToCartButton />
+        </View>
+      </Div>
+    </TouchableWithoutFeedback>
   )
 }
 

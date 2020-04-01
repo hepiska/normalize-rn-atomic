@@ -1,14 +1,16 @@
-import React, { useState, useEffect, ReactType, ReactElement } from 'react'
-import { Image, ViewStyle, TextStyle, StyleSheet } from 'react-native'
+import React, { ReactElement } from 'react'
+import { ViewStyle, TextStyle, StyleSheet } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
-import { Div, Font, ScrollDiv, PressAbbleDiv } from '@components/atoms/basic'
+import { Font, PressAbbleDiv } from '@components/atoms/basic'
+import Icon from 'react-native-vector-icons/FontAwesome5'
+
 import { colors } from '@src/utils/constants'
 
 interface ButtonType {
   title: string
   fontStyle?: TextStyle
-  leftIcon?: ReactElement
-  rightIcon?: ReactElement
+  leftIcon?: ReactElement | string
+  rightIcon?: ReactElement | string
   style?: ViewStyle
   onPress: Function
   disabled?: boolean
@@ -86,7 +88,7 @@ export const GradientButton = ({
 export const OutlineButton = ({
   style,
   title,
-  fontStyle,
+  fontStyle = {},
   leftIcon,
   rightIcon,
   onPress,
@@ -97,11 +99,30 @@ export const OutlineButton = ({
       _direction="row"
       style={[styles.outline, style]}
       onPress={onPress}>
-      {leftIcon && leftIcon}
-      <Font family="HelveticaNeue" size="14px" style={fontStyle}>
+      {leftIcon && typeof leftIcon === 'string' ? (
+        <Icon
+          name={leftIcon}
+          color={fontStyle.color || colors.black100}
+          size={fontStyle.fontSize || 14}
+        />
+      ) : (
+        leftIcon
+      )}
+      <Font
+        family="HelveticaNeue"
+        size="14px"
+        style={{ marginLeft: 8, ...fontStyle }}>
         {title}
       </Font>
-      {rightIcon && rightIcon}
+      {rightIcon && typeof rightIcon === 'string' ? (
+        <Icon
+          name={rightIcon}
+          color={fontStyle.color || colors.black100}
+          size={fontStyle.fontSize || 16}
+        />
+      ) : (
+        rightIcon
+      )}
     </PressAbbleDiv>
   )
 }
@@ -109,7 +130,7 @@ export const OutlineButton = ({
 export const Button = ({
   style,
   title,
-  fontStyle,
+  fontStyle = {},
   leftIcon,
   onPress,
   rightIcon,
@@ -121,11 +142,30 @@ export const Button = ({
       _direction="row"
       style={!disabled ? [styles.fill, style] : [style, styles.disabled]}
       onPress={!disabled ? onPress : null}>
-      {leftIcon && leftIcon}
-      <Font family="HelveticaNeue" size="14px" style={fontStyle}>
+      {leftIcon && typeof leftIcon === 'string' ? (
+        <Icon
+          name={leftIcon}
+          color={fontStyle.color || colors.black100}
+          size={fontStyle.fontSize || 14}
+        />
+      ) : (
+        leftIcon
+      )}
+      <Font
+        family="HelveticaNeue"
+        size="14px"
+        style={{ marginLeft: 8, ...fontStyle }}>
         {title}
       </Font>
-      {rightIcon && rightIcon}
+      {rightIcon && typeof rightIcon === 'string' ? (
+        <Icon
+          name={rightIcon}
+          color={fontStyle.color || colors.black100}
+          size={fontStyle.fontSize || 16}
+        />
+      ) : (
+        rightIcon
+      )}
     </PressAbbleDiv>
   )
 }

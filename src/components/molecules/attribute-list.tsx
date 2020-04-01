@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Div, Font, PressAbbleDiv, ScrollDiv } from '@components/atoms/basic'
 import { colors } from '@utils/constants'
 import { futuraTitleFont, helveticaNormalFont } from '../commont-styles'
+import { OutlineButton } from '@components/atoms/button'
 
 // export interface AtributeValueType {
 //   label: String
@@ -110,6 +111,14 @@ const AtributesList = ({
           </PressAbbleDiv>
         ))}
       </ScrollDiv>
+      {label.toLowerCase() === 'size' && (
+        <OutlineButton
+          leftIcon="ruler"
+          style={{ borderWidth: 0 }}
+          title="Size guide"
+          onPress={() => {}}
+        />
+      )}
     </Div>
   )
 }

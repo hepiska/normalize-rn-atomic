@@ -1,4 +1,4 @@
-import { schema } from 'normalizr'
+import { schema, normalize } from 'normalizr'
 
 export const lookbooks = new schema.Entity('lookbooks')
 
@@ -8,7 +8,85 @@ export const user = new schema.Entity('user')
 
 export const brand = new schema.Entity('brand')
 
-export const category = new schema.Entity('category')
+const grandchildrenCategory = new schema.Entity(
+  'category',
+  {},
+  {
+    processStrategy: entity => {
+      entity.data = entity.children
+      return entity
+    },
+  },
+)
+
+const childrenCategory = new schema.Entity(
+  'category',
+  {
+    children: new schema.Entity(
+      'category',
+      {},
+      {
+        processStrategy: entity => {
+          entity.data = entity.children
+          return entity
+        },
+      },
+    ),
+  },
+  {
+    processStrategy: entity => {
+      entity.data = entity.children
+      return entity
+    },
+  },
+)
+
+export const category = new schema.Entity(
+  'category',
+  {
+    children: [
+      new schema.Entity(
+        'category',
+        {
+          children: [
+            new schema.Entity(
+              'category',
+              {},
+              {
+                processStrategy: entity => {
+                  if (entity.children)
+                    entity.data = entity.children.map(({ id }) => id)
+                  else entity.data = []
+                  return entity
+                },
+              },
+            ),
+          ],
+        },
+        {
+          processStrategy: entity => {
+            if (entity.children)
+              entity.data = entity.children.map(({ id }) => id)
+            else entity.data = []
+
+            return entity
+          },
+        },
+      ),
+    ],
+    parent: new schema.Entity('category', {
+      parent: new schema.Entity('category'),
+    }),
+  },
+  {
+    processStrategy: entity => {
+      if (entity.children) entity.data = entity.children.map(({ id }) => id)
+      else entity.data = []
+
+      return entity
+    },
+  },
+)
 
 export const product = new schema.Entity('product', {
   brand: brand,

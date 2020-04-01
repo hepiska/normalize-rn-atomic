@@ -6,8 +6,9 @@ import postReducer from './post/reducer'
 import topPostReducer from './post-top/reducer'
 import productsReducer from './product/reducer'
 import brandReducer from './brand/reducer'
-import categoryReducer from './brand/reducer'
+import categoryReducer from './category/reducer'
 import productFilterReducer from './product-filter/reducer'
+import sortReducer from './sort/reducer'
 import uiInteracrionReducer from './ui-interaction/reducer'
 import collectionReducer from './collection/reducer'
 
@@ -22,6 +23,7 @@ const combinedReducer: Reducer<any> = combineReducers({
   uiInteraction: uiInteracrionReducer,
   productFilter: productFilterReducer,
   post: postReducer,
+  sort: sortReducer,
   collection: collectionReducer,
 })
 
