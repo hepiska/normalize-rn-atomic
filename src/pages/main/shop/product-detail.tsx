@@ -314,87 +314,82 @@ class ProductListPage extends React.Component<any, any> {
     const { selectedVariant } = this.state
 
     const varianData = this.getVariantData(selectedVariant)
-    navigation.setOptions({
-      header: () => {
-        return (
-          <NavbarTopAnimated
-            parentDim={{ coverheight: this.dimentionConstant.imageHeight }}
-            onBack={() => {}}
-            y={y}
-            Title={product.name}
-          />
-        )
-      },
-    })
-
     return (
-      <Div _width="100%" justify="flex-start">
-        <CoverImageAnimated
+      <>
+        <NavbarTopAnimated
+          parentDim={{ coverheight: this.dimentionConstant.imageHeight }}
+          onBack={() => navigation.goBack()}
           y={y}
-          width={width}
-          images={varianData.image_urls.map(url => ({
-            uri: url,
-          }))}
-          height={this.dimentionConstant.imageHeight}>
-          <ImagesWithPreviews
-            size={{ width, height: this.dimentionConstant.imageHeight }}
+          Title={product.name}
+        />
+        <Div _width="100%" justify="flex-start">
+          <CoverImageAnimated
+            y={y}
+            width={width}
             images={varianData.image_urls.map(url => ({
-              uri: setImage(url, { width: 400, height: 600 }),
+              uri: url,
             }))}
-          />
-        </CoverImageAnimated>
-        <ImageCoverContentLayout
-          y={y}
-          dimentionConstant={this.dimentionConstant}>
-          <Div bg="white" _width="100%" padd="0px 16px 96px">
-            <ProductOverviewCard product={{ ...product, ...varianData }} />
-            {product.attributes && (
-              <ProductAttributes
-                attributes={product.attributes}
-                onAllAttributesSelected={this._selectVariant}
-              />
-            )}
-
-            <Button
-              leftIcon="save"
-              title="Available for return or exchange"
-              onPress={() => {}}
-              style={{
-                width: '100%',
-                marginVertical: 12,
-                justifyContent: 'flex-start',
-                height: 32,
-                backgroundColor: 'rgba(26, 26, 26, 0.04)',
-              }}
+            height={this.dimentionConstant.imageHeight}>
+            <ImagesWithPreviews
+              size={{ width, height: this.dimentionConstant.imageHeight }}
+              images={varianData.image_urls.map(url => ({
+                uri: setImage(url, { width: 400, height: 600 }),
+              }))}
             />
-            <Button
-              title="Add to cart"
-              onPress={this.openCartModal}
-              fontStyle={{
-                color: colors.white,
-                fontSize: 14,
-              }}
-              style={{
-                width: '100%',
-                height: 46,
-                marginVertical: 12,
-                backgroundColor: '#8131E2',
-              }}
-            />
+          </CoverImageAnimated>
+          <ImageCoverContentLayout
+            y={y}
+            dimentionConstant={this.dimentionConstant}>
+            <Div bg="white" _width="100%" padd="0px 16px 96px">
+              <ProductOverviewCard product={{ ...product, ...varianData }} />
+              {product.attributes && (
+                <ProductAttributes
+                  attributes={product.attributes}
+                  onAllAttributesSelected={this._selectVariant}
+                />
+              )}
 
-            <ButtonGroup items={this.groupButton} />
-            {product?.details?.map((detail, idx) => (
-              <ContentExpandable
-                title={detail.type}
-                content={detail.content}
-                key={idx}
-                id={'expanable' + idx}
-                isFirst={idx === 0}
+              <Button
+                leftIcon="save"
+                title="Available for return or exchange"
+                onPress={() => {}}
+                style={{
+                  width: '100%',
+                  marginVertical: 12,
+                  justifyContent: 'flex-start',
+                  height: 32,
+                  backgroundColor: 'rgba(26, 26, 26, 0.04)',
+                }}
               />
-            ))}
-          </Div>
-        </ImageCoverContentLayout>
-      </Div>
+              <Button
+                title="Add to cart"
+                onPress={this.openCartModal}
+                fontStyle={{
+                  color: colors.white,
+                  fontSize: 14,
+                }}
+                style={{
+                  width: '100%',
+                  height: 46,
+                  marginVertical: 12,
+                  backgroundColor: '#8131E2',
+                }}
+              />
+
+              <ButtonGroup items={this.groupButton} />
+              {product?.details?.map((detail, idx) => (
+                <ContentExpandable
+                  title={detail.type}
+                  content={detail.content}
+                  key={idx}
+                  id={'expanable' + idx}
+                  isFirst={idx === 0}
+                />
+              ))}
+            </Div>
+          </ImageCoverContentLayout>
+        </Div>
+      </>
     )
   }
 }

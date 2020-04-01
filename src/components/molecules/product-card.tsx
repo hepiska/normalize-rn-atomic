@@ -14,6 +14,7 @@ import Price from '@src/components/atoms/price'
 import AddToCartButton from '@src/components/atoms/button-add-to-cart'
 import { useNavigation } from '@react-navigation/native'
 import RangePrice from '@components/molecules/range-price'
+import { setImage as chageImageUri } from '@utils/helpers'
 import UserSaved from '@components/molecules/user-saved'
 import ColorList from '@components/molecules/color-list'
 
@@ -90,14 +91,13 @@ const ProductCard = ({
 
   const imageSource = product.image_url
     ? {
-        uri:
-          product.image_url +
-          '?w=450&h=600&fit=fillmax&fill=solid&fill-color=white',
+        uri: chageImageUri(product.image_url, { width: 100, height: 150 }),
       }
     : require('../../assets/placeholder/placeholder2.jpg')
 
   const [image, setImage] = useState(imageSource)
   const [attributeSelected, setAttributeSelected] = useState(null)
+  console.log('brand', brand)
 
   const onAttributeChange = (attribute, index) => () => {
     const random = Math.floor(Math.random() * product.image_urls.length)
@@ -217,6 +217,7 @@ const ProductCardVertical = ({
   onAttributeChange,
 }) => {
   const productName = product.name.replace(/\n|\r/g, '')
+
   const colorAttributes =
     product.attributes && product.attributes.find(x => x.label === 'Color')
   return (

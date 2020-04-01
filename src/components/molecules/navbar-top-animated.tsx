@@ -1,18 +1,17 @@
 import React from 'react'
 import DeviceInfo from 'react-native-device-info'
 import { Dimensions, StyleSheet, SafeAreaView } from 'react-native'
-import { Div, Font, Image } from '@components/atoms/basic'
+import { Div, Font, Image, PressAbbleDiv } from '@components/atoms/basic'
 import LinearGradient from 'react-native-linear-gradient'
 import { globalDimention } from '@utils/constants'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import Animated from 'react-native-reanimated'
 import styled from 'styled-components/native'
-
-let hasNotch = DeviceInfo.hasNotch()
+import { useNavigation } from '@react-navigation/native'
 
 const { interpolate, Extrapolate } = Animated
 
-const LeftDiv = styled(Div)`
+const LeftDiv = styled(PressAbbleDiv)`
   position: absolute;
   padding: 16px 12px;
   flex: 1;
@@ -61,6 +60,7 @@ const NavbarTopAnimated: React.SFC<NavbarBottomProps> = ({
     outputRange: [Animated.color(0, 0, 0, 0), Animated.color(255, 255, 255, 1)],
     extrapolate: Extrapolate.CLAMP,
   })
+  const navigation = useNavigation()
   const textOpacity = interpolate(y, {
     inputRange: [
       parentDim.coverheight - headerHeight,
@@ -81,14 +81,14 @@ const NavbarTopAnimated: React.SFC<NavbarBottomProps> = ({
   return (
     <AnimatedSaveArea
       style={{
-        flex: 1,
         position: 'absolute',
         top: 0,
         left: 0,
         backgroundColor: backgroundColor,
+        zIndex: 10,
       }}>
       <LinearGradient
-        style={StyleSheet.absoluteFill}
+        style={[StyleSheet.absoluteFill, { zIndex: -1 }]}
         start={{ x: 0, y: 1 }}
         end={{ x: 0, y: 0.4 }}
         colors={[
@@ -104,10 +104,13 @@ const NavbarTopAnimated: React.SFC<NavbarBottomProps> = ({
         _width={width}
         _height={globalDimention.headerHeight}
         justify="space-between"
+        zIndex="10"
         _direction="row">
         {onBack && (
           <LeftDiv zIndex="2" _height={55}>
-            <AnimatedIcon name="chevron-left" size={20} color={textColor} />
+            <PressAbbleDiv onPress={onBack}>
+              <AnimatedIcon name="chevron-left" size={20} color={textColor} />
+            </PressAbbleDiv>
           </LeftDiv>
         )}
         <Div
