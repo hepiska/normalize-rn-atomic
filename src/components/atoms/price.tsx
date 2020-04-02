@@ -1,27 +1,68 @@
 import React from 'react'
 import { TextStyle } from 'react-native'
-import { Font } from '@components/atoms/basic'
+import { Font, Div } from '@components/atoms/basic'
 import { colors } from '@utils/constants'
+import Img from '@components/atoms/image'
+
 import { formatRupiah } from '@utils/helpers'
 
 interface Price {
-  value: number
+  price: number
+  discount_price?: number
   style?: TextStyle
 }
 
-const Price = ({ value, style }: Price) => {
+const Price = ({ price, discount_price, style }: Price) => {
+  // const price = `${formatRupiah(from)} - ${formatRupiah(to)}`.split(' ')
+  const mainPrice = `${formatRupiah(discount_price || price)}`.split(' ')
+
   return (
-    <Font
-      size={14}
-      color={colors.black100}
-      type="title"
-      _margin="4px"
-      style={{
-        marginTop: 16,
-        ...style,
-      }}>
-      {formatRupiah(value)}
-    </Font>
+    <Div _direction="row" justify="flex-start" style={{ flexWrap: 'wrap' }}>
+      {discount_price && (
+        <Font
+          type="HelveticaNeue"
+          size={11}
+          _margin="4px"
+          color={colors.black60}
+          style={{ textDecorationLine: 'line-through' }}>
+          {formatRupiah(price)}
+        </Font>
+      )}
+      {mainPrice.map((x, i) => {
+        if (i !== mainPrice.length - 1 || !discount_price) {
+          return (
+            <Font
+              key={i}
+              size={14}
+              type="title"
+              _margin="4px 0px 0px 4px"
+              style={style}>
+              {x}
+            </Font>
+          )
+        } else if (discount_price && i === mainPrice.length - 1) {
+          return (
+            <Div key={i} _margin="4px 4px 4px 12px" overflow="visible">
+              <Img
+                source={require('../../assets/icons/badge-discount.png')}
+                style={{
+                  position: 'absolute',
+                  width: 31,
+                  height: 15,
+                }}
+              />
+              <Font
+                size={8}
+                _margin="0px 0px 0px 8px"
+                color={colors.white}
+                style={{ fontWeight: '500' }}>
+                {x}
+              </Font>
+            </Div>
+          )
+        }
+      })}
+    </Div>
   )
 }
 

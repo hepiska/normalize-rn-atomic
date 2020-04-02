@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, memo } from 'react'
 import {
   ViewStyle,
   StyleSheet,
@@ -7,18 +7,18 @@ import {
 } from 'react-native'
 import styled from 'styled-components'
 import ImageAutoSchale from '@components/atoms/image-autoschale'
-import Icon from 'react-native-vector-icons/FontAwesome'
-import { Div, Font } from '@components/atoms/basic'
-import { colors, images } from '@utils/constants'
+import Icon from 'react-native-vector-icons/MaterialIcons'
+import { Div, Font, PressAbbleDiv } from '@components/atoms/basic'
+import { colors, images as defaultImages } from '@utils/constants'
 import Price from '@src/components/atoms/price'
-import AddToCartButton from '@src/components/atoms/button-add-to-cart'
-import { useNavigation } from '@react-navigation/native'
+import { OutlineButton } from '@components/atoms/button'
+// import { useNavigation } from '@react-navigation/native'
 import RangePrice from '@components/molecules/range-price'
 import { setImage as chageImageUri } from '@utils/helpers'
 import UserSaved from '@components/molecules/user-saved'
 import ColorList from '@components/molecules/color-list'
 
-const AbsDiv = styled(Div)`
+const AbsDiv = styled(PressAbbleDiv)`
   position: absolute;
   right: 16px;
   top: 16px;
@@ -33,10 +33,12 @@ interface ViewExtend extends ViewStyle {
   wrappermargin?: number
 }
 
-interface ProductCard {
+interface ProductCardType {
   product: any
   brand?: any
   onPress: () => void
+  onAddtoCart: () => void
+  onSave: () => void
   style?: ViewExtend
   horizontal?: boolean
 }
@@ -56,13 +58,25 @@ const typeDict = {
   },
 }
 
+// revisit : handle on save handle add to cart
+
 const styles = StyleSheet.create({
   image: {
     borderRadius: 8,
   },
+  button: {
+    width: '100%',
+    height: 36,
+    borderColor: '#EFEFEF',
+  },
+  buttonText: {
+    fontSize: 12,
+    color: colors.black80,
+    marginLeft: 8,
+    fontWeight: 'bold',
+  },
   defaultStyle: {
     width: 156,
-    minHeight: 352,
     marginTop: 16,
     marginBottom: 16,
     paddingHorizontal: 8,
@@ -74,9 +88,11 @@ const ProductCard = ({
   product,
   style,
   brand = {},
+  onSave,
+  onAddtoCart,
   onPress,
   horizontal = false,
-}: ProductCard) => {
+}: ProductCardType) => {
   const type = 'med'
   const composeStyle = { ...styles.defaultStyle, ...style }
   const margin = composeStyle.marginRight
@@ -89,22 +105,39 @@ const ProductCard = ({
 
   const isSaved = false
 
-  const imageSource = product.image_url
-    ? {
-        uri: chageImageUri(product.image_url, { width: 100, height: 150 }),
-      }
-    : require('../../assets/placeholder/placeholder2.jpg')
-
-  const [image, setImage] = useState(imageSource)
+  const [defaultImage, setImage] = useState(null)
   const [attributeSelected, setAttributeSelected] = useState(null)
-  console.log('brand', brand)
+  const [selectedVariantId, setSelectedVariantId] = useState(null)
 
-  const onAttributeChange = (attribute, index) => () => {
-    const random = Math.floor(Math.random() * product.image_urls.length)
-    const selected = product.image_urls[random]
-    setImage({ uri: selected })
+  const colorAttributes =
+    product.attributes && product.attributes.find(x => x.label === 'Color')
+  const onColorChange = (attribute, index) => () => {
+    const _filteredVariants = product.variants.filter(_variant => {
+      _variant.attribute_values =
+        _variant.attribute_values || _variant.attributeValues
+      return _variant.attribute_values.find(
+        ({ attribute_id, attribute_value_id }) =>
+          attribute_id === colorAttributes.id &&
+          attribute_value_id === attribute.id,
+      )
+    })
+    setSelectedVariantId(_filteredVariants[0].id)
     setAttributeSelected(attribute)
   }
+  const selectedVariant =
+    product.variants.find(variant => variant.id === selectedVariantId) ||
+    product.variants[0]
+  const images = selectedVariant.image_urls || product.image_urls || []
+  const random = Math.floor(Math.random() * images.length)
+  const variantPrice = selectedVariantId && {
+    price: selectedVariant.price,
+    discount_price: selectedVariant.price_after_disc,
+  }
+  const image =
+    defaultImage ||
+    (!!images[random]
+      ? chageImageUri(images[random], { width: 200, height: 300 })
+      : defaultImages.product)
 
   return horizontal ? (
     <ProductCardHorizontal
@@ -113,11 +146,15 @@ const ProductCard = ({
       image={image}
       setImage={setImage}
       type={type}
+      variantPrice={variantPrice}
       onPress={onPress}
       brand={brand}
+      onSave={onSave}
+      onAddtoCart={onAddtoCart}
       product={product}
+      colorAttributes={colorAttributes}
       attributeSelected={attributeSelected}
-      onAttributeChange={onAttributeChange}
+      onColorChange={onColorChange}
     />
   ) : (
     <ProductCardVertical
@@ -127,11 +164,15 @@ const ProductCard = ({
       onPress={onPress}
       image={image}
       setImage={setImage}
+      variantPrice={variantPrice}
+      onSave={onSave}
+      onAddtoCart={onAddtoCart}
       type={type}
+      colorAttributes={colorAttributes}
       brand={brand}
       product={product}
       attributeSelected={attributeSelected}
-      onAttributeChange={onAttributeChange}
+      onColorChange={onColorChange}
     />
   )
 }
@@ -145,10 +186,27 @@ const ProductCardHorizontal = ({
   brand,
   product,
   onPress,
+  onSave,
+  onAddtoCart,
+  variantPrice,
+  colorAttributes,
   attributeSelected,
-  onAttributeChange,
+  onColorChange,
 }) => {
   const productName = product.name.replace(/\n|\r/g, '')
+  const price: any = {}
+  if (!product.max_price_after_disc && !product.min_price_after_disc) {
+    price.from = product.min_price
+    price.to = product.max_price
+    price.withDiscount = false
+  } else {
+    price.from = product.min_price_after_disc
+    price.to = product.max_price_after_disc
+    price.exFrom = product.min_price
+    price.exTo = product.max_price
+    price.withDiscount = true
+  }
+
   return (
     <TouchableWithoutFeedback onPress={onPress}>
       <Div
@@ -160,7 +218,7 @@ const ProductCardHorizontal = ({
           <ImageAutoSchale
             source={image}
             onError={() => {
-              setImage(images.product)
+              setImage(defaultImages.product)
             }}
             width={width}
             style={styles.image}
@@ -189,14 +247,24 @@ const ProductCardHorizontal = ({
             {productName}
           </Font>
           {/* <UserSaved imageUrl={imageSource} /> */}
-          <RangePrice
-            from={1090900}
-            to={1890000}
-            exFrom={1590000}
-            exTo={2390000}
-            withDiscount={true}
-          />
-          <AddToCartButton />
+          {variantPrice ? (
+            <Price {...variantPrice} />
+          ) : (
+            <RangePrice {...price} upTo />
+          )}
+          {onAddtoCart && (
+            <Div _flex={1} justify="flex-end" _margin="16px 0px 0px">
+              <OutlineButton
+                title="Add to Cart"
+                onPress={() => {}}
+                leftIcon={
+                  <Icon name="shopping-bag" size={12} color={colors.black80} />
+                }
+                style={styles.button}
+                fontStyle={styles.buttonText}
+              />
+            </Div>
+          )}
         </View>
       </Div>
     </TouchableWithoutFeedback>
@@ -213,28 +281,46 @@ const ProductCardVertical = ({
   brand,
   product,
   onPress,
+  onSave,
+  onAddtoCart,
+  variantPrice,
+  colorAttributes,
   attributeSelected,
-  onAttributeChange,
+  onColorChange,
 }) => {
   const productName = product.name.replace(/\n|\r/g, '')
-
-  const colorAttributes =
-    product.attributes && product.attributes.find(x => x.label === 'Color')
+  const price: any = {}
+  if (!product.max_price_after_disc && !product.min_price_after_disc) {
+    price.from = product.min_price
+    price.to = product.max_price
+    price.withDiscount = false
+  } else {
+    price.from = product.min_price_after_disc
+    price.to = product.max_price_after_disc
+    price.exFrom = product.min_price
+    price.exTo = product.max_price
+    price.withDiscount = true
+  }
   return (
     <TouchableWithoutFeedback onPress={onPress}>
       <Div style={{ ...composeStyle, width }}>
         <Div _margin="0px 0px 8px" _width="100%">
-          <AbsDiv zIndex="2">
+          <AbsDiv
+            zIndex="2"
+            _width="32px"
+            _height="32px"
+            _background="white"
+            radius="16px">
             <Icon
-              name="bookmark"
-              size={24}
+              name={isSaved ? 'bookmark' : 'bookmark-border'}
+              size={18}
               color={isSaved ? colors.black50 : colors.black90}
             />
           </AbsDiv>
           <ImageAutoSchale
             source={image}
             onError={() => {
-              setImage(images.product)
+              setImage(defaultImages.product)
             }}
             width={width}
             style={styles.image}
@@ -243,7 +329,7 @@ const ProductCardVertical = ({
 
         <View
           style={{
-            flex: 1,
+            // flex: 1,
             width: '100%',
             paddingHorizontal: composeStyle.paddingHorizontal,
           }}>
@@ -263,19 +349,36 @@ const ProductCardVertical = ({
             ellipsizeMode="tail">
             {productName}
           </Font>
-          {/* {product.attributes && (
-          <ColorList
-            selectedId={attributeSelected ? attributeSelected.id : null}
-            data={colorAttributes ? colorAttributes.values : []}
-            onChange={onAttributeChange}
-          />
-        )} */}
-          <Price value={1000} />
-          <AddToCartButton />
+          {colorAttributes && (
+            <ColorList
+              selectedId={attributeSelected ? attributeSelected.id : null}
+              data={colorAttributes ? colorAttributes.values : []}
+              onChange={onColorChange}
+            />
+          )}
+          {variantPrice ? (
+            <Price {...variantPrice} />
+          ) : (
+            <RangePrice {...price} upTo />
+          )}
+
+          {onAddtoCart && (
+            <Div _flex={1} justify="flex-end" _margin="16px 0px 0px">
+              <OutlineButton
+                title="Add to Cart"
+                onPress={() => {}}
+                leftIcon={
+                  <Icon name="shopping-bag" size={12} color={colors.black80} />
+                }
+                style={styles.button}
+                fontStyle={styles.buttonText}
+              />
+            </Div>
+          )}
         </View>
       </Div>
     </TouchableWithoutFeedback>
   )
 }
 
-export default ProductCard
+export default memo(ProductCard)

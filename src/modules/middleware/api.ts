@@ -20,6 +20,7 @@ const api = ({ dispatch, getState }) => next => action => {
   } = action.payload
 
   if (startNetwork) {
+    console.log('====== dispacht')
     dispatch(startNetwork(label))
   }
 

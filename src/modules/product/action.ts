@@ -11,7 +11,7 @@ export const productActionType = {
   SET_PRODUCT_DATA: 'product/SET_PRODUCT_DATA',
   SET_PRODUCT_ORDER: 'product/SET_PRODUCT_ORDER',
   FETCH_START: 'product/FETCH_START',
-  SET_PRODUCT_LOADING: 'product/SET_PRODUCT_LOADING',
+  SET_PRODUCTS_LOADING: 'product/SET_PRODUCTS_LOADING',
   CHANGE_VALUE: 'product/CHANGE_VALUE',
   ERROR: 'product/ERROR',
 }
@@ -30,8 +30,8 @@ const changeValue = (data = { key: 'productLoading', value: false }) => ({
   type: productActionType.CHANGE_VALUE,
   payload: data,
 })
-export const setProductLoading = (data: any) => ({
-  type: productActionType.SET_PRODUCT_LOADING,
+export const setProductsLoading = (data: any) => ({
+  type: productActionType.SET_PRODUCTS_LOADING,
   payload: data,
 })
 
@@ -57,19 +57,24 @@ export const productApi = (params, url) => ({
     requestParams: { params },
     schema: [schema.product],
     startNetwork: () => {
-      return setProductLoading(true)
+      console.log('====== setProductsLoading')
+      return setProductsLoading(true)
     },
 
     success: (data, { pagination }) => {
+      console.log('====== success')
       return data
         ? [
             setProductData(data.entities.product),
             setProductOrder({ order: data.result, pagination }),
-            setProductLoading(false),
+            setProductsLoading(false),
             setBrandData(data.entities.brand),
             setCategoryData(data.entities.category),
           ]
-        : [setProductOrder({ order: [], pagination }), setProductLoading(false)]
+        : [
+            setProductOrder({ order: [], pagination }),
+            setProductsLoading(false),
+          ]
     },
   },
 })

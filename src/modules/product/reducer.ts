@@ -10,7 +10,8 @@ interface ProductState {
   readonly data: Object
   readonly order: Array<number>
   pagination: Object
-  loading: Boolean
+  productsLoading: boolean
+  productLoading: Boolean
   readonly error?: ErrorType
 }
 
@@ -49,8 +50,8 @@ const productReducer: Reducer<ProductState> = (
       }
       newState.pagination = action.payload.pagination
       return newState
-    case productActionType.SET_PRODUCT_LOADING:
-      newState.loading = action.payload
+    case productActionType.SET_PRODUCTS_LOADING:
+      newState.productsLoading = action.payload
       return newState
     default:
       return newState
