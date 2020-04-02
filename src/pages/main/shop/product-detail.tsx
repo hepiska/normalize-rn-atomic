@@ -23,7 +23,7 @@ import RangePrice from '@components/molecules/range-price'
 
 import Price from '@components/atoms/price'
 import ButtonGroup from '@components/molecules/button-group'
-import { OutlineButton } from '@components/atoms/button'
+import { OutlineButton, GradientButton } from '@components/atoms/button'
 import { getProductById } from '@modules/product/action'
 import { setImage } from '@utils/helpers'
 
@@ -335,6 +335,8 @@ class ProductListPage extends React.Component<any, any> {
         <NavbarTopAnimated
           parentDim={{ coverheight: this.dimentionConstant.imageHeight }}
           showBack
+          showSearch
+          showCart
           y={y}
           Title={product.name}
         />
@@ -395,11 +397,15 @@ class ProductListPage extends React.Component<any, any> {
                   backgroundColor: 'rgba(26, 26, 26, 0.04)',
                 }}
               />
-              <Button
+              <GradientButton
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                colors={['#3067E4', '#8131E2']}
                 title="Add to cart"
                 onPress={this.openCartModal}
                 fontStyle={{
                   color: colors.white,
+                  fontWeight: '500',
                   fontSize: 14,
                 }}
                 style={{
