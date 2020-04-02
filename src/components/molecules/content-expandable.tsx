@@ -81,7 +81,9 @@ class ContentExpandable extends React.Component<ContentExpandableType, any> {
         </Div>
         <Animated.ScrollView
           style={{ width: '100%', height: height, overflow: 'scroll' }}>
-          <HTML html={content} />
+          <HTML
+            html={content.replace(/\\\\r\\\\n/g, '').replace(/\\r\\n/g, '')}
+          />
         </Animated.ScrollView>
       </Div>
     )

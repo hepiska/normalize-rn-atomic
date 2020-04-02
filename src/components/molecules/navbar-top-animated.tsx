@@ -34,7 +34,7 @@ interface NavbarBottomProps {
   y: any
   style?: any
   parentDim: ParentDimType
-  onBack: () => void
+  showBack?: boolean
   Title?: string | React.ReactType<any>
   RightMenu?: React.ReactType<any>
 }
@@ -46,7 +46,7 @@ const AnimatedIcon = Animated.createAnimatedComponent(Icon)
 
 const NavbarTopAnimated: React.SFC<NavbarBottomProps> = ({
   style,
-  onBack,
+  showBack,
   RightMenu,
   Title,
   y,
@@ -61,6 +61,9 @@ const NavbarTopAnimated: React.SFC<NavbarBottomProps> = ({
     extrapolate: Extrapolate.CLAMP,
   })
   const navigation = useNavigation()
+  const _onBack = () => {
+    navigation.goBack()
+  }
   const textOpacity = interpolate(y, {
     inputRange: [
       parentDim.coverheight - headerHeight,
@@ -106,13 +109,13 @@ const NavbarTopAnimated: React.SFC<NavbarBottomProps> = ({
         justify="space-between"
         zIndex="10"
         _direction="row">
-        {onBack && (
-          <LeftDiv zIndex="2" _height={55}>
-            <PressAbbleDiv onPress={onBack}>
+        <LeftDiv zIndex="2" _height={55} _direction="row">
+          {showBack && (
+            <PressAbbleDiv onPress={_onBack}>
               <AnimatedIcon name="chevron-left" size={20} color={textColor} />
             </PressAbbleDiv>
-          </LeftDiv>
-        )}
+          )}
+        </LeftDiv>
         <Div
           padd="16px 12px"
           width="100%"

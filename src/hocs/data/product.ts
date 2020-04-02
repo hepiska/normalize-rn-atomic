@@ -4,17 +4,14 @@ import { navigate } from '@src/root-navigation'
 const productListMap = (state, ownProps) => {
   const { productId } = ownProps
   const product = state.products.data[productId]
-  const variants = product.variants || []
-  const primary = {
-    ...product,
-    ...variants.find(_var => _var.is_primary),
-  }
+  // const product = ownProps.product
   ownProps.onPress = () => {
     navigate('ProductDetail', { productId })
   }
   return {
-    product: primary,
+    product: product,
     brand: state.brands.data[product.brand],
+    // brand: product.brand,
     category: state.categories[state.products[productId]],
   }
 }

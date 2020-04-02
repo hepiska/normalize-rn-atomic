@@ -21,6 +21,11 @@ const ImageAutoSchale = ({
   style,
 }: ImageAutoSchaleType) => {
   let [size, setSize] = useState(null)
+  source = source.uri
+    ? source
+    : typeof source === 'string'
+    ? { uri: source }
+    : source
 
   const calculateSize = (newWidth, newHeight) => {
     if (width && height) {

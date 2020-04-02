@@ -181,7 +181,7 @@ class Productlist extends Component<any, any> {
     </>
   )
 
-  _renderItem = ({ item, index }) => {
+  _renderItem = ({ section, index }) => {
     const numColumns = 2
     if (index % numColumns !== 0) return null
     const items = []
@@ -189,8 +189,9 @@ class Productlist extends Component<any, any> {
     for (let i = index; i < index + numColumns; i++) {
       items.push(
         <ProductWithCardHoc
-          productId={item}
-          key={'' + item + index}
+          productId={section.data[i]}
+          // product={item}
+          key={'' + section.data[i] + index}
           style={{
             flex: 1,
             wrappermargin: 16,
@@ -202,7 +203,7 @@ class Productlist extends Component<any, any> {
 
     return (
       <View
-        key={'' + item + index}
+        key={'' + index}
         style={{
           flexDirection: 'row',
           justifyContent: 'space-between',
@@ -242,7 +243,7 @@ class Productlist extends Component<any, any> {
   )
   render() {
     const { headerName } = this.state
-    const { navigation, products, pagination } = this.props
+    const { products, pagination, loading } = this.props
     const sectionData = [
       {
         title: 'asa',
@@ -285,7 +286,7 @@ class Productlist extends Component<any, any> {
             stickySectionHeadersEnabled
             renderItem={this._renderItem}
           />
-          {this.props.loading && (
+          {loading && (
             <Div
               style={{ position: 'absolute', bottom: 0, left: 0 }}
               justify="center"
