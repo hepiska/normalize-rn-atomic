@@ -9,10 +9,14 @@ export const brandActionType = {
   ERROR: 'brand/ERROR',
 }
 
-export const setBrandData = (data: any) => ({
-  type: brandActionType.SET_BRAND_DATA,
-  payload: data,
-})
+export const setBrandData = (data: any) => {
+  if (data) {
+    return {
+      type: brandActionType.SET_BRAND_DATA,
+      payload: data,
+    }
+  }
+}
 
 export const setBrandOrder = (data: any) => ({
   type: brandActionType.SET_BRAND_ORDER,

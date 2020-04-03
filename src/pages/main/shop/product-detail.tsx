@@ -20,7 +20,6 @@ import ProductAttributes from '@components/organisms/product-attributes'
 import Animated from 'react-native-reanimated'
 import { colors } from '@src/utils/constants'
 import RangePrice from '@components/molecules/range-price'
-
 import Price from '@components/atoms/price'
 import ButtonGroup from '@components/molecules/button-group'
 import { OutlineButton, GradientButton } from '@components/atoms/button'

@@ -16,10 +16,14 @@ export const productActionType = {
   ERROR: 'product/ERROR',
 }
 
-export const setProductData = (data: any) => ({
-  type: productActionType.SET_PRODUCT_DATA,
-  payload: data,
-})
+export const setProductData = (data: any) => {
+  if (data) {
+    return {
+      type: productActionType.SET_PRODUCT_DATA,
+      payload: data,
+    }
+  }
+}
 
 export const setProductOrder = (data: any) => ({
   type: productActionType.SET_PRODUCT_ORDER,
@@ -57,12 +61,10 @@ export const productApi = (params, url) => ({
     requestParams: { params },
     schema: [schema.product],
     startNetwork: () => {
-      console.log('====== setProductsLoading')
       return setProductsLoading(true)
     },
 
     success: (data, { pagination }) => {
-      console.log('====== success')
       return data
         ? [
             setProductData(data.entities.product),

@@ -1,6 +1,6 @@
-import { QueryParams } from '@utils/globalInterface';
-import { API } from '../action-types';
-import * as schema from '@modules/normalize-schema';
+import { QueryParams } from '@utils/globalInterface'
+import { API } from '../action-types'
+import * as schema from '@modules/normalize-schema'
 
 export const userActionType = {
   FETCH: 'post/FETCH',
@@ -9,9 +9,13 @@ export const userActionType = {
   FETCH_START: 'user/FETCH_START',
   SET_USER_LOADING: 'user/SET_USER_LOADING',
   ERROR: 'user/ERROR',
-};
+}
 
-export const setUserData = (data: any) => ({
-  type: userActionType.SET_USER_DATA,
-  payload: data,
-});
+export const setUserData = (data: any) => {
+  if (data) {
+    return {
+      type: userActionType.SET_USER_DATA,
+      payload: data,
+    }
+  }
+}
