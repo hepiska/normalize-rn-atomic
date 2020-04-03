@@ -36,12 +36,12 @@ export const getPage = pagename => ({
     },
     success: data => {
       return [
-        setPage(data.entities.page),
         setSection(data.entities.section),
         setUserData(data.entities.user),
         setBrandData(data.entities.brand),
         setPostData(data.entities.post),
         setProductData(data.entities.product),
+        setPage(data.entities.page),
         setPageLoading({ key: pagename, value: false }),
       ]
     },

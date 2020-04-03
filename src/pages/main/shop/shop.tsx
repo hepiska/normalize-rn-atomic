@@ -35,6 +35,7 @@ class ShopPage extends React.Component<any, any> {
   }
 
   _renderSection = section => {
+    if (!section) return null
     switch (section.component) {
       case 'jumbotron':
         return (
@@ -50,7 +51,6 @@ class ShopPage extends React.Component<any, any> {
   }
   render() {
     const { navigation, page, loading } = this.props
-    console.log(page, loading)
     const dummyPost = {
       id: 82,
       type: 'image',
@@ -91,9 +91,10 @@ class ShopPage extends React.Component<any, any> {
           <Animated.ScrollView
             onScroll={onScroll({ y })}
             scrollEventThrottle={5}>
-            {page.section.map(_section => {
-              return this._renderSection(_section)
-            })}
+            {page.section &&
+              page.section.map(_section => {
+                return this._renderSection(_section)
+              })}
           </Animated.ScrollView>
         </View>
       </>
@@ -111,10 +112,13 @@ const mapDispatchToProps = dispatch =>
   )
 
 const mapStateToProps = state => {
-  const denormalizedPage = deepClone(state.page.data.shop)
-  denormalizedPage.section = denormalizedPage.section.map(
-    sectionId => state.page.section[sectionId],
-  )
+  let denormalizedPage: any = {}
+  if (state.page.data.shop) {
+    denormalizedPage = deepClone(state.page.data.shop)
+    denormalizedPage.section = denormalizedPage.section.map(
+      sectionId => state.page.section[sectionId],
+    )
+  }
 
   return { page: denormalizedPage, loading: state.page.loading.shop }
 }
