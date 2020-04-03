@@ -1,6 +1,6 @@
 import React, { memo } from 'react'
 import { StyleSheet } from 'react-native'
-import { PressAbbleDiv, Image } from '@components/atoms/basic'
+import { Image, TouchableWithoutFeedback } from '@components/atoms/basic'
 import { setImage } from '@utils/helpers'
 import { globalDimention } from '@utils/constants'
 
@@ -30,19 +30,19 @@ const ListItemJumbotron = ({
 }: ItemJumbotronType) => {
   const _onPress = () => {
     navigation.push(navigateTarget, {
-      collectionId: item.target_url,
+      collectionId: 4,
     })
   }
 
   return (
-    <PressAbbleDiv onPress={_onPress}>
+    <TouchableWithoutFeedback onPress={_onPress}>
       <Image
         source={{
           uri: setImage(item.image_url, { ...styles.image }),
         }}
         style={styles.image}
       />
-    </PressAbbleDiv>
+    </TouchableWithoutFeedback>
   )
 }
 

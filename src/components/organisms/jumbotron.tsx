@@ -2,7 +2,7 @@ import React from 'react'
 import { Dimensions, FlatList, View } from 'react-native'
 import { StyleSheet } from 'react-native'
 import { Div, PressAbbleDiv } from '@components/atoms/basic'
-import ListItemJumbotron from './list-item-jumbotron'
+import ListItemJumbotron from '../molecules/list-item-jumbotron'
 import { globalDimention } from '@utils/constants'
 
 const { width } = Dimensions.get('window')

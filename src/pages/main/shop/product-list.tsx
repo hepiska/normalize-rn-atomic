@@ -70,8 +70,8 @@ class Productlist extends Component<any, any> {
   componentDidMount() {
     this.props.getCollectionBySlug('rafie-botakksszzzszszszz')
 
-    if (this.props.collection)
-      this.props.getCollectionBySlug('rafie-botakksszzzszszszz')
+    // if (this.props.collection)
+    //   this.props.getCollectionBySlug('rafie-botakksszzzszszszz')
   }
 
   componentDidUpdate(prevProps) {
@@ -250,20 +250,6 @@ class Productlist extends Component<any, any> {
         data: products,
       },
     ]
-    // navigation.setOptions({
-    //   header: () => {
-    //     return (
-    //       <NavbarTop>
-    //         <Div justify="center" _width="100%">
-    //           <Font {...helveticaBlackBold}>{headerName}</Font>
-    //           <Font {...{ ...helveticaNormalFont, size: 12 }}>
-    //             {pagination.total} Items
-    //           </Font>
-    //         </Div>
-    //       </NavbarTop>
-    //     )
-    //   },
-    // })
     return (
       <>
         <NavbarTop>
@@ -296,8 +282,6 @@ class Productlist extends Component<any, any> {
               <InviniteLoader />
             </Div>
           )}
-
-          <FilterBottomSheet />
         </Div>
       </>
     )

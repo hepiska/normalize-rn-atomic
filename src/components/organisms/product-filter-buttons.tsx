@@ -5,6 +5,7 @@ import { Div, Font, ScrollDiv } from '@components/atoms/basic'
 import { Button, OutlineButton } from '@components/atoms/button'
 import { colors } from '@utils/constants'
 import Field from '@components/atoms/field'
+import { useNavigation } from '@react-navigation/native'
 import {
   changeValue,
   openFilter,
@@ -32,6 +33,7 @@ const FilterButton = ({ title, onPress }) => {
   )
 }
 const FilterTriger = (props: any) => {
+  const navigation = useNavigation()
   const [searchKey, setSearchKey] = useState(props.search)
 
   useEffect(() => {
@@ -44,6 +46,13 @@ const FilterTriger = (props: any) => {
     }, 500)
     return () => clearTimeout(timer)
   }, [searchKey])
+
+  const _openFilter = (section?: any) => () => {
+    if (section) {
+      props.openFilter(section)
+    }
+    navigation.navigate('modals', { screen: 'ProductFilter' })
+  }
 
   return (
     <Div _width="100%" bg="white" style={props.style}>
@@ -62,9 +71,7 @@ const FilterTriger = (props: any) => {
         />
         <Button
           title="Sort"
-          onPress={() => {
-            props.openFilter('sort')
-          }}
+          onPress={_openFilter('sort')}
           fontStyle={{ color: colors.white }}
           style={{ marginLeft: 8, backgroundColor: colors.black100 }}
           leftIcon={
@@ -83,7 +90,7 @@ const FilterTriger = (props: any) => {
         showsHorizontalScrollIndicator={false}>
         <Button
           title="All Filters"
-          onPress={() => {}}
+          onPress={_openFilter()}
           fontStyle={{ color: colors.white }}
           style={{ marginRight: 8, backgroundColor: colors.black100 }}
           leftIcon={
@@ -94,18 +101,9 @@ const FilterTriger = (props: any) => {
             />
           }
         />
-        <FilterButton
-          title="Brands"
-          onPress={() => props.openFilter('brand')}
-        />
-        <FilterButton
-          title="Categories"
-          onPress={() => props.openFilter('category')}
-        />
-        <FilterButton
-          title="Prices"
-          onPress={() => props.openFilter('price')}
-        />
+        <FilterButton title="Brands" onPress={_openFilter('brand')} />
+        <FilterButton title="Categories" onPress={_openFilter('category')} />
+        <FilterButton title="Prices" onPress={_openFilter('price')} />
       </ScrollDiv>
     </Div>
   )

@@ -301,9 +301,7 @@ class ProductListPage extends React.Component<any, any> {
 
   openCartModal = () => {
     const { navigation, product } = this.props
-    navigation.navigate('CartModal', {
-      product,
-    })
+    navigation.navigate('modals', { screen: 'CartModal', params: { product } })
   }
 
   groupButton = [

@@ -130,26 +130,22 @@ const FilterBottomSheet = props => {
       ? [height * 0.8, height * 0.5, 0]
       : [Math.max(360, height * 0.5), 0]
   return (
-    <Modal transparent visible={isOpen}>
+    <>
       <BottomSheet
-        onCloseEnd={() => props.changeValue({ key: 'isOpen', value: false })}
+        onCloseEnd={() => props.navigation.goBack()}
         initialSnap={0}
         renderHeader={() => (
-          <Header
-            onBack={() => props.changeValue({ key: 'isOpen', value: false })}
-            section={section}
-          />
+          <Header onBack={() => props.navigation.goBack()} section={section} />
         )}
         snapPoints={_snapPoint}
         renderContent={() =>
           section === 'sort' ? <SortOrg /> : <FilterContent />
         }
       />
-      <TouchableWithoutFeedback
-        onPress={() => props.changeValue({ key: 'isOpen', value: false })}>
+      <TouchableWithoutFeedback onPress={() => props.navigation.goBack()}>
         <Div bg="rgba(0,0,0,0.7)" _height={height} _width="100%" />
       </TouchableWithoutFeedback>
-    </Modal>
+    </>
   )
 }
 

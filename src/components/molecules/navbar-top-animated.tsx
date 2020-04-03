@@ -7,6 +7,7 @@ import { globalDimention, colors } from '@utils/constants'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import Animated from 'react-native-reanimated'
 import styled from 'styled-components/native'
+import CartAction from '@components/atoms/cart-action-button'
 import { useNavigation } from '@react-navigation/native'
 
 const { interpolate, Extrapolate } = Animated
@@ -46,6 +47,7 @@ interface NavbarBottomProps {
   showSearch?: boolean
   showCart?: boolean
   showBack?: boolean
+  showBars?: boolean
   Title?: string | React.ReactType<any>
 }
 
@@ -59,6 +61,7 @@ const NavbarTopAnimated: React.SFC<NavbarBottomProps> = ({
   Title,
   showSearch,
   showCart,
+  showBars,
   y,
   parentDim,
 }) => {
@@ -71,9 +74,12 @@ const NavbarTopAnimated: React.SFC<NavbarBottomProps> = ({
     extrapolate: Extrapolate.CLAMP,
   })
   const navigation = useNavigation()
+
   const _onBack = () => {
     navigation.goBack()
   }
+
+  const _onBurger = () => {}
   const textOpacity = interpolate(y, {
     inputRange: [
       parentDim.coverheight - headerHeight,
@@ -117,6 +123,11 @@ const NavbarTopAnimated: React.SFC<NavbarBottomProps> = ({
               <Icon name="chevron-left" size={20} color={colors.black100} />
             </PressAbbleDiv>
           )}
+          {showBars && (
+            <PressAbbleDiv onPress={_onBurger}>
+              <Icon name="bars" size={20} color={colors.black100} />
+            </PressAbbleDiv>
+          )}
         </LeftDiv>
         <Div
           padd="16px 12px"
@@ -147,11 +158,7 @@ const NavbarTopAnimated: React.SFC<NavbarBottomProps> = ({
               <Icon name="search" size={20} color={colors.black100} />
             </PressAbbleDiv>
           )}
-          {showCart && (
-            <PressAbbleDiv onPress={_onBack} style={styles.rightAction}>
-              <Icon name="shopping-cart" size={20} color={colors.black100} />
-            </PressAbbleDiv>
-          )}
+          {showCart && <CartAction />}
         </RightDiv>
       </Div>
     </AnimatedSaveArea>

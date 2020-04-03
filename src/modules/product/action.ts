@@ -1,4 +1,3 @@
-import { QueryParams } from '@utils/globalInterface'
 import { setBrandData } from '@modules/brand/action'
 import { setCategoryData } from '@modules/category/action'
 // import persistor from './reducer'

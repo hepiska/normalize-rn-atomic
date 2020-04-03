@@ -81,11 +81,10 @@ class ShopPage extends React.Component<any, any> {
       <>
         <NavbarTopAnimated
           parentDim={{ coverheight: this.dimentionConstant.imageHeight }}
-          showBack
+          showBars
           showSearch
           showCart
           y={y}
-          Title="bla bla"
         />
         <View style={styles.container}>
           <Animated.ScrollView
@@ -115,9 +114,13 @@ const mapStateToProps = state => {
   let denormalizedPage: any = {}
   if (state.page.data.shop) {
     denormalizedPage = deepClone(state.page.data.shop)
-    denormalizedPage.section = denormalizedPage.section.map(
-      sectionId => state.page.section[sectionId],
-    )
+    denormalizedPage.section = denormalizedPage.section
+      .map(sectionId => state.page.section[sectionId])
+      .sort((a, b) => {
+        if (a.order > b.order) return 1
+        if (a.order < b.order) return -1
+        return 0
+      })
   }
 
   return { page: denormalizedPage, loading: state.page.loading.shop }

@@ -61,13 +61,12 @@ const FilterBrandOrg = (props: any) => {
     { _onChangeAlvabet, _onSearchChange },
   ] = useBrandFilter(props)
 
-  let brands = deepClone(props.brands).map(brandSection => {
+  let brands = deepClone(props.brands || []).map(brandSection => {
     brandSection.data = brandSection.data.filter(brand => {
       return brand.name.toLowerCase().includes(search.toLowerCase())
     })
     return brandSection
   })
-
   brands = brands.filter(brandSection => {
     if (!brandSection.data.length) {
       return false
@@ -127,7 +126,7 @@ const FilterBrandOrg = (props: any) => {
 }
 
 const mapStateToProps = state => ({
-  brands: state.productFilter.data.brands,
+  brands: state.productFilter.data.brands || [],
   selectedBrand: state.productFilter.selected.brand_ids
     ? state.productFilter.selected.brand_ids
     : '',
