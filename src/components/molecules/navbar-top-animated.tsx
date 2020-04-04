@@ -3,13 +3,23 @@ import DeviceInfo from 'react-native-device-info'
 import { Dimensions, StyleSheet, SafeAreaView } from 'react-native'
 import { Div, Font, Image, PressAbbleDiv } from '@components/atoms/basic'
 import LinearGradient from 'react-native-linear-gradient'
-import { globalDimention } from '@utils/constants'
+import { globalDimention, colors } from '@utils/constants'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import Animated from 'react-native-reanimated'
 import styled from 'styled-components/native'
+import CartAction from '@components/atoms/cart-action-button'
 import { useNavigation } from '@react-navigation/native'
 
 const { interpolate, Extrapolate } = Animated
+
+const styles = StyleSheet.create({
+  rightAction: {
+    marginLeft: 24,
+  },
+  leftAction: {
+    marginRight: 24,
+  },
+})
 
 const LeftDiv = styled(PressAbbleDiv)`
   position: absolute;
@@ -34,21 +44,24 @@ interface NavbarBottomProps {
   y: any
   style?: any
   parentDim: ParentDimType
-  onBack: () => void
+  showSearch?: boolean
+  showCart?: boolean
+  showBack?: boolean
+  showBars?: boolean
   Title?: string | React.ReactType<any>
-  RightMenu?: React.ReactType<any>
 }
 
 const headerHeight = 55
 
 const AnimatedSaveArea = Animated.createAnimatedComponent(SafeAreaView)
-const AnimatedIcon = Animated.createAnimatedComponent(Icon)
 
 const NavbarTopAnimated: React.SFC<NavbarBottomProps> = ({
   style,
-  onBack,
-  RightMenu,
+  showBack,
   Title,
+  showSearch,
+  showCart,
+  showBars,
   y,
   parentDim,
 }) => {
@@ -61,6 +74,12 @@ const NavbarTopAnimated: React.SFC<NavbarBottomProps> = ({
     extrapolate: Extrapolate.CLAMP,
   })
   const navigation = useNavigation()
+
+  const _onBack = () => {
+    navigation.goBack()
+  }
+
+  const _onBurger = () => {}
   const textOpacity = interpolate(y, {
     inputRange: [
       parentDim.coverheight - headerHeight,
@@ -69,12 +88,12 @@ const NavbarTopAnimated: React.SFC<NavbarBottomProps> = ({
     outputRange: [0, 1],
     extrapolate: Extrapolate.CLAMP,
   })
-  const textColor = interpolate(y, {
+  const opacity = interpolate(y, {
     inputRange: [
-      parentDim.coverheight - headerHeight,
-      parentDim.coverheight - headerHeight + 2,
+      parentDim.coverheight - headerHeight - 32,
+      parentDim.coverheight - headerHeight + 20,
     ],
-    outputRange: [Animated.color(255, 255, 255), Animated.color(0, 0, 0)],
+    outputRange: [0, 1],
     extrapolate: Extrapolate.CLAMP,
   })
 
@@ -87,41 +106,41 @@ const NavbarTopAnimated: React.SFC<NavbarBottomProps> = ({
         backgroundColor: backgroundColor,
         zIndex: 10,
       }}>
-      <LinearGradient
-        style={[StyleSheet.absoluteFill, { zIndex: -1 }]}
-        start={{ x: 0, y: 1 }}
-        end={{ x: 0, y: 0.4 }}
-        colors={[
-          'transparent',
-          'rgba(26, 26, 26, 0.3)',
-          'rgba(26, 26, 26, 0.4)',
-          'rgba(26, 26, 26, 0.5)',
-        ]}
-      />
       <Div
         as={Animated.View}
-        style={{ backgroundColor: backgroundColor }}
+        style={[StyleSheet.absoluteFill, { zIndex: -1, opacity }]}
+      />
+      <Div
+        style={{ backgroundColor: 'transparent' }}
         _width={width}
-        _height={globalDimention.headerHeight}
-        justify="space-between"
+        // _height={globalDimention.headerHeight}
+        justify="center"
         zIndex="10"
         _direction="row">
-        {onBack && (
-          <LeftDiv zIndex="2" _height={55}>
-            <PressAbbleDiv onPress={onBack}>
-              <AnimatedIcon name="chevron-left" size={20} color={textColor} />
+        <LeftDiv zIndex="2" _height={55} _direction="row">
+          {showBack && (
+            <PressAbbleDiv onPress={_onBack}>
+              <Icon name="chevron-left" size={20} color={colors.black100} />
             </PressAbbleDiv>
-          </LeftDiv>
-        )}
+          )}
+          {showBars && (
+            <PressAbbleDiv onPress={_onBurger}>
+              <Icon name="bars" size={20} color={colors.black100} />
+            </PressAbbleDiv>
+          )}
+        </LeftDiv>
         <Div
           padd="16px 12px"
-          width="100%"
-          bg="transparent"
+          overflow="visible"
+          width={width - 132}
+          _direction="row"
+          wrap="wrap"
           {...style}
           align="center">
           <Animated.Text
             style={[
               {
+                flexWrap: 'wrap',
                 color: 'black',
                 fontSize: 16,
                 textAlign: 'center',
@@ -132,11 +151,15 @@ const NavbarTopAnimated: React.SFC<NavbarBottomProps> = ({
             {Title}
           </Animated.Text>
         </Div>
-        {RightMenu && (
-          <RightDiv _flex="1" _height={55}>
-            <RightMenu />
-          </RightDiv>
-        )}
+
+        <RightDiv _flex="1" _height={55} _direction="row">
+          {showSearch && (
+            <PressAbbleDiv onPress={_onBack} style={styles.rightAction}>
+              <Icon name="search" size={20} color={colors.black100} />
+            </PressAbbleDiv>
+          )}
+          {showCart && <CartAction />}
+        </RightDiv>
       </Div>
     </AnimatedSaveArea>
   )

@@ -1,7 +1,6 @@
 import { store } from '@src/init-store'
 import { API } from '../action-types'
 import { deepClone } from '@utils/helpers'
-import { brand } from '../normalize-schema'
 
 export const productFilterType = {
   CHANGE_VALUE: 'product-filter/CHANGE_VALUE',
@@ -58,6 +57,7 @@ export const fetchCountProduct = params => {
     ...globState.productFilter.selected,
     ...globState.productFilter.selected.prices,
     ...params,
+    is_commerce: true,
   }
   delete _params.prices
   return {
@@ -158,6 +158,6 @@ export const addFilterData = (data: {
 export const clearFilter = () => ({ type: productFilterType.CLEAR_FILTER })
 
 export const openFilter = (data: any) => [
-  changeValue({ key: 'isOpen', value: true }),
+  // changeValue({ key: 'isOpen', value: true }),
   changeValue({ key: 'section', value: data }),
 ]

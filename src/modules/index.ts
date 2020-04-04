@@ -11,8 +11,7 @@ import productFilterReducer from './product-filter/reducer'
 import sortReducer from './sort/reducer'
 import uiInteracrionReducer from './ui-interaction/reducer'
 import collectionReducer from './collection/reducer'
-import registerReducer from './register/reducer'
-import loginReducer from './login/reducer'
+import pageReducer from './page/reducer'
 
 const combinedReducer: Reducer<any> = combineReducers({
   router: routerReducer,
@@ -25,6 +24,7 @@ const combinedReducer: Reducer<any> = combineReducers({
   uiInteraction: uiInteracrionReducer,
   productFilter: productFilterReducer,
   post: postReducer,
+  page: pageReducer,
   sort: sortReducer,
   collection: collectionReducer,
   register: registerReducer,

@@ -11,6 +11,7 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { Div, PressAbbleDiv, Font } from '@components/atoms/basic'
 import { helveticaBlackBold } from '@components/commont-styles'
+import CartAction from '@components/atoms/cart-action-button'
 import styled from 'styled-components/native'
 
 let hasNotch = DeviceInfo.hasNotch()
@@ -60,9 +61,7 @@ const NavbarTop: React.SFC<NavbarTopProps> = ({ style, children }) => {
           <PressAbbleDiv mar="0px 16px 0px 0px">
             <Icon name="search" size={20} color="black" />
           </PressAbbleDiv>
-          <PressAbbleDiv>
-            <Icon name="shopping-cart" size={20} color="black" />
-          </PressAbbleDiv>
+          <CartAction />
         </RightDiv>
       </View>
     </SafeAreaView>

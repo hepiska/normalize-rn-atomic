@@ -13,10 +13,14 @@ export const userActionType = {
   ERROR: 'user/ERROR',
 }
 
-export const setUserData = (data: any) => ({
-  type: userActionType.SET_USER_DATA,
-  payload: data,
-})
+export const setUserData = (data: any) => {
+  if (data) {
+    return {
+      type: userActionType.SET_USER_DATA,
+      payload: data,
+    }
+  }
+}
 
 export const fetchUserStart = () => ({
   type: userActionType.FETCH_START,

@@ -25,12 +25,15 @@ const RangePrice = ({
   upTo,
 }: RangePrice) => {
   const price = `${formatRupiah(from)} - ${formatRupiah(to)}`.split(' ')
+  const discount = Math.round(
+    Math.max((exFrom - from) / exFrom, (exTo - to) / exTo) * 100,
+  )
   if (withDiscount) {
-    price.push('88%')
+    price.push(`${discount}%`)
   }
   return (
     <Div align="flex-start" _margin="8px 0px 0px 0px">
-      {withDiscount && (
+      {exFrom && exTo && (
         <Font
           type="HelveticaNeue"
           size={11}
@@ -43,7 +46,7 @@ const RangePrice = ({
 
       <Div _direction="row" justify="flex-start" style={{ flexWrap: 'wrap' }}>
         {price.map((x, i) => {
-          if (!withDiscount) {
+          if (i !== price.length - 1 || !withDiscount) {
             return (
               <Font
                 key={i}
@@ -54,25 +57,9 @@ const RangePrice = ({
                 {x}
               </Font>
             )
-          } else if (i !== price.length - 1) {
+          } else if (withDiscount && i === price.length - 1) {
             return (
-              <Font
-                key={i}
-                size={14}
-                type="title"
-                _margin="4px 0px 0px 4px"
-                style={style}>
-                {x}
-              </Font>
-            )
-          } else {
-            return (
-              <Div
-                key={i}
-                _margin="4px 4px 4px 4px"
-                _width="100%"
-                align="flex-start"
-                _height="20px">
+              <Div key={i} _margin="4px 4px 4px 12px" overflow="visible">
                 <Img
                   source={
                     upTo

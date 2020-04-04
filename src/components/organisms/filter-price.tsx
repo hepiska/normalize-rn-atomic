@@ -115,7 +115,7 @@ const mapDispatchToProps = dispatch =>
   )
 
 const mapStateToProps = state => ({
-  colectionPrices: state.productFilter.data.prices,
+  colectionPrices: state.productFilter.data.prices || {},
   minimum_price: state.productFilter.selected.prices.minimum_price,
   maximum_price: state.productFilter.selected.prices.maximum_price,
 })

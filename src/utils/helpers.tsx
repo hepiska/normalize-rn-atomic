@@ -49,18 +49,25 @@ export const capilEachWord = str =>
 
 export const checkHex = hex => /^#[0-9A-F]{6}$/i.test(hex)
 
-export const setImage = (uri, size) => {
-  let queryString = `?fit=fillmax&fill=solid&fill-color=white`
+export const setImage = (uri, size, params?) => {
+  const defaultParams = '&fit=clamp'
+  let queryString = `?`
   if (size.width) {
     queryString += `&width=${size.width}`
   }
   if (size.height) {
     queryString += `&height=${size.height}`
   }
+  if (params) {
+    queryString += `${params}`
+  } else {
+    queryString += defaultParams
+  }
 
   const res =
-    uri.replace(Config.SHONET_AWS_IMAGE_BASE, Config.SHONET_IMGIX_IMAGE_BASE) +
-    queryString
+    uri
+      .replace(Config.SHONET_AWS_IMAGE_BASE, Config.SHONET_IMGIX_IMAGE_BASE)
+      .replace(/(\?.*)/, '') + queryString
   return res
 }
 

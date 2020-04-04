@@ -8,39 +8,6 @@ export const user = new schema.Entity('user')
 
 export const brand = new schema.Entity('brand')
 
-const grandchildrenCategory = new schema.Entity(
-  'category',
-  {},
-  {
-    processStrategy: entity => {
-      entity.data = entity.children
-      return entity
-    },
-  },
-)
-
-const childrenCategory = new schema.Entity(
-  'category',
-  {
-    children: new schema.Entity(
-      'category',
-      {},
-      {
-        processStrategy: entity => {
-          entity.data = entity.children
-          return entity
-        },
-      },
-    ),
-  },
-  {
-    processStrategy: entity => {
-      entity.data = entity.children
-      return entity
-    },
-  },
-)
-
 export const category = new schema.Entity(
   'category',
   {
@@ -103,3 +70,15 @@ export const post = new schema.Entity('post', {
   comments: [comment],
   user: user,
 })
+
+export const pageSection = new schema.Entity('section', {
+  posts: [post],
+  products: [product],
+  brands: [brand],
+})
+
+export const page = new schema.Entity(
+  'page',
+  { section: [pageSection] },
+  { idAttribute: 'page' },
+)

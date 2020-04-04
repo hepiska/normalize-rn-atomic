@@ -1,5 +1,7 @@
 import DeviceInfo from 'react-native-device-info'
 const hasNotch = DeviceInfo.hasNotch()
+import { Dimensions, StyleSheet } from 'react-native'
+const { width } = Dimensions.get('window')
 
 export const shadows = {
   idle: `shadow-color: #000;
@@ -54,7 +56,15 @@ export const images = {
   product: require('@assets/placeholder/placeholder2.jpg'),
 }
 
+const styles = StyleSheet.create({
+  jumbotronSize: {
+    width: width,
+    height: Math.round((2 / 3) * width),
+  },
+})
+
 export const globalDimention = {
   headerHeight: 56,
+  jumbotronSize: styles.jumbotronSize,
   // firstComponentMargin: hasNotch ? '22px 0px 0px' : '0px',
 }

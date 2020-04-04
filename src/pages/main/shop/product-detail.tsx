@@ -19,8 +19,10 @@ import ProductOverviewCard from '@src/components/molecules/product-overview-card
 import ProductAttributes from '@components/organisms/product-attributes'
 import Animated from 'react-native-reanimated'
 import { colors } from '@src/utils/constants'
+import RangePrice from '@components/molecules/range-price'
+import Price from '@components/atoms/price'
 import ButtonGroup from '@components/molecules/button-group'
-import { OutlineButton } from '@components/atoms/button'
+import { OutlineButton, GradientButton } from '@components/atoms/button'
 import { getProductById } from '@modules/product/action'
 import { setImage } from '@utils/helpers'
 
@@ -299,9 +301,7 @@ class ProductListPage extends React.Component<any, any> {
 
   openCartModal = () => {
     const { navigation, product } = this.props
-    navigation.navigate('CartModal', {
-      product,
-    })
+    navigation.navigate('modals', { screen: 'CartModal', params: { product } })
   }
 
   groupButton = [
@@ -310,15 +310,30 @@ class ProductListPage extends React.Component<any, any> {
   ]
 
   render() {
-    const { navigation, product } = this.props
-    const { selectedVariant } = this.state
+    const { product } = this.props
+    const { selectedVariant, isUserSelectVariant } = this.state
 
     const varianData = this.getVariantData(selectedVariant)
+    const price: any = {}
+    if (!product.max_price_after_disc && !product.min_price_after_disc) {
+      price.from = product.min_price
+      price.to = product.max_price
+      price.withDiscount = false
+    } else {
+      price.from = product.min_price_after_disc
+      price.to = product.max_price_after_disc
+      price.exFrom = product.min_price
+      price.exTo = product.max_price
+      price.withDiscount = true
+    }
+
     return (
       <>
         <NavbarTopAnimated
           parentDim={{ coverheight: this.dimentionConstant.imageHeight }}
-          onBack={() => navigation.goBack()}
+          showBack
+          showSearch
+          showCart
           y={y}
           Title={product.name}
         />
@@ -341,14 +356,32 @@ class ProductListPage extends React.Component<any, any> {
             y={y}
             dimentionConstant={this.dimentionConstant}>
             <Div bg="white" _width="100%" padd="0px 16px 96px">
-              <ProductOverviewCard product={{ ...product, ...varianData }} />
+              <Div width="100%" align="flex-start" padd="16px 0px">
+                <Font
+                  family="Futura-Bold"
+                  size={18}
+                  _margin="4px"
+                  color="black">
+                  {product.brand.name}
+                </Font>
+                <Font size={18} _margin="4px" color={colors.gray3}>
+                  {product.name}
+                </Font>
+                {isUserSelectVariant ? (
+                  <Price
+                    price={varianData.price}
+                    discount_price={varianData.price_after_disc}
+                  />
+                ) : (
+                  <RangePrice {...price} />
+                )}
+              </Div>
               {product.attributes && (
                 <ProductAttributes
                   attributes={product.attributes}
                   onAllAttributesSelected={this._selectVariant}
                 />
               )}
-
               <Button
                 leftIcon="save"
                 title="Available for return or exchange"
@@ -361,11 +394,15 @@ class ProductListPage extends React.Component<any, any> {
                   backgroundColor: 'rgba(26, 26, 26, 0.04)',
                 }}
               />
-              <Button
+              <GradientButton
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                colors={['#3067E4', '#8131E2']}
                 title="Add to cart"
                 onPress={this.openCartModal}
                 fontStyle={{
                   color: colors.white,
+                  fontWeight: '500',
                   fontSize: 14,
                 }}
                 style={{

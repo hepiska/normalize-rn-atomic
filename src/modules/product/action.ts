@@ -1,4 +1,3 @@
-import { QueryParams } from '@utils/globalInterface'
 import { setBrandData } from '@modules/brand/action'
 import { setCategoryData } from '@modules/category/action'
 // import persistor from './reducer'
@@ -11,15 +10,19 @@ export const productActionType = {
   SET_PRODUCT_DATA: 'product/SET_PRODUCT_DATA',
   SET_PRODUCT_ORDER: 'product/SET_PRODUCT_ORDER',
   FETCH_START: 'product/FETCH_START',
-  SET_PRODUCT_LOADING: 'product/SET_PRODUCT_LOADING',
+  SET_PRODUCTS_LOADING: 'product/SET_PRODUCTS_LOADING',
   CHANGE_VALUE: 'product/CHANGE_VALUE',
   ERROR: 'product/ERROR',
 }
 
-export const setProductData = (data: any) => ({
-  type: productActionType.SET_PRODUCT_DATA,
-  payload: data,
-})
+export const setProductData = (data: any) => {
+  if (data) {
+    return {
+      type: productActionType.SET_PRODUCT_DATA,
+      payload: data,
+    }
+  }
+}
 
 export const setProductOrder = (data: any) => ({
   type: productActionType.SET_PRODUCT_ORDER,
@@ -30,8 +33,8 @@ const changeValue = (data = { key: 'productLoading', value: false }) => ({
   type: productActionType.CHANGE_VALUE,
   payload: data,
 })
-export const setProductLoading = (data: any) => ({
-  type: productActionType.SET_PRODUCT_LOADING,
+export const setProductsLoading = (data: any) => ({
+  type: productActionType.SET_PRODUCTS_LOADING,
   payload: data,
 })
 
@@ -57,7 +60,7 @@ export const productApi = (params, url) => ({
     requestParams: { params },
     schema: [schema.product],
     startNetwork: () => {
-      return setProductLoading(true)
+      return setProductsLoading(true)
     },
 
     success: (data, { pagination }) => {
@@ -65,11 +68,14 @@ export const productApi = (params, url) => ({
         ? [
             setProductData(data.entities.product),
             setProductOrder({ order: data.result, pagination }),
-            setProductLoading(false),
+            setProductsLoading(false),
             setBrandData(data.entities.brand),
             setCategoryData(data.entities.category),
           ]
-        : [setProductOrder({ order: [], pagination }), setProductLoading(false)]
+        : [
+            setProductOrder({ order: [], pagination }),
+            setProductsLoading(false),
+          ]
     },
   },
 })
