@@ -12,6 +12,7 @@ import sortReducer from './sort/reducer'
 import uiInteracrionReducer from './ui-interaction/reducer'
 import collectionReducer from './collection/reducer'
 import pageReducer from './page/reducer'
+import authReducer from './auth/reducer'
 
 const combinedReducer: Reducer<any> = combineReducers({
   router: routerReducer,
@@ -27,8 +28,7 @@ const combinedReducer: Reducer<any> = combineReducers({
   page: pageReducer,
   sort: sortReducer,
   collection: collectionReducer,
-  register: registerReducer,
-  login: loginReducer,
+  auth: authReducer,
 })
 
 export default combinedReducer

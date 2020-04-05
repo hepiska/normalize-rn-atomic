@@ -1,18 +1,11 @@
-import React, { useState, useMemo, useEffect } from 'react'
+import React, { useState, useMemo, useCallback } from 'react'
 import { Image, StyleSheet } from 'react-native'
-import { bindActionCreators } from 'redux'
-import { connect } from 'react-redux'
 import { Div, Font, PressAbbleDiv } from '@components/atoms/basic'
 import { colors } from '@src/utils/constants'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { Button, OutlineButton } from '@components/atoms/button'
 import TextInputOutline from '@src/components/atoms/field-floating'
-import {
-  registerApi,
-  setRegisterError,
-  setRegisterData,
-} from '@modules/register/action'
-import { useFormValidator } from '@components/atoms/use-form-validator'
+import { useFormValidator } from '@src/hooks/use-form-validator'
 
 const styles = StyleSheet.create({
   width100: {
@@ -55,15 +48,11 @@ const styles = StyleSheet.create({
 interface FormRegister {
   onChangeModal: any
   onLoginClick: () => void
-  setRegisterData: any
-  data: any
 }
 
 const FormRegister: React.FC<FormRegister> = ({
   onLoginClick,
   onChangeModal,
-  setRegisterData,
-  data,
 }) => {
   const inputSchema = {
     email: {
@@ -92,30 +81,19 @@ const FormRegister: React.FC<FormRegister> = ({
   const _onSubmit = ({ isValid, state }) => {
     if (isValid) {
       onChangeModal('Create new account', true)
-      setRegisterData({
-        email: state.email.value,
-        password: state.password.value,
-        confirmPassword: state.confirmPassword.value,
-      })
     }
   }
 
   const { state, disable, handleOnChange, handleOnSubmit } = useFormValidator(
     inputSchema,
     _onSubmit,
-    {
-      reduxState: data,
-    },
   )
 
   const [showPassword, setShowPassword] = useState(false)
-  const _onShowPassword = () => setShowPassword(prevState => !prevState)
-
-  useEffect(() => {
-    return () => {
-      setRegisterError(null)
-    }
-  }, [])
+  const _onShowPassword = useCallback(
+    () => setShowPassword(prevState => !prevState),
+    [showPassword],
+  )
 
   return useMemo(
     () => (
@@ -230,18 +208,4 @@ const FormRegister: React.FC<FormRegister> = ({
   )
 }
 
-const mapDispatchToProps = dispatch =>
-  bindActionCreators(
-    {
-      registerApi,
-      setRegisterData,
-      setRegisterError,
-    },
-    dispatch,
-  )
-
-const mapStateToProps = state => ({
-  data: state.register.data,
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(FormRegister)
+export default FormRegister

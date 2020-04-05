@@ -1,17 +1,21 @@
 import { AnyAction, Reducer } from 'redux'
 import Immutable from 'seamless-immutable'
 import { ErrorType } from '@utils/globalInterface'
-import { registerActionType } from './action'
+import { authActionType } from './action'
 
 interface RegisterState {
-  readonly data: Object
   readonly loading: Boolean
   readonly error?: ErrorType
+  readonly data: Object
+  readonly isAuth: Boolean
+  readonly usernameAvalaible: any
 }
 const initialState: RegisterState = {
-  data: Immutable({}),
   loading: false,
   error: null,
+  data: Immutable({}),
+  isAuth: false,
+  usernameAvalaible: null,
 }
 
 const registerReducer: Reducer<RegisterState> = (
@@ -20,11 +24,18 @@ const registerReducer: Reducer<RegisterState> = (
 ) => {
   const newState = { ...state }
   switch (action.type) {
-    case registerActionType.SET_REGISTER_DATA:
-      newState.data = Immutable.merge(newState.data, action.payload)
+    case authActionType.FETCHNG:
+      newState.loading = action.payload.loading
       return newState
-    case registerActionType.ERROR:
+    case authActionType.ERROR:
       newState.error = action.payload
+      return newState
+    case authActionType.SET_LOGIN_SUCCESS:
+      newState.data = action.payload.data
+      newState.isAuth = action.payload.isAuth
+      return newState
+    case authActionType.SET_USERNAME_AVAILABLE:
+      newState.usernameAvalaible = action.payload
       return newState
     default:
       return newState

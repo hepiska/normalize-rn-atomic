@@ -1,7 +1,8 @@
 import React, { useRef, useState, useMemo, useEffect, useCallback } from 'react'
-import { StyleSheet, ScrollView } from 'react-native'
-import { bindActionCreators } from 'redux'
-import { connect } from 'react-redux'
+import { StyleSheet, ScrollView, SafeAreaView } from 'react-native'
+import { withNavigation } from 'react-navigation'
+import { useDispatch, useSelector } from 'react-redux'
+import CheckBox from 'react-native-check-box'
 import { Div, Font, PressAbbleDiv, ScrollDiv } from '@components/atoms/basic'
 import { colors } from '@src/utils/constants'
 import Icon from 'react-native-vector-icons/FontAwesome'
@@ -9,12 +10,11 @@ import { Button } from '@components/atoms/button'
 import TextInputOutline from '@src/components/atoms/field-floating'
 import {
   registerApi,
-  setRegisterError,
-  setRegisterData,
-} from '@modules/register/action'
-import { checkUsernameAvailable } from '@modules/user/action'
-import { useFormValidator } from '@components/atoms/use-form-validator'
-import { useDebounce } from '@components/atoms/use-debounce'
+  setAuthError,
+  checkUsernameAvailable,
+} from '@modules/auth/action'
+import { useFormValidator } from '@src/hooks/use-form-validator'
+import { useDebounce } from '@src/hooks/use-debounce'
 import PickerPopup from '@components/molecules/picker'
 import DatePicker from '@components/atoms/datepicker'
 
@@ -57,284 +57,358 @@ const styles = StyleSheet.create({
 })
 
 interface FormRegisterBasicInformation {
-  registerApi: any
-  setRegisterData: any
-  checkUsernameAvailable: any
-  usernameAvalaible: boolean
-  data: any
-  loading: boolean
-  error: any
+  navigation: any
 }
 
-const FormRegisterBasicInformation = ({
-  registerApi,
-  checkUsernameAvailable,
-  usernameAvalaible,
-  data,
-  error,
-  loading,
+const FormRegisterBasicInformation: React.FC<FormRegisterBasicInformation> = ({
+  navigation,
 }) => {
   let pickerRef = null
   let datePickerRef = null
   let scrollRef = useRef<ScrollView>(null)
 
-  const inputSchema = {
-    email: { required: true },
-    firstName: { required: true },
-    lastName: { required: true },
-    gender: { required: true },
-    dateOfBirth: { required: true },
-    username: { required: true },
-  }
+  const dispatch = useDispatch()
+  const { loading, error, usernameAvalaible } = useSelector(({ auth }) => ({
+    loading: auth.loading,
+    error: auth.error,
+    usernameAvalaible: auth.usernameAvalaible,
+  }))
 
   const [username, setUsername] = useState('')
   const debounceInputTerm = useDebounce(username, 300)
 
   const [showPassword, setShowPassword] = useState(false)
+
   const _onShowPassword = () => setShowPassword(prevState => !prevState)
 
-  const scrollToTop = () => {
+  const _scrollToTop = () => {
     scrollRef.current.scrollTo({ x: 0, y: 0, animated: true })
   }
 
-  const _onSubmit = useCallback(
-    ({ isValid, state }) => {
-      if (isValid) {
-        const {
-          email,
-          username,
-          firstName,
-          lastName,
-          dateOfBirth,
-          gender,
-        } = state
-        const { password, confirmPassword } = data
-        const params = {
-          email: email.value,
-          password,
-          repassword: confirmPassword,
-          username: username.value,
-          name: `${firstName.value} ${lastName.value}`,
-          date_of_birth: new Date(dateOfBirth.value),
-          gender: gender.value,
-        }
-        registerApi(params)
+  const _onSubmit = ({ isValid, state }) => {
+    if (isValid) {
+      const {
+        email,
+        password,
+        confirmPassword,
+        username,
+        firstName,
+        lastName,
+        dateOfBirth,
+        gender,
+      } = state
+      const params = {
+        email: email.value,
+        password: password.value,
+        repassword: confirmPassword.value,
+        username: username.value,
+        name: `${firstName.value} ${lastName.value}`,
+        date_of_birth: new Date(dateOfBirth.value),
+        gender: gender.value,
       }
-    },
-    [data],
-  )
+      dispatch(registerApi(params))
+    } else {
+      _scrollToTop()
+    }
+  }
+
+  const _onBack = () => {
+    navigation.goBack()
+  }
 
   const {
     state,
     handleOnChange,
     handleOnSubmit,
     setFieldError,
-  } = useFormValidator(inputSchema, _onSubmit, {
-    reduxState: data,
-  })
+  } = useFormValidator(
+    {
+      email: {
+        required: true,
+        pattern: {
+          regEx: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
+          message: 'Invalid email address format',
+        },
+      },
+      password: {
+        required: true,
+        pattern: {
+          regEx: /[a-zA-Z0-9]{6,}/,
+          message: 'Password must be 6 characters',
+        },
+      },
+      confirmPassword: {
+        required: true,
+        pattern: {
+          condition: (value, { password }) => value === password.value,
+          message: 'Passwords don`t match',
+        },
+      },
+      firstName: { required: true },
+      lastName: { required: true },
+      gender: { required: true },
+      dateOfBirth: { required: true },
+      username: { required: true },
+      tnc: {
+        required: true,
+        message: 'Terms of Use and Privacy Policy must be accepted',
+      },
+    },
+    _onSubmit,
+  )
 
   useEffect(() => {
     if (error) {
-      scrollToTop()
+      _scrollToTop()
     }
   }, [error, loading])
 
   useEffect(() => {
-    if (username.length && !usernameAvalaible) {
+    if (username.length) {
       setFieldError({
         field: 'username',
-        message: 'Username already taken!',
+        pattern: {
+          condition: username.length && !usernameAvalaible,
+          message: 'Username already taken!',
+        },
       })
     }
   }, [usernameAvalaible])
 
   useEffect(() => {
     if (debounceInputTerm) {
-      checkUsernameAvailable(username)
+      dispatch(checkUsernameAvailable(username))
     }
   }, [debounceInputTerm])
 
   useEffect(() => {
     return () => {
-      setRegisterError(null)
+      setAuthError(null)
     }
   }, [])
 
   return useMemo(
     () => (
-      <ScrollDiv
-        ref={scrollRef}
-        style={{ width: '100%' }}
-        showsVerticalScrollIndicator={false}>
-        <Div _width="100%" _padding="0px 0px 24px">
-          {error && (
-            <Div
-              align="flex-start"
-              borderRadius="5px"
-              _width="100%"
-              _background="rgba(225, 54, 97, 0.25)"
-              _padding="8px"
-              _margin="0px 0px -24px">
-              <Font size={11} color={colors.redBookmark}>
-                {error}
-              </Font>
-            </Div>
-          )}
-
-          <Div _width="100%" _margin="32px 0px 24px">
-            <TextInputOutline
-              label="Your Email"
-              value={state.email.value}
-              onChangeText={handleOnChange('email')}
-              keyboardType="email-address"
-              error={state.email.error}
-              autoCapitalize="none"
-              disabled
-              rightIcon={
-                <PressAbbleDiv onPress={_onShowPassword}>
-                  <Font
-                    size={14}
-                    color={colors.black100}
-                    weight="bold"
-                    type="HelveticaNeue">
-                    Change
+      <SafeAreaView style={{ flex: 1, width: '100%', height: '100%' }}>
+        <Div _flex={1} _width="100%" _padding="16px">
+          <Div
+            _width="100%"
+            _direction="row"
+            justify="space-between"
+            _margin="0px 0px 16px">
+            <Font
+              size="24"
+              fontFamily="Futura"
+              weight="500"
+              color={colors.black100}>
+              Create New Account
+            </Font>
+            <PressAbbleDiv onPress={_onBack}>
+              <Icon name="close" size={24} color={colors.black70} />
+            </PressAbbleDiv>
+          </Div>
+          <ScrollDiv
+            ref={scrollRef}
+            style={{ width: '100%' }}
+            showsVerticalScrollIndicator={false}>
+            <Div _width="100%" _padding="0px 0px 24px">
+              {!!state.tnc.error && (
+                <Div
+                  align="flex-start"
+                  borderRadius="5px"
+                  _width="100%"
+                  _background="rgba(225, 54, 97, 0.25)"
+                  _padding="8px"
+                  _margin="0px 0px -16px">
+                  <Font size={11} color={colors.redBookmark}>
+                    {state.tnc.error}
                   </Font>
+                </Div>
+              )}
+
+              <Div _width="100%" _margin="32px 0px 24px">
+                <TextInputOutline
+                  label="Your Email"
+                  value={state.email.value}
+                  onChangeText={handleOnChange('email')}
+                  keyboardType="email-address"
+                  error={state.email.error}
+                  autoCapitalize="none"
+                />
+              </Div>
+
+              <Div _width="100%" _margin="0px 0px 24px">
+                <TextInputOutline
+                  label="First Name"
+                  value={state.firstName.value}
+                  onChangeText={handleOnChange('firstName')}
+                  autoCapitalize="none"
+                  error={state.firstName.error}
+                />
+              </Div>
+
+              <Div _width="100%" _margin="0px 0px 24px">
+                <TextInputOutline
+                  label="Last Name"
+                  value={state.lastName.value}
+                  onChangeText={handleOnChange('lastName')}
+                  autoCapitalize="none"
+                  error={state.lastName.error}
+                />
+              </Div>
+
+              <Div _width="100%" _margin="0px 0px 24px">
+                <TextInputOutline
+                  label="Username"
+                  value={state.username.value}
+                  onChangeText={value => {
+                    handleOnChange('username')(value)
+                    setUsername(value)
+                  }}
+                  autoCapitalize="none"
+                  error={state.username.error}
+                />
+              </Div>
+
+              <Div _width="100%" _margin="0px 0px 24px">
+                <TextInputOutline
+                  label="Password"
+                  value={state.password.value}
+                  onChangeText={handleOnChange('password')}
+                  secureTextEntry={!showPassword ? true : false}
+                  autoCapitalize="none"
+                  error={state.password.error}
+                  rightIcon={
+                    <PressAbbleDiv onPress={_onShowPassword}>
+                      <Icon
+                        name={showPassword ? 'eye' : 'eye-slash'}
+                        size={22}
+                        color={colors.black80}
+                      />
+                    </PressAbbleDiv>
+                  }
+                />
+              </Div>
+
+              <Div _width="100%" _margin="0px 0px 24px">
+                <TextInputOutline
+                  label="Confirm Password"
+                  value={state.confirmPassword.value}
+                  onChangeText={handleOnChange('confirmPassword')}
+                  secureTextEntry={true}
+                  autoCapitalize="none"
+                  error={state.confirmPassword.error}
+                />
+              </Div>
+
+              <Div _width="100%" _margin="0px 0px 24px">
+                <PickerPopup
+                  pickerRef={e => (pickerRef = e)}
+                  value={null}
+                  title={'Select a gender'}
+                  items={[
+                    { label: 'Male', value: 'm' },
+                    { label: 'Female', value: 'f' },
+                  ]}
+                  onValueChange={(value, index, data) => {
+                    handleOnChange('gender')(data.label)
+                  }}
+                />
+                <PressAbbleDiv
+                  style={{ width: '100%' }}
+                  onPress={() => pickerRef.show()}>
+                  <TextInputOutline
+                    label="Gender"
+                    value={state.gender.value}
+                    error={state.gender.error}
+                    disabled
+                    rightIcon={
+                      <Icon
+                        name={'caret-down'}
+                        size={22}
+                        color={colors.black80}
+                      />
+                    }
+                  />
                 </PressAbbleDiv>
-              }
-            />
-          </Div>
+              </Div>
 
-          <Div _width="100%" _margin="0px 0px 24px">
-            <TextInputOutline
-              label="First Name"
-              value={state.firstName.value}
-              onChangeText={handleOnChange('firstName')}
-              autoCapitalize="none"
-              error={state.firstName.error}
-            />
-          </Div>
+              <Div _width="100%" _margin="0px 0px 24px">
+                <DatePicker
+                  datePickerRef={e => (datePickerRef = e)}
+                  value={
+                    state.dateOfBirth.value
+                      ? new Date(state.dateOfBirth.value)
+                      : new Date()
+                  }
+                  onChange={date =>
+                    handleOnChange('dateOfBirth')(date.toLocaleDateString())
+                  }
+                />
+                <PressAbbleDiv
+                  onPress={() => datePickerRef.open()}
+                  style={{ width: '100%' }}>
+                  <TextInputOutline
+                    label="Date Of Birth"
+                    value={state.dateOfBirth.value}
+                    error={state.dateOfBirth.error}
+                    disabled
+                    rightIcon={
+                      <Icon
+                        name={'calendar'}
+                        size={22}
+                        color={colors.black80}
+                      />
+                    }
+                  />
+                </PressAbbleDiv>
+              </Div>
 
-          <Div _width="100%" _margin="0px 0px 24px">
-            <TextInputOutline
-              label="Last Name"
-              value={state.lastName.value}
-              onChangeText={handleOnChange('lastName')}
-              autoCapitalize="none"
-              error={state.lastName.error}
-            />
-          </Div>
+              <Div
+                width="100%"
+                _direction="row"
+                _padding="0px 22px"
+                _justify="center"
+                align="flex-start">
+                <CheckBox
+                  onClick={() => {
+                    handleOnChange('tnc')(!state.tnc.value)
+                  }}
+                  isChecked={!!state.tnc.value}
+                />
+                <Div
+                  _width="100%"
+                  _margin="0px 0px 24px 12px"
+                  _direction="row"
+                  justify="flex-start"
+                  style={{
+                    flexWrap: 'wrap',
+                    widht: '100%',
+                  }}>
+                  <Font size={12}>By register you agree to The Shonet </Font>
+                  <PressAbbleDiv style={{ borderBottomWidth: 1 }}>
+                    <Font color={colors.black100}>Terms of Use</Font>
+                  </PressAbbleDiv>
+                  <Font> and </Font>
+                  <PressAbbleDiv style={{ borderBottomWidth: 1 }}>
+                    <Font color={colors.black100}>Privacy Policy</Font>
+                  </PressAbbleDiv>
+                </Div>
+              </Div>
 
-          <Div _width="100%" _margin="0px 0px 24px">
-            <TextInputOutline
-              label="Username"
-              value={state.username.value}
-              onChangeText={value => {
-                handleOnChange('username')(value)
-                setUsername(value)
-              }}
-              autoCapitalize="none"
-              error={state.username.error}
-            />
-          </Div>
-
-          <Div _width="100%" _margin="0px 0px 24px">
-            <PickerPopup
-              pickerRef={e => (pickerRef = e)}
-              value={null}
-              title={'Select a gender'}
-              items={[
-                { label: 'Male', value: 'm' },
-                { label: 'Female', value: 'f' },
-              ]}
-              onValueChange={(value, index, data) => {
-                handleOnChange('gender')(data.label)
-              }}
-            />
-            <PressAbbleDiv
-              style={{ width: '100%' }}
-              onPress={() => pickerRef.show()}>
-              <TextInputOutline
-                label="Gender"
-                value={state.gender.value}
-                error={state.gender.error}
-                disabled
-                rightIcon={
-                  <Icon name={'caret-down'} size={22} color={colors.black80} />
-                }
+              <Button
+                title="Register"
+                onPress={handleOnSubmit}
+                style={styles.btnSubmit}
+                fontStyle={styles.btnSubmitText}
               />
-            </PressAbbleDiv>
-          </Div>
-
-          <Div _width="100%" _margin="0px 0px 24px">
-            <DatePicker
-              datePickerRef={e => (datePickerRef = e)}
-              value={
-                state.dateOfBirth.value
-                  ? new Date(state.dateOfBirth.value)
-                  : new Date()
-              }
-              onChange={date =>
-                handleOnChange('dateOfBirth')(date.toLocaleDateString())
-              }
-            />
-            <PressAbbleDiv
-              onPress={() => datePickerRef.open()}
-              style={{ width: '100%' }}>
-              <TextInputOutline
-                label="Date Of Birth"
-                value={state.dateOfBirth.value}
-                error={state.dateOfBirth.error}
-                disabled
-                rightIcon={
-                  <Icon name={'calendar'} size={22} color={colors.black80} />
-                }
-              />
-            </PressAbbleDiv>
-          </Div>
-
-          <Div _width="100%" _margin="0px 0px 24px" _direction="row">
-            <Font size={12}>By register you agree to The Shonet </Font>
-            <PressAbbleDiv style={{ borderBottomWidth: 1 }}>
-              <Font color={colors.black100}>Terms of Use</Font>
-            </PressAbbleDiv>
-            <Font> and </Font>
-            <PressAbbleDiv style={{ borderBottomWidth: 1 }}>
-              <Font color={colors.black100}>Privacy Policy</Font>
-            </PressAbbleDiv>
-          </Div>
-
-          <Button
-            title="Register"
-            onPress={handleOnSubmit}
-            style={styles.btnSubmit}
-            fontStyle={styles.btnSubmitText}
-          />
+            </Div>
+          </ScrollDiv>
         </Div>
-      </ScrollDiv>
+      </SafeAreaView>
     ),
     [state, showPassword, error],
   )
 }
 
-const mapDispatchToProps = dispatch =>
-  bindActionCreators(
-    {
-      registerApi,
-      setRegisterData,
-      setRegisterError,
-      checkUsernameAvailable,
-    },
-    dispatch,
-  )
-
-const mapStateToProps = state => ({
-  loading: state.register.loading,
-  data: state.register.data,
-  error: state.register.error,
-  usernameAvalaible: state.user.usernameAvalaible,
-})
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(FormRegisterBasicInformation)
+export default withNavigation(FormRegisterBasicInformation)

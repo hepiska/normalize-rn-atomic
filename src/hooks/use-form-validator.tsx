@@ -14,13 +14,14 @@ export const useFormValidator = (schema, callback, reduxProps?: any) => {
   const [state, setState] = useState(stateSchema)
   const [disable, setDisable] = useState(true)
   const [isDirty, setIsDirty] = useState(false)
+  const [customError, setCustomError] = useState(null)
 
   const validateState = useCallback(() => {
     const hasErrorInState = Object.keys(schema).some(key => {
       const isInputFieldRequired = schema[key].required
       const stateValue = state[key].value
       const stateError = state[key].error
-      return (isInputFieldRequired && !stateValue) || stateError
+      return stateError || (isInputFieldRequired && !stateValue)
     })
 
     return hasErrorInState
@@ -30,8 +31,9 @@ export const useFormValidator = (schema, callback, reduxProps?: any) => {
     let error = ''
     if (schema[name].required) {
       if (!value) {
-        error = `${schema[name].label ||
-          splitCamelCaseToString(name)} must be filled`
+        error =
+          schema[name].message ||
+          `${schema[name].label || splitCamelCaseToString(name)} must be filled`
       }
     }
 
@@ -55,6 +57,10 @@ export const useFormValidator = (schema, callback, reduxProps?: any) => {
       }
     }
 
+    if (customError && customError[name]) {
+      error = customError[name].error
+    }
+
     setState(prevState => ({
       ...prevState,
       [name]: { value, error },
@@ -70,12 +76,23 @@ export const useFormValidator = (schema, callback, reduxProps?: any) => {
   )
 
   const setFieldError = useCallback(
-    ({ field, message }) => {
+    ({ field, pattern }) => {
+      let error = ''
+      if (pattern.condition) {
+        error = pattern.message
+      }
+      setCustomError(prevState => ({
+        ...prevState,
+        [field]: {
+          value: state[field].value,
+          error: error,
+        },
+      }))
       setState(prevState => ({
         ...prevState,
         [field]: {
-          value: prevState[field].value,
-          error: message,
+          value: state[field].value,
+          error: error,
         },
       }))
     },
@@ -88,14 +105,11 @@ export const useFormValidator = (schema, callback, reduxProps?: any) => {
     if (!validateState()) {
       isValid = true
     } else {
+      setIsDirty(true)
       Object.keys(state).map(key => {
         return validate({ name: key, value: state[key].value })
       })
     }
-
-    Object.keys(state).map(key => {
-      return validate({ name: key, value: state[key].value })
-    })
 
     callback({ isValid, state })
   }, [state])
