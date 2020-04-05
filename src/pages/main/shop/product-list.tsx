@@ -62,7 +62,7 @@ class Productlist extends Component<any, any> {
     skip: 0,
     headerName: 'Product',
   }
-  limit = 15
+  limit = 20
 
   skip = 0
   lastskip = 0

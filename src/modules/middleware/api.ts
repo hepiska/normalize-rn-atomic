@@ -1,5 +1,6 @@
 import { normalize } from 'normalizr'
 import { request } from '@utils/services'
+
 import * as actions from '../action-types'
 
 const api = ({ dispatch, getState }) => next => action => {

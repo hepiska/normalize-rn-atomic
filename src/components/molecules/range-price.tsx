@@ -20,7 +20,7 @@ const RangePrice = ({
   to,
   exFrom,
   exTo,
-  withDiscount = false,
+  withDiscount,
   style,
   upTo,
 }: RangePrice) => {
@@ -69,12 +69,12 @@ const RangePrice = ({
                   style={{
                     position: 'absolute',
                     width: upTo ? 65 : 31,
-                    height: 14,
+                    height: 15,
                   }}
                 />
                 <Font
                   size={8}
-                  _margin="0px 0px 0px 11px"
+                  _margin="0px 0px 0px 8px"
                   color={colors.white}
                   style={{ fontWeight: '500' }}>
                   {upTo ? `UP TO ${x}` : x}

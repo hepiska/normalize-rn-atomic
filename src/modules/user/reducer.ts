@@ -25,13 +25,6 @@ const userReducer: Reducer<UserState> = (
     case userActionType.SET_USER_DATA:
       newState.data = Immutable.merge(newState.data, action.payload)
       return newState
-    case userActionType.FETCH_START:
-      newState.loading = true
-      return newState
-    case userActionType.FETCH_FINISH:
-      newState.loading = false
-      return newState
-
     default:
       return newState
   }

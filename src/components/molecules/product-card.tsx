@@ -171,7 +171,6 @@ const ProductCard = ({
       colorAttributes={colorAttributes}
       brand={brand}
       product={product}
-      variantSelected={variantSelected}
       attributeSelected={attributeSelected}
       onColorChange={onColorChange}
     />
