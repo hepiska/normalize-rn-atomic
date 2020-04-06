@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, StyleSheet } from 'react-native'
+import { FlatList, Dimensions, View, StyleSheet, Text } from 'react-native'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { collectionApi } from '@modules/collection/action'
@@ -7,6 +7,7 @@ import { getPage } from '@modules/page/action'
 import { deepClone } from '@utils/helpers'
 import HorizontalList from '@components/organisms/horizontal-list'
 import Jumbotron from '@components/organisms/jumbotron'
+import SectionGridList from '@components/organisms/section-grid-list'
 import Animated from 'react-native-reanimated'
 import { globalDimention } from '@utils/constants'
 import { onScroll } from 'react-native-redash'
@@ -45,6 +46,8 @@ class ShopPage extends React.Component<any, any> {
         )
       case 'section-horizontal-list':
         return <HorizontalList data={section} />
+      case 'section-grid-list':
+        return <SectionGridList data={section} />
       default:
         return null
     }
