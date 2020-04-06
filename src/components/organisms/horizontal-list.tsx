@@ -8,9 +8,11 @@ import {
 import { OutlineButton } from '@components/atoms/button'
 import { colors } from '@utils/constants'
 import PostCard from '@components/molecules/post-card'
+import CollectionCard from '@components/molecules/post-card'
 import BrandCard from '@components/molecules/brand-card'
 import ProductCard from '@components/molecules/product-card'
 import { postListData } from '@hocs/data/post'
+import { collectionListData } from '@hocs/data/collection'
 import { productListData } from '@hocs/data/product'
 import { brandListData } from '@hocs/data/brand'
 
@@ -21,6 +23,7 @@ interface HorizontalListType {
 }
 
 const PostHoc = postListData(PostCard)
+const CollectionHoc = collectionListData(CollectionCard)
 const ProductHoc = productListData(ProductCard)
 const BrandHoc = brandListData(BrandCard)
 
@@ -49,7 +52,11 @@ class HorizontalList extends React.Component<HorizontalListType, any> {
 
     switch (type) {
       case 'post':
-        return <PostHoc key={index} postId={item} idx={index} />
+        if (this.props.data.posts) {
+          return <PostHoc key={index} postId={item} idx={index} />
+        } else if (this.props.data.collections) {
+          return <CollectionHoc key={index} collectionId={item} idx={index} />
+        }
       case 'product':
         return (
           <ProductHoc
@@ -89,6 +96,13 @@ class HorizontalList extends React.Component<HorizontalListType, any> {
     }
   }
 
+  _renderData = () => {
+    const { data } = this.props
+
+    if (data[`${data.type}s`]) return data[`${data.type}s`]
+    return data[`collections`]
+  }
+
   render() {
     const { data } = this.props
 
@@ -102,7 +116,7 @@ class HorizontalList extends React.Component<HorizontalListType, any> {
           showsHorizontalScrollIndicator={false}
           decelerationRate="fast"
           snapToAlignment="center"
-          data={data[`${data.type}s`]} // revisi: based on API response, every type has different key object
+          data={this._renderData()} // revisi: based on API response, every type has different key object
           keyExtractor={this._keyExtractor}
           renderItem={this._renderItem}
         />

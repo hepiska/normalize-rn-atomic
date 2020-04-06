@@ -1,6 +1,11 @@
 import React from 'react'
 import { StyleSheet } from 'react-native'
-import { Div, PressAbbleDiv, Image, Font } from '@components/atoms/basic'
+import {
+  Div,
+  Image,
+  Font,
+  TouchableWithoutFeedback,
+} from '@components/atoms/basic'
 import { setImage } from '@utils/helpers'
 import { helveticaBlackTitleBold } from '@components/commont-styles'
 import { colors } from '@utils/constants'
@@ -19,7 +24,7 @@ const styles = StyleSheet.create({
     height: 84,
     borderRadius: 8,
   },
-  pressableDiv: {
+  touchableDiv: {
     overflow: 'hidden',
     marginRight: 32,
     alignItems: 'flex-start',
@@ -50,34 +55,35 @@ class BrandListItem extends React.PureComponent<BrandListItemType, any> {
     const { brand, idx, onPress } = this.props
 
     return brand ? (
-      <PressAbbleDiv
-        style={{
-          ...styles.pressableDiv,
-          marginLeft: idx === 0 ? 16 : 0,
-        }}
-        onPress={onPress}>
-        <Font {...helveticaBlackTitleBold} size="24px">
-          {idx + 1}
-        </Font>
-        <Div flexDirection="column">
-          <Image
-            source={{
-              uri: brand.image_url
-                ? setImage(brand.image_url, { ...styles.brand })
-                : brand.image_url,
-            }}
-            style={styles.brand}
-          />
-          <Button
-            onPress={() => {
-              console.log('follow')
-            }} // revisi: belum ada action follow
-            title="Follow"
-            fontStyle={styles.buttonText}
-            style={styles.button}
-          />
+      <TouchableWithoutFeedback onPress={onPress}>
+        <Div
+          style={{
+            ...styles.touchableDiv,
+            marginLeft: idx === 0 ? 16 : 0,
+          }}>
+          <Font {...helveticaBlackTitleBold} size="24px">
+            {idx + 1}
+          </Font>
+          <Div flexDirection="column">
+            <Image
+              source={{
+                uri: brand.image_url
+                  ? setImage(brand.image_url, { ...styles.brand })
+                  : brand.image_url,
+              }}
+              style={styles.brand}
+            />
+            <Button
+              onPress={() => {
+                console.log('follow')
+              }} // revisi: belum ada action follow
+              title="Follow"
+              fontStyle={styles.buttonText}
+              style={styles.button}
+            />
+          </Div>
         </Div>
-      </PressAbbleDiv>
+      </TouchableWithoutFeedback>
     ) : (
       <InviniteLoader />
     )
