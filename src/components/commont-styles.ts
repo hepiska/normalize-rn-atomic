@@ -20,6 +20,12 @@ export const helveticaNormalFont = {
   color: colors.gray3,
 }
 
+export const helveticaNormalFont12 = {
+  size: 12,
+  type: 'HelveticaNeue',
+  color: colors.gray3,
+}
+
 export const helveticaBlackBold = {
   size: 14,
   type: 'HelveticaNeue',

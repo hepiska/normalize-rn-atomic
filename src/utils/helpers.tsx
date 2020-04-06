@@ -72,3 +72,5 @@ export const setImage = (uri, size, params?) => {
 }
 
 export const deepClone = obj => JSON.parse(JSON.stringify(obj))
+
+export const removeLineBreak = text => text.replace(/(\r\n|\n|\r)/gm, ' ')
