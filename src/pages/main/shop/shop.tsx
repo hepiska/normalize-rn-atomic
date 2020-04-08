@@ -26,7 +26,6 @@ const y = new Value(0)
 
 class ShopPage extends React.Component<any, any> {
   componentDidMount() {
-    this.props.collectionApi()
     this.props.getPage('shop')
   }
   dimentionConstant = {

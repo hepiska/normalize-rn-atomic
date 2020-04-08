@@ -67,3 +67,16 @@ export const globalDimention = {
   jumbotronSize: styles.jumbotronSize,
   // firstComponentMargin: hasNotch ? '22px 0px 0px' : '0px',
 }
+
+export const uriSchreenMap = {
+  collection: {
+    parent: 'Shop',
+    path: 'ProductList',
+    paramId: 'collectionId',
+  },
+  brand: {
+    parent: 'Shop',
+    path: 'ProductList',
+    paramId: 'brandId',
+  },
+}

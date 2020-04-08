@@ -1,4 +1,5 @@
 import Config from 'react-native-config'
+import { uriSchreenMap } from './constants'
 
 const currencyNum = inp => {
   const a = inp
@@ -69,6 +70,14 @@ export const setImage = (uri, size, params?) => {
       .replace(Config.SHONET_AWS_IMAGE_BASE, Config.SHONET_IMGIX_IMAGE_BASE)
       .replace(/(\?.*)/, '') + queryString
   return res
+}
+
+export const parseUriToScreen = (navigation: any, uri: string) => {
+  const [screen, param] = uri.split('/')
+  const params = {}
+  params[uriSchreenMap[screen].paramId] = param
+
+  return navigation.navigate(uriSchreenMap[screen].path, params)
 }
 
 export const deepClone = obj => JSON.parse(JSON.stringify(obj))

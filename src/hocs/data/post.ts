@@ -3,15 +3,15 @@ import { navigate } from '@src/root-navigation'
 
 const postListMap = (state, ownProps) => {
   const { postId } = ownProps
-  const post = state.post.data[postId]
-  const user = state.user.data[post.user_id]
+  const post = state.post.data[postId] || {}
+  const user = state.user.data[post.user]
 
   ownProps.onPress = () => {
     navigate('PostDetail', { postId }) // revisi: navigasi ke post id
   }
   return {
     post,
-    user
+    user,
   }
 }
 export function postListData(WrappedComponent) {

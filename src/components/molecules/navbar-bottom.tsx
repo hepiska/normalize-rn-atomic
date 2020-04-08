@@ -4,7 +4,6 @@ import { useHistory } from 'react-router-native'
 import { Dimensions } from 'react-native'
 import styled from 'styled-components/native'
 
-
 const { width } = Dimensions.get('screen')
 
 const AbsDiv = styled(Div)`
@@ -16,27 +15,20 @@ interface NavbarBottomProps {
 }
 
 interface NavItemProps {
-  action: Function,
-  icon: string,
+  action: Function
+  icon: string
 }
 
-
-const NavItem: React.SFC<NavItemProps> = ({ action, icon, }) => (
-  <PressAbbleDiv flx='1' onPress={action} _height='56px'>
-    <Image
-      _width='24px'
-      _height='24px'
-      source={icon}
-    />
+const NavItem: React.SFC<NavItemProps> = ({ action, icon }) => (
+  <PressAbbleDiv flx="1" onPress={action} _height="56px">
+    <Image _width="24px" _height="24px" source={icon} />
   </PressAbbleDiv>
 )
-
-
 
 const NavbarBottom: React.SFC<NavbarBottomProps> = ({ style }) => {
   let history = useHistory()
 
-  const goto = (uri) => () => {
+  const goto = uri => () => {
     history.push(uri)
   }
 
@@ -56,11 +48,12 @@ const NavbarBottom: React.SFC<NavbarBottomProps> = ({ style }) => {
   ]
 
   return (
-    <AbsDiv _direction='row' _position='absolute' {...style} _width={width}>
-      {navItemData.map((item, index) => (<NavItem key={index} {...item} />))}
+    <AbsDiv _direction="row" _position="absolute" {...style} _width={width}>
+      {navItemData.map((item, index) => (
+        <NavItem key={index} {...item} />
+      ))}
     </AbsDiv>
   )
 }
-
 
 export default NavbarBottom

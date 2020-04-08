@@ -65,6 +65,7 @@ const ButtonGroup = ({ items, style }: ButtonGroupProps) => {
       {items.map((item, index) => (
         <TouchableOpacity
           key={index}
+          onPress={item.onPress}
           style={items.length - 1 > index ? styles.button : styles.lastButton}>
           {item.icon && (
             <Icon

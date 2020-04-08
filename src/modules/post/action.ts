@@ -8,6 +8,7 @@ export const postActionType = {
   SET_POST_ORDER: 'post/SET_USER_ORDER',
   FETCH_START: 'post/FETCH_START',
   SET_POST_LOADING: 'post/SET_USER_LOADING',
+  CLEAR_POST: 'post/CLEAR_POST',
   ERROR: 'post/ERROR',
 }
 

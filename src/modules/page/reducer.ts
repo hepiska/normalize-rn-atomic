@@ -46,7 +46,7 @@ const pagereducer: Reducer<PageDataType> = (
 }
 
 const postPersistConfig = {
-  key: 'post',
+  key: 'page',
   storage: AsyncStorage,
 }
 
