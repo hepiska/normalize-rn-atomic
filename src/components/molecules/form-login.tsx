@@ -7,7 +7,7 @@ import { Div, Font, PressAbbleDiv } from '@components/atoms/basic'
 import { colors } from '@src/utils/constants'
 import { Button, OutlineButton } from '@components/atoms/button'
 import TextInputOutline from '@src/components/atoms/field-floating'
-import { loginApi, setAuthError } from '@modules/auth/action'
+import { loginApi, setAuthError, _authSelector } from '@modules/auth/action'
 import { useFormValidator } from '@src/hooks/use-form-validator'
 
 const styles = StyleSheet.create({
@@ -54,11 +54,7 @@ interface FormLogin {
 
 const FormLogin: React.FC<FormLogin> = ({ navigation }) => {
   const dispatch = useDispatch()
-  const { data, error, called } = useSelector(({ auth }) => ({
-    data: auth.data,
-    error: auth.error,
-    called: auth.called,
-  }))
+  const { data, error, called } = useSelector(_authSelector)
 
   const [showPassword, setShowPassword] = useState(false)
 
@@ -227,7 +223,7 @@ const FormLogin: React.FC<FormLogin> = ({ navigation }) => {
                 onPress={null}
                 leftIcon={
                   <Image
-                    source={require('../../assets/icons/google-icon.png')}
+                    source={require('../../assets/icons/google-icon-login.png')}
                     style={styles.googleIcon}
                   />
                 }
@@ -239,7 +235,7 @@ const FormLogin: React.FC<FormLogin> = ({ navigation }) => {
                 onPress={null}
                 leftIcon={
                   <Image
-                    source={require('../../assets/icons/facebook-icon.png')}
+                    source={require('../../assets/icons/facebook-icon-login.png')}
                     style={styles.fbIcon}
                   />
                 }

@@ -1,14 +1,13 @@
 import React from 'react'
-import { FlatList, Dimensions, View, StyleSheet } from 'react-native'
+import { FlatList, Dimensions, View, StyleSheet, Text } from 'react-native'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { collectionApi } from '@modules/collection/action'
 import { getPage } from '@modules/page/action'
 import { deepClone } from '@utils/helpers'
-import { collectionListData } from '@hocs/data/collection'
-import InviniteLoader from '@components/atoms/loaders/invinite'
-import { Font, PressAbbleDiv } from '@components/atoms/basic'
+import HorizontalList from '@components/organisms/horizontal-list'
 import Jumbotron from '@components/organisms/jumbotron'
+import SectionGridList from '@components/organisms/section-grid-list'
 import Animated from 'react-native-reanimated'
 import { globalDimention } from '@utils/constants'
 import { onScroll } from 'react-native-redash'
@@ -27,7 +26,6 @@ const y = new Value(0)
 
 class ShopPage extends React.Component<any, any> {
   componentDidMount() {
-    this.props.collectionApi()
     this.props.getPage('shop')
   }
   dimentionConstant = {
@@ -45,37 +43,16 @@ class ShopPage extends React.Component<any, any> {
             navigateTarget="ProductList"
           />
         )
+      case 'section-horizontal-list':
+        return <HorizontalList data={section} />
+      case 'section-grid-list':
+        return <SectionGridList data={section} />
       default:
         return null
     }
   }
   render() {
     const { navigation, page, loading } = this.props
-    const dummyPost = {
-      id: 82,
-      type: 'image',
-      component: 'jumbotron',
-      title: '',
-      subtitle: '',
-      link: '',
-      link_text: '',
-      image_urls: null,
-      order: 1,
-      images: [
-        {
-          id: 27,
-          image_url:
-            'https://ecs7.tokopedia.net/img/banner/2020/3/20/85531617/85531617_2d947b4e-eb8a-40c1-ba26-ccf06058bac9.jpg',
-          target_url: '/collections/rafie-botaks',
-        },
-        {
-          id: 28,
-          image_url:
-            'https://ecs7.tokopedia.net/img/banner/2020/3/20/85531617/85531617_a2ac7b8f-c63e-4739-ae7b-dbb77f4a7338.jpg',
-          target_url: '/collections/rafie-botak',
-        },
-      ],
-    }
 
     return (
       <>

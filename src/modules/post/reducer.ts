@@ -3,6 +3,7 @@ import Immutable from 'seamless-immutable'
 import { ErrorType } from '@utils/globalInterface'
 import { persistReducer } from 'redux-persist'
 import { postActionType } from './action'
+import { deepClone } from '@utils/helpers'
 import AsyncStorage from '@react-native-community/async-storage'
 
 interface PostType {}
@@ -22,7 +23,7 @@ const initialState: any = {
 }
 
 const postreducer: Reducer<PostState> = (
-  state: any = initialState,
+  state: any = deepClone(initialState),
   action: AnyAction,
 ) => {
   const newState = { ...state }
@@ -42,6 +43,8 @@ const postreducer: Reducer<PostState> = (
     case postActionType.SET_POST_LOADING:
       newState.loading = action.payload
       return newState
+    case postActionType.CLEAR_POST:
+      return initialState
     default:
       return newState
   }

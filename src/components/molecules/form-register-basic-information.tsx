@@ -13,6 +13,7 @@ import {
   registerApi,
   setAuthError,
   checkUsernameAvailable,
+  _authSelector,
 } from '@modules/auth/action'
 import { useFormValidator } from '@src/hooks/use-form-validator'
 import { useDebounce } from '@src/hooks/use-debounce'
@@ -76,13 +77,7 @@ const FormRegisterBasicInformation: React.FC<FormRegisterBasicInformation> = ({
 
   const dispatch = useDispatch()
   const { data, loading, error, called, usernameAvalaible } = useSelector(
-    ({ auth }) => ({
-      loading: auth.loading,
-      error: auth.error,
-      data: auth.data,
-      called: auth.called,
-      usernameAvalaible: auth.usernameAvalaible,
-    }),
+    _authSelector,
   )
 
   const [username, setUsername] = useState('')
@@ -200,7 +195,7 @@ const FormRegisterBasicInformation: React.FC<FormRegisterBasicInformation> = ({
   }, [usernameAvalaible])
 
   useEffect(() => {
-    if (data?.user.id && called) {
+    if (data?.user?.id && called) {
       navigation.navigate('Profile')
     }
   }, [called])

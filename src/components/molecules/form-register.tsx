@@ -123,7 +123,7 @@ const FormRegister: React.FC<FormRegister> = ({
             onPress={null}
             leftIcon={
               <Image
-                source={require('../../assets/icons/google-icon.png')}
+                source={require('../../assets/icons/google-icon-login.png')}
                 style={styles.googleIcon}
               />
             }
@@ -135,7 +135,7 @@ const FormRegister: React.FC<FormRegister> = ({
             onPress={null}
             leftIcon={
               <Image
-                source={require('../../assets/icons/facebook-icon.png')}
+                source={require('../../assets/icons/facebook-icon-login.png')}
                 style={styles.fbIcon}
               />
             }

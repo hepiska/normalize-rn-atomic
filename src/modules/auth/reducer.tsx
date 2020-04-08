@@ -2,7 +2,6 @@ import { AnyAction, Reducer } from 'redux'
 import Immutable from 'seamless-immutable'
 import { ErrorType } from '@utils/globalInterface'
 import { authActionType } from './action'
-import R from 'reactotron-react-native'
 
 interface RegisterState {
   readonly loading: Boolean

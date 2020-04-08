@@ -1,4 +1,5 @@
 import Config from 'react-native-config'
+import { uriSchreenMap } from './constants'
 
 const currencyNum = inp => {
   const a = inp
@@ -71,7 +72,17 @@ export const setImage = (uri, size, params?) => {
   return res
 }
 
+export const parseUriToScreen = (navigation: any, uri: string) => {
+  const [screen, param] = uri.split('/')
+  const params = {}
+  params[uriSchreenMap[screen].paramId] = param
+
+  return navigation.navigate(uriSchreenMap[screen].path, params)
+}
+
 export const deepClone = obj => JSON.parse(JSON.stringify(obj))
+
+export const removeLineBreak = text => text.replace(/(\r\n|\n|\r)/gm, ' ')
 
 export const splitCamelCaseToString = s => {
   return s
