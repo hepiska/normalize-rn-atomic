@@ -5,6 +5,7 @@ export const authActionType = {
   ERROR: 'auth/ERROR',
   SET_USERNAME_AVAILABLE: 'auth/SET_USER_AVAILABLE',
   SET_LOGIN_SUCCESS: 'auth/SET_LOGIN_SUCCESS',
+  SET_REGISTER_SUCCESS: 'auth/SET_REGISTER_SUCCESS',
 }
 
 const setAuthFetching = (isFetching: boolean) => ({
@@ -20,6 +21,11 @@ const setLoginSuccess = (data: any) => ({
     data,
     isAuth: true,
   },
+})
+
+const setRegisterSuccess = (data: any) => ({
+  type: authActionType.SET_REGISTER_SUCCESS,
+  payload: data,
 })
 
 export const setAuthError = (data: any) => ({
@@ -71,7 +77,7 @@ export const registerApi = params => ({
       return setAuthFetching(false)
     },
     success: (data, { pagination }) => {
-      return []
+      return [setRegisterSuccess(data)]
     },
     error: err => {
       const error = err.response.data.meta.message

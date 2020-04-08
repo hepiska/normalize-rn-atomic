@@ -1,8 +1,9 @@
-import React, { useRef, useState, useMemo, useEffect, useCallback } from 'react'
+import React, { useRef, useState, useMemo, useEffect } from 'react'
 import { StyleSheet, ScrollView, SafeAreaView } from 'react-native'
 import { withNavigation } from 'react-navigation'
 import { useDispatch, useSelector } from 'react-redux'
 import CheckBox from 'react-native-check-box'
+import ReCaptcha, { IProps } from '@components/atoms/recaptcha'
 import { Div, Font, PressAbbleDiv, ScrollDiv } from '@components/atoms/basic'
 import { colors } from '@src/utils/constants'
 import Icon from 'react-native-vector-icons/FontAwesome'
@@ -60,21 +61,32 @@ interface FormRegisterBasicInformation {
   navigation: any
 }
 
+const gender = [
+  { label: 'Male', value: 'M' },
+  { label: 'Female', value: 'F' },
+]
+
 const FormRegisterBasicInformation: React.FC<FormRegisterBasicInformation> = ({
   navigation,
 }) => {
   let pickerRef = null
   let datePickerRef = null
+  let recapthcaRef = null
   let scrollRef = useRef<ScrollView>(null)
 
   const dispatch = useDispatch()
-  const { loading, error, usernameAvalaible } = useSelector(({ auth }) => ({
-    loading: auth.loading,
-    error: auth.error,
-    usernameAvalaible: auth.usernameAvalaible,
-  }))
+  const { data, loading, error, called, usernameAvalaible } = useSelector(
+    ({ auth }) => ({
+      loading: auth.loading,
+      error: auth.error,
+      data: auth.data,
+      called: auth.called,
+      usernameAvalaible: auth.usernameAvalaible,
+    }),
+  )
 
   const [username, setUsername] = useState('')
+  const [recaptcha, setRecaptcha] = useState('')
   const debounceInputTerm = useDebounce(username, 300)
 
   const [showPassword, setShowPassword] = useState(false)
@@ -83,6 +95,14 @@ const FormRegisterBasicInformation: React.FC<FormRegisterBasicInformation> = ({
 
   const _scrollToTop = () => {
     scrollRef.current.scrollTo({ x: 0, y: 0, animated: true })
+  }
+
+  const _getCapthca = (token: string) => {
+    if (!token) {
+      recapthcaRef.refreshToken()
+    } else {
+      setRecaptcha(token)
+    }
   }
 
   const _onSubmit = ({ isValid, state }) => {
@@ -105,9 +125,13 @@ const FormRegisterBasicInformation: React.FC<FormRegisterBasicInformation> = ({
         name: `${firstName.value} ${lastName.value}`,
         date_of_birth: new Date(dateOfBirth.value),
         gender: gender.value,
+        recaptcha,
       }
       dispatch(registerApi(params))
     } else {
+      if (!recaptcha) {
+        recapthcaRef.refreshToken()
+      }
       _scrollToTop()
     }
   }
@@ -124,31 +148,31 @@ const FormRegisterBasicInformation: React.FC<FormRegisterBasicInformation> = ({
   } = useFormValidator(
     {
       email: {
-        required: true,
+        required: false,
         pattern: {
           regEx: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
           message: 'Invalid email address format',
         },
       },
       password: {
-        required: true,
+        required: false,
         pattern: {
           regEx: /[a-zA-Z0-9]{6,}/,
           message: 'Password must be 6 characters',
         },
       },
       confirmPassword: {
-        required: true,
+        required: false,
         pattern: {
           condition: (value, { password }) => value === password.value,
           message: 'Passwords don`t match',
         },
       },
       firstName: { required: true },
-      lastName: { required: true },
-      gender: { required: true },
-      dateOfBirth: { required: true },
-      username: { required: true },
+      lastName: { required: false },
+      gender: { required: false },
+      dateOfBirth: { required: false },
+      username: { required: false },
       tnc: {
         required: true,
         message: 'Terms of Use and Privacy Policy must be accepted',
@@ -176,6 +200,12 @@ const FormRegisterBasicInformation: React.FC<FormRegisterBasicInformation> = ({
   }, [usernameAvalaible])
 
   useEffect(() => {
+    if (data?.user.id && called) {
+      navigation.navigate('Profile')
+    }
+  }, [called])
+
+  useEffect(() => {
     if (debounceInputTerm) {
       dispatch(checkUsernameAvailable(username))
     }
@@ -183,7 +213,7 @@ const FormRegisterBasicInformation: React.FC<FormRegisterBasicInformation> = ({
 
   useEffect(() => {
     return () => {
-      setAuthError(null)
+      dispatch(setAuthError(null))
     }
   }, [])
 
@@ -212,7 +242,7 @@ const FormRegisterBasicInformation: React.FC<FormRegisterBasicInformation> = ({
             style={{ width: '100%' }}
             showsVerticalScrollIndicator={false}>
             <Div _width="100%" _padding="0px 0px 24px">
-              {!!state.tnc.error && (
+              {(state.tnc.error || error) && (
                 <Div
                   align="flex-start"
                   borderRadius="5px"
@@ -221,7 +251,7 @@ const FormRegisterBasicInformation: React.FC<FormRegisterBasicInformation> = ({
                   _padding="8px"
                   _margin="0px 0px -16px">
                   <Font size={11} color={colors.redBookmark}>
-                    {state.tnc.error}
+                    {state.tnc.error || error}
                   </Font>
                 </Div>
               )}
@@ -306,12 +336,9 @@ const FormRegisterBasicInformation: React.FC<FormRegisterBasicInformation> = ({
                   pickerRef={e => (pickerRef = e)}
                   value={null}
                   title={'Select a gender'}
-                  items={[
-                    { label: 'Male', value: 'm' },
-                    { label: 'Female', value: 'f' },
-                  ]}
+                  items={gender}
                   onValueChange={(value, index, data) => {
-                    handleOnChange('gender')(data.label)
+                    handleOnChange('gender')(value)
                   }}
                 />
                 <PressAbbleDiv
@@ -319,7 +346,11 @@ const FormRegisterBasicInformation: React.FC<FormRegisterBasicInformation> = ({
                   onPress={() => pickerRef.show()}>
                   <TextInputOutline
                     label="Gender"
-                    value={state.gender.value}
+                    value={
+                      state.gender.value
+                        ? gender.find(x => x.value === state.gender.value).label
+                        : null
+                    }
                     error={state.gender.error}
                     disabled
                     rightIcon={
@@ -395,7 +426,12 @@ const FormRegisterBasicInformation: React.FC<FormRegisterBasicInformation> = ({
                   </PressAbbleDiv>
                 </Div>
               </Div>
-
+              <ReCaptcha
+                recaptchaRef={e => (recapthcaRef = e)}
+                captchaDomain={'https://shonet.dev'}
+                siteKey={'6LcNHeUUAAAAAAm1sPl8eHrU5Ms5pCpps6LBg5n-'}
+                onReceiveToken={_getCapthca}
+              />
               <Button
                 title="Register"
                 onPress={handleOnSubmit}

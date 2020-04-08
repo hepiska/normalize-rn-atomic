@@ -54,8 +54,10 @@ interface FormLogin {
 
 const FormLogin: React.FC<FormLogin> = ({ navigation }) => {
   const dispatch = useDispatch()
-  const { error } = useSelector(({ auth }) => ({
+  const { data, error, called } = useSelector(({ auth }) => ({
+    data: auth.data,
     error: auth.error,
+    called: auth.called,
   }))
 
   const [showPassword, setShowPassword] = useState(false)
@@ -95,8 +97,14 @@ const FormLogin: React.FC<FormLogin> = ({ navigation }) => {
   )
 
   useEffect(() => {
+    if (data?.id_token && called) {
+      navigation.navigate('Profile')
+    }
+  }, [called])
+
+  useEffect(() => {
     return () => {
-      setAuthError(null)
+      dispatch(setAuthError(null))
     }
   }, [])
 
