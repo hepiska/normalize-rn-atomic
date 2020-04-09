@@ -11,7 +11,12 @@ import { Div, Font, PressAbbleDiv } from '@components/atoms/basic'
 import InviniteLoader from '@components/atoms/loaders/invinite'
 import BrandCard from '@components/molecules/brand-card'
 import FilterTriger from '@components/organisms/brand-filter-buttons'
-import { brandApi, changeSearch, clearSearch } from '@modules/brand/action'
+import {
+  brandApi,
+  changeSearch,
+  clearSearch,
+  resetBrand,
+} from '@modules/brand/action'
 import { brandListData } from '@hocs/data/brand'
 
 const { width } = Dimensions.get('window')
@@ -41,6 +46,7 @@ class BrandList extends Component<any, any> {
 
   componentWillUnmount() {
     this.props.clearSearch()
+    this.props.resetBrand()
   }
 
   _freshfetch = async () => {
@@ -72,6 +78,8 @@ class BrandList extends Component<any, any> {
     const params: any = {
       limit: this.limit,
       offset: skip * this.limit,
+      sort_by: 'name',
+      sort_direction: 'asc',
       // ...sort.value,
       // ...appliedFilters,
     }
@@ -132,7 +140,7 @@ class BrandList extends Component<any, any> {
       },
     ]
 
-    const leftContent = ['back', 'close']
+    const leftContent = ['back']
 
     const rightContent = ['shop', 'notification', 'search']
 
@@ -148,6 +156,8 @@ class BrandList extends Component<any, any> {
         <Div _width="100%" _flex="1" justify="flex-start">
           {this._renderHeader()}
           <FlatList
+            onEndReached={this._fetchMore}
+            onEndReachedThreshold={0.97}
             showsHorizontalScrollIndicator={false}
             decelerationRate="fast"
             snapToAlignment="center"
@@ -177,6 +187,7 @@ const mapDispatchToProps = dispatch =>
       brandApi,
       changeSearch,
       clearSearch,
+      resetBrand,
     },
     dispatch,
   )
@@ -184,7 +195,8 @@ const mapDispatchToProps = dispatch =>
 const mapStateToProps = (state, { route }) => ({
   brands: state.brands.order,
   search: state.brands.search,
-  pagination: state.brands.order.length,
+  pagination: state.brands.pagination,
+  loading: state.brands.loading,
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(BrandList)

@@ -11,6 +11,7 @@ export const brandActionType = {
   SET_BRAND_LOADING: 'brand/SET_BRAND_LOADING',
   CHANGE_SEARCH: 'brand/CHANGE_SEARCH',
   CLEAR_SEARCH: 'brand/CLEAR_SEARCH',
+  RESET_BRAND: 'brand/RESET_BRAND',
   SET_ACTIVE_BRAND: 'brand/SET_ACTIVE',
   ERROR: 'brand/ERROR',
 }
@@ -46,6 +47,10 @@ export const changeSearch = (data: string) => ({
 
 export const clearSearch = () => ({
   type: brandActionType.CLEAR_SEARCH,
+})
+
+export const resetBrand = () => ({
+  type: brandActionType.RESET_BRAND,
 })
 
 export const getBrand = id => ({
