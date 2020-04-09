@@ -13,6 +13,7 @@ import uiInteracrionReducer from './ui-interaction/reducer'
 import collectionReducer from './collection/reducer'
 import pageReducer from './page/reducer'
 import globalReducer from './global/reducer'
+import authReducer from './auth/reducer'
 
 const combinedReducer: Reducer<any> = combineReducers({
   router: routerReducer,
@@ -29,6 +30,7 @@ const combinedReducer: Reducer<any> = combineReducers({
   sort: sortReducer,
   global: globalReducer,
   collection: collectionReducer,
+  auth: authReducer,
 })
 
 export default combinedReducer

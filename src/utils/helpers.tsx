@@ -83,3 +83,12 @@ export const parseUriToScreen = (navigation: any, uri: string) => {
 export const deepClone = obj => JSON.parse(JSON.stringify(obj))
 
 export const removeLineBreak = text => text.replace(/(\r\n|\n|\r)/gm, ' ')
+
+export const splitCamelCaseToString = s => {
+  return s
+    .split(/(?=[A-Z])/)
+    .map(function(p) {
+      return p.charAt(0).toUpperCase() + p.slice(1)
+    })
+    .join(' ')
+}
