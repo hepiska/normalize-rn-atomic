@@ -4,6 +4,7 @@ import {
   StyleSheet,
   View,
   TouchableWithoutFeedback,
+  Image,
 } from 'react-native'
 import styled from 'styled-components'
 import ImageAutoSchale from '@components/atoms/image-autoschale'
@@ -216,7 +217,7 @@ const ProductCardHorizontal = ({
         align="flex-start">
         <Div _width="40%">
           <ImageAutoSchale
-            source={image}
+            source={typeof image === 'string' ? { uri: image } : image}
             onError={() => {
               setImage(defaultImages.product)
             }}
@@ -318,12 +319,12 @@ const ProductCardVertical = ({
             />
           </AbsDiv>
           <ImageAutoSchale
-            source={image}
+            source={typeof image === 'string' ? { uri: image } : image}
             onError={() => {
               setImage(defaultImages.product)
             }}
             width={width}
-            style={styles.image}
+            style={{ ...styles.image }}
           />
         </Div>
 

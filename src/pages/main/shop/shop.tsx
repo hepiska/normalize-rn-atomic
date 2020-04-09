@@ -27,6 +27,7 @@ const y = new Value(0)
 class ShopPage extends React.Component<any, any> {
   componentDidMount() {
     this.props.getPage('shop')
+    this.props.navigation.setParams({ page: 'asadassasd' })
   }
   dimentionConstant = {
     imageHeight: globalDimention.jumbotronSize.height,
@@ -52,7 +53,7 @@ class ShopPage extends React.Component<any, any> {
     }
   }
   render() {
-    const { navigation, page, loading } = this.props
+    const { page } = this.props
 
     return (
       <>

@@ -12,9 +12,8 @@ const styles = StyleSheet.create({
 })
 
 const CloseActionButton = props => {
-  const navigation = useNavigation()
   return (
-    <PressAbbleDiv onPress={navigation.goBack} style={styles.leftAction}>
+    <PressAbbleDiv onPress={props.onPress} style={styles.leftAction}>
       <Icon
         name={props.name === 'back' ? 'chevron-left' : 'close'}
         size={20}

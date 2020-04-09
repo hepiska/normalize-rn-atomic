@@ -1,5 +1,7 @@
 import { QueryParams } from '@utils/globalInterface'
 import { API } from '../action-types'
+import { setCategoryData } from '../category/action'
+
 import * as schema from '@modules/normalize-schema'
 
 export const brandActionType = {
@@ -9,6 +11,7 @@ export const brandActionType = {
   SET_BRAND_LOADING: 'brand/SET_BRAND_LOADING',
   CHANGE_SEARCH: 'brand/CHANGE_SEARCH',
   CLEAR_SEARCH: 'brand/CLEAR_SEARCH',
+  SET_ACTIVE_BRAND: 'brand/SET_ACTIVE',
   ERROR: 'brand/ERROR',
 }
 
@@ -20,6 +23,11 @@ export const setBrandData = (data: any) => {
     }
   }
 }
+
+export const setActiveBrand = data => ({
+  type: brandActionType.SET_ACTIVE_BRAND,
+  payload: data,
+})
 
 export const setBrandOrder = (data: any) => ({
   type: brandActionType.SET_BRAND_ORDER,
@@ -38,6 +46,25 @@ export const changeSearch = (data: string) => ({
 
 export const clearSearch = () => ({
   type: brandActionType.CLEAR_SEARCH,
+})
+
+export const getBrand = id => ({
+  type: API,
+  payload: {
+    url: '/brands/' + id,
+    schema: schema.brandFull,
+    startNetwork: () => {
+      return setBrandLoading(true)
+    },
+    success: data => {
+      return [
+        setCategoryData(data.entities.category),
+        setBrandData(data.entities.brand),
+        setActiveBrand(data.result),
+        setBrandLoading(false),
+      ]
+    },
+  },
 })
 
 export const brandApi = (params, url) => ({

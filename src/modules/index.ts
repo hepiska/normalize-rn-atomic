@@ -12,6 +12,7 @@ import sortReducer from './sort/reducer'
 import uiInteracrionReducer from './ui-interaction/reducer'
 import collectionReducer from './collection/reducer'
 import pageReducer from './page/reducer'
+import globalReducer from './global/reducer'
 
 const combinedReducer: Reducer<any> = combineReducers({
   router: routerReducer,
@@ -26,6 +27,7 @@ const combinedReducer: Reducer<any> = combineReducers({
   post: postReducer,
   page: pageReducer,
   sort: sortReducer,
+  global: globalReducer,
   collection: collectionReducer,
 })
 

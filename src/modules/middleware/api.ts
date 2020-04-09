@@ -1,5 +1,6 @@
 import { normalize } from 'normalizr'
 import { request } from '@utils/services'
+import { setGlobalError } from '../global/action'
 
 import * as actions from '../action-types'
 
@@ -22,6 +23,7 @@ const api = ({ dispatch, getState }) => next => action => {
   if (startNetwork) {
     dispatch(startNetwork(label))
   }
+  dispatch(setGlobalError(null))
 
   return request
     .request({ url, ...requestParams })
@@ -34,11 +36,19 @@ const api = ({ dispatch, getState }) => next => action => {
       if (success) {
         dispatch(success(normalizeData, res.data))
       }
-      dispatch(endNetwork(label))
+      console.log('err')
+      if (endNetwork) {
+        dispatch(endNetwork('success'))
+      }
     })
     .catch(err => {
       if (error) {
         dispatch(error(err))
+      } else {
+        dispatch(setGlobalError(err))
+      }
+      if (endNetwork) {
+        dispatch(endNetwork('error', err))
       }
     })
 }

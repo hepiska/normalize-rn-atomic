@@ -12,6 +12,7 @@ export const collectionActionType = {
   SET_COLLECTION_DATA: 'collection/SET_COLLECTION_DATA',
   SET_COLLECTION_ORDER: 'collection/SET_COLLECTION_ORDER',
   FETCH_START: 'collection/FETCH_START',
+  SET_ACTIVE_COLLECTION: 'collection/SET_ACTIVE_COLLECTION',
   SET_COLLECTION_LOADING: 'collection/SET_USER_LOADING',
   ERROR: 'collection/ERROR',
 }
@@ -31,27 +32,15 @@ export const setCollectionLoading = (data: any) => ({
   payload: data,
 })
 
-// export const getCollectionBySlug = () => (slug, params) => ({
-//   type: API,
-//   payload: {
-//     url: '/collections/' + slug,
-//     requestParams: { params },
-//     schema: schema.collection,
-//     startNetwork: () => {
-//       return setCollectionLoading(true)
-//     },
+export const setActiveCollection = (data: any) => ({
+  type: collectionActionType.SET_ACTIVE_COLLECTION,
+  payload: data,
+})
 
-//     success: data => {
-//       return [
-//         // setBrandData(data.entities.brand),
-//         // setCategoryData(data.entities.category),
-//         // setProductData(data.entities.product),
-//         // setCollectionData(data.entities.collection),
-//         // setCollectionLoading(false),
-//       ]
-//     },
-//   },
-// })
+export const setCollectionError = (data: any) => ({
+  type: collectionActionType.ERROR,
+  payload: data,
+})
 
 export const getCollectionBySlug = slug => ({
   type: API,
@@ -61,9 +50,14 @@ export const getCollectionBySlug = slug => ({
     startNetwork: () => {
       return setCollectionLoading(true)
     },
-
+    endNetwork: status => {
+      if (status === 'error') {
+        return [setActiveCollection(null)]
+      }
+    },
     success: data => {
       return [
+        setActiveCollection(data.result),
         setBrandData(data.entities.brand),
         setCategoryData(data.entities.category),
         setProductData(data.entities.product),

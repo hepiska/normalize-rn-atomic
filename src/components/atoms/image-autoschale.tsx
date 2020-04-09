@@ -13,47 +13,21 @@ interface ImageAutoSchaleType {
   style?: ViewStyle
 }
 
-const ImageAutoSchale = ({
-  source,
-  onError,
-  width,
-  height,
-  style,
-}: ImageAutoSchaleType) => {
-  let [size, setSize] = useState(null)
-  source = source.uri
-    ? source
-    : typeof source === 'string'
-    ? { uri: source }
-    : source
+let imageSize: any = null
 
-  const calculateSize = (newWidth, newHeight) => {
-    if (width && height) {
-      return setSize({ width, height })
-    }
-    if (!width && !height) {
-      return setSize({ width: newWidth, height: newHeight })
-    }
-    if (!height) {
-      const height = Number(newHeight)
-        ? Math.floor(width * (newHeight / newWidth))
-        : width
-      return setSize({
-        width,
-        height,
-      })
-    }
-    if (!width) {
-      return setSize({ width: height * (newWidth / newHeight), height })
-    }
-  }
-
-  useEffect(() => {
+class ImageAutoSchale extends React.Component<ImageAutoSchaleType, any> {
+  state: any = {}
+  mounted = true
+  componentDidMount() {
+    const { source, onError } = this.props
     if (source.uri) {
-      Image.getSize(
+      imageSize = Image.getSize(
         source.uri,
         (newWidth, newHeight) => {
-          calculateSize(newWidth, newHeight)
+          if (!this.mounted) {
+            return
+          }
+          this.calculateSize(newWidth, newHeight)
         },
         err => {
           if (onError) {
@@ -65,11 +39,51 @@ const ImageAutoSchale = ({
       const { width: newWidth, height: newHeight } = Image.resolveAssetSource(
         source,
       )
-      calculateSize(newWidth, newHeight)
+      this.calculateSize(newWidth, newHeight)
     }
-    return () => {}
-  }, [width, source])
-  return size ? <Image source={source} style={{ ...size, ...style }} /> : null
+    return () => {
+      imageSize = null
+    }
+  }
+
+  calculateSize = (newWidth, newHeight) => {
+    const { width, height } = this.props
+    if (width && height) {
+      return this.setState({ size: { width, height } })
+    }
+    if (!width && !height) {
+      return this.setState({ size: { width: newWidth, height: newHeight } })
+    }
+    if (!height) {
+      const height = Number(newHeight)
+        ? Math.floor(width * (newHeight / newWidth))
+        : width
+      return this.setState({
+        size: {
+          width,
+          height,
+        },
+      })
+    }
+    if (!width) {
+      return this.setState({
+        size: { width: height * (newWidth / newHeight), height },
+      })
+    }
+  }
+
+  componentWillUnmount() {
+    this.mounted = false
+  }
+
+  render() {
+    const { source, style } = this.props
+    const { size } = this.state
+
+    return this.state.size ? (
+      <Image source={source} style={{ ...size, ...style }} />
+    ) : null
+  }
 }
 
 export default ImageAutoSchale

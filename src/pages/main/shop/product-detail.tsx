@@ -7,6 +7,7 @@ import {
   ScrollDiv,
   PressAbbleDiv,
 } from '@components/atoms/basic'
+import Config from 'react-native-config'
 import { Button } from '@components/atoms/button'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
@@ -26,225 +27,6 @@ import { OutlineButton, GradientButton } from '@components/atoms/button'
 import { getProductById } from '@modules/product/action'
 import { setImage } from '@utils/helpers'
 
-const productMock: any = {
-  id: 1,
-  brand: {
-    id: 3,
-    name: 'Sulwhasoo',
-  },
-  category: {
-    id: 4,
-    name: 'Face Serum',
-    parent: {
-      id: 4,
-      name: 'Treatment',
-      parent: {
-        id: 4,
-        name: 'Beauty',
-      },
-    },
-  },
-  attributes: [
-    {
-      id: 1,
-      label: 'Size',
-      values: [
-        {
-          id: 1,
-          label: 'Small',
-        },
-        {
-          id: 2,
-          label: 'Large',
-        },
-      ],
-    },
-    {
-      id: 2,
-      label: 'Color',
-      values: [
-        {
-          id: 3,
-          label: 'Blue',
-          metadata: 'blue',
-        },
-        {
-          id: 4,
-          label: 'Yellow',
-          metadata: 'yellow',
-        },
-      ],
-    },
-  ],
-  name: 'First Care Activating Serum',
-  slug: 'sulwhasoo-first-care-activating-serum',
-  moderation: {
-    status: 'Awaiting',
-    content: {
-      name: 'New Product Name',
-      description: 'New description of the product',
-    },
-  },
-  isPurchaseable: true,
-  isHidden: false,
-  isApproved: false,
-  variants: [
-    {
-      id: 1,
-      attributeValues: [
-        {
-          attribute_id: 1,
-          attribute_value_id: 1,
-        },
-        {
-          attribute_id: 2,
-          attribute_value_id: 3,
-        },
-      ],
-      sku: 'SUL-F1001',
-      isPrimary: true,
-      price: 1500,
-      stockQty: 20,
-      grossWeight: 300,
-      photos: [
-        {
-          id: 1,
-          url:
-            'https://theshonet.imgix.net/images/0bf2a8d5-b75a-4074-b71d-976540b7ac89-1576043746.jpeg',
-          isPrimary: true,
-        },
-        {
-          id: 2,
-          url:
-            'https://shonet.imgix.net/users/facebook_bd39e9db-1f16-4c3c-bb16-dcdfeb2d15c8.jpeg?q=75&auto=compress,format&w=500',
-          isPrimary: false,
-        },
-        {
-          id: 3,
-          url:
-            'https://shonet.imgix.net/users/facebook_bd39e9db-1f16-4c3c-bb16-dcdfeb2d15c8.jpeg?q=75&auto=compress,format&w=500',
-          isPrimary: false,
-        },
-      ],
-    },
-    {
-      id: 2,
-      attributeValues: [
-        {
-          attribute_id: 1,
-          attribute_value_id: 1,
-        },
-        {
-          attribute_id: 2,
-          attribute_value_id: 4,
-        },
-      ],
-      sku: 'SUL-F1002',
-      isPrimary: false,
-      price: 1600,
-      stockQty: 8,
-      grossWeight: 300,
-      photos: [
-        {
-          id: 4,
-          url:
-            'https://theshonet.imgix.net/images/0bf2a8d5-b75a-4074-b71d-976540b7ac89-1576043746.jpeg',
-          isPrimary: true,
-        },
-        {
-          id: 5,
-          url:
-            'https://shonet.imgix.net/users/facebook_bd39e9db-1f16-4c3c-bb16-dcdfeb2d15c8.jpeg?q=75&auto=compress,format&w=500',
-          isPrimary: false,
-        },
-        {
-          id: 6,
-          url:
-            'https://shonet.imgix.net/users/facebook_bd39e9db-1f16-4c3c-bb16-dcdfeb2d15c8.jpeg?q=75&auto=compress,format&w=500',
-          isPrimary: false,
-        },
-      ],
-    },
-    {
-      id: 3,
-      attribute_values: [
-        {
-          attribute_id: 1,
-          attribute_value_id: 2,
-        },
-        {
-          attribute_id: 2,
-          attribute_value_id: 3,
-        },
-      ],
-      sku: 'SUL-F1003',
-      isPrimary: false,
-      price: 1700,
-      priceDisc: 1500,
-      stockQty: 15,
-      grossWeight: 300,
-      photos: [
-        {
-          id: 7,
-          url:
-            'https://shonet.imgix.net/filemanager/shared/072b030b_Renato%20Abati%20%282%29.jpg?q=75&auto=compress,format&w=800',
-          isPrimary: true,
-        },
-        {
-          id: 8,
-          url:
-            'https://shonet.imgix.net/users/facebook_bd39e9db-1f16-4c3c-bb16-dcdfeb2d15c8.jpeg?q=75&auto=compress,format&w=500',
-          isPrimary: false,
-        },
-        {
-          id: 9,
-          url:
-            'https://shonet.imgix.net/users/facebook_bd39e9db-1f16-4c3c-bb16-dcdfeb2d15c8.jpeg?q=75&auto=compress,format&w=500',
-          isPrimary: false,
-        },
-      ],
-    },
-    {
-      id: 4,
-      attribute_values: [
-        {
-          attribute_id: 1,
-          attribute_value_id: 2,
-        },
-        {
-          attribute_id: 2,
-          attribute_value_id: 4,
-        },
-      ],
-      sku: 'SUL-F1004',
-      isPrimary: false,
-      price: 1800,
-      stockQty: 11,
-      grossWeight: 300,
-      photos: [
-        {
-          id: 10,
-          url:
-            'https://theshonet.imgix.net/images/0bf2a8d5-b75a-4074-b71d-976540b7ac89-1576043746.jpeg',
-          isPrimary: true,
-        },
-        {
-          id: 11,
-          url:
-            'https://shonet.imgix.net/users/facebook_bd39e9db-1f16-4c3c-bb16-dcdfeb2d15c8.jpeg?q=75&auto=compress,format&w=500',
-          isPrimary: false,
-        },
-        {
-          id: 12,
-          url:
-            'https://shonet.imgix.net/users/facebook_bd39e9db-1f16-4c3c-bb16-dcdfeb2d15c8.jpeg?q=75&auto=compress,format&w=500',
-          isPrimary: false,
-        },
-      ],
-    },
-  ],
-}
-
 const { Value } = Animated
 const { width, height } = Dimensions.get('screen')
 
@@ -252,13 +34,12 @@ const y = new Value(0)
 
 class ProductListPage extends React.Component<any, any> {
   state = {
-    product: productMock,
     selectedVariant: 1,
     isUserSelectVariant: false,
   }
 
   componentDidMount() {
-    this.props.getProductById(this.props.route.params?.productI)
+    this.props.getProductById(this.props.route.params?.productId)
   }
 
   getVariantData = id => {
@@ -272,7 +53,7 @@ class ProductListPage extends React.Component<any, any> {
   }
 
   _selectVariant = attributes => {
-    const { product } = this.state
+    const { product } = this.props
     const variant = product.variants.find(_variant => {
       _variant.attribute_values =
         _variant.attribute_values || _variant.attributeValues
@@ -306,7 +87,21 @@ class ProductListPage extends React.Component<any, any> {
 
   groupButton = [
     { name: 'Save', icon: 'bookmark', onPress: () => {} },
-    { name: 'Share', icon: 'share', onPress: () => {} },
+    {
+      name: 'Share',
+      icon: 'share',
+      onPress: () => {
+        const { product } = this.props
+        this.props.navigation.navigate('modals', {
+          screen: 'Share',
+          params: {
+            title: 'The shonet product' + product.name,
+            uri: Config + '/products/' + product.id,
+            message: product.description,
+          },
+        })
+      },
+    },
   ]
 
   render() {

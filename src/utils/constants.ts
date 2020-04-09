@@ -80,3 +80,23 @@ export const uriSchreenMap = {
     paramId: 'brandId',
   },
 }
+
+export const nestedScreenMap = (key, params?) => {
+  const map = {
+    collections: {
+      screen: 'Shop',
+      params: {
+        screen: 'ProductList',
+        params,
+      },
+    },
+    brands: {
+      screen: 'Shop',
+      params: {
+        screen: 'ProductList',
+        params,
+      },
+    },
+  }
+  return map[key]
+}

@@ -7,6 +7,7 @@ import AsyncStorage from '@react-native-community/async-storage'
 
 interface CollectionState {
   readonly data: Object
+  activeCollection: number
   readonly order: Array<number>
   pagination: Object
   loading: Boolean
@@ -16,6 +17,7 @@ interface CollectionState {
 const initialState: any = {
   data: Immutable({}),
   order: Immutable([]),
+  activeCollection: null,
   pagination: {},
   loading: false,
   error: null,
@@ -44,6 +46,9 @@ const productReducer: Reducer<CollectionState> = (
       return newState
     case collectionActionType.SET_COLLECTION_LOADING:
       newState.loading = action.payload
+      return newState
+    case collectionActionType.SET_ACTIVE_COLLECTION:
+      newState.activeCollection = action.payload
       return newState
     default:
       return newState

@@ -52,19 +52,34 @@ const styles = StyleSheet.create({
 const { width } = Dimensions.get('screen')
 
 interface NavbarTopProps {
-  title?: any
-  subtitle?: any
-  style?: any
-  leftContent?: any
-  rightContent?: any
+  title?: string
+  subtitle?: string
+  style?: View
+  onBeforeBack?: () => void
+  leftContent?: Array<string>
+  rightContent?: Array<string>
   leftAction?: any
   rightAction?: any
 }
 
-const RenderLeftContent = ({ content, leftAction }) => {
+const RenderLeftContent = ({ content, leftAction, onBeforeBack }: any) => {
+  const navigation = useNavigation()
+
+  const _onBack = async () => {
+    if (onBeforeBack) {
+      await onBeforeBack()
+    }
+    if (navigation.canGoBack) {
+      navigation.goBack()
+    }
+  }
+
   return (
     <LeftDiv _direction="row" zIndex="2">
-      {content && content.map(v => <BackCloseAction key={`v-${v}`} name={v} />)}
+      {content &&
+        content.map(v => (
+          <BackCloseAction key={`v-${v}`} name={v} onPress={_onBack} />
+        ))}
       {leftAction && leftAction}
     </LeftDiv>
   )
@@ -98,13 +113,18 @@ const NavbarTop: React.SFC<NavbarTopProps> = ({
   subtitle,
   leftContent,
   rightContent,
+  onBeforeBack,
   leftAction,
   rightAction,
 }) => {
   return (
     <SafeAreaView style={styles.saveArea}>
       <View style={styles.container}>
-        <RenderLeftContent content={leftContent} leftAction={leftAction} />
+        <RenderLeftContent
+          content={leftContent}
+          onBeforeBack={onBeforeBack}
+          leftAction={leftAction}
+        />
         {subtitle ? (
           <Div justify="center" _width="100%">
             <Font {...helveticaBlackTitleBold}>{title}</Font>
@@ -123,10 +143,10 @@ const NavbarTop: React.SFC<NavbarTopProps> = ({
   )
 }
 
-interface NavbarTopProps {
-  title?: any
-  style?: any
-}
+// interface NavbarTopProps {
+//   title?: any
+//   style?: any
+// }
 
 export const NavbarTopModal: React.FC<NavbarTopProps> = ({ title, style }) => {
   const navigation = useNavigation()

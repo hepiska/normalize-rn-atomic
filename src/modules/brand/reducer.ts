@@ -10,6 +10,7 @@ interface BrandState {
   readonly order: Array<number>
   readonly loading: Boolean
   readonly error?: ErrorType
+  activeBrand: number
   search: String
 }
 
@@ -17,6 +18,7 @@ const initialState: any = {
   data: Immutable({}),
   order: Immutable([]),
   loading: false,
+  activeBrand: null,
   error: null,
   search: '',
 }
@@ -46,6 +48,9 @@ const brandReducer: Reducer<BrandState> = (
       return newState
     case brandActionType.CHANGE_SEARCH:
       newState.search = action.payload
+      return newState
+    case brandActionType.SET_ACTIVE_BRAND:
+      newState.activeBrand = action.payload
       return newState
     case brandActionType.CLEAR_SEARCH:
       newState.search = ''

@@ -1,6 +1,6 @@
 import React from 'react'
 import DeviceInfo from 'react-native-device-info'
-import { Dimensions, StyleSheet, SafeAreaView } from 'react-native'
+import { Dimensions, StyleSheet, SafeAreaView, View } from 'react-native'
 import { Div, Font, Image, PressAbbleDiv } from '@components/atoms/basic'
 import LinearGradient from 'react-native-linear-gradient'
 import { globalDimention, colors } from '@utils/constants'
@@ -25,12 +25,14 @@ const LeftDiv = styled(PressAbbleDiv)`
   position: absolute;
   padding: 16px 12px;
   flex: 1;
+  top: 0;
   left: 0px;
 `
 const RightDiv = styled(Div)`
   position: absolute;
   padding: 16px 16px 12px;
   flex: 1;
+  top: 0;
   right: 0px;
 `
 
@@ -53,7 +55,7 @@ interface NavbarBottomProps {
 
 const headerHeight = 55
 
-const AnimatedSaveArea = Animated.createAnimatedComponent(SafeAreaView)
+const AnimatedSaveArea: any = Animated.createAnimatedComponent(SafeAreaView)
 
 const NavbarTopAnimated: React.SFC<NavbarBottomProps> = ({
   style,
