@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import {
   Dimensions,
-  FlatList,
   ImageBackground,
   StyleSheet,
   SectionList,
@@ -9,10 +8,6 @@ import {
 } from 'react-native'
 
 import { Div, Font } from '@components/atoms/basic'
-import {
-  helveticaBlackBold,
-  helveticaNormalFont,
-} from '@components/commont-styles'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { productApi } from '@modules/product/action'
@@ -252,14 +247,11 @@ class Productlist extends Component<any, any> {
     ]
     return (
       <>
-        <NavbarTop>
-          <Div justify="center" _width="100%">
-            <Font {...helveticaBlackBold}>{headerName}</Font>
-            <Font {...{ ...helveticaNormalFont, size: 12 }}>
-              {pagination.total} Items
-            </Font>
-          </Div>
-        </NavbarTop>
+        <NavbarTop
+          leftContent="back"
+          title={headerName}
+          subtitle={`${pagination.total} Items`}
+        />
         <Div _width="100%" _flex="1" justify="flex-start">
           <SectionList
             ListHeaderComponent={this._header}
