@@ -4,6 +4,8 @@ export const isMountedRef: any = { current: false }
 
 export const navigationRef: any = React.createRef()
 
+export const navigationInf = () => navigationRef.current
+
 export function navigate(name, params) {
   if (isMountedRef.current && navigationRef.current) {
     // Perform navigation if the app has mounted

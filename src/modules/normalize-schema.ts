@@ -57,7 +57,7 @@ export const category = new schema.Entity(
 
 export const product = new schema.Entity('product', {
   brand: brand,
-  category: category,
+  categories: [category],
 })
 
 export const collection = new schema.Entity('collection', {
@@ -75,6 +75,12 @@ export const pageSection = new schema.Entity('section', {
   posts: [post],
   products: [product],
   brands: [brand],
+})
+
+export const brandFull = new schema.Entity('brand', {
+  brands: [brand],
+  products: [product],
+  categories: [category],
 })
 
 export const page = new schema.Entity(

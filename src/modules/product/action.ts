@@ -10,6 +10,7 @@ export const productActionType = {
   SET_PRODUCT_DATA: 'product/SET_PRODUCT_DATA',
   SET_PRODUCT_ORDER: 'product/SET_PRODUCT_ORDER',
   FETCH_START: 'product/FETCH_START',
+  ClEAR_PRODUCT: 'product/ClEAR_PRODUCT',
   SET_PRODUCTS_LOADING: 'product/SET_PRODUCTS_LOADING',
   CHANGE_VALUE: 'product/CHANGE_VALUE',
   ERROR: 'product/ERROR',
@@ -29,6 +30,11 @@ export const setProductOrder = (data: any) => ({
   payload: data,
 })
 
+export const clearProduct = (data: any) => ({
+  type: productActionType.ClEAR_PRODUCT,
+  payload: data,
+})
+
 const changeValue = (data = { key: 'productLoading', value: false }) => ({
   type: productActionType.CHANGE_VALUE,
   payload: data,
@@ -45,10 +51,10 @@ export const getProductById = id => ({
     schema: schema.product,
     startNetwork: () => changeValue({ key: 'productLoading', value: true }),
     success: data => [
-      setProductData(data.entities.product),
-      changeValue({ key: 'productLoading', value: false }),
       setBrandData(data.entities.brand),
       setCategoryData(data.entities.category),
+      setProductData(data.entities.product),
+      changeValue({ key: 'productLoading', value: false }),
     ],
   },
 })
@@ -66,11 +72,11 @@ export const productApi = (params, url) => ({
     success: (data, { pagination }) => {
       return data
         ? [
+            setBrandData(data.entities.brand),
+            setCategoryData(data.entities.category),
             setProductData(data.entities.product),
             setProductOrder({ order: data.result, pagination }),
             setProductsLoading(false),
-            setBrandData(data.entities.brand),
-            setCategoryData(data.entities.category),
           ]
         : [
             setProductOrder({ order: [], pagination }),

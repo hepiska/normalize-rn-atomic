@@ -10,9 +10,18 @@ import {
 } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { Div, PressAbbleDiv, Font } from '@components/atoms/basic'
-import { helveticaBlackBold } from '@components/commont-styles'
+import {
+  helveticaBlackBold,
+  helveticaBlackTitleBold,
+  helveticaNormalFont12,
+} from '@components/commont-styles'
+import NotificationAction from '@components/atoms/notification-action-button'
+import SearchAction from '@components/atoms/search-action-button'
 import CartAction from '@components/atoms/cart-action-button'
+import CreateAction from '@components/atoms/create-action-button'
+import BackCloseAction from '@components/atoms/back-close-action-button'
 import styled from 'styled-components/native'
+import { colors } from '@utils/constants'
 
 let hasNotch = DeviceInfo.hasNotch()
 
@@ -36,42 +45,108 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
     backgroundColor: 'white',
+    justifyContent: 'center',
   },
 })
 
 const { width } = Dimensions.get('screen')
 
 interface NavbarTopProps {
-  style?: any
+  title?: string
+  subtitle?: string
+  style?: View
+  onBeforeBack?: () => void
+  leftContent?: Array<string>
+  rightContent?: Array<string>
+  leftAction?: any
+  rightAction?: any
 }
 
-const NavbarTop: React.SFC<NavbarTopProps> = ({ style, children }) => {
+const RenderLeftContent = ({ content, leftAction, onBeforeBack }: any) => {
   const navigation = useNavigation()
 
+  const _onBack = async () => {
+    if (onBeforeBack) {
+      await onBeforeBack()
+    }
+    if (navigation.canGoBack) {
+      navigation.goBack()
+    }
+  }
+
+  return (
+    <LeftDiv _direction="row" zIndex="2">
+      {content &&
+        content.map(v => (
+          <BackCloseAction key={`v-${v}`} name={v} onPress={_onBack} />
+        ))}
+      {leftAction && leftAction}
+    </LeftDiv>
+  )
+}
+
+const RenderRightContent = ({ content, rightAction }) => {
+  return (
+    <RightDiv _direction="row">
+      {content &&
+        content.map(v => {
+          switch (v) {
+            case 'search':
+              return <SearchAction key={`navbar-${v}`} />
+            case 'shop' || 'cart':
+              return <CartAction key={`navbar-${v}`} />
+            case 'notification':
+              return <NotificationAction key={`navbar-${v}`} />
+            default:
+              return null
+          }
+        })}
+      {rightAction && rightAction}
+    </RightDiv>
+  )
+  return null
+}
+
+const NavbarTop: React.SFC<NavbarTopProps> = ({
+  style,
+  title,
+  subtitle,
+  leftContent,
+  rightContent,
+  onBeforeBack,
+  leftAction,
+  rightAction,
+}) => {
   return (
     <SafeAreaView style={styles.saveArea}>
       <View style={styles.container}>
-        <LeftDiv zIndex="2">
-          <PressAbbleDiv onPress={navigation.goBack}>
-            <Icon name="chevron-left" size={20} color="black" />
-          </PressAbbleDiv>
-        </LeftDiv>
-        {children}
-        <RightDiv _direction="row">
-          <PressAbbleDiv mar="0px 16px 0px 0px">
-            <Icon name="search" size={20} color="black" />
-          </PressAbbleDiv>
-          <CartAction />
-        </RightDiv>
+        <RenderLeftContent
+          content={leftContent}
+          onBeforeBack={onBeforeBack}
+          leftAction={leftAction}
+        />
+        {subtitle ? (
+          <Div justify="center" _width="100%">
+            <Font {...helveticaBlackTitleBold}>{title}</Font>
+            <Font {...helveticaNormalFont12} color={colors.black60}>
+              {subtitle}
+            </Font>
+          </Div>
+        ) : (
+          <Div justify="center" _width="100%">
+            <Font {...helveticaBlackBold}>{title}</Font>
+          </Div>
+        )}
+        <RenderRightContent content={rightContent} rightAction={rightAction} />
       </View>
     </SafeAreaView>
   )
 }
 
-interface NavbarTopProps {
-  title?: any
-  style?: any
-}
+// interface NavbarTopProps {
+//   title?: any
+//   style?: any
+// }
 
 export const NavbarTopModal: React.FC<NavbarTopProps> = ({ title, style }) => {
   const navigation = useNavigation()

@@ -10,13 +10,19 @@ interface BrandState {
   readonly order: Array<number>
   readonly loading: Boolean
   readonly error?: ErrorType
+  activeBrand: number
+  search: String
+  pagination: Object
 }
 
 const initialState: any = {
   data: Immutable({}),
   order: Immutable([]),
   loading: false,
+  activeBrand: null,
   error: null,
+  search: '',
+  pagination: {},
 }
 
 const brandReducer: Reducer<BrandState> = (
@@ -30,15 +36,31 @@ const brandReducer: Reducer<BrandState> = (
       return newState
     case brandActionType.SET_BRAND_ORDER:
       if (
-        !newState.order.length ||
-        (action.payload.pagination.total &&
-          newState.order < action.payload.pagination.total)
+        action.payload.pagination.next_id &&
+        action.payload.pagination.total &&
+        newState.order.length < action.payload.pagination.total
       ) {
         newState.order = newState.order.concat(Immutable(action.payload.order))
+      } else {
+        newState.order = Immutable(action.payload.order)
       }
+      newState.pagination = action.payload.pagination
       return newState
     case brandActionType.SET_BRAND_LOADING:
       newState.loading = action.payload
+      return newState
+    case brandActionType.CHANGE_SEARCH:
+      newState.search = action.payload
+      return newState
+    case brandActionType.SET_ACTIVE_BRAND:
+      newState.activeBrand = action.payload
+      return newState
+    case brandActionType.CLEAR_SEARCH:
+      newState.search = ''
+      return newState
+    case brandActionType.RESET_BRAND:
+      newState.data = Immutable({})
+      newState.order = Immutable([])
       return newState
     default:
       return newState

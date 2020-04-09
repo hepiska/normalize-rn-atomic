@@ -1,7 +1,7 @@
 import { connect } from 'react-redux'
 
 const collectionListMap = (state, ownProps) => {
-  const { collectionId } = ownProps
+  const collectionId = ownProps.collectionId || ownProps.collectionsID
   const collection = state.collection.data[collectionId]
   return {
     collection,

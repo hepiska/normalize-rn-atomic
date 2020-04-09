@@ -53,6 +53,8 @@ const productReducer: Reducer<ProductState> = (
     case productActionType.SET_PRODUCTS_LOADING:
       newState.productsLoading = action.payload
       return newState
+    case productActionType.ClEAR_PRODUCT:
+      return initialState
     default:
       return newState
   }

@@ -12,10 +12,11 @@ import { colors } from '@utils/constants'
 import { Button } from '@components/atoms/button'
 import InviniteLoader from '@components/atoms/loaders/invinite'
 
-interface BrandListItemType {
+interface BrandCardType {
   brand: any
   idx: any
   onPress: () => void
+  imageOnly: boolean
 }
 
 const styles = StyleSheet.create({
@@ -23,12 +24,13 @@ const styles = StyleSheet.create({
     width: 112,
     height: 84,
     borderRadius: 8,
+    borderWidth: 1,
+    borderColor: colors.black50,
   },
   touchableDiv: {
     overflow: 'hidden',
     marginRight: 32,
     alignItems: 'flex-start',
-    justifyContent: 'space-between',
     flexDirection: 'row',
     height: 'auto',
     width: 138,
@@ -50,37 +52,45 @@ const styles = StyleSheet.create({
   },
 })
 
-class BrandListItem extends React.PureComponent<BrandListItemType, any> {
+class BrandCard extends React.PureComponent<BrandCardType, any> {
   render() {
-    const { brand, idx, onPress } = this.props
+    const { brand, idx, onPress, imageOnly } = this.props
 
     return brand ? (
       <TouchableWithoutFeedback onPress={onPress}>
         <Div
           style={{
             ...styles.touchableDiv,
-            marginLeft: idx === 0 ? 16 : 0,
-          }}>
-          <Font {...helveticaBlackTitleBold} size="24px">
-            {idx + 1}
-          </Font>
+            marginLeft: !imageOnly ? (idx === 0 ? 16 : 0) : 0,
+            marginRight: !imageOnly ? 32 : 0,
+          }}
+          justify={!imageOnly ? 'space-between' : 'center'}>
+          {!imageOnly && (
+            <Font {...helveticaBlackTitleBold} size="24px">
+              {idx + 1}
+            </Font>
+          )}
           <Div flexDirection="column">
             <Image
-              source={{
-                uri: brand.image_url
-                  ? setImage(brand.image_url, { ...styles.brand })
-                  : brand.image_url,
-              }}
+              source={
+                brand.image_url
+                  ? {
+                      uri: setImage(brand.image_url, { ...styles.brand }),
+                    }
+                  : require('../../assets/placeholder/placeholder2.jpg')
+              }
               style={styles.brand}
             />
-            <Button
-              onPress={() => {
-                console.log('follow')
-              }} // revisi: belum ada action follow
-              title="Follow"
-              fontStyle={styles.buttonText}
-              style={styles.button}
-            />
+            {!imageOnly && (
+              <Button
+                onPress={() => {
+                  console.log('follow')
+                }} // revisi: belum ada action follow
+                title="Follow"
+                fontStyle={styles.buttonText}
+                style={styles.button}
+              />
+            )}
           </Div>
         </Div>
       </TouchableWithoutFeedback>
@@ -90,4 +100,4 @@ class BrandListItem extends React.PureComponent<BrandListItemType, any> {
   }
 }
 
-export default BrandListItem
+export default BrandCard

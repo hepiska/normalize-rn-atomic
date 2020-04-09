@@ -1,10 +1,6 @@
 import React, { Component } from 'react'
-import { Div, Font } from '@components/atoms/basic'
+import { Div } from '@components/atoms/basic'
 import NavbarTop from '@components/molecules/navbar-top'
-import {
-  helveticaBlackBold,
-  helveticaNormalFont,
-} from '@components/commont-styles'
 import { ScrollDiv } from '@components/atoms/basic'
 import CartEmptyState from '@components/molecules/cart-empty-state'
 import Wishlist from '@src/components/organisms/wishlist'
@@ -20,15 +16,9 @@ class CartPage extends Component<any, any> {
             style={{
               borderColor: '#EEE',
               borderWidth: 1,
-            }}>
-            <Div _width="100%" _margin="4px 0px 0px">
-              <Div justify="center" _width="100%">
-                <Font {...helveticaBlackBold} size={18}>
-                  Cart
-                </Font>
-              </Div>
-            </Div>
-          </NavbarTop>
+            }}
+            title="Cart"
+          />
         )
       },
     })

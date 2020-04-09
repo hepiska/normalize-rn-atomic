@@ -6,6 +6,7 @@ import ShopPage from './shop'
 import PostDetailPage from './post-detail'
 import ProductDetail from './product-detail'
 import ProductList from './product-list'
+import BrandList from './brand-list'
 import CartPage from './cart'
 
 const Stack = createStackNavigator()
@@ -25,6 +26,7 @@ function ShopStack() {
       <Stack.Screen name="Cart" component={CartPage} />
       <Stack.Screen name="ProductDetail" component={ProductDetail} />
       <Stack.Screen name="ProductList" component={ProductList} />
+      <Stack.Screen name="BrandList" component={BrandList} />
     </Stack.Navigator>
   )
 }

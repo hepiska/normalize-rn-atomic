@@ -7,7 +7,7 @@ import { colors } from '@src/utils/constants'
 import { OutlineButton } from '@src/components/atoms/button'
 import ProductCard from '@components/molecules/product-card'
 import { productListData } from '@hocs/data/product'
-import { ProductApi } from '@modules/product/action'
+import { productApi } from '@modules/product/action'
 
 const { width } = Dimensions.get('window')
 
@@ -85,7 +85,7 @@ class ProductSimilar extends Component<any, any> {
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
-      ProductApi,
+      productApi,
     },
     dispatch,
   )

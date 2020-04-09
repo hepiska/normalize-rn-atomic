@@ -1,24 +1,19 @@
 import React, { Component } from 'react'
 import {
   Dimensions,
-  FlatList,
   ImageBackground,
   StyleSheet,
   SectionList,
   View,
 } from 'react-native'
-
-import { Div, Font } from '@components/atoms/basic'
-import {
-  helveticaBlackBold,
-  helveticaNormalFont,
-} from '@components/commont-styles'
+import { Div, Font, PressAbbleDiv } from '@components/atoms/basic'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { productApi } from '@modules/product/action'
 import NavbarTop from '@components/molecules/navbar-top'
 import ProductCard from '@components/molecules/product-card'
 import { productListData } from '@hocs/data/product'
+import { getBrand } from '@modules/brand/action'
 import FilterTriger from '@components/organisms/product-filter-buttons'
 import FilterBottomSheet from '@components/organisms/product-filter'
 import { futuraTitleFont } from '@components/commont-styles'
@@ -26,13 +21,17 @@ import InviniteLoader from '@components/atoms/loaders/invinite'
 import { getCollectionBySlug } from '@modules/collection/action'
 import { deepClone } from '@utils/helpers'
 import { colors } from '@utils/constants'
+import ErrorOrg from '@src/components/organisms/four-o-four'
+import ProductEmpty from '@components/organisms/product-empty'
 import {
   addFilterData,
   clearFilter,
   setBrandFilter,
   setFilter,
+  changeSelectedBrand,
   setSelectedCollection,
 } from '@modules/product-filter/action'
+import { brand } from '@src/modules/normalize-schema'
 const { width } = Dimensions.get('window')
 
 const styles = StyleSheet.create({
@@ -67,11 +66,15 @@ class Productlist extends Component<any, any> {
   skip = 0
   lastskip = 0
 
-  componentDidMount() {
-    this.props.getCollectionBySlug('rafie-botakksszzzszszszz')
+  navListener = null
 
-    // if (this.props.collection)
-    //   this.props.getCollectionBySlug('rafie-botakksszzzszszszz')
+  componentDidMount() {
+    const { route, brand } = this.props
+    if (route.params.from === 'collections' && route.params.collectionsSlug)
+      return this.props.getCollectionBySlug(route.params.collectionsSlug)
+    if (route.params.from === 'brands' && brand) {
+      return this.props.getBrand(brand.id)
+    }
   }
 
   componentDidUpdate(prevProps) {
@@ -84,11 +87,23 @@ class Productlist extends Component<any, any> {
         return
       }
     }
+    if (
+      this.props.brand &&
+      // JSON.stringify(this.props.brand) != JSON.stringify(prevProps.brand) &&
+      this.props.isBrandLoading !== prevProps.isBrandLoading
+    ) {
+      if (!this.props.isBrandLoading) {
+        // console.log('th', this.props.brand)
+        this._setInitialState()
+        return
+      }
+    }
 
     if (this.props.search !== prevProps.search) {
       this._freshfetch()
       return ''
     }
+
     if (this.props.sort !== prevProps.sort) {
       this._freshfetch()
       return ''
@@ -110,8 +125,10 @@ class Productlist extends Component<any, any> {
   _setInitialState() {
     const {
       collection,
+      brand,
       setFilter,
       setBrandFilter,
+      changeSelectedBrand,
       setSelectedCollection,
     } = this.props
     if (collection) {
@@ -125,13 +142,23 @@ class Productlist extends Component<any, any> {
       setSelectedCollection(collection.id)
       setBrandFilter(collection.brands)
       this._freshfetch()
-    } else {
+    } else if (brand) {
+      setFilter({
+        categories: brand.categories || [],
+        prices: {
+          maximum_price: brand.price_max,
+          minimum_price: brand.price_min,
+        },
+      })
+      changeSelectedBrand(brand.id)
+      setBrandFilter(brand.brands || [])
+
       this._freshfetch()
     }
   }
 
   _fetchData = skip => {
-    const { collection, appliedFilters, search, sort } = this.props
+    const { collection, appliedFilters, search, sort, brand } = this.props
     const params: any = {
       limit: this.limit,
       is_commerce: true,
@@ -146,6 +173,9 @@ class Productlist extends Component<any, any> {
 
     if (collection) {
       params.collection_ids = collection.id
+    }
+    if (brand) {
+      params.brand_ids = brand.id
     }
 
     this.props.productApi(params)
@@ -219,53 +249,73 @@ class Productlist extends Component<any, any> {
     transparent: false,
   }
 
-  _sectionData = {
-    title: 'asa',
-    data: this.props.products,
+  _header = () => {
+    const { collection, brand } = this.props
+    const headerData: any = {
+      image:
+        'https://shonet.imgix.net/commerce/Loueve/#LJRING14-MAIN.jpg?q=75&auto=compress,format&w=350',
+    }
+    if (brand) {
+      headerData.title = brand.name
+      headerData.image = brand.image_url || headerData.image
+    } else if (collection) {
+      headerData.title = brand.title
+      headerData.image = brand.landscape_image_url || headerData.image
+    }
+
+    return this.props.headerError ? (
+      <ErrorOrg />
+    ) : (
+      <ImageBackground
+        style={{
+          width: '100%',
+          height: imageHeight,
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+        source={{
+          uri: headerData.image,
+        }}>
+        <Font {...futuraTitleFont} size="24">
+          {headerData.title}
+        </Font>
+      </ImageBackground>
+    )
   }
-  _header = (
-    <ImageBackground
-      style={{
-        width: '100%',
-        height: imageHeight,
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}
-      source={
-        this.props.collection
-          ? { uri: this.props.collection.landscape_image_url }
-          : require('../../../assets/placeholder/placeholder-image.png')
-      }>
-      <Font {...futuraTitleFont} size="24">
-        {this.props.collection && this.props.collection.title}
-      </Font>
-    </ImageBackground>
-  )
+
+  emptyComponent = () =>
+    !this.props.headerError ? (
+      <>
+        <FilterTriger style={{ paddingHorizontal: 16 }} />
+        <ProductEmpty title="sadasada" subtitle="sasas" />
+      </>
+    ) : null
+
   render() {
     const { headerName } = this.state
     const { products, pagination, loading } = this.props
-    const sectionData = [
-      {
-        title: 'asa',
-        data: products,
-      },
-    ]
+    const sectionData = products.length
+      ? [
+          {
+            title: 'mantap',
+            data: products,
+          },
+        ]
+      : []
     return (
       <>
-        <NavbarTop>
-          <Div justify="center" _width="100%">
-            <Font {...helveticaBlackBold}>{headerName}</Font>
-            <Font {...{ ...helveticaNormalFont, size: 12 }}>
-              {pagination.total} Items
-            </Font>
-          </Div>
-        </NavbarTop>
+        <NavbarTop
+          leftContent={['back']}
+          title={headerName}
+          subtitle={`${pagination?.total} Items`}
+        />
         <Div _width="100%" _flex="1" justify="flex-start">
           <SectionList
             ListHeaderComponent={this._header}
             style={styles.sectionContainer}
             onEndReachedThreshold={0.97}
             onEndReached={this._fetchMore}
+            ListEmptyComponent={this.emptyComponent}
             keyExtractor={this._keyExtractor}
             renderSectionHeader={this._renderHeader}
             sections={sectionData}
@@ -296,7 +346,9 @@ const mapDispatchToProps = dispatch =>
       setFilter,
       addFilterData,
       getCollectionBySlug,
+      changeSelectedBrand,
       clearFilter,
+      getBrand,
       setSelectedCollection,
     },
     dispatch,
@@ -307,31 +359,65 @@ const mapStateToProps = (state, { route }) => {
   appliedFilters = { ...appliedFilters, ...appliedFilters.prices }
   delete appliedFilters.prices
 
-  if (route.params && route.params.collectionId) {
-    const collection =
-      route.params.collectionId &&
-      state.collection.data[route.params.collectionId]
+  const collectionId =
+    route.params.collectionId || state.collection.activeCollection
+
+  const filterProps = {
+    sort: state.sort.selected,
+    search: state.productFilter.search,
+    appliedFilters,
+  }
+
+  const commontErrorProps = {
+    globalError: state.global.error,
+    Producterror: state.products.error,
+  }
+
+  // if (state.global.error || state.collection.error || state.products.error) {
+  //   return {
+  //     globalError: state.global.error,
+  //     products: [],
+  //     loading: state.products.productsLoading,
+  //     collectionError: state.collection.error,
+  //     Producterror: state.products.error,
+  //     ...filterProps,
+  //   }
+  // }
+
+  if (
+    route.params.from === 'collections' &&
+    (collectionId || route.params.collectionsSlug)
+  ) {
+    const collection = collectionId && state.collection.data[collectionId]
     return {
-      collection:
-        route.params.collectionId &&
-        state.collection.data[route.params.collectionId],
-      products: state.products.order,
-      sort: state.sort.selected,
-      search: state.productFilter.search,
+      collection: collectionId && state.collection.data[collectionId],
+      headerError: state.global.error,
+      products: collectionId ? state.products.order : [],
       isCollectionLoading: state.collection.loading,
-      appliedFilters,
       loading: state.products.productsLoading,
       pagination: { total: collection && collection.products.length },
+      ...filterProps,
+    }
+  }
+
+  const brandId = route.params.brandId || route.params.brandsId
+
+  if (brandId) {
+    return {
+      brand: state.brands.data[brandId],
+      isBrandLoading: state.brands.loading,
+      products: state.products.order,
+      ...filterProps,
     }
   }
 
   return {
-    products: state.products.order,
-    pagination: state.products.pagination,
-    appliedFilters,
-    sort: state.sort.selected,
+    globalError: state.global.error,
+    products: [],
     loading: state.products.productsLoading,
-    error: state.products.error,
+    collectionError: state.collection.error,
+    Producterror: state.products.error,
+    ...filterProps,
   }
 }
 

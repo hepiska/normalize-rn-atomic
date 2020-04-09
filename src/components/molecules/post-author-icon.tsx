@@ -3,7 +3,7 @@ import {
   Div,
   TouchableWithoutFeedback,
   Image,
-  Text,
+  Font,
 } from '@components/atoms/basic'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
@@ -35,9 +35,9 @@ class AuthorProfileIcon extends React.PureComponent<
             radius="12px"
             source={{ uri: author && author.photo_url }}
           />
-          <Text fontSize="1.05rem" color="#333" _margin="4px 0px">
+          <Font fontSize="1.05rem" color="#333" _margin="4px 0px">
             {author.name}
-          </Text>
+          </Font>
         </Div>
       </TouchableWithoutFeedback>
     ) : null

@@ -1,20 +1,20 @@
-import React from 'react';
-import { Dimensions } from 'react-native';
+import React from 'react'
+import { Dimensions } from 'react-native'
 import {
   Div,
   TouchableWithoutFeedback,
   Image,
-  Font
-} from '@components/atoms/basic';
-import { ImageSource } from '@utils/globalInterface';
-import PostAuthor from './post-author-icon';
+  Font,
+} from '@components/atoms/basic'
+import { ImageSource } from '@utils/globalInterface'
+import PostAuthor from './post-author-icon'
 
-const { width } = Dimensions.get('window');
+const { width } = Dimensions.get('window')
 
 interface ListItemLookBookProps {
-  post: any;
-  style?: any;
-  onPress?: Function;
+  post: any
+  style?: any
+  onPress?: Function
 }
 
 class PostTopCard extends React.PureComponent<ListItemLookBookProps, any> {
@@ -23,14 +23,14 @@ class PostTopCard extends React.PureComponent<ListItemLookBookProps, any> {
       this.props.onPress({
         id: this.props.post.id,
         slug: this.props.post.slug,
-      });
+      })
     }
-  };
+  }
 
   render() {
     const {
       post: { image_url, id, user, title, ...post },
-    } = this.props;
+    } = this.props
     return (
       <TouchableWithoutFeedback onPress={this._onPress} display="flex">
         <Div
@@ -58,8 +58,8 @@ class PostTopCard extends React.PureComponent<ListItemLookBookProps, any> {
           </Div>
         </Div>
       </TouchableWithoutFeedback>
-    );
+    )
   }
 }
 
-export default PostTopCard;
+export default PostTopCard

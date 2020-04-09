@@ -15,6 +15,7 @@ import { postListData } from '@hocs/data/post'
 import { collectionListData } from '@hocs/data/collection'
 import { productListData } from '@hocs/data/product'
 import { brandListData } from '@hocs/data/brand'
+import { navigate } from '@src/root-navigation'
 
 const { width } = Dimensions.get('window')
 
@@ -87,7 +88,10 @@ class HorizontalList extends React.Component<HorizontalListType, any> {
         <Div _width="100%" padd="0px 16px">
           <OutlineButton
             title={data.link_text}
-            onPress={() => console.log(data.link)} // revisi: diganti navigasi ke data.link
+            onPress={() => {
+              if (data.type === 'brand') navigate('BrandList', {}) // revisi: diganti navigasi ke data.link
+              console.log(data.link)
+            }}
             {...helveticaNormalFont}
             style={styles.button}
           />

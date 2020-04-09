@@ -4,6 +4,7 @@ import { navigate } from '@src/root-navigation'
 const productListMap = (state, ownProps) => {
   const { productId } = ownProps
   const product = state.products.data[productId]
+  if (!product) return {}
   // const product = ownProps.product
   ownProps.onPress = () => {
     navigate('ProductDetail', { productId })

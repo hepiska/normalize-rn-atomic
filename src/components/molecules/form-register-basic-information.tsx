@@ -3,6 +3,7 @@ import { StyleSheet, ScrollView, SafeAreaView } from 'react-native'
 import { withNavigation } from 'react-navigation'
 import { useDispatch, useSelector } from 'react-redux'
 import CheckBox from 'react-native-check-box'
+import Config from 'react-native-config'
 import ReCaptcha, { IProps } from '@components/atoms/recaptcha'
 import { Div, Font, PressAbbleDiv, ScrollDiv } from '@components/atoms/basic'
 import { colors } from '@src/utils/constants'
@@ -423,8 +424,8 @@ const FormRegisterBasicInformation: React.FC<FormRegisterBasicInformation> = ({
               </Div>
               <ReCaptcha
                 recaptchaRef={e => (recapthcaRef = e)}
-                captchaDomain={'https://shonet.dev'}
-                siteKey={'6LcNHeUUAAAAAAm1sPl8eHrU5Ms5pCpps6LBg5n-'}
+                captchaDomain={Config.SHONET_URI}
+                siteKey={Config.SHONET_SITEKEY}
                 onReceiveToken={_getCapthca}
               />
               <Button
