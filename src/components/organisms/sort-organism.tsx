@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { View, Text, Dimensions } from 'react-native'
+import { View, Dimensions } from 'react-native'
 import { colors } from '@utils/constants'
 import { setSelectedSort } from '@modules/sort/action'
 import SelectAbleItem, {
@@ -55,13 +55,13 @@ class SortOrg extends React.Component<any, any> {
           backgroundColor: 'white',
           width,
         }}>
-        {sortData.map(data => (
+        {sortData.map((data, k) => (
           <SelectAbleItem
             fontStyle={{ color: colors.black100 }}
             isSelected={this._isSelected(data)}
             onPress={this._onPress}
             item={data}
-            key={data.id}
+            key={`sort-organism-${k}`}
             selectorShape={SelectorShapeType.circle}
           />
         ))}

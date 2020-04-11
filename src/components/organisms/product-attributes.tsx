@@ -39,9 +39,9 @@ class ProductAttributes extends Component<ProductAttributesPropsType, any> {
     const data = moveToFront(attributes, (e: any) => e.label === 'Color')
     return (
       <>
-        {data.map(attribute => (
+        {data.map((attribute, key) => (
           <AttributeList
-            key={attribute.id}
+            key={`product-attribute-${key}`}
             onAttributesChanged={this.onSelectAttributes}
             attribute={attribute}
           />

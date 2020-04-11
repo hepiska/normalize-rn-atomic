@@ -50,7 +50,7 @@ const NavbarBottom: React.SFC<NavbarBottomProps> = ({ style }) => {
   return (
     <AbsDiv _direction="row" _position="absolute" {...style} _width={width}>
       {navItemData.map((item, index) => (
-        <NavItem key={index} {...item} />
+        <NavItem key={`navbar-bottom-${index}`} {...item} />
       ))}
     </AbsDiv>
   )

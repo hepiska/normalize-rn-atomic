@@ -33,21 +33,32 @@ class ShopPage extends React.Component<any, any> {
     imageHeight: globalDimention.jumbotronSize.height,
   }
 
-  _renderSection = section => {
+  _renderSection = (section, key) => {
     if (!section) return null
     switch (section.component) {
       case 'jumbotron':
         return (
           <Jumbotron
+            key={`shop-${section.component}-${key}`}
             data={section.images}
             navigation={this.props.navigation}
             navigateTarget="ProductList"
           />
         )
       case 'section-horizontal-list':
-        return <HorizontalList data={section} />
+        return (
+          <HorizontalList
+            key={`shop-${section.component}-${key}`}
+            data={section}
+          />
+        )
       case 'section-grid-list':
-        return <SectionGridList data={section} />
+        return (
+          <SectionGridList
+            key={`shop-${section.component}-${key}`}
+            data={section}
+          />
+        )
       default:
         return null
     }
@@ -69,8 +80,8 @@ class ShopPage extends React.Component<any, any> {
             onScroll={onScroll({ y })}
             scrollEventThrottle={5}>
             {page.section &&
-              page.section.map(_section => {
-                return this._renderSection(_section)
+              page.section.map((_section, key) => {
+                return this._renderSection(_section, key)
               })}
           </Animated.ScrollView>
         </View>

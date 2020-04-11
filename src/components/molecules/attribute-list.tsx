@@ -101,8 +101,10 @@ const AtributesList = ({
         <Font {...helveticaNormalFont}>{selectedAttribute.label}</Font>
       </Div>
       <ScrollDiv horizontal _margin="8px 0px" radius="0px">
-        {values.map(option => (
-          <PressAbbleDiv key={option.id} onPress={changeAtribute(option)}>
+        {values.map((option, k) => (
+          <PressAbbleDiv
+            key={`attribute-list-${k}`}
+            onPress={changeAtribute(option)}>
             {getAntributesItem(
               label,
               option,

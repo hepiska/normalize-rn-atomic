@@ -68,9 +68,13 @@ class ProductListItem extends React.PureComponent<ProductListItemType, any> {
           />
         </PressAbbleDiv>
         <Image
-          source={{
-            uri: setImage(product.image_url, { ...styles.product }),
-          }}
+          source={
+            product.image_url
+              ? {
+                  uri: setImage(product.image_url, { ...styles.product }),
+                }
+              : require('../../assets/placeholder/placeholder-image.png')
+          }
           style={styles.product}
         />
         <React.Fragment>

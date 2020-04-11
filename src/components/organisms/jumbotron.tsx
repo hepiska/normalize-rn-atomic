@@ -9,7 +9,7 @@ const { width } = Dimensions.get('window')
 
 /* revisi: need to change based on response API */
 interface DataType {
-  id: number
+  id: string | number
   image_url: string
   target_url: string
 }
@@ -46,7 +46,7 @@ class Jumbotron extends React.Component<JumbotronType, any> {
     }
   }
 
-  _keyExtractor = item => item.id
+  _keyExtractor = item => item.id.toString()
 
   _renderItem = ({ item }) => {
     /* revisi : need to be parsed */
@@ -83,7 +83,7 @@ class Jumbotron extends React.Component<JumbotronType, any> {
               _width="8px"
               _height="8px"
               radius="10"
-              key={k}
+              key={`jumbotron-${k}`}
               mar="0px 4px"
               bg={k === this.state.childPosition ? '#455BE3' : '#949494'}
             />

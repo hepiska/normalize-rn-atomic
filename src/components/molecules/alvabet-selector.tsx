@@ -11,8 +11,11 @@ const AlvabetSelectorMol = ({ style, onSelect, available }: any) => {
   return (
     <Div _height={32} style={style}>
       <ScrollDiv horizontal justify="flex-start">
-        {availSection.map(al => (
-          <PressAbbleDiv key={al} _padding="8px" onPress={_onPress(al)}>
+        {availSection.map((al, k) => (
+          <PressAbbleDiv
+            key={`alphabeth-${k}`}
+            _padding="8px"
+            onPress={_onPress(al)}>
             <Font>{al.toUpperCase()}</Font>
           </PressAbbleDiv>
         ))}

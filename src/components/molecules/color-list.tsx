@@ -12,7 +12,9 @@ const ColorList = ({ selectedId, data, onChange }: ColorList) => {
   return (
     <Div _direction="row" justify="flex-start">
       {data.map((item, index) => (
-        <PressAbbleDiv key={index} onPress={onChange(item, index)}>
+        <PressAbbleDiv
+          key={`color-list-${index}`}
+          onPress={onChange(item, index)}>
           <Div
             _width="20px"
             _height="20px"

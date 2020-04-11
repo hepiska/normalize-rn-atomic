@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
 })
 
 class HorizontalList extends React.Component<HorizontalListType, any> {
-  _keyExtractor = item => item.id
+  _keyExtractor = item => item.toString()
 
   _renderItem = ({ item, index }) => {
     const {
@@ -54,15 +54,27 @@ class HorizontalList extends React.Component<HorizontalListType, any> {
     switch (type) {
       case 'post':
         if (this.props.data.posts) {
-          return <PostHoc key={index} postId={item} idx={index} />
+          return (
+            <PostHoc
+              key={`horizontal-list-post-${index}`}
+              postId={item}
+              idx={index}
+            />
+          )
         } else if (this.props.data.collections) {
-          return <CollectionHoc key={index} collectionId={item} idx={index} />
+          return (
+            <CollectionHoc
+              key={`horizontal-list-collection-${index}`}
+              collectionId={item}
+              idx={index}
+            />
+          )
         }
       case 'product':
         return (
           <ProductHoc
             productId={item}
-            key={index}
+            key={`horizontal-list-product-${index}`}
             style={{
               flex: 1,
               wrappermargin: 4,
@@ -76,7 +88,13 @@ class HorizontalList extends React.Component<HorizontalListType, any> {
           />
         )
       case 'brand':
-        return <BrandHoc key={index} brandId={item} idx={index} />
+        return (
+          <BrandHoc
+            key={`horizontal-list-brand-${index}`}
+            brandId={item}
+            idx={index}
+          />
+        )
       default:
         return null
     }

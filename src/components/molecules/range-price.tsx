@@ -49,7 +49,7 @@ const RangePrice = ({
           if (i !== price.length - 1 || !withDiscount) {
             return (
               <Font
-                key={i}
+                key={`range-price-${i}`}
                 size={14}
                 type="title"
                 _margin="4px 0px 0px 4px"
@@ -59,7 +59,10 @@ const RangePrice = ({
             )
           } else if (withDiscount && i === price.length - 1) {
             return (
-              <Div key={i} _margin="4px 4px 4px 12px" overflow="visible">
+              <Div
+                key={`range-price-${i}`}
+                _margin="4px 4px 4px 12px"
+                overflow="visible">
                 <Img
                   source={
                     upTo

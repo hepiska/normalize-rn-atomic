@@ -3,9 +3,9 @@ import { Dimensions } from 'react-native'
 import {
   Div,
   Font,
-  Image,
-  ScrollDiv,
-  PressAbbleDiv,
+  // Image,
+  // ScrollDiv,
+  // PressAbbleDiv,
 } from '@components/atoms/basic'
 import Config from 'react-native-config'
 import { Button } from '@components/atoms/button'
@@ -16,14 +16,14 @@ import CoverImageAnimated from '@src/components/organisms/cover-image-animated'
 import ImagesWithPreviews from '@components/organisms/images-with-preview'
 import ContentExpandable from '@components/molecules/content-expandable'
 import ImageCoverContentLayout from '@src/components/layouts/image-cover-animated-content'
-import ProductOverviewCard from '@src/components/molecules/product-overview-card-body'
+// import ProductOverviewCard from '@src/components/molecules/product-overview-card-body'
 import ProductAttributes from '@components/organisms/product-attributes'
 import Animated from 'react-native-reanimated'
 import { colors } from '@src/utils/constants'
 import RangePrice from '@components/molecules/range-price'
 import Price from '@components/atoms/price'
 import ButtonGroup from '@components/molecules/button-group'
-import { OutlineButton, GradientButton } from '@components/atoms/button'
+import { GradientButton } from '@components/atoms/button'
 import { getProductById } from '@modules/product/action'
 import { setImage } from '@utils/helpers'
 
@@ -213,7 +213,7 @@ class ProductListPage extends React.Component<any, any> {
                 <ContentExpandable
                   title={detail.type}
                   content={detail.content}
-                  key={idx}
+                  key={`product-detail-${idx}`}
                   id={'expanable' + idx}
                   isFirst={idx === 0}
                 />

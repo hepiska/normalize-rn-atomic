@@ -71,8 +71,8 @@ class Wishlist extends Component<any, any> {
           _flex={1}
           align="flex-start"
           style={{ flexWrap: 'wrap' }}>
-          {products.map(item => (
-            <Div key={item} _width="50%" _height={430}>
+          {products.map((item, k) => (
+            <Div key={`wishlist-${k}`} _width="50%" _height={430}>
               {this._renderItem({ item })}
             </Div>
           ))}

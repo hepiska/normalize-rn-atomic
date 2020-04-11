@@ -1,5 +1,5 @@
 import React from 'react'
-import { SectionList, StyleSheet, Text, Dimensions, View } from 'react-native'
+import { StyleSheet, Dimensions } from 'react-native'
 import { Div, Font } from '@components/atoms/basic'
 import {
   futuraTitleFont,
@@ -47,7 +47,7 @@ class SectionGridList extends React.Component<SectionGridListType, any> {
             align="flex-start"
             style={{ flexWrap: 'wrap' }}>
             {_data.map((item, key) => (
-              <Div key={item} _width="50%" _height={430}>
+              <Div key={`section-grid-${key}`} _width="50%" _height={430}>
                 <ProductHoc
                   productId={item}
                   key={'' + item + key}

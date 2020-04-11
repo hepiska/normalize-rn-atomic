@@ -32,7 +32,7 @@ const Price = ({ price, discount_price, style }: Price) => {
         if (i !== mainPrice.length - 1 || !discount_price) {
           return (
             <Font
-              key={i}
+              key={`price-${i}`}
               size={14}
               type="title"
               _margin="4px 0px 0px 4px"
