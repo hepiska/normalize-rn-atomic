@@ -13,6 +13,7 @@ import { helveticaNormalFont } from '@components/commont-styles'
 import { colors, images as defaultImages } from '@utils/constants'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import InviniteLoader from '@components/atoms/loaders/invinite'
+import { navigate } from '@src/root-navigation'
 
 interface PostListItemType {
   post: any
@@ -159,9 +160,11 @@ class PostListItem extends React.PureComponent<PostListItemType, any> {
                 <PressAbbleDiv
                   flexDirection="row"
                   onPress={() =>
-                    console.log('user clicked')
-                  } /* revisi: diganti navigasi ke detail user */
-                >
+                    navigate('Insider', {
+                      screen: 'UserDetail',
+                      params: { userId: user.id },
+                    })
+                  }>
                   <ImageAutoSchale
                     source={
                       typeof user.photo_url === 'string'
