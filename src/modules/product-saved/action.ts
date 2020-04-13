@@ -5,7 +5,9 @@ import { setProductData } from '../product/action'
 import { setBrandData } from '../brand/action'
 import { setCategoryData } from '../category/action'
 
-const getMe = () => store.getState().auth.data.user
+const getMe = () => {
+  return store.getState().auth.data.user || {}
+}
 
 export const productSavedActionType = {
   CLEAR: 'productSaved/CLEAR',
@@ -58,6 +60,9 @@ export const getProductSaved = () => ({
         productSavedSetLoading(false),
       ]
     },
+    error: () => {
+      return [productSavedSetLoading(false)]
+    },
   },
 })
 
@@ -74,6 +79,9 @@ export const addProductSaved = productId => ({
       productSavedAddSaved(productId),
       productSavedSetLoading(false),
     ],
+    error: () => {
+      return [productSavedSetLoading(false)]
+    },
   },
 })
 
@@ -90,5 +98,8 @@ export const deleteProductSaved = productId => ({
       productSavedDeleteSaved(productId),
       productSavedSetLoading(false),
     ],
+    error: () => {
+      return [productSavedSetLoading(false)]
+    },
   },
 })
