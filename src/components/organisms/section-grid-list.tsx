@@ -8,7 +8,9 @@ import {
 import { OutlineButton } from '@components/atoms/button'
 import { colors } from '@utils/constants'
 import ProductCard from '@components/molecules/product-card'
+import PostCard from '@components/molecules/post-card'
 import { productListData } from '@hocs/data/product'
+import { postListData } from '@src/hocs/data/post'
 
 const { width } = Dimensions.get('window')
 
@@ -17,6 +19,7 @@ interface SectionGridListType {
 }
 
 const ProductHoc = productListData(ProductCard)
+const PostHoc = postListData(PostCard)
 
 const styles = StyleSheet.create({
   button: {
@@ -58,6 +61,34 @@ class SectionGridList extends React.Component<SectionGridListType, any> {
                     paddingHorizontal: 0,
                     marginLeft: 8,
                     marginRight: 8,
+                  }}
+                />
+              </Div>
+            ))}
+          </Div>
+        )
+      case 'post':
+        return (
+          <Div
+            _direction="row"
+            align="flex-start"
+            justify="flex-start"
+            style={{ flexWrap: 'wrap' }}>
+            {_data.map((item, key) => (
+              <Div
+                justifyContent="flex-start"
+                align="center"
+                key={item}
+                _width="50%">
+                <PostHoc
+                  postId={item}
+                  key={'' + item + key}
+                  idx={key}
+                  style={{
+                    flex: 1,
+                    wrappermargin: 4,
+                    width: width / 2,
+                    paddingHorizontal: 8,
                   }}
                 />
               </Div>

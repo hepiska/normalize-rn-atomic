@@ -56,6 +56,7 @@ class HorizontalList extends React.Component<HorizontalListType, any> {
         if (this.props.data.posts) {
           return (
             <PostHoc
+              horizontal
               key={`horizontal-list-post-${index}`}
               postId={item}
               idx={index}
