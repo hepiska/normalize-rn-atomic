@@ -1,9 +1,8 @@
 import React from 'react'
-import { Dimensions, FlatList, View } from 'react-native'
+import { Dimensions, FlatList, View, ViewStyle } from 'react-native'
 import { StyleSheet } from 'react-native'
 import { Div, PressAbbleDiv } from '@components/atoms/basic'
 import ListItemJumbotron from '../molecules/list-item-jumbotron'
-import { globalDimention } from '@utils/constants'
 
 const { width } = Dimensions.get('window')
 
@@ -18,6 +17,7 @@ interface JumbotronType {
   data: Array<DataType>
   navigation: any
   navigateTarget: any
+  style: ViewStyle
 }
 
 const styles = StyleSheet.create({
@@ -26,8 +26,8 @@ const styles = StyleSheet.create({
     height: 240,
   },
   indicator: {
-    bottom: 76,
-    right: width / 2 - 80,
+    bottom: 20,
+    left: 16,
   },
 })
 
@@ -46,7 +46,9 @@ class Jumbotron extends React.Component<JumbotronType, any> {
     }
   }
 
-  _keyExtractor = item => item.id.toString()
+  _keyExtractor = (item, index) => {
+    return item.id.toString() + index
+  }
 
   _renderItem = ({ item }) => {
     /* revisi : need to be parsed */
@@ -62,9 +64,9 @@ class Jumbotron extends React.Component<JumbotronType, any> {
   }
 
   render() {
-    const { data } = this.props
+    const { data, style } = this.props
     return (
-      <View style={globalDimention.jumbotronSize}>
+      <View style={style}>
         <FlatList
           horizontal
           showsHorizontalScrollIndicator={false}
@@ -77,7 +79,11 @@ class Jumbotron extends React.Component<JumbotronType, any> {
           onViewableItemsChanged={this._onViewAbleChange}
           viewabilityConfig={this._itemVisiblePercentThreshold}
         />
-        <Div flexDirection="row" position="absolute" style={styles.indicator}>
+        <Div
+          flexDirection="row"
+          position="absolute"
+          style={styles.indicator}
+          justify="flex-start">
           {data.map((_, k) => (
             <PressAbbleDiv
               _width="8px"

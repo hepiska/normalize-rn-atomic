@@ -14,6 +14,7 @@ export const brandActionType = {
   RESET_BRAND: 'brand/RESET_BRAND',
   SET_ACTIVE_BRAND: 'brand/SET_ACTIVE',
   ERROR: 'brand/ERROR',
+  DEFAULT: 'brand/DEFAULT',
 }
 
 export const setBrandData = (data: any) => {
@@ -22,6 +23,9 @@ export const setBrandData = (data: any) => {
       type: brandActionType.SET_BRAND_DATA,
       payload: data,
     }
+  }
+  return {
+    type: brandActionType.DEFAULT,
   }
 }
 

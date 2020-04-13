@@ -1,9 +1,8 @@
 import React, { memo } from 'react'
-import { StyleSheet } from 'react-native'
-import { Image, TouchableWithoutFeedback } from '@components/atoms/basic'
+import { StyleSheet, Dimensions, View } from 'react-native'
+import { TouchableWithoutFeedback } from '@components/atoms/basic'
 import { setImage } from '@utils/helpers'
 import { nestedScreenMap } from '@utils/constants'
-import { globalDimention } from '@utils/constants'
 import ImageAutoSchale from '@components/atoms/image-autoschale'
 
 /* revisi: need to change based on response API */
@@ -13,19 +12,23 @@ interface ItemType {
   target_url: string
 }
 
+const { width } = Dimensions.get('screen')
+
 interface ItemJumbotronType {
   item: ItemType
   navigation: any
-  navigateTarget: any
 }
 
 const styles = StyleSheet.create({
   image: {
-    ...globalDimention.jumbotronSize,
+    marginHorizontal: 8,
+    borderRadius: 8,
   },
 })
 
-const ListItemJumbotron = ({ item, navigation }: ItemJumbotronType) => {
+const imageWidth = 0.75 * width
+
+const ImageCard = ({ item, navigation }: ItemJumbotronType) => {
   const _onPress = () => {
     const parsedUri = item.target_url.split('/')
     const screenKey = parsedUri[parsedUri.length - 2]
@@ -41,17 +44,19 @@ const ListItemJumbotron = ({ item, navigation }: ItemJumbotronType) => {
 
   return (
     <TouchableWithoutFeedback onPress={_onPress}>
-      <ImageAutoSchale
-        source={{
-          uri: setImage(item.image_url, {
-            width: globalDimention.jumbotronSize.width,
-          }),
-        }}
-        width={globalDimention.jumbotronSize.width}
-        // style={styles.image}
-      />
+      <View>
+        <ImageAutoSchale
+          source={{
+            uri: setImage(item.image_url, {
+              width: imageWidth,
+            }),
+          }}
+          width={imageWidth}
+          style={styles.image}
+        />
+      </View>
     </TouchableWithoutFeedback>
   )
 }
 
-export default memo(ListItemJumbotron)
+export default memo(ImageCard)

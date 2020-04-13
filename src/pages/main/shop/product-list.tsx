@@ -19,7 +19,8 @@ import FilterBottomSheet from '@components/organisms/product-filter'
 import { futuraTitleFont } from '@components/commont-styles'
 import InviniteLoader from '@components/atoms/loaders/invinite'
 import { getCollectionBySlug } from '@modules/collection/action'
-import { deepClone, setImage } from '@utils/helpers'
+import { getCategory } from '@modules/category/action'
+import { deepClone } from '@utils/helpers'
 import { colors } from '@utils/constants'
 import ErrorOrg from '@src/components/organisms/four-o-four'
 import ProductEmpty from '@components/organisms/product-empty'
@@ -29,9 +30,9 @@ import {
   setBrandFilter,
   setFilter,
   changeSelectedBrand,
+  changeSelectedCategory,
   setSelectedCollection,
 } from '@modules/product-filter/action'
-import { brand } from '@src/modules/normalize-schema'
 const { width } = Dimensions.get('window')
 
 const styles = StyleSheet.create({
@@ -69,11 +70,14 @@ class Productlist extends Component<any, any> {
   navListener = null
 
   componentDidMount() {
-    const { route, brand } = this.props
+    const { route, brand, category, getCategory } = this.props
     if (route.params.from === 'collections' && route.params.collectionsSlug)
       return this.props.getCollectionBySlug(route.params.collectionsSlug)
     if (route.params.from === 'brands' && brand) {
       return this.props.getBrand(brand.id)
+    }
+    if (route.params.from === 'categories' && category) {
+      getCategory(category.id)
     }
   }
 
@@ -87,13 +91,23 @@ class Productlist extends Component<any, any> {
         return
       }
     }
+
     if (
       this.props.brand &&
-      // JSON.stringify(this.props.brand) != JSON.stringify(prevProps.brand) &&
       this.props.isBrandLoading !== prevProps.isBrandLoading
     ) {
       if (!this.props.isBrandLoading) {
         // console.log('th', this.props.brand)
+        this._setInitialState()
+        return
+      }
+    }
+
+    if (
+      this.props.category &&
+      this.props.isCategoryLoading !== prevProps.isCategoryLoading
+    ) {
+      if (!this.props.isCategoryLoading) {
         this._setInitialState()
         return
       }
@@ -127,10 +141,12 @@ class Productlist extends Component<any, any> {
       collection,
       brand,
       setFilter,
+      category,
       setBrandFilter,
       changeSelectedBrand,
       setSelectedCollection,
     } = this.props
+
     if (collection) {
       setFilter({
         categories: collection.categories,
@@ -154,11 +170,29 @@ class Productlist extends Component<any, any> {
       setBrandFilter(brand.brands || [])
 
       this._freshfetch()
+    } else if (category) {
+      setFilter({
+        categories: category.categories,
+        prices: {
+          maximum_price: category.price_max,
+          minimum_price: category.price_min,
+        },
+      })
+      changeSelectedCategory(category.id)
+      setBrandFilter(category.brands)
+      this._freshfetch()
     }
   }
 
   _fetchData = skip => {
-    const { collection, appliedFilters, search, sort, brand } = this.props
+    const {
+      collection,
+      appliedFilters,
+      search,
+      sort,
+      brand,
+      category,
+    } = this.props
     const params: any = {
       limit: this.limit,
       is_commerce: true,
@@ -176,6 +210,9 @@ class Productlist extends Component<any, any> {
     }
     if (brand) {
       params.brand_ids = brand.id
+    }
+    if (category) {
+      params.category_ids = category.id
     }
 
     this.props.productApi(params)
@@ -250,7 +287,12 @@ class Productlist extends Component<any, any> {
   }
 
   _header = () => {
-    const { collection, brand } = this.props
+    const { collection, brand, route } = this.props
+
+    if (route.params.from === 'categories') {
+      return null
+    }
+
     const headerData: any = {
       image:
         'https://shonet.imgix.net/commerce/Loueve/#LJRING14-MAIN.jpg?q=75&auto=compress,format&w=350',
@@ -349,7 +391,9 @@ const mapDispatchToProps = dispatch =>
       changeSelectedBrand,
       clearFilter,
       getBrand,
+      changeSelectedCategory,
       setSelectedCollection,
+      getCategory,
     },
     dispatch,
   )
@@ -368,10 +412,10 @@ const mapStateToProps = (state, { route }) => {
     appliedFilters,
   }
 
-  const commontErrorProps = {
-    globalError: state.global.error,
-    Producterror: state.products.error,
-  }
+  // const commontErrorProps = {
+  //   globalError: state.global.error,
+  //   Producterror: state.products.error,
+  // }
 
   // if (state.global.error || state.collection.error || state.products.error) {
   //   return {
@@ -404,9 +448,30 @@ const mapStateToProps = (state, { route }) => {
 
   if (brandId) {
     return {
-      brand: state.brands.data[brandId],
+      brand: state.brands.data[brandId] || { id: brandId },
+      headerError: state.global.error,
+      loading: state.products.productsLoading,
       isBrandLoading: state.brands.loading,
       products: state.products.order,
+      pagination: {
+        total: state.products.pagination.total,
+      },
+      ...filterProps,
+    }
+  }
+
+  const categoriesId = route.params.categoriesId || route.params.categoryId
+
+  if (categoriesId) {
+    return {
+      category: state.categories.data[categoriesId] || { id: categoriesId },
+      headerError: state.global.error,
+      loading: state.products.productsLoading,
+      isCategoryLoading: state.categories.loading,
+      products: state.products.order,
+      pagination: {
+        total: state.products.pagination.total,
+      },
       ...filterProps,
     }
   }

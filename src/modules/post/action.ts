@@ -10,6 +10,7 @@ export const postActionType = {
   SET_POST_LOADING: 'post/SET_USER_LOADING',
   CLEAR_POST: 'post/CLEAR_POST',
   ERROR: 'post/ERROR',
+  DEFAULT: 'post/DEFAULT',
 }
 
 export const fetchPost = (params: QueryParams) => ({
@@ -23,6 +24,10 @@ export const setPostData = (data: any) => {
       type: postActionType.SET_POST_DATA,
       payload: data,
     }
+  }
+  return {
+    type: postActionType.DEFAULT,
+    payload: data,
   }
 }
 

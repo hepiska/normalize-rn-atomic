@@ -83,7 +83,7 @@ class FilterBrandOrg extends Component<any, any> {
   render() {
     const { categories } = this.props
     return (
-      <View style={{ flex: 1, width, marginTop: 48 }}>
+      <View style={{ flex: 1, width }}>
         <SectionList
           style={styles.sectionContainer}
           keyExtractor={this._keyExtractor}

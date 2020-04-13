@@ -136,6 +136,7 @@ const NavbarTopAnimated: React.SFC<NavbarBottomProps> = ({
           overflow="visible"
           width={width - 132}
           _direction="row"
+          minHeight={48}
           wrap="wrap"
           {...style}
           align="center">

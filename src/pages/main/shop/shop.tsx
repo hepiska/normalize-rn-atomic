@@ -1,5 +1,5 @@
 import React from 'react'
-import { FlatList, Dimensions, View, StyleSheet, Text } from 'react-native'
+import { View, StyleSheet } from 'react-native'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { collectionApi } from '@modules/collection/action'
@@ -17,6 +17,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'flex-start',
+  },
+  firstSectionMargin: {
+    marginBottom: 12,
+  },
+  sectionMargin: {
+    marginVertical: 12,
   },
 })
 
@@ -42,6 +48,11 @@ class ShopPage extends React.Component<any, any> {
             key={`shop-${section.component}-${key}`}
             data={section.images}
             navigation={this.props.navigation}
+            style={
+              section.order === 1
+                ? styles.firstSectionMargin
+                : styles.sectionMargin
+            }
             navigateTarget="ProductList"
           />
         )
@@ -49,6 +60,8 @@ class ShopPage extends React.Component<any, any> {
         return (
           <HorizontalList
             key={`shop-${section.component}-${key}`}
+            navigation={this.props.navigation}
+            style={styles.sectionMargin}
             data={section}
           />
         )

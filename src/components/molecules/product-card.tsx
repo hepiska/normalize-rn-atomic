@@ -37,9 +37,12 @@ interface ViewExtend extends ViewStyle {
 interface ProductCardType {
   product: any
   brand?: any
+  isSaved?: boolean
+  isShowRangePrice: boolean
   onPress: () => void
-  onAddtoCart: () => void
-  onSave: () => void
+  onAddtoCart: (productId) => void
+  isAtributesShow: boolean
+  onSave: (productId) => void
   style?: ViewExtend
   horizontal?: boolean
 }
@@ -91,6 +94,9 @@ const ProductCard = ({
   brand = {},
   onSave,
   onAddtoCart,
+  isAtributesShow = true,
+  isShowRangePrice = true,
+  isSaved,
   onPress,
   horizontal = false,
 }: ProductCardType) => {
@@ -104,8 +110,6 @@ const ProductCard = ({
     ? width - composeStyle.wrappermargin
     : width
 
-  const isSaved = false
-
   const [defaultImage, setImage] = useState(null)
   const [attributeSelected, setAttributeSelected] = useState(null)
   const [selectedVariantId, setSelectedVariantId] = useState(null)
@@ -114,17 +118,20 @@ const ProductCard = ({
     product.attributes && product.attributes.find(x => x.label === 'Color')
   const onColorChange = (attribute, index) => () => {
     const _filteredVariants = product.variants.filter(_variant => {
-      _variant.attribute_values =
-        _variant.attribute_values || _variant.attributeValues
       return _variant.attribute_values.find(
         ({ attribute_id, attribute_value_id }) =>
-          attribute_id === colorAttributes.id &&
+          attribute_id === colorAttributes.attribute_id &&
           attribute_value_id === attribute.id,
       )
     })
     setSelectedVariantId(_filteredVariants[0].id)
     setAttributeSelected(attribute)
   }
+
+  const _onSave = () => {
+    onSave(product.id)
+  }
+
   const selectedVariant =
     product.variants.find(variant => variant.id === selectedVariantId) ||
     product.variants[0]
@@ -146,11 +153,13 @@ const ProductCard = ({
       width={width}
       image={image}
       setImage={setImage}
+      isAtributesShow={isAtributesShow}
       type={type}
+      isShowRangePrice={isShowRangePrice}
       variantPrice={variantPrice}
       onPress={onPress}
       brand={brand}
-      onSave={onSave}
+      onSave={_onSave}
       onAddtoCart={onAddtoCart}
       product={product}
       colorAttributes={colorAttributes}
@@ -164,9 +173,11 @@ const ProductCard = ({
       isSaved={isSaved}
       onPress={onPress}
       image={image}
+      isShowRangePrice={isShowRangePrice}
+      isAtributesShow={isAtributesShow}
       setImage={setImage}
       variantPrice={variantPrice}
-      onSave={onSave}
+      onSave={_onSave}
       onAddtoCart={onAddtoCart}
       type={type}
       colorAttributes={colorAttributes}
@@ -190,7 +201,9 @@ const ProductCardHorizontal = ({
   onSave,
   onAddtoCart,
   variantPrice,
+  isShowRangePrice,
   colorAttributes,
+  isAtributesShow,
   attributeSelected,
   onColorChange,
 }) => {
@@ -283,8 +296,10 @@ const ProductCardVertical = ({
   product,
   onPress,
   onSave,
+  isShowRangePrice,
   onAddtoCart,
   variantPrice,
+  isAtributesShow,
   colorAttributes,
   attributeSelected,
   onColorChange,
@@ -311,11 +326,12 @@ const ProductCardVertical = ({
             _width="32px"
             _height="32px"
             _background="white"
+            onPress={onSave}
             radius="16px">
             <Icon
               name={isSaved ? 'bookmark' : 'bookmark-border'}
               size={18}
-              color={isSaved ? colors.black50 : colors.black90}
+              color={isSaved ? colors.black100 : colors.black90}
             />
           </AbsDiv>
           <ImageAutoSchale
@@ -350,7 +366,7 @@ const ProductCardVertical = ({
             ellipsizeMode="tail">
             {productName}
           </Font>
-          {colorAttributes && (
+          {isAtributesShow && colorAttributes && (
             <ColorList
               selectedId={attributeSelected ? attributeSelected.id : null}
               data={colorAttributes ? colorAttributes.values : []}
@@ -359,8 +375,10 @@ const ProductCardVertical = ({
           )}
           {variantPrice ? (
             <Price {...variantPrice} />
-          ) : (
+          ) : isShowRangePrice ? (
             <RangePrice {...price} upTo />
+          ) : (
+            <Price price={product.price} />
           )}
 
           {onAddtoCart && (

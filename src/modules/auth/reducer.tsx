@@ -2,11 +2,14 @@ import { AnyAction, Reducer } from 'redux'
 import Immutable from 'seamless-immutable'
 import { ErrorType } from '@utils/globalInterface'
 import { authActionType } from './action'
+import { persistReducer } from 'redux-persist'
+import AsyncStorage from '@react-native-community/async-storage'
 
 interface RegisterState {
   readonly loading: Boolean
   readonly error?: ErrorType
-  readonly data: Object
+  readonly called: Boolean
+  readonly data: any
   readonly isAuth: Boolean
   readonly usernameAvalaible: any
 }
@@ -52,4 +55,11 @@ const registerReducer: Reducer<RegisterState> = (
   }
 }
 
-export default registerReducer
+const brandersistConfig = {
+  key: 'auth',
+  storage: AsyncStorage,
+}
+
+export default persistReducer(brandersistConfig, registerReducer)
+
+// export default registerReducer

@@ -1,5 +1,5 @@
 import React from 'react'
-import { FlatList, StyleSheet, Dimensions } from 'react-native'
+import { FlatList, StyleSheet, Dimensions, ViewStyle } from 'react-native'
 import { Div, Font } from '@components/atoms/basic'
 import {
   futuraTitleFont,
@@ -16,11 +16,14 @@ import { collectionListData } from '@hocs/data/collection'
 import { productListData } from '@hocs/data/product'
 import { brandListData } from '@hocs/data/brand'
 import { navigate } from '@src/root-navigation'
+import ImageCard from '@components/molecules/image-card'
 
 const { width } = Dimensions.get('window')
 
 interface HorizontalListType {
   data: any
+  navigation: any
+  style: ViewStyle
 }
 
 const PostHoc = postListData(PostCard)
@@ -35,6 +38,16 @@ const styles = StyleSheet.create({
     borderColor: colors.black60,
     marginTop: 16,
   },
+  productCard: {
+    flex: 1,
+
+    width: width / 2 - 8,
+    marginTop: 0,
+    marginLeft: 8,
+    marginRight: 8,
+    marginBottom: 0,
+    paddingHorizontal: 0,
+  },
   buttonText: {
     fontSize: 12,
     color: colors.black80,
@@ -44,7 +57,12 @@ const styles = StyleSheet.create({
 })
 
 class HorizontalList extends React.Component<HorizontalListType, any> {
-  _keyExtractor = item => item.toString()
+  _keyExtractor = item => {
+    if (typeof item === 'object') {
+      return item.id.toString()
+    }
+    return item.toString()
+  }
 
   _renderItem = ({ item, index }) => {
     const {
@@ -76,24 +94,19 @@ class HorizontalList extends React.Component<HorizontalListType, any> {
           <ProductHoc
             productId={item}
             key={`horizontal-list-product-${index}`}
-            style={{
-              flex: 1,
-              wrappermargin: 4,
-              width: width / 2 - 8,
-              marginTop: 0,
-              marginLeft: 8,
-              marginRight: 8,
-              marginBottom: 0,
-              paddingHorizontal: 0,
-            }}
+            isAtributesShow={false}
+            isShowRangePrice={false}
+            style={{ ...styles.productCard, wrappermargin: 4 }}
           />
         )
       case 'brand':
+        return <BrandHoc key={index} brandId={item} idx={index} />
+      case 'image':
         return (
-          <BrandHoc
-            key={`horizontal-list-brand-${index}`}
-            brandId={item}
-            idx={index}
+          <ImageCard
+            key={index}
+            item={item}
+            navigation={this.props.navigation}
           />
         )
       default:
@@ -127,10 +140,10 @@ class HorizontalList extends React.Component<HorizontalListType, any> {
   }
 
   render() {
-    const { data } = this.props
+    const { data, style } = this.props
 
     return (
-      <Div _width="100%" align="flex-start" mar="12px 0">
+      <Div _width="100%" align="flex-start" style={style}>
         <Font {...futuraTitleFont} size="24px" mar="0 0 24px 16px">
           {data.title}
         </Font>

@@ -9,6 +9,7 @@ export const userActionType = {
   FETCH_START: 'user/FETCH_START',
   SET_USER_LOADING: 'user/SET_USER_LOADING',
   ERROR: 'user/ERROR',
+  DEFAULT: 'user/DEFAULT',
 }
 
 export const setUserData = (data: any) => {
@@ -17,5 +18,9 @@ export const setUserData = (data: any) => {
       type: userActionType.SET_USER_DATA,
       payload: data,
     }
+  }
+  return {
+    type: userActionType.DEFAULT,
+    payload: data,
   }
 }

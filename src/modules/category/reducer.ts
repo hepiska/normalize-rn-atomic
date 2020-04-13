@@ -38,7 +38,7 @@ const categoryReducer: Reducer<PostState> = (
         newState.order = newState.order.concat(Immutable(action.payload.order))
       }
       return newState
-    case categoryActionType.SET_CATEGORY_LOADING:
+    case categoryActionType.SET_LOADING:
       newState.loading = action.payload
       return newState
     default:

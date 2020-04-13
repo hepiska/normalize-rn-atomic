@@ -1,4 +1,5 @@
 import { API } from '../action-types'
+import AsyncStorage from '@react-native-community/async-storage'
 
 export const authActionType = {
   FETCHNG: 'auth/FETCHNG',
@@ -15,13 +16,16 @@ const setAuthFetching = (isFetching: boolean) => ({
   },
 })
 
-const setLoginSuccess = (data: any) => ({
-  type: authActionType.SET_LOGIN_SUCCESS,
-  payload: {
-    data,
-    isAuth: true,
-  },
-})
+const setLoginSuccess = (data: any) => {
+  AsyncStorage.setItem('token', data.id_token)
+  return {
+    type: authActionType.SET_LOGIN_SUCCESS,
+    payload: {
+      data,
+      isAuth: true,
+    },
+  }
+}
 
 const setRegisterSuccess = (data: any) => ({
   type: authActionType.SET_REGISTER_SUCCESS,
@@ -76,7 +80,7 @@ export const registerApi = params => ({
     endNetwork: () => {
       return setAuthFetching(false)
     },
-    success: (data, { pagination }) => {
+    success: data => {
       return [setRegisterSuccess(data)]
     },
     error: err => {
