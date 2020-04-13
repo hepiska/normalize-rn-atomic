@@ -38,13 +38,11 @@ const productSavedReducer: Reducer<ProductSavedState> = (
       newState.order = OrderData
       return newState
     case productSavedActionType.ADD_SAVED_PRODUCT:
-      newState.order = newState.order.concat(Immutable(action.payload))
       const savedProductObj = {}
       savedProductObj[action.payload] = action.payload
       newState.data = Immutable.merge(newState.data, savedProductObj)
       return newState
     case productSavedActionType.DELETE_SAVED_PRODUCT:
-      newState.order = newState.order.filter(_prod => _prod !== action.payload)
       newState.data = Immutable.without(newState.data, [action.payload])
       return newState
 
