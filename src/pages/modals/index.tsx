@@ -21,7 +21,7 @@ function ModalStack() {
           backgroundColor: 'white',
         },
       }}>
-      <Stack.Screen name="cardmodal" component={CartModal} />
+      <Stack.Screen name="CartModal" component={CartModal} />
       <Stack.Screen
         name="ProductFilter"
         options={{ cardStyle: { backgroundColor: 'transparent' } }}

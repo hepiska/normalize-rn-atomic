@@ -55,8 +55,6 @@ class ProductListPage extends React.Component<any, any> {
   _selectVariant = attributes => {
     const { product } = this.props
     const variant = product.variants.find(_variant => {
-      _variant.attribute_values =
-        _variant.attribute_values || _variant.attributeValues
       const ismatch = _variant.attribute_values.reduce((acc, _att) => {
         const sellectedAtt = attributes.find(
           _attribute =>
@@ -82,7 +80,10 @@ class ProductListPage extends React.Component<any, any> {
 
   openCartModal = () => {
     const { navigation, product } = this.props
-    navigation.navigate('modals', { screen: 'CartModal', params: { product } })
+    navigation.navigate('modals', {
+      screen: 'CartModal',
+      params: { product: product.id },
+    })
   }
 
   groupButton = [
@@ -194,7 +195,11 @@ class ProductListPage extends React.Component<any, any> {
                 end={{ x: 1, y: 1 }}
                 colors={['#3067E4', '#8131E2']}
                 title="Add to cart"
-                onPress={this.openCartModal}
+                onPress={
+                  isUserSelectVariant
+                    ? () => console.log('add cart to redux + BE')
+                    : this.openCartModal
+                }
                 fontStyle={{
                   color: colors.white,
                   fontWeight: '500',

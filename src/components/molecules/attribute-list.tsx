@@ -70,7 +70,7 @@ const useAtributes = props => {
 
     setselectedAttribute(newAttribute)
     props.onAttributesChanged({
-      attribute_id: props.attribute.id,
+      attribute_id: props.attribute.attribute_id,
       attribute_value_id: attribute.id,
     })
   }
@@ -114,12 +114,13 @@ const AtributesList = ({
         ))}
       </ScrollDiv>
       {label.toLowerCase() === 'size' && (
-        <OutlineButton
-          leftIcon="ruler"
-          style={{ borderWidth: 0 }}
-          title="Size guide"
-          onPress={() => {}}
-        />
+        <PressAbbleDiv onPress={() => {}} _margin="8px 0">
+          <Font
+            {...helveticaNormalFont}
+            style={{ textDecorationLine: 'underline' }}>
+            Size guide
+          </Font>
+        </PressAbbleDiv>
       )}
     </Div>
   )
