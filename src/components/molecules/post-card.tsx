@@ -12,6 +12,7 @@ import { setImage } from '@utils/helpers'
 import { helveticaNormalFont } from '@components/commont-styles'
 import { colors, images as defaultImages } from '@utils/constants'
 import Icon from 'react-native-vector-icons/FontAwesome5'
+import IconFa from 'react-native-vector-icons/FontAwesome'
 import InviniteLoader from '@components/atoms/loaders/invinite'
 import { navigate } from '@src/root-navigation'
 
@@ -20,7 +21,9 @@ interface PostListItemType {
   user: any
   idx: string | number
   onPress: () => void
+  onLike: (postId) => void
   horizontal?: boolean
+  isLiked?: boolean
   style?: any
 }
 
@@ -73,8 +76,21 @@ class PostListItem extends React.PureComponent<PostListItemType, any> {
     defaultImage: null,
   }
 
+  _onLike = () => {
+    this.props.onLike(this.props.post.id)
+  }
+
   render() {
-    const { post, user, idx, onPress, horizontal = false, style } = this.props
+    const {
+      post,
+      user,
+      idx,
+      onPress,
+      horizontal = false,
+      style,
+      isLiked,
+      onLike,
+    } = this.props
 
     let width = 246
     if (!horizontal && style) {
@@ -180,16 +196,11 @@ class PostListItem extends React.PureComponent<PostListItemType, any> {
                     {user.name}
                   </Font>
                 </PressAbbleDiv>
-                <PressAbbleDiv
-                  flexDirection="row"
-                  onPress={() =>
-                    console.log('you like/unlike this post')
-                  } /* revisi: diganti dengan action like / unlike */
-                >
-                  <Icon
+                <PressAbbleDiv flexDirection="row" onPress={this._onLike}>
+                  <IconFa
                     name="heart"
                     size={16}
-                    color={post.is_liked ? colors.black100 : colors.black50}
+                    color={isLiked ? colors.black100 : colors.black50}
                   />
                   <Font size="10.5px" color={colors.black70} padd="0 0 0 4px">
                     {post.like_count}

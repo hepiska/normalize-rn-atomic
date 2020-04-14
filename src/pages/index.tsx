@@ -4,6 +4,7 @@ import ModalPages from './modals'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { getProductSaved } from '@modules/product-saved/action'
+import { getPostLiked } from '@modules/post-liked/action'
 import GlobalErrorAndWarning from '@src/components/molecules/global-error-warning'
 import { createStackNavigator } from '@react-navigation/stack'
 const Stack = createStackNavigator()
@@ -11,6 +12,7 @@ const Stack = createStackNavigator()
 class Pages extends React.Component<any, any> {
   componentDidMount() {
     this.props.getProductSaved()
+    this.props.getPostLiked()
   }
   render() {
     return (
@@ -40,6 +42,7 @@ const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
       getProductSaved,
+      getPostLiked,
     },
     dispatch,
   )

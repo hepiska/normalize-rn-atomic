@@ -51,7 +51,6 @@ export const getProductSaved = () => ({
     schema: [schema.product],
     startNetwork: () => productSavedSetLoading(true),
     success: data => {
-      console.log(data)
       return [
         setProductData(data.entities.product),
         setCategoryData(data.entities.category),
@@ -66,24 +65,26 @@ export const getProductSaved = () => ({
   },
 })
 
-export const addProductSaved = productId => ({
-  type: API,
-  payload: {
-    url: '/users/' + getMe().id + '/saved',
-    requestParams: {
-      method: 'POST',
-      data: { product_id: productId },
+export const addProductSaved = productId => {
+  return {
+    type: API,
+    payload: {
+      url: '/users/' + getMe().id + '/saved',
+      requestParams: {
+        method: 'POST',
+        data: { product_id: productId },
+      },
+      startNetwork: () => productSavedSetLoading(true),
+      success: () => [
+        productSavedAddSaved(productId),
+        productSavedSetLoading(false),
+      ],
+      error: () => {
+        return [productSavedSetLoading(false)]
+      },
     },
-    startNetwork: () => productSavedSetLoading(true),
-    success: () => [
-      productSavedAddSaved(productId),
-      productSavedSetLoading(false),
-    ],
-    error: () => {
-      return [productSavedSetLoading(false)]
-    },
-  },
-})
+  }
+}
 
 export const deleteProductSaved = productId => ({
   type: API,

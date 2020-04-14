@@ -22,7 +22,7 @@ const initialState: any = {
   error: null,
 }
 
-const postreducer: Reducer<PostState> = (
+const postLikedReducer: Reducer<PostState> = (
   state: any = deepClone(initialState),
   action: AnyAction,
 ) => {
@@ -55,4 +55,4 @@ const postPersistConfig = {
   storage: AsyncStorage,
 }
 
-export default persistReducer(postPersistConfig, postreducer)
+export default persistReducer(postPersistConfig, postLikedReducer)

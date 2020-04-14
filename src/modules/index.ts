@@ -15,6 +15,8 @@ import pageReducer from './page/reducer'
 import globalReducer from './global/reducer'
 import authReducer from './auth/reducer'
 import productSavedActionType from './product-saved/reducer'
+import postLikedActionType from './post-liked/reducer'
+import commentReducer from './comment/reducer'
 
 const combinedReducer: Reducer<any> = combineReducers({
   router: routerReducer,
@@ -33,6 +35,8 @@ const combinedReducer: Reducer<any> = combineReducers({
   collection: collectionReducer,
   auth: authReducer,
   productsSaved: productSavedActionType,
+  postsLiked: postLikedActionType,
+  comments: commentReducer,
 })
 
 export default combinedReducer
