@@ -68,6 +68,7 @@ class ShopPage extends React.Component<any, any> {
       case 'section-grid-list':
         return (
           <SectionGridList
+            navigation={this.props.navigation}
             key={`shop-${section.component}-${key}`}
             data={section}
           />

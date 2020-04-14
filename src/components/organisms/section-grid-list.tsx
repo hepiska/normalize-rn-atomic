@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, Dimensions } from 'react-native'
+import { StyleSheet, Dimensions, ViewStyle } from 'react-native'
 import { Div, Font } from '@components/atoms/basic'
 import {
   futuraTitleFont,
@@ -11,11 +11,14 @@ import ProductCard from '@components/molecules/product-card'
 import PostCard from '@components/molecules/post-card'
 import { productListData } from '@hocs/data/product'
 import { postListData } from '@src/hocs/data/post'
+import ImageCard from '@components/molecules/image-card'
 
 const { width } = Dimensions.get('window')
 
 interface SectionGridListType {
   data: any
+  navigation: any
+  style?: ViewStyle
 }
 
 const ProductHoc = productListData(ProductCard)
@@ -38,9 +41,8 @@ const styles = StyleSheet.create({
 
 class SectionGridList extends React.Component<SectionGridListType, any> {
   _renderItem = () => {
-    const { data } = this.props
+    const { data, navigation } = this.props
     const _data = data[`${data.type}s`]
-
     switch (data.type) {
       case 'product':
         return (
@@ -72,26 +74,41 @@ class SectionGridList extends React.Component<SectionGridListType, any> {
           <Div
             _direction="row"
             align="flex-start"
-            justify="flex-start"
+            justify="center"
             style={{ flexWrap: 'wrap' }}>
             {_data.map((item, key) => (
-              <Div
-                justifyContent="flex-start"
-                align="center"
-                key={item}
-                _width="50%">
-                <PostHoc
-                  postId={item}
-                  key={'' + item + key}
-                  idx={key}
-                  style={{
-                    flex: 1,
-                    wrappermargin: 4,
-                    width: width / 2,
-                    paddingHorizontal: 8,
-                  }}
-                />
-              </Div>
+              // <Div
+              //   justifyContent="flex-start"
+              //   align="center"
+              //   key={item}
+              //   _width="50%">
+              <PostHoc
+                postId={item}
+                key={'' + item + key}
+                idx={key}
+                type="large"
+                style={{
+                  // flex: 1,
+                  // wrappermargin: 4,
+                  width: width - 16,
+                  marginVertical: 24,
+                  paddingHorizontal: 8,
+                }}
+              />
+              // </Div>
+            ))}
+          </Div>
+        )
+      case 'image':
+        return (
+          <Div align="flex-start" justify="center">
+            {_data.map((item, key) => (
+              <ImageCard
+                navigation={navigation}
+                item={item}
+                style={{ width: width - 16, marginBottom: 18 }}
+                key={'image-key' + key}
+              />
             ))}
           </Div>
         )
@@ -116,10 +133,15 @@ class SectionGridList extends React.Component<SectionGridListType, any> {
   }
 
   render() {
-    const { data } = this.props
+    const { data, style } = this.props
 
     return (
-      <Div _flex="1" _width="100%" align="flex-start" mar="12px 0">
+      <Div
+        _flex="1"
+        _width="100%"
+        align="flex-start"
+        mar="12px 0"
+        style={style}>
         <Font {...futuraTitleFont} size="24px" mar="0 0 24px 16px">
           {data.title}
         </Font>

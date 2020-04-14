@@ -1,44 +1,39 @@
 import { AnyAction, Reducer } from 'redux'
 import Immutable from 'seamless-immutable'
-import { ErrorType } from '@utils/globalInterface'
 import { persistReducer } from 'redux-persist'
-import { productActionType } from './action'
-import { deepClone } from '@utils/helpers'
+import { actionType } from './action'
 import AsyncStorage from '@react-native-community/async-storage'
+import { ErrorType } from '@utils/globalInterface'
+import { deepClone } from '@utils/helpers'
 
-interface ProductState {
+interface CartStateType {
   readonly data: Object
   readonly order: Array<number>
-  pagination: Object
-  productsLoading: boolean
-  productLoading: Boolean
   readonly error?: ErrorType
+  activeCart: number
+  pagination: Object
+  loading: Boolean
 }
 
-const initialState: any = {
+const initialState: CartStateType = {
   data: Immutable({}),
   order: Immutable([]),
-  pagination: {},
-  productsLoading: false,
-  productLoading: false,
   error: null,
+  pagination: null,
+  activeCart: null,
+  loading: false,
 }
 
-const productReducer: Reducer<ProductState> = (
-  state: ProductState = deepClone(initialState),
+const cartReducer: Reducer<CartStateType> = (
+  state: CartStateType = deepClone(initialState),
   action: AnyAction,
 ) => {
   const newState = { ...state }
   switch (action.type) {
-    case productActionType.SET_PRODUCT_DATA:
+    case actionType.SET_CART_DATA:
       newState.data = Immutable.merge(newState.data, action.payload)
       return newState
-
-    case productActionType.CHANGE_VALUE:
-      newState[action.payload.key] = action.payload.value
-      return newState
-
-    case productActionType.SET_PRODUCT_ORDER:
+    case actionType.SET_CART_ORDER:
       if (
         action.payload.pagination.offset &&
         action.payload.pagination.total &&
@@ -50,21 +45,15 @@ const productReducer: Reducer<ProductState> = (
       }
       newState.pagination = action.payload.pagination
       return newState
-    case productActionType.SET_PRODUCTS_LOADING:
-      newState.productsLoading = action.payload
+    case actionType.SET_ERROR:
+      newState.error = action.payload
       return newState
-    case productActionType.ClEAR_PRODUCT:
-      return initialState
-    case productActionType.SET_DEFAULT:
+    case actionType.SET_LOADING:
+      newState.loading = action.payload
       return newState
     default:
       return newState
   }
 }
 
-const postPersistConfig = {
-  key: 'product',
-  storage: AsyncStorage,
-}
-
-export default persistReducer(postPersistConfig, productReducer)
+export default cartReducer

@@ -13,7 +13,7 @@ export const collectionActionType = {
   SET_COLLECTION_ORDER: 'collection/SET_COLLECTION_ORDER',
   FETCH_START: 'collection/FETCH_START',
   SET_ACTIVE_COLLECTION: 'collection/SET_ACTIVE_COLLECTION',
-  SET_COLLECTION_LOADING: 'collection/SET_USER_LOADING',
+  SET_COLLECTION_LOADING: 'collection/SET_COLLECTION_LOADING',
   ERROR: 'collection/ERROR',
 }
 
@@ -54,6 +54,7 @@ export const getCollectionBySlug = slug => ({
       if (status === 'error') {
         return [setActiveCollection(null)]
       }
+      return setCollectionLoading(false)
     },
     success: data => {
       return [
@@ -62,7 +63,6 @@ export const getCollectionBySlug = slug => ({
         setCategoryData(data.entities.category),
         setProductData(data.entities.product),
         setCollectionData(data.entities.collection),
-        setCollectionLoading(false),
       ]
     },
   },

@@ -1,9 +1,10 @@
 import React, { memo } from 'react'
-import { StyleSheet, Dimensions, View } from 'react-native'
+import { StyleSheet, Dimensions, View, ViewStyle } from 'react-native'
 import { TouchableWithoutFeedback } from '@components/atoms/basic'
 import { setImage } from '@utils/helpers'
 import { nestedScreenMap } from '@utils/constants'
 import ImageAutoSchale from '@components/atoms/image-autoschale'
+import { compose } from 'redux'
 
 /* revisi: need to change based on response API */
 interface ItemType {
@@ -16,19 +17,23 @@ const { width } = Dimensions.get('screen')
 
 interface ItemJumbotronType {
   item: ItemType
+  style?: ViewStyle
   navigation: any
 }
 
 const styles = StyleSheet.create({
-  image: {
+  container: {
+    borderRadius: 8,
     marginHorizontal: 8,
+  },
+  image: {
     borderRadius: 8,
   },
 })
 
 const imageWidth = 0.75 * width
 
-const ImageCard = ({ item, navigation }: ItemJumbotronType) => {
+const ImageCard = ({ item, navigation, style }: ItemJumbotronType) => {
   const _onPress = () => {
     const parsedUri = item.target_url.split('/')
     const screenKey = parsedUri[parsedUri.length - 2]
@@ -42,16 +47,18 @@ const ImageCard = ({ item, navigation }: ItemJumbotronType) => {
     navigation.navigate(screen.screen, screen.params)
   }
 
+  const composeStyle = { ...styles.container, ...style }
+
   return (
     <TouchableWithoutFeedback onPress={_onPress}>
-      <View>
+      <View style={composeStyle}>
         <ImageAutoSchale
           source={{
             uri: setImage(item.image_url, {
               width: imageWidth,
             }),
           }}
-          width={imageWidth}
+          width={style?.width || imageWidth}
           style={styles.image}
         />
       </View>

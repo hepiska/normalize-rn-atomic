@@ -8,7 +8,7 @@ interface ImageType {
 interface ImageAutoSchaleType {
   source: any
   onError?: any
-  width?: number
+  width?: number | string
   height?: number
   style?: ViewStyle
 }

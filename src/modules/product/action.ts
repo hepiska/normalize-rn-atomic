@@ -13,6 +13,7 @@ export const productActionType = {
   ClEAR_PRODUCT: 'product/ClEAR_PRODUCT',
   SET_PRODUCTS_LOADING: 'product/SET_PRODUCTS_LOADING',
   CHANGE_VALUE: 'product/CHANGE_VALUE',
+  SET_DEFAULT: 'product/SET_DEFAULT',
   ERROR: 'product/ERROR',
 }
 
@@ -22,6 +23,9 @@ export const setProductData = (data: any) => {
       type: productActionType.SET_PRODUCT_DATA,
       payload: data,
     }
+  }
+  return {
+    type: productActionType.SET_DEFAULT,
   }
 }
 

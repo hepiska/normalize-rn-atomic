@@ -29,7 +29,7 @@ class ProductSimilar extends Component<any, any> {
 
   freshfetch = async () => {
     try {
-      await this.props.ProductApi({
+      await this.props.productApi({
         limit: this.limit,
         offset: 0,
       })

@@ -19,6 +19,7 @@ import { navigate } from '@src/root-navigation'
 interface PostListItemType {
   post: any
   user: any
+  type?: string
   idx: string | number
   onPress: () => void
   onLike: (postId) => void
@@ -46,15 +47,24 @@ const styles = StyleSheet.create({
     height: 'auto',
     width: 246,
   },
-  userImage: {
-    width: 16,
-    height: 16,
-    borderRadius: 20,
-  },
+
   tags: {
     position: 'absolute',
     right: 16,
     top: 16,
+  },
+})
+
+const userImageStyle = StyleSheet.create({
+  large: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+  },
+  default: {
+    width: 16,
+    height: 16,
+    borderRadius: 20,
   },
 })
 
@@ -88,8 +98,8 @@ class PostListItem extends React.PureComponent<PostListItemType, any> {
       onPress,
       horizontal = false,
       style,
+      type = 'default',
       isLiked,
-      onLike,
     } = this.props
 
     let width = 246
@@ -109,12 +119,7 @@ class PostListItem extends React.PureComponent<PostListItemType, any> {
     const image =
       this.state.defaultImage ||
       (!!post.image_url
-        ? setImage(
-            post.image_url,
-            horizontal
-              ? { ...styles.postHorizontal }
-              : { ...styles.postVertical },
-          )
+        ? setImage(post.image_url, horizontal ? { width } : { width })
         : defaultImages.product)
 
     if (post && user) {
@@ -124,10 +129,12 @@ class PostListItem extends React.PureComponent<PostListItemType, any> {
             style={
               horizontal
                 ? {
+                    ...style,
                     ...styles.touchableDiv,
                     marginLeft: idx === 0 ? 16 : 0,
                   }
                 : {
+                    ...style,
                     width,
                     marginTop: idx >= 2 ? 24 : 0,
                   }
@@ -161,13 +168,16 @@ class PostListItem extends React.PureComponent<PostListItemType, any> {
               style={styles.image}
             />
             <React.Fragment>
-              <Font
-                {...helveticaNormalFont}
-                size="12px"
-                color={colors.black100}
-                mar="8px 0 0 0">
-                {post.title}
-              </Font>
+              <Div _width="100%" align="flex-start">
+                <Font
+                  {...helveticaNormalFont}
+                  size={type === 'large' ? '13px' : '12px'}
+                  color={colors.black100}
+                  mar="8px 0 0 0">
+                  {post.title}
+                </Font>
+              </Div>
+
               <Div
                 _width="100%"
                 mar="8px 0 0 0"
@@ -190,9 +200,14 @@ class PostListItem extends React.PureComponent<PostListItemType, any> {
                     onError={() => {
                       this.setState({ defaultImage: defaultImages.product })
                     }}
-                    style={styles.userImage}
+                    style={userImageStyle[type] || userImageStyle['default']}
                   />
-                  <Font size="10.5px" color={colors.black70} padd="0 0 0 3px">
+                  <Font
+                    size={type === 'large' ? '12px' : '10.5px'}
+                    style={{ fontWeight: 'bold' }}
+                    weight={type === 'large' ? 'bold' : 'normal'}
+                    color={type === 'large' ? colors.black100 : colors.black70}
+                    padd="0 0 0 3px">
                     {user.name}
                   </Font>
                 </PressAbbleDiv>

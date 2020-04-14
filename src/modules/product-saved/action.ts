@@ -6,7 +6,8 @@ import { setBrandData } from '../brand/action'
 import { setCategoryData } from '../category/action'
 
 const getMe = () => {
-  return store.getState().auth.data.user || {}
+  if (store) return store.getState().auth.data.user || {}
+  return {}
 }
 
 export const productSavedActionType = {

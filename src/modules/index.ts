@@ -14,6 +14,7 @@ import collectionReducer from './collection/reducer'
 import pageReducer from './page/reducer'
 import globalReducer from './global/reducer'
 import authReducer from './auth/reducer'
+import cartReducer from './cart/reducer'
 import productSavedActionType from './product-saved/reducer'
 import postLikedActionType from './post-liked/reducer'
 import commentReducer from './comment/reducer'
@@ -34,6 +35,7 @@ const combinedReducer: Reducer<any> = combineReducers({
   global: globalReducer,
   collection: collectionReducer,
   auth: authReducer,
+  carts: cartReducer,
   productsSaved: productSavedActionType,
   postsLiked: postLikedActionType,
   comments: commentReducer,

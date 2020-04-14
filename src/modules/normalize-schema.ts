@@ -94,3 +94,5 @@ export const page = new schema.Entity(
   { section: [pageSection] },
   { idAttribute: 'page' },
 )
+
+export const cart = new schema.Entity('cart')

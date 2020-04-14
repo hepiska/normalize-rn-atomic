@@ -36,6 +36,7 @@ const api = ({ dispatch, getState }) => next => action => {
       if (success) {
         dispatch(success(normalizeData, res.data))
       }
+
       if (endNetwork) {
         dispatch(endNetwork('success'))
       }

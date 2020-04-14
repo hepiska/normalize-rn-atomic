@@ -1,4 +1,5 @@
 import React from 'react'
+import colorString from 'color-string'
 import { Div, PressAbbleDiv } from '@components/atoms/basic'
 import { colors } from '@utils/constants'
 
@@ -23,7 +24,9 @@ const ColorList = ({ selectedId, data, onChange }: ColorList) => {
               selectedId === item.id ? colors.black90 : colors.black50
             }`}
             radius="20px"
-            _background={item.metadata}
+            _background={
+              colorString.get(item.metadata) ? item.metadata : '#fff'
+            }
           />
         </PressAbbleDiv>
       ))}

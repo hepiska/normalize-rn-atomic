@@ -6,7 +6,7 @@ import {
   SectionList,
   View,
 } from 'react-native'
-import { Div, Font, PressAbbleDiv } from '@components/atoms/basic'
+import { Div, Font } from '@components/atoms/basic'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { productApi } from '@modules/product/action'
@@ -15,7 +15,6 @@ import ProductCard from '@components/molecules/product-card'
 import { productListData } from '@hocs/data/product'
 import { getBrand } from '@modules/brand/action'
 import FilterTriger from '@components/organisms/product-filter-buttons'
-import FilterBottomSheet from '@components/organisms/product-filter'
 import { futuraTitleFont } from '@components/commont-styles'
 import InviniteLoader from '@components/atoms/loaders/invinite'
 import { getCollectionBySlug } from '@modules/collection/action'
@@ -73,11 +72,14 @@ class Productlist extends Component<any, any> {
     const { route, brand, category, getCategory } = this.props
     if (route.params.from === 'collections' && route.params.collectionsSlug)
       return this.props.getCollectionBySlug(route.params.collectionsSlug)
-    if (route.params.from === 'brands' && brand) {
-      return this.props.getBrand(brand.id)
+    if (route.params.from === 'brands' && (brand || route.params.brandSlug)) {
+      return this.props.getBrand(brand.id || route.params.brandsSlug)
     }
-    if (route.params.from === 'categories' && category) {
-      getCategory(category.id)
+    if (
+      route.params.from === 'categories' &&
+      (category || route.params.categoriesSlug)
+    ) {
+      getCategory(category.id || route.params.categoriesSlug)
     }
   }
 
@@ -97,7 +99,6 @@ class Productlist extends Component<any, any> {
       this.props.isBrandLoading !== prevProps.isBrandLoading
     ) {
       if (!this.props.isBrandLoading) {
-        // console.log('th', this.props.brand)
         this._setInitialState()
         return
       }
@@ -294,15 +295,15 @@ class Productlist extends Component<any, any> {
     }
 
     const headerData: any = {
-      image:
-        'https://shonet.imgix.net/commerce/Loueve/#LJRING14-MAIN.jpg?q=75&auto=compress,format&w=350',
+      // image:
+      // 'https://shonet.imgix.net/commerce/Loueve/#LJRING14-MAIN.jpg?q=75&auto=compress,format&w=350',
     }
     if (brand) {
       headerData.title = brand.name
       headerData.image = brand.image_url || headerData.image
     } else if (collection) {
-      headerData.title = brand.title
-      headerData.image = brand.landscape_image_url || headerData.image
+      headerData.title = collection.title
+      headerData.image = collection.landscape_image_url || headerData.image
     }
 
     return this.props.headerError ? (
@@ -329,7 +330,10 @@ class Productlist extends Component<any, any> {
     !this.props.headerError ? (
       <>
         <FilterTriger style={{ paddingHorizontal: 16 }} />
-        <ProductEmpty title="sadasada" subtitle="sasas" />
+        <ProductEmpty
+          title="No Results Found"
+          subtitle="We're sorry! We can't find any products available"
+        />
       </>
     ) : null
 
@@ -349,7 +353,7 @@ class Productlist extends Component<any, any> {
         <NavbarTop
           leftContent={['back']}
           title={headerName}
-          subtitle={`${pagination?.total} Items`}
+          subtitle={`${pagination.total} Items`}
         />
         <Div _width="100%" _flex="1" justify="flex-start">
           <SectionList
@@ -432,21 +436,20 @@ const mapStateToProps = (state, { route }) => {
     route.params.from === 'collections' &&
     (collectionId || route.params.collectionsSlug)
   ) {
-    const collection = collectionId && state.collection.data[collectionId]
     return {
       collection: collectionId && state.collection.data[collectionId],
       headerError: state.global.error,
       products: collectionId ? state.products.order : [],
       isCollectionLoading: state.collection.loading,
       loading: state.products.productsLoading,
-      pagination: { total: collection && collection.products.length },
+      pagination: { total: state.products.pagination.total || 0 },
       ...filterProps,
     }
   }
 
   const brandId = route.params.brandId || route.params.brandsId
 
-  if (brandId) {
+  if (route.params.from === 'brands' && (brandId || route.params.brandsSlug)) {
     return {
       brand: state.brands.data[brandId] || { id: brandId },
       headerError: state.global.error,
@@ -454,7 +457,7 @@ const mapStateToProps = (state, { route }) => {
       isBrandLoading: state.brands.loading,
       products: state.products.order,
       pagination: {
-        total: state.products.pagination.total,
+        total: state.products.pagination.total || 0,
       },
       ...filterProps,
     }
@@ -462,7 +465,10 @@ const mapStateToProps = (state, { route }) => {
 
   const categoriesId = route.params.categoriesId || route.params.categoryId
 
-  if (categoriesId) {
+  if (
+    route.params.from === 'categories' &&
+    (categoriesId || route.params.categoriesSlug)
+  ) {
     return {
       category: state.categories.data[categoriesId] || { id: categoriesId },
       headerError: state.global.error,
@@ -470,7 +476,7 @@ const mapStateToProps = (state, { route }) => {
       isCategoryLoading: state.categories.loading,
       products: state.products.order,
       pagination: {
-        total: state.products.pagination.total,
+        total: state.products.pagination.total || 0,
       },
       ...filterProps,
     }
