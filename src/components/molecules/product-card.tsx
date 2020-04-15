@@ -304,6 +304,9 @@ const ProductCardVertical = ({
   attributeSelected,
   onColorChange,
 }) => {
+  if (!product) {
+    return null
+  }
   const productName = product.name.replace(/\n|\r/g, '')
   const price: any = {}
   if (!product.max_price_after_disc && !product.min_price_after_disc) {

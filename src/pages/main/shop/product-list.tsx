@@ -21,6 +21,7 @@ import { getCollectionBySlug } from '@modules/collection/action'
 import { getCategory } from '@modules/category/action'
 import { deepClone } from '@utils/helpers'
 import { colors } from '@utils/constants'
+import { setImage } from '@utils/helpers'
 import ErrorOrg from '@src/components/organisms/four-o-four'
 import ProductEmpty from '@components/organisms/product-empty'
 import {
@@ -73,13 +74,13 @@ class Productlist extends Component<any, any> {
     if (route.params.from === 'collections' && route.params.collectionsSlug)
       return this.props.getCollectionBySlug(route.params.collectionsSlug)
     if (route.params.from === 'brands' && (brand || route.params.brandSlug)) {
-      return this.props.getBrand(brand.id || route.params.brandsSlug)
+      return this.props.getBrand(route.params.brandsSlug || brand.id)
     }
     if (
       route.params.from === 'categories' &&
       (category || route.params.categoriesSlug)
     ) {
-      getCategory(category.id || route.params.categoriesSlug)
+      return getCategory(route.params.categoriesSlug || category.id)
     }
   }
 
@@ -109,6 +110,7 @@ class Productlist extends Component<any, any> {
       this.props.isCategoryLoading !== prevProps.isCategoryLoading
     ) {
       if (!this.props.isCategoryLoading) {
+        console.log('set initial state')
         this._setInitialState()
         return
       }
@@ -239,7 +241,9 @@ class Productlist extends Component<any, any> {
       if (this.props.loading) {
         return
       }
-      this._fetchData(this.skip)
+      if (this.props.pagination.total > this.props.products.length) {
+        this._fetchData(this.skip)
+      }
     }
   }
 
@@ -299,8 +303,8 @@ class Productlist extends Component<any, any> {
       // 'https://shonet.imgix.net/commerce/Loueve/#LJRING14-MAIN.jpg?q=75&auto=compress,format&w=350',
     }
     if (brand) {
-      headerData.title = brand.name
-      headerData.image = brand.image_url || headerData.image
+      headerData.title = brand?.name
+      headerData.image = brand?.image_url || headerData.image
     } else if (collection) {
       headerData.title = collection.title
       headerData.image = collection.landscape_image_url || headerData.image
@@ -317,9 +321,9 @@ class Productlist extends Component<any, any> {
           justifyContent: 'center',
         }}
         source={{
-          uri: headerData.image,
+          uri: setImage(headerData.image || '', { width, height: imageHeight }),
         }}>
-        <Font {...futuraTitleFont} size="24">
+        <Font {...futuraTitleFont} color="white" size="24">
           {headerData.title}
         </Font>
       </ImageBackground>
@@ -338,8 +342,29 @@ class Productlist extends Component<any, any> {
     ) : null
 
   render() {
-    const { headerName } = this.state
-    const { products, pagination, loading } = this.props
+    const {
+      products,
+      pagination,
+      loading,
+      brand,
+      collection,
+      category,
+    } = this.props
+
+    const headerData: any = {
+      // image:
+      // 'https://shonet.imgix.net/commerce/Loueve/#LJRING14-MAIN.jpg?q=75&auto=compress,format&w=350',
+    }
+
+    if (brand) {
+      headerData.title = brand?.name
+      headerData.image = brand?.image_url || headerData.image
+    } else if (collection) {
+      headerData.title = collection.title
+      headerData.image = collection.landscape_image_url || headerData.image
+    } else if (category) {
+      headerData.title = category.title
+    }
     const sectionData = products.length
       ? [
           {
@@ -352,7 +377,7 @@ class Productlist extends Component<any, any> {
       <>
         <NavbarTop
           leftContent={['back']}
-          title={headerName}
+          title={headerData.title || ''}
           subtitle={`${pagination.total} Items`}
         />
         <Div _width="100%" _flex="1" justify="flex-start">
@@ -463,7 +488,10 @@ const mapStateToProps = (state, { route }) => {
     }
   }
 
-  const categoriesId = route.params.categoriesId || route.params.categoryId
+  const categoriesId =
+    route.params.categoriesId ||
+    route.params.categoryId ||
+    state.categories.activeCategory
 
   if (
     route.params.from === 'categories' &&

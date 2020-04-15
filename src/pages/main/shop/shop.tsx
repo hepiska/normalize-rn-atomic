@@ -12,6 +12,7 @@ import Animated from 'react-native-reanimated'
 import { globalDimention } from '@utils/constants'
 import { onScroll } from 'react-native-redash'
 import NavbarTopAnimated from '@components/molecules/navbar-top-animated'
+import FeaturedCategory from '@components/organisms/featured-category'
 
 const styles = StyleSheet.create({
   container: {
@@ -78,7 +79,7 @@ class ShopPage extends React.Component<any, any> {
     }
   }
   render() {
-    const { page } = this.props
+    const { page, navigation } = this.props
 
     return (
       <>
@@ -95,7 +96,17 @@ class ShopPage extends React.Component<any, any> {
             scrollEventThrottle={5}>
             {page.section &&
               page.section.map((_section, key) => {
-                return this._renderSection(_section, key)
+                return (
+                  <>
+                    {this._renderSection(_section, key)}
+                    {key === 0 && (
+                      <FeaturedCategory
+                        style={{ marginVertical: 12 }}
+                        navigation={navigation}
+                      />
+                    )}
+                  </>
+                )
               })}
           </Animated.ScrollView>
         </View>

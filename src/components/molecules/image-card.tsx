@@ -4,7 +4,6 @@ import { TouchableWithoutFeedback } from '@components/atoms/basic'
 import { setImage } from '@utils/helpers'
 import { nestedScreenMap } from '@utils/constants'
 import ImageAutoSchale from '@components/atoms/image-autoschale'
-import { compose } from 'redux'
 
 /* revisi: need to change based on response API */
 interface ItemType {

@@ -44,6 +44,7 @@ export const colors = {
   purple1: '#9B51E0',
   purple2: '#BB6BD9',
   white: '#FFFFFF',
+  black10: '#F8F8F8',
   black50: '#EFEFEF',
   black60: '#949494',
   black70: '#737373',
@@ -85,6 +86,13 @@ export const uriSchreenMap = {
 export const nestedScreenMap = (key, params?) => {
   const map = {
     collections: {
+      screen: 'Shop',
+      params: {
+        screen: 'ProductList',
+        params,
+      },
+    },
+    categories: {
       screen: 'Shop',
       params: {
         screen: 'ProductList',

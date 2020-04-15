@@ -9,6 +9,8 @@ import AsyncStorage from '@react-native-community/async-storage'
 interface PostState {
   readonly data: Object
   readonly order: Array<number>
+  readonly featured: Array<number>
+  activeCategory: number
   readonly loading: Boolean
   readonly error?: ErrorType
 }
@@ -16,6 +18,8 @@ interface PostState {
 const initialState: any = {
   data: Immutable({}),
   order: Immutable([]),
+  activeCategory: null,
+  featured: Immutable([]),
   loading: false,
   error: null,
 }
@@ -38,6 +42,12 @@ const categoryReducer: Reducer<PostState> = (
       ) {
         newState.order = newState.order.concat(Immutable(action.payload.order))
       }
+      return newState
+    case categoryActionType.SET_FEATURED:
+      newState.featured = Immutable(action.payload)
+      return newState
+    case categoryActionType.SET_ACTIVE_CATEGORY:
+      newState.activeCategory = action.payload
       return newState
     case categoryActionType.SET_LOADING:
       newState.loading = action.payload

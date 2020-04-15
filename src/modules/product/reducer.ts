@@ -42,7 +42,7 @@ const productReducer: Reducer<ProductState> = (
       if (
         action.payload.pagination.offset &&
         action.payload.pagination.total &&
-        newState.order.length < action.payload.pagination.total
+        newState.order.length <= action.payload.pagination.total
       ) {
         newState.order = newState.order.concat(Immutable(action.payload.order))
       } else {
