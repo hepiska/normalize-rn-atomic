@@ -1,7 +1,6 @@
 import React, { createRef, useMemo } from 'react'
 import { withNavigation } from 'react-navigation'
 import { Div, Font, PressAbbleDiv } from '@components/atoms/basic'
-import { withAuthModal } from '@components/organisms/auth-modal'
 
 const ProfilPage = ({ navigation }) => {
   return (

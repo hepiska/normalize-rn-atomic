@@ -14,6 +14,12 @@ export const futuraBoldFont16 = {
   color: colors.black100,
 }
 
+export const futuraBlackFont14 = {
+  size: 14,
+  type: 'Futura',
+  color: colors.black100,
+}
+
 export const helveticaNormalFont = {
   size: 14,
   type: 'HelveticaNeue',
@@ -24,6 +30,18 @@ export const helveticaNormalFont12 = {
   size: 12,
   type: 'HelveticaNeue',
   color: colors.gray3,
+}
+
+export const helveticaBlackFont12 = {
+  size: 12,
+  type: 'HelveticaNeue',
+  color: colors.black80,
+}
+
+export const helveticaBlackFont14 = {
+  size: 14,
+  type: 'HelveticaNeue',
+  color: colors.black80,
 }
 
 export const helveticaBlackBold = {

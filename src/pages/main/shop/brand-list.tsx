@@ -78,8 +78,8 @@ class BrandList extends Component<any, any> {
     const params: any = {
       limit: this.limit,
       offset: skip * this.limit,
-      sort_by: 'name',
-      sort_direction: 'asc',
+      sort_by: 'date',
+      sort_direction: 'desc',
       // ...sort.value,
       // ...appliedFilters,
     }

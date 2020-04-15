@@ -18,6 +18,7 @@ import cartReducer from './cart/reducer'
 import productSavedActionType from './product-saved/reducer'
 import postLikedActionType from './post-liked/reducer'
 import commentReducer from './comment/reducer'
+import productAttributeReducer from './product-attribute/reducer'
 
 const combinedReducer: Reducer<any> = combineReducers({
   router: routerReducer,
@@ -39,6 +40,7 @@ const combinedReducer: Reducer<any> = combineReducers({
   productsSaved: productSavedActionType,
   postsLiked: postLikedActionType,
   comments: commentReducer,
+  productAttribute: productAttributeReducer,
 })
 
 export default combinedReducer

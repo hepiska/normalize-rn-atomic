@@ -90,11 +90,13 @@ const mapDispatchToProps = dispatch =>
     dispatch,
   )
 
-const mapStateToProps = state => ({
-  products: state.products.order,
-  pagination: state.products.pagination,
-  loading: state.products.loading,
-  error: state.products.error,
-})
+const mapStateToProps = state => {
+  return {
+    products: state.products.order,
+    pagination: state.products.pagination,
+    loading: state.products.loading,
+    error: state.products.error,
+  }
+}
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProductSimilar)

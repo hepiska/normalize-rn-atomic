@@ -31,7 +31,8 @@ const cartReducer: Reducer<CartStateType> = (
   const newState = { ...state }
   switch (action.type) {
     case actionType.SET_CART_DATA:
-      newState.data = Immutable.merge(newState.data, action.payload)
+      if (action.payload)
+        newState.data = Immutable.merge(newState.data, action.payload)
       return newState
     case actionType.SET_CART_ORDER:
       if (
@@ -45,11 +46,42 @@ const cartReducer: Reducer<CartStateType> = (
       }
       newState.pagination = action.payload.pagination
       return newState
-    case actionType.SET_ERROR:
-      newState.error = action.payload
+    case actionType.ADD_ONE_CART_ORDER:
+      if (!newState.order.includes(action.payload)) {
+        newState.order = newState.order.concat(
+          Immutable([action.payload.order]),
+        )
+      }
+      return newState
+    case actionType.CHANGE_QTY_DATA:
+      const newData = {}
+      newData[action.payload.cart_id] = {
+        ...deepClone(newState.data[action.payload.cart_id]),
+        qty: action.payload.qty,
+      }
+
+      newState.data = Immutable.merge(
+        newState.data,
+        Immutable.replace(newState.data, newData),
+      )
+      return newState
+    case actionType.REPLACE_ORDER:
+      const neworder = Immutable.asMutable(newState.order)
+      const index = neworder.indexOf(action.payload.from)
+      if (~index) {
+        neworder[index] = action.payload.to
+      }
+      newState.order = Immutable(neworder)
+    case actionType.REMOVE_CART_ORDER:
+      newState.order = Immutable(
+        newState.order.filter(_order => _order !== action.payload),
+      )
       return newState
     case actionType.SET_LOADING:
       newState.loading = action.payload
+      return newState
+    case actionType.SET_ERROR:
+      newState.error = action.payload
       return newState
     default:
       return newState

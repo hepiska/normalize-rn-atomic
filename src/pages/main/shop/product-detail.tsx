@@ -20,12 +20,13 @@ import ImageCoverContentLayout from '@src/components/layouts/image-cover-animate
 import ProductAttributes from '@components/organisms/product-attributes'
 import Animated from 'react-native-reanimated'
 import { colors } from '@src/utils/constants'
+import { addCart } from '@modules/cart/action'
 import RangePrice from '@components/molecules/range-price'
 import Price from '@components/atoms/price'
 import ButtonGroup from '@components/molecules/button-group'
 import { GradientButton } from '@components/atoms/button'
 import { getProductById } from '@modules/product/action'
-import { setImage } from '@utils/helpers'
+import { setImage, deepClone } from '@utils/helpers'
 
 const { Value } = Animated
 const { width, height } = Dimensions.get('screen')
@@ -104,6 +105,14 @@ class ProductListPage extends React.Component<any, any> {
       },
     },
   ]
+
+  _addToCart = () => {
+    if (this.state.isUserSelectVariant) {
+      this.props.addCart({ variant_id: this.state.selectedVariant, qty: 1 })
+    } else {
+      this.openCartModal()
+    }
+  }
 
   render() {
     const { product } = this.props
@@ -195,11 +204,7 @@ class ProductListPage extends React.Component<any, any> {
                 end={{ x: 1, y: 1 }}
                 colors={['#3067E4', '#8131E2']}
                 title="Add to cart"
-                onPress={
-                  isUserSelectVariant
-                    ? () => console.log('add cart to redux + BE')
-                    : this.openCartModal
-                }
+                onPress={this._addToCart}
                 fontStyle={{
                   color: colors.white,
                   fontWeight: '500',
@@ -232,12 +237,21 @@ class ProductListPage extends React.Component<any, any> {
 }
 
 const mapStateToProps = (state, ownProps) => {
+  const _product = deepClone(
+    state.products.data[ownProps.route.params?.productId],
+  )
+  if (_product.attributes) {
+    _product.attributes = _product.attributes.map(v => {
+      return state.productAttribute.data[v]
+    })
+  }
+
   return {
-    product: state.products.data[ownProps.route.params?.productId],
+    product: _product,
   }
 }
 
 const mapDispatchToProps = dispatch =>
-  bindActionCreators({ getProductById }, dispatch)
+  bindActionCreators({ getProductById, addCart }, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProductListPage)

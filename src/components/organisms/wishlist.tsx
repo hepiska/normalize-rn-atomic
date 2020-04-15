@@ -5,6 +5,7 @@ import { connect } from 'react-redux'
 import { Div, Font } from '@components/atoms/basic'
 import { colors } from '@src/utils/constants'
 import { OutlineButton } from '@src/components/atoms/button'
+import { getProductSaved } from '@modules/product-saved/action'
 import ProductCard from '@components/molecules/product-card'
 import { productListData } from '@hocs/data/product'
 import { productApi } from '@modules/product/action'
@@ -29,33 +30,14 @@ class Wishlist extends Component<any, any> {
 
   freshfetch = async () => {
     try {
-      await this.props.productApi({
-        limit: this.limit,
-        offset: 0,
-      })
-      this.lastskip = 0
-      this.skip = 0
+      this.props.getProductSaved()
     } catch (err) {
       console.log(err)
     }
   }
 
-  _renderItem = ({ item }) => {
-    return (
-      <ProductWithCardHoc
-        key={item}
-        productId={item}
-        style={{
-          flex: 1,
-          wrappermargin: 16,
-          width: width / 2,
-        }}
-      />
-    )
-  }
-
   render() {
-    const { products } = this.props
+    const { products, loading } = this.props
     return (
       <Div _flex={1} _margin="64px 0px 0px" _width="100%" align="flex-start">
         <Font
@@ -69,13 +51,22 @@ class Wishlist extends Component<any, any> {
         <Div
           _direction="row"
           _flex={1}
+          justify="space-between"
           align="flex-start"
           style={{ flexWrap: 'wrap' }}>
-          {products.map((item, k) => (
-            <Div key={`wishlist-${k}`} _width="50%" _height={430}>
-              {this._renderItem({ item })}
-            </Div>
-          ))}
+          {loading
+            ? null
+            : products.map((item, k) => (
+                <ProductWithCardHoc
+                  key={item}
+                  productId={item}
+                  style={{
+                    wrappermargin: 8,
+                    paddingHorizontal: 0,
+                    width: width / 2 - 16,
+                  }}
+                />
+              ))}
         </Div>
         <Div _padding="0px 8px" _width="100%">
           <OutlineButton
@@ -97,15 +88,16 @@ const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
       productApi,
+      getProductSaved,
     },
     dispatch,
   )
 
 const mapStateToProps = state => ({
-  products: state.products.order,
+  products: state.productsSaved.order,
   pagination: state.products.pagination,
-  loading: state.products.loading,
-  error: state.products.error,
+  loading: state.productsSaved.loading,
+  error: state.productsSaved.error,
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Wishlist)

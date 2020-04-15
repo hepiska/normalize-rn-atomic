@@ -5,13 +5,15 @@ import { connect } from 'react-redux'
 import styled from 'styled-components'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { Div, Font, PressAbbleDiv } from '@components/atoms/basic'
-import { Button } from '@components/atoms/button'
+import { Button, GradientButton } from '@components/atoms/button'
 import NavbarTop from '@components/molecules/navbar-top'
 import ProductOverviewCart from '@components/molecules/product-overview-cart'
 import ProductAttributes from '@components/organisms/product-attributes'
 import { getProductById } from '@modules/product/action'
+import { addCart, changeVariant } from '@modules/cart/action'
+
 import { images, colors } from '@utils/constants'
-import { formatRupiah } from '@utils/helpers'
+import { formatRupiah, deepClone } from '@utils/helpers'
 
 const AbsDiv = styled(Div)`
   position: absolute;
@@ -79,6 +81,24 @@ class CartModal extends React.Component<any, any> {
     }
   }
 
+  _addToCart = async () => {
+    const { navigation } = this.props
+    const { type, cart } = this.props.route.params
+
+    if (type === 'change_variant' && cart) {
+      await this.props.changeVariant({
+        variant_id: this.state.selectedVariant,
+        cart: cart,
+      })
+      navigation.goBack()
+    } else {
+      await this.props.addCart({
+        variant_id: this.state.selectedVariant,
+        qty: 1,
+      })
+      navigation.goBack()
+    }
+  }
   getVariantData = id => {
     const { product } = this.props
     const varian = product.variants.find(variant => variant.id === id)
@@ -87,12 +107,30 @@ class CartModal extends React.Component<any, any> {
 
   render() {
     const { selectedVariant } = this.state
-    const { product, brand } = this.props
+    const { product, brand, route } = this.props
     const varianData = this.getVariantData(selectedVariant || 1)
+    const { fixAttributes, type, changeAttribute } = route.params
+
+    const fixAttributesIds =
+      type === 'change_variant' && fixAttributes
+        ? [fixAttributes.attribute_id]
+        : []
+
+    const selectedAttributes =
+      type === 'change_variant' && fixAttributes ? [fixAttributes] : []
+
+    const headerTitle =
+      type === 'change_variant' && changeAttribute
+        ? `Choose New ${changeAttribute.label}`
+        : 'Add To Cart'
+    const buttonText =
+      type === 'change_variant' && changeAttribute
+        ? `Update ${changeAttribute.label}`
+        : 'Add To Cart'
 
     return (
       <>
-        <NavbarTop title="Add To Cart" leftContent={['close']} />
+        <NavbarTop title={headerTitle} leftContent={['close']} />
         <Div
           _width="100%"
           _flex="1"
@@ -109,6 +147,8 @@ class CartModal extends React.Component<any, any> {
             sale // revisi: diubah data dari BE
           />
           <ProductAttributes
+            fixAttributesIds={fixAttributesIds}
+            selectedAttributes={selectedAttributes}
             attributes={product.attributes}
             onAllAttributesSelected={this._selectVariant}
           />
@@ -130,9 +170,12 @@ class CartModal extends React.Component<any, any> {
               </Font>
             </Div>
             <Div _flex={0.5} align="flex-end">
-              <Button
-                onPress={() => console.log('add cart to redux + BE')}
-                title="Add to Cart"
+              <GradientButton
+                onPress={this._addToCart}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+                colors={['#3067E4', '#8131E2']}
+                title={buttonText}
                 fontStyle={styles.buttonText}
                 style={styles.button}
                 disabled={selectedVariant ? false : true}
@@ -149,6 +192,8 @@ const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
       getProductById,
+      addCart,
+      changeVariant,
     },
     dispatch,
   )
@@ -156,8 +201,12 @@ const mapDispatchToProps = dispatch =>
 const mapStateToProps = (state, ownProps) => {
   const productId = ownProps.route.params?.product
   const product = state.products.data[productId]
+  const _product = deepClone(product)
+  _product.attributes = _product.attributes.map(v => {
+    return state.productAttribute.data[v]
+  })
   return {
-    product,
+    product: _product,
     brand: state.brands.data[product.brand],
   }
 }

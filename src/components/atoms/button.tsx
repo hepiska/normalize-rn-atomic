@@ -4,7 +4,7 @@ import LinearGradient from 'react-native-linear-gradient'
 import { Font, PressAbbleDiv } from '@components/atoms/basic'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 
-import { colors } from '@src/utils/constants'
+import { colors as constantsColors } from '@src/utils/constants'
 
 interface ButtonType {
   title: string
@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
   },
   disabled: {
     borderRadius: 8,
-    backgroundColor: colors.black50,
+    backgroundColor: constantsColors.black50,
   },
 })
 
@@ -60,18 +60,21 @@ export const GradientButton = ({
   style,
   onPress,
   fontStyle,
+  disabled = false,
   title,
 }: GradienButtonType) => {
   return (
     <PressAbbleDiv
-      onPress={onPress}
+      onPress={!disabled ? onPress : null}
       style={{ ...styles.container, ...style }}
       _direction="row"
       align="stretch">
       <LinearGradient
         start={start}
         end={end}
-        colors={colors}
+        colors={
+          !disabled ? colors : [constantsColors.black50, constantsColors.gray5]
+        }
         style={styles.linearGradient}>
         <Font
           family="HelveticaNeue"
@@ -102,7 +105,7 @@ export const OutlineButton = ({
       {leftIcon && typeof leftIcon === 'string' ? (
         <Icon
           name={leftIcon}
-          color={fontStyle.color || colors.black100}
+          color={fontStyle.color || constantsColors.black100}
           size={fontStyle.fontSize || 14}
         />
       ) : (
@@ -117,7 +120,7 @@ export const OutlineButton = ({
       {rightIcon && typeof rightIcon === 'string' ? (
         <Icon
           name={rightIcon}
-          color={fontStyle.color || colors.black100}
+          color={fontStyle.color || constantsColors.black100}
           size={fontStyle.fontSize || 16}
         />
       ) : (
@@ -145,7 +148,7 @@ export const Button = ({
       {leftIcon && typeof leftIcon === 'string' ? (
         <Icon
           name={leftIcon}
-          color={fontStyle.color || colors.black100}
+          color={fontStyle.color || constantsColors.black100}
           size={fontStyle.fontSize || 14}
         />
       ) : (
@@ -160,7 +163,7 @@ export const Button = ({
       {rightIcon && typeof rightIcon === 'string' ? (
         <Icon
           name={rightIcon}
-          color={fontStyle.color || colors.black100}
+          color={fontStyle.color || constantsColors.black100}
           size={fontStyle.fontSize || 16}
         />
       ) : (

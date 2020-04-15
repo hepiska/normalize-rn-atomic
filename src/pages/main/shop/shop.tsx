@@ -34,7 +34,6 @@ const y = new Value(0)
 class ShopPage extends React.Component<any, any> {
   componentDidMount() {
     this.props.getPage('shop')
-    this.props.navigation.setParams({ page: 'asadassasd' })
   }
   dimentionConstant = {
     imageHeight: globalDimention.jumbotronSize.height,
@@ -96,17 +95,20 @@ class ShopPage extends React.Component<any, any> {
             scrollEventThrottle={5}>
             {page.section &&
               page.section.map((_section, key) => {
-                return (
-                  <>
-                    {this._renderSection(_section, key)}
-                    {key === 0 && (
-                      <FeaturedCategory
-                        style={{ marginVertical: 12 }}
-                        navigation={navigation}
-                      />
-                    )}
-                  </>
-                )
+                if (key === 0)
+                  return (
+                    <View key={'sections' + key}>
+                      {this._renderSection(_section, key)}
+                      {key === 0 && (
+                        <FeaturedCategory
+                          key={'sections' + key}
+                          style={{ marginVertical: 12 }}
+                          navigation={navigation}
+                        />
+                      )}
+                    </View>
+                  )
+                return this._renderSection(_section, key)
               })}
           </Animated.ScrollView>
         </View>

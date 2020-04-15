@@ -87,6 +87,7 @@ export const nestedScreenMap = (key, params?) => {
   const map = {
     collections: {
       screen: 'Shop',
+      defaultScreen: 'ColectionList',
       params: {
         screen: 'ProductList',
         params,
@@ -94,6 +95,7 @@ export const nestedScreenMap = (key, params?) => {
     },
     categories: {
       screen: 'Shop',
+      defaultScreen: 'CategoryList',
       params: {
         screen: 'ProductList',
         params,
@@ -101,6 +103,7 @@ export const nestedScreenMap = (key, params?) => {
     },
     brands: {
       screen: 'Shop',
+      defaultScreen: 'BrandList',
       params: {
         screen: 'ProductList',
         params,

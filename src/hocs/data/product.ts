@@ -5,19 +5,29 @@ import {
   deleteProductSaved,
 } from '@modules/product-saved/action'
 import { navigate } from '@src/root-navigation'
+import { deepClone } from '@utils/helpers'
 
 const productListMap = (state, ownProps) => {
   const { productId } = ownProps
   const product = state.products.data[productId]
+
+  const _product = deepClone(product)
+
+  if (_product.attributes) {
+    _product.attributes = _product.attributes.map(v => {
+      return state.productAttribute.data[v]
+    })
+  }
+
   const isSaved = !!state.productsSaved.data[productId]
-  if (!product) return {}
+  if (!_product) return {}
   // const product = ownProps.product
   ownProps.onPress = () => {
     navigate('ProductDetail', { productId })
   }
   return {
-    product: product,
-    brand: state.brands.data[product.brand],
+    product: _product,
+    brand: state.brands.data[_product.brand],
     isSaved,
     // brand: product.brand,
     category: state.categories[state.products[productId]],

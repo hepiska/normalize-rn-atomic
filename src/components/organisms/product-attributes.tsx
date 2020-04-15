@@ -7,12 +7,14 @@ import { moveToFront } from '@utils/helpers'
 
 interface ProductAttributesPropsType {
   attributes: any
+  fixAttributesIds?: Array<any>
+  selectedAttributes?: Array<any>
   onAllAttributesSelected(any): void
 }
 
 class ProductAttributes extends Component<ProductAttributesPropsType, any> {
   state = {
-    selectedAttributes: [],
+    selectedAttributes: this.props.selectedAttributes || [],
   }
   onSelectAttributes = atribute => {
     const { selectedAttributes } = this.state
@@ -35,17 +37,19 @@ class ProductAttributes extends Component<ProductAttributesPropsType, any> {
   }
 
   render() {
-    const { attributes } = this.props
+    const { attributes, fixAttributesIds = [] } = this.props
     const data = moveToFront(attributes, (e: any) => e.label === 'Color')
     return (
       <>
-        {data.map((attribute, key) => (
-          <AttributeList
-            key={`product-attribute-${key}`}
-            onAttributesChanged={this.onSelectAttributes}
-            attribute={attribute}
-          />
-        ))}
+        {data
+          .filter(_att => !fixAttributesIds.includes(_att.attribute_id))
+          .map((attribute, key) => (
+            <AttributeList
+              key={`product-attribute-${key}`}
+              onAttributesChanged={this.onSelectAttributes}
+              attribute={attribute}
+            />
+          ))}
       </>
     )
   }

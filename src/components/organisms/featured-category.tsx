@@ -22,7 +22,7 @@ class FeaturedCategory extends React.Component<any, any> {
     const parsedUri = slug.split('/')
     const screenKey = parsedUri[parsedUri.length - 2]
     const screenParams = parsedUri[parsedUri.length - 1]
-    if (screenParams) {
+    if (screenKey) {
       const params = { from: screenKey }
       params[
         Number(screenParams) ? `${screenKey}Id` : `${screenKey}Slug`
@@ -32,8 +32,8 @@ class FeaturedCategory extends React.Component<any, any> {
       console.log(screenKey, params)
       this.props.navigation.navigate(screen.screen, screen.params)
     } else {
-      const screen = nestedScreenMap(screenKey)
-      this.props.navigation.navigate(screen.screen)
+      const screen = nestedScreenMap(screenParams)
+      this.props.navigation.navigate(screen.defaultScreen)
     }
   }
 
@@ -52,7 +52,7 @@ class FeaturedCategory extends React.Component<any, any> {
   }
 
   render() {
-    const { categories, style, navigation } = this.props
+    const { categories, style } = this.props
     const composeStyle = { ...styles.container, ...style }
     const data = [
       { title: 'New Arrival', slug: 'collections/new-arrival' },

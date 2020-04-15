@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Div, Font, PressAbbleDiv, ScrollDiv } from '@components/atoms/basic'
+import colorString from 'color-string'
 import { colors } from '@utils/constants'
 import { futuraTitleFont, helveticaNormalFont } from '../commont-styles'
 import { OutlineButton } from '@components/atoms/button'
@@ -33,7 +34,9 @@ const getAntributesItem = (label: string, data: any, isSelected?: boolean) => {
           style={{ marginRight: 16 }}
           _border={`2px solid ${isSelected ? colors.black100 : colors.black50}`}
           radius="20px"
-          _background={data.metadata}
+          _background={
+            colorString.get(data.metadata) ? data.metadata : 'transparent'
+          }
         />
       )
     case 'size':

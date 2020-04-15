@@ -134,7 +134,9 @@ const NavbarTop: React.SFC<NavbarTopProps> = ({
           </Div>
         ) : (
           <Div justify="center" _width="100%">
-            <Font {...helveticaBlackBold}>{title}</Font>
+            <Font {...helveticaBlackBold} size="18">
+              {title}
+            </Font>
           </Div>
         )}
         <RenderRightContent content={rightContent} rightAction={rightAction} />

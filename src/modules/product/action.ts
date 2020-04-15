@@ -1,5 +1,6 @@
 import { setBrandData } from '@modules/brand/action'
 import { setCategoryData } from '@modules/category/action'
+import { setProductAttributeData } from '@modules/product-attribute/action'
 // import persistor from './reducer'
 import { API } from '../action-types'
 
@@ -58,6 +59,7 @@ export const getProductById = id => ({
       setBrandData(data.entities.brand),
       setCategoryData(data.entities.category),
       setProductData(data.entities.product),
+      setProductAttributeData(data.entities.attribute),
       changeValue({ key: 'productLoading', value: false }),
     ],
   },
@@ -79,6 +81,7 @@ export const productApi = (params, url) => ({
             setBrandData(data.entities.brand),
             setCategoryData(data.entities.category),
             setProductData(data.entities.product),
+            setProductAttributeData(data.entities.attribute),
             setProductOrder({ order: data.result, pagination }),
             setProductsLoading(false),
           ]

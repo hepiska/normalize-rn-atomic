@@ -8,8 +8,8 @@ const Stack = createStackNavigator()
 function InsiderStack() {
   return (
     <Stack.Navigator
-      // initialRouteName={initialPageConfig.shop}
       headerMode="none"
+      mode="card"
       screenOptions={{
         cardStyle: {
           backgroundColor: 'white',

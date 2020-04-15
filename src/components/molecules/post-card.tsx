@@ -90,6 +90,13 @@ class PostListItem extends React.PureComponent<PostListItemType, any> {
     this.props.onLike(this.props.post.id)
   }
 
+  _onUserCliked = () => {
+    navigate('Screens', {
+      screen: 'UserDetail',
+      params: { userId: this.props.user.id },
+    })
+  }
+
   render() {
     const {
       post,
@@ -183,14 +190,7 @@ class PostListItem extends React.PureComponent<PostListItemType, any> {
                 mar="8px 0 0 0"
                 justify="space-between"
                 flexDirection="row">
-                <PressAbbleDiv
-                  flexDirection="row"
-                  onPress={() =>
-                    navigate('Insider', {
-                      screen: 'UserDetail',
-                      params: { userId: user.id },
-                    })
-                  }>
+                <PressAbbleDiv flexDirection="row" onPress={this._onUserCliked}>
                   <ImageAutoSchale
                     source={
                       typeof user.photo_url === 'string'

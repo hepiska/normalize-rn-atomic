@@ -1,5 +1,6 @@
 import * as React from 'react'
 import MainPage from './main'
+import Screens from './screens'
 import ModalPages from './modals'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
@@ -8,6 +9,21 @@ import { getPostLiked } from '@modules/post-liked/action'
 import GlobalErrorAndWarning from '@src/components/molecules/global-error-warning'
 import { createStackNavigator } from '@react-navigation/stack'
 const Stack = createStackNavigator()
+
+const MainScreens = () => (
+  <Stack.Navigator>
+    <Stack.Screen
+      name="Main"
+      component={MainPage}
+      options={{ headerShown: false, animationEnabled: false }}
+    />
+    <Stack.Screen
+      name="Screens"
+      component={Screens}
+      options={{ headerShown: false }}
+    />
+  </Stack.Navigator>
+)
 
 class Pages extends React.Component<any, any> {
   componentDidMount() {
@@ -20,9 +36,12 @@ class Pages extends React.Component<any, any> {
         <GlobalErrorAndWarning />
         <Stack.Navigator initialRouteName="Main" mode="modal">
           <Stack.Screen
-            name="Main"
-            component={MainPage}
-            options={{ headerShown: false }}
+            name="MainScreen"
+            options={{
+              headerShown: false,
+              cardStyle: { backgroundColor: 'transparent' },
+            }}
+            component={MainScreens}
           />
           <Stack.Screen
             name="modals"

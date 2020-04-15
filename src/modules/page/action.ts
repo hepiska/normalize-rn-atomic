@@ -4,6 +4,7 @@ import { setBrandData } from '../brand/action'
 import { setPostData } from '../post/action'
 import { setProductData } from '../product/action'
 import * as schema from '@modules/normalize-schema'
+import { setProductAttributeData } from '../product-attribute/action'
 
 export const pageActionType = {
   SET_PAGE: 'page/SET_PAGE',
@@ -41,6 +42,7 @@ export const getPage = pagename => ({
         setBrandData(data.entities.brand),
         setPostData(data.entities.post),
         setProductData(data.entities.product),
+        setProductAttributeData(data.entities.attribute),
         setPage(data.entities.page),
         setPageLoading({ key: pagename, value: false }),
       ]

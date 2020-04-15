@@ -8,6 +8,12 @@ export const user = new schema.Entity('user')
 
 export const brand = new schema.Entity('brand')
 
+export const attribute = new schema.Entity(
+  'attribute',
+  {},
+  { idAttribute: 'attribute_id' },
+)
+
 export const category = new schema.Entity(
   'category',
   {
@@ -58,6 +64,7 @@ export const category = new schema.Entity(
 export const product = new schema.Entity('product', {
   brand: brand,
   categories: [category],
+  attributes: [attribute],
 })
 
 export const collection = new schema.Entity('collection', {

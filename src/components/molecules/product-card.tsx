@@ -83,6 +83,8 @@ const styles = StyleSheet.create({
     width: 156,
     marginTop: 16,
     marginBottom: 16,
+    borderRadius: 8,
+    overflow: 'hidden',
     paddingHorizontal: 8,
     justifyContent: 'flex-start',
   },
@@ -115,7 +117,10 @@ const ProductCard = ({
   const [selectedVariantId, setSelectedVariantId] = useState(null)
 
   const colorAttributes =
-    product.attributes && product.attributes.find(x => x.label === 'Color')
+    product.attributes &&
+    product.attributes.label &&
+    product.attributes.find(x => x.label === 'Color')
+
   const onColorChange = (attribute, index) => () => {
     const _filteredVariants = product.variants.filter(_variant => {
       return _variant.attribute_values.find(
@@ -144,7 +149,7 @@ const ProductCard = ({
   const image =
     defaultImage ||
     (!!images[random]
-      ? chageImageUri(images[random], { width: 200, height: 300 })
+      ? chageImageUri(images[random], { width })
       : defaultImages.product)
 
   return horizontal ? (
@@ -323,7 +328,7 @@ const ProductCardVertical = ({
   return (
     <TouchableWithoutFeedback onPress={onPress}>
       <Div style={{ ...composeStyle, width }}>
-        <Div _margin="0px 0px 8px" _width="100%">
+        <Div _margin="0px 0px 8px" overflow="visible">
           <AbsDiv
             zIndex="2"
             _width="32px"
@@ -350,6 +355,7 @@ const ProductCardVertical = ({
         <View
           style={{
             // flex: 1,
+            alignItems: 'flex-start',
             width: '100%',
             paddingHorizontal: composeStyle.paddingHorizontal,
           }}>
