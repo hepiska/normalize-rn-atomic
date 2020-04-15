@@ -98,7 +98,7 @@ class ProductListPage extends React.Component<any, any> {
           screen: 'Share',
           params: {
             title: 'The shonet product' + product.name,
-            uri: Config + '/products/' + product.id,
+            uri: Config.SHONET_URI + '/products/' + product.id,
             message: product.description,
           },
         })
