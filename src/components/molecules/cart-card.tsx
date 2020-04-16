@@ -24,6 +24,8 @@ interface CartCardType {
   index: string | number
   isChecked: boolean
   chooseCart: Function
+  removeCart: (data: any) => void
+  changeCartQty: (data: any) => void
 }
 
 const styles = StyleSheet.create({
@@ -168,13 +170,13 @@ class CartCard extends React.PureComponent<CartCardType, any> {
                 justify="space-between"
                 align="center"
                 _margin="16px 0 0 0">
-                <FieldQuantity
+                {/* <FieldQuantity
                   qty={cart.qty}
                   onChangeQty={() => {}}
                   placeholder="1"
                   onIncrease={this._incQty}
                   onDecrease={this._decQty}
-                />
+                /> */}
                 <Div style={{ flexDirection: 'row' }}>
                   {/* remove cart */}
                   <PressAbbleDiv onPress={this._deleteCart}>

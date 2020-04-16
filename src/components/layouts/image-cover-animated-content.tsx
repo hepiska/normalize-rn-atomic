@@ -71,7 +71,7 @@ const ImageCoverContentLayout = ({ y, children, dimentionConstant }) => {
               dimentionConstant.imageHeight - globalDimention.headerHeight - 32,
           },
         ]}>
-        <Animated.View style={[styles.gradient, { height }]}></Animated.View>
+        <Animated.View style={[styles.gradient, { height }]} />
       </View>
       {children}
     </ScrollDiv>

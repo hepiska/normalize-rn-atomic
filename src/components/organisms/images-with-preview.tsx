@@ -4,14 +4,18 @@ import {
   FlatList,
   TouchableWithoutFeedback,
   TouchableOpacity,
+  StyleSheet,
+  View,
   Dimensions,
 } from 'react-native'
+import Modal from 'react-native-modal'
 import { Div, Font } from '@components/atoms/basic'
 import styled from 'styled-components/native'
 import Icon from 'react-native-vector-icons/EvilIcons'
 import ImageAutoSchale from '@components/atoms/image-autoschale'
 import flastlistItemHoc from '@src/hocs/flatlist-item'
-import ImageView from 'react-native-image-viewing'
+import ImageViewer from 'react-native-image-zoom-viewer'
+
 import { colors, globalDimention } from '@src/utils/constants'
 
 interface SizeType {
@@ -29,6 +33,13 @@ interface ImagesWithPreviewsType {
   size: SizeType
   images: Array<ImageType | string>
 }
+
+const AbsDiv = styled(Div)`
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  left: 0;
+`
 
 const IndDiv = styled(Div)`
   position: absolute;
@@ -77,16 +88,19 @@ class ImagesWithPreviews extends React.Component<ImagesWithPreviewsType, any> {
     </Div>
   )
   _headerComp = () => (
-    <TouchableWithoutFeedback onPress={this._closeModal}>
-      <Div _width="100%" align="flex-start" _padding="20px">
-        <Icon name="close" size={18} color={colors.gray1} />
-      </Div>
-    </TouchableWithoutFeedback>
+    <AbsDiv>
+      <TouchableWithoutFeedback onPress={this._closeModal}>
+        <Div _width="100%" align="flex-start" _padding="20px">
+          <Icon name="close" size={24} color={colors.black100} />
+        </Div>
+      </TouchableWithoutFeedback>
+    </AbsDiv>
   )
 
   render() {
     const { size, images } = this.props
     const { isVisible, selectedImage } = this.state
+    const fullScreenImage = images.map(_img => ({ url: _img.uri }))
     return (
       <Div _width={size.width} _height={size.height}>
         <FlatList
@@ -99,17 +113,15 @@ class ImagesWithPreviews extends React.Component<ImagesWithPreviewsType, any> {
           data={images}
           renderItem={this._renderItem}
         />
-        <ImageView
-          HeaderComponent={this._headerComp}
-          doubleTapToZoomEnabled
-          backgroundColor="white"
-          FooterComponent={this._footerComp}
-          swipeToCloseEnabled
-          onRequestClose={this._closeModal}
-          images={this._flatImates(images)}
-          visible={isVisible}
-          imageIndex={selectedImage}
-        />
+        <Modal isVisible={isVisible} style={{ margin: 0 }}>
+          <ImageViewer
+            backgroundColor="white"
+            enableSwipeDown
+            renderHeader={this._headerComp}
+            imageUrls={fullScreenImage}
+            onSwipeDown={this._closeModal}
+          />
+        </Modal>
       </Div>
     )
   }
