@@ -36,6 +36,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    flexDirection: 'row',
   },
   disabled: {
     borderRadius: 8,
@@ -62,6 +63,7 @@ export const GradientButton = ({
   fontStyle,
   disabled = false,
   title,
+  leftIcon,
 }: GradienButtonType) => {
   return (
     <PressAbbleDiv
@@ -76,6 +78,15 @@ export const GradientButton = ({
           !disabled ? colors : [constantsColors.black50, constantsColors.gray5]
         }
         style={styles.linearGradient}>
+        {leftIcon && typeof leftIcon === 'string' ? (
+          <Icon
+            name={leftIcon}
+            color={fontStyle.color || constantsColors.black100}
+            size={fontStyle.fontSize || 14}
+          />
+        ) : (
+          leftIcon
+        )}
         <Font
           family="HelveticaNeue"
           size="14px"

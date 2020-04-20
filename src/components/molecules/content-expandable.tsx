@@ -10,7 +10,8 @@ const { Value, timing, interpolate, concat } = Animated
 
 interface ContentExpandableType {
   id: string
-  title: string
+  title: any
+  rightTitle?: any
   content?: string
   isFirst?: boolean
 }
@@ -52,7 +53,7 @@ class ContentExpandable extends React.Component<ContentExpandableType, any> {
   }
 
   render() {
-    const { id, title, content, isFirst } = this.props
+    const { id, title, rightTitle, content, isFirst } = this.props
     const rotation = interpolate(this.iconAnimatedValue, {
       inputRange: [0, 1],
       outputRange: [0, 180],
@@ -70,14 +71,21 @@ class ContentExpandable extends React.Component<ContentExpandableType, any> {
           _width="100%"
           justify="space-between"
           padd="32px 0px">
-          <Font type="Futura" weight="bold" size="18px">
-            {capilEachWord(title.replace('-', ' '))}
-          </Font>
-          <PressAbbleDiv onPress={this.onExpandChange} id={`${id}-button`}>
-            <Animated.View style={{ transform }}>
-              <Icon name="chevron-down" size={16} />
-            </Animated.View>
-          </PressAbbleDiv>
+          {typeof title === 'string' ? (
+            <Font type="Futura" weight="bold" size="18px">
+              {capilEachWord(title.replace('-', ' '))}
+            </Font>
+          ) : (
+            title
+          )}
+          <Div flexDirection="row">
+            {rightTitle && rightTitle}
+            <PressAbbleDiv onPress={this.onExpandChange} id={`${id}-button`}>
+              <Animated.View style={{ transform }}>
+                <Icon name="chevron-down" size={16} />
+              </Animated.View>
+            </PressAbbleDiv>
+          </Div>
         </Div>
         <Animated.ScrollView
           style={{ width: '100%', height: height, overflow: 'scroll' }}>

@@ -204,7 +204,10 @@ class CartCard extends React.PureComponent<CartCardType, any> {
           </Div>
         </Div>
 
-        <Div flexDirection="row" _margin="16px 0 24px 0">
+        <Div
+          flexDirection="row"
+          _margin="16px 0 24px 0"
+          justifyContent="flex-start">
           {variant && variant.attribute_values ? (
             variant.attribute_values?.map((_attribute, index) => {
               return (

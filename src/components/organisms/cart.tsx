@@ -8,11 +8,14 @@ import {
   helveticaBlackBold,
 } from '@components/commont-styles'
 import CartCard from '@components/molecules/cart-card'
+import CartEmptyState from '@components/molecules/cart-empty-state'
+import TotalPayCart from '@components/molecules/total-pay-cart'
 import { cartListData } from '@hocs/data/cart'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { removeCart } from '@modules/cart/action'
 import IconFa from 'react-native-vector-icons/FontAwesome5'
+import { navigate } from '@src/root-navigation'
 
 const styles = StyleSheet.create({
   solidDivider: {
@@ -61,6 +64,9 @@ class Cart extends Component<any, any> {
       carts.map(cart => {
         removeCart(cart)
       })
+    this.setState({
+      selectedVariant: [],
+    })
   }
 
   _chooseAll = () => {
@@ -183,8 +189,24 @@ class Cart extends Component<any, any> {
     )
   }
 
+  _emptyComponent = () => {
+    return (
+      <View {...styles.cartMargin}>
+        <CartEmptyState />
+      </View>
+    )
+  }
+
+  _onCheckout = (item, totalPrice) => () => {
+    navigate('Screens', {
+      screen: 'Checkout',
+      params: { cartsId: item, totalPrice: totalPrice },
+    })
+  }
+
   render() {
     const { carts, footer, data } = this.props
+    const { selectedVariant } = this.state
 
     return (
       <>
@@ -196,6 +218,12 @@ class Cart extends Component<any, any> {
           ListHeaderComponent={this._header}
           stickyHeaderIndices={[0]}
           ListFooterComponent={footer && footer}
+          ListEmptyComponent={this._emptyComponent}
+        />
+        <TotalPayCart
+          items={selectedVariant}
+          buttonText="Checkout"
+          onCheckout={this._onCheckout}
         />
       </>
     )

@@ -54,6 +54,8 @@ const styles = StyleSheet.create({
     width: 32,
     borderLeftWidth: 0,
     borderRightWidth: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 })
 
@@ -79,7 +81,7 @@ const FieldQuantity = ({
           <Icon name="minus" size={8} color={colors.black60} />
         </Div>
       </PressAbbleDiv>
-      <TextInput
+      {/* <TextInput
         value={typeof qty === 'number' ? qty.toString() : qty}
         style={{ textAlign: 'center' }}
         onChangeText={onChangeQty}
@@ -87,7 +89,10 @@ const FieldQuantity = ({
         {...inputProps}
         {...helveticaBlackFont12}
         {...styles.input}
-      />
+      /> */}
+      <Div {...styles.input}>
+        <Font {...helveticaBlackFont12}>{qty}</Font>
+      </Div>
       <PressAbbleDiv onPress={_onInc}>
         <Div {...styles.rightButton} {...styles.button}>
           <Icon name="plus" size={8} color={colors.black60} />
