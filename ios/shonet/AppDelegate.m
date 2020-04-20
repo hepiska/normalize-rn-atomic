@@ -6,17 +6,22 @@
  */
 
 #import "AppDelegate.h"
-
+#import "ReactNativeConfig.h"
+#import <GoogleMaps/GoogleMaps.h>
 #import <React/RCTBridge.h>
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
 
+@import GoogleMaps;
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-  
+  NSString *gmapApi = [ReactNativeConfig envFor:@"GOOGLE_MAP_KEY"];
+
+  [GMSServices provideAPIKey:gmapApi];
+
   [[FBSDKApplicationDelegate sharedInstance] application:application
     didFinishLaunchingWithOptions:launchOptions];
   

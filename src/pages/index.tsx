@@ -8,10 +8,12 @@ import { getProductSaved } from '@modules/product-saved/action'
 import { getPostLiked } from '@modules/post-liked/action'
 import GlobalErrorAndWarning from '@src/components/molecules/global-error-warning'
 import { createStackNavigator } from '@react-navigation/stack'
+import InitialPage from './page-initial.config'
+
 const Stack = createStackNavigator()
 
 const MainScreens = () => (
-  <Stack.Navigator>
+  <Stack.Navigator initialRouteName={InitialPage.index}>
     <Stack.Screen
       name="Main"
       component={MainPage}
@@ -34,7 +36,7 @@ class Pages extends React.Component<any, any> {
     return (
       <>
         <GlobalErrorAndWarning />
-        <Stack.Navigator initialRouteName="Main" mode="modal">
+        <Stack.Navigator mode="modal">
           <Stack.Screen
             name="MainScreen"
             options={{

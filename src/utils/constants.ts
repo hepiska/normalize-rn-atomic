@@ -53,6 +53,10 @@ export const colors = {
   black100: '#1A1A1A',
 }
 
+export const regex: any = {
+  phoneNumber: /^(^\+62\s?|^0)(\d{3,4}){2}\d{3,4}$/,
+  email: /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/,
+}
 export const images = {
   product: require('@assets/placeholder/placeholder2.jpg'),
 }

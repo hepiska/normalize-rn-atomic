@@ -1,4 +1,5 @@
 import { colors } from '@utils/constants'
+import { StyleSheet } from 'react-native'
 
 export const futuraBlackFont24 = {
   size: 24,
@@ -77,6 +78,43 @@ export const helveticaBlackTitleBold = {
   color: colors.black100,
 }
 
+export const formStyles = StyleSheet.create({
+  title: {
+    fontFamily: 'Futura',
+    fontWeight: '500',
+    color: colors.font1,
+    marginVertical: 12,
+    fontSize: 24,
+  },
+  field: {
+    height: 46,
+    marginVertical: 12,
+  },
+  text: {
+    fontFamily: 'Helvetica Neue',
+    color: colors.black80,
+    fontSize: 14,
+  },
+  info: {
+    fontFamily: 'Helvetica Neue',
+    color: colors.black60,
+    fontSize: 14,
+  },
+  buttonText: {
+    color: colors.white,
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
+  button: {
+    width: '100%',
+    height: 46,
+    marginVertical: 16,
+    backgroundColor: '#8131E2',
+  },
+  distance: {
+    marginVertical: 12,
+  },
+})
 export const helveticaTitleFont = {
   size: 18,
   type: 'Helvetica',

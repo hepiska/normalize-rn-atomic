@@ -1,5 +1,7 @@
 import Config from 'react-native-config'
+import { ToastAndroid, Alert, Platform } from 'react-native'
 import { uriSchreenMap } from './constants'
+import { PERMISSIONS, check, request } from 'react-native-permissions'
 
 const currencyNum = inp => {
   const a = inp
@@ -91,4 +93,34 @@ export const splitCamelCaseToString = s => {
       return p.charAt(0).toUpperCase() + p.slice(1)
     })
     .join(' ')
+}
+
+export const showAlert = (message: string) => {
+  if (Platform.OS === 'android') {
+    ToastAndroid.show(message, ToastAndroid.SHORT)
+  } else {
+    Alert.alert(message)
+  }
+}
+
+export const checkLocationPermit = async (): Promise<boolean> => {
+  try {
+    if (Platform.OS === 'ios') {
+      let isGranted = await check(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE)
+      if (isGranted !== 'granted') {
+        isGranted = await request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE)
+      }
+      return isGranted === 'granted'
+    }
+    if (Platform.OS === 'android') {
+      let isGranted = await check(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION)
+      if (isGranted !== 'granted') {
+        isGranted = await request(PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION)
+      }
+      return isGranted === 'granted'
+    }
+    return false
+  } catch (error) {
+    throw error
+  }
 }

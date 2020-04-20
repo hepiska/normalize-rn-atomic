@@ -3,11 +3,12 @@ import { ViewStyle, TextStyle, StyleSheet } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import { Font, PressAbbleDiv } from '@components/atoms/basic'
 import Icon from 'react-native-vector-icons/FontAwesome5'
-
+import CirleLoader from '@src/components/atoms/loaders/cirle'
 import { colors as constantsColors } from '@src/utils/constants'
 
 interface ButtonType {
   title: string
+  loading?: boolean
   fontStyle?: TextStyle
   leftIcon?: ReactElement | string
   rightIcon?: ReactElement | string
@@ -59,6 +60,7 @@ export const GradientButton = ({
   end,
   colors,
   style,
+  loading,
   onPress,
   fontStyle,
   disabled = false,
@@ -67,7 +69,7 @@ export const GradientButton = ({
 }: GradienButtonType) => {
   return (
     <PressAbbleDiv
-      onPress={!disabled ? onPress : null}
+      onPress={!loading && !disabled ? onPress : null}
       style={{ ...styles.container, ...style }}
       _direction="row"
       align="stretch">
@@ -75,7 +77,9 @@ export const GradientButton = ({
         start={start}
         end={end}
         colors={
-          !disabled ? colors : [constantsColors.black50, constantsColors.gray5]
+          !disabled
+            ? colors
+            : [constantsColors.black60, constantsColors.black60]
         }
         style={styles.linearGradient}>
         {leftIcon && typeof leftIcon === 'string' ? (
@@ -87,13 +91,17 @@ export const GradientButton = ({
         ) : (
           leftIcon
         )}
-        <Font
-          family="HelveticaNeue"
-          size="14px"
-          style={fontStyle}
-          {...fontStyle}>
-          {title}
-        </Font>
+        {loading ? (
+          <CirleLoader style={{ width: 24, height: 24 }} size={24} />
+        ) : (
+          <Font
+            family="HelveticaNeue"
+            size="14px"
+            style={fontStyle}
+            {...fontStyle}>
+            {title}
+          </Font>
+        )}
       </LinearGradient>
     </PressAbbleDiv>
   )
@@ -102,6 +110,8 @@ export const GradientButton = ({
 export const OutlineButton = ({
   style,
   title,
+  disabled,
+  loading,
   fontStyle = {},
   leftIcon,
   rightIcon,
@@ -112,7 +122,7 @@ export const OutlineButton = ({
       padd="8px"
       _direction="row"
       style={[styles.outline, style]}
-      onPress={onPress}>
+      onPress={!loading && !disabled ? onPress : null}>
       {leftIcon && typeof leftIcon === 'string' ? (
         <Icon
           name={leftIcon}
@@ -122,12 +132,17 @@ export const OutlineButton = ({
       ) : (
         leftIcon
       )}
-      <Font
-        family="HelveticaNeue"
-        size="14px"
-        style={{ marginLeft: 8, ...fontStyle }}>
-        {title}
-      </Font>
+      {loading ? (
+        <CirleLoader name="spinner" size={24} />
+      ) : (
+        <Font
+          family="HelveticaNeue"
+          size="14px"
+          style={{ marginLeft: 8, ...fontStyle }}>
+          {title}
+        </Font>
+      )}
+
       {rightIcon && typeof rightIcon === 'string' ? (
         <Icon
           name={rightIcon}
@@ -145,6 +160,7 @@ export const Button = ({
   style,
   title,
   fontStyle = {},
+  loading,
   leftIcon,
   onPress,
   rightIcon,
@@ -154,8 +170,8 @@ export const Button = ({
     <PressAbbleDiv
       padd="8px"
       _direction="row"
-      style={!disabled ? [styles.fill, style] : [style, styles.disabled]}
-      onPress={!disabled ? onPress : null}>
+      onPress={!loading && !disabled ? onPress : null}
+      style={!disabled ? [styles.fill, style] : [style, styles.disabled]}>
       {leftIcon && typeof leftIcon === 'string' ? (
         <Icon
           name={leftIcon}
@@ -165,12 +181,21 @@ export const Button = ({
       ) : (
         leftIcon
       )}
-      <Font
-        family="HelveticaNeue"
-        size="14px"
-        style={{ marginLeft: 8, ...fontStyle }}>
-        {title}
-      </Font>
+      {loading ? (
+        <CirleLoader
+          style={{ width: 20, height: 20 }}
+          name="spinner"
+          size={24}
+        />
+      ) : (
+        <Font
+          family="HelveticaNeue"
+          size="14px"
+          style={{ marginLeft: 8, ...fontStyle }}>
+          {title}
+        </Font>
+      )}
+
       {rightIcon && typeof rightIcon === 'string' ? (
         <Icon
           name={rightIcon}

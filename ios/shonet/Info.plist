@@ -35,6 +35,14 @@
 	<string>2034068290174004</string>
 	<key>FacebookDisplayName</key>
 	<string>The Shonet</string>
+  <key>NSCameraUsageDescription</key>
+  <string>The Shonet need access for the camera so that yout can capture your receipt directly from your camera</string>
+  <key>NSLocationAlwaysUsageDescription</key>
+  <string>The Shonet need access for the location.
+  </string>
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>The Shonet need access for the location .
+  </string>  
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>fbapi</string>

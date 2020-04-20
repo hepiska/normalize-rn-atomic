@@ -6,7 +6,11 @@ export const useFormValidator = (schema, callback, reduxProps?: any) => {
     {},
     ...Object.keys(schema).map(key => ({
       [key]: {
-        value: reduxProps ? reduxProps.reduxState[key] : '',
+        value: reduxProps
+          ? reduxProps.reduxState[key]
+          : schema[key].initialValue
+          ? schema[key].initialValue
+          : '',
         error: '',
       },
     })),

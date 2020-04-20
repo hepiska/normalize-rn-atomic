@@ -19,28 +19,33 @@ import productSavedActionType from './product-saved/reducer'
 import postLikedActionType from './post-liked/reducer'
 import commentReducer from './comment/reducer'
 import productAttributeReducer from './product-attribute/reducer'
+import addressReducer from './address/reducer'
 
 const combinedReducer: Reducer<any> = combineReducers({
-  router: routerReducer,
-  user: userReducer,
-  lookbooks: lookbookReducer,
-  categories: categoryReducer,
-  brands: brandReducer,
-  products: productsReducer,
-  topPost: topPostReducer,
-  uiInteraction: uiInteracrionReducer,
-  productFilter: productFilterReducer,
-  post: postReducer,
-  page: pageReducer,
-  sort: sortReducer,
-  global: globalReducer,
-  collection: collectionReducer,
+  address: addressReducer,
   auth: authReducer,
+  brands: brandReducer,
   carts: cartReducer,
-  productsSaved: productSavedActionType,
-  postsLiked: postLikedActionType,
+  categories: categoryReducer,
+  collection: collectionReducer,
   comments: commentReducer,
+  global: globalReducer,
+  lookbooks: lookbookReducer,
+  page: pageReducer,
+  post: postReducer,
+  postsLiked: postLikedActionType,
+
+  productFilter: productFilterReducer,
+  productsSaved: productSavedActionType,
+  products: productsReducer,
   productAttribute: productAttributeReducer,
+  router: routerReducer,
+  sort: sortReducer,
+  topPost: topPostReducer,
+
+  uiInteraction: uiInteracrionReducer,
+
+  user: userReducer,
 })
 
 export default combinedReducer

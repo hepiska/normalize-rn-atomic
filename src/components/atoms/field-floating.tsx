@@ -40,6 +40,7 @@ type TextInputProps = React.ComponentPropsWithRef<typeof NativeTextInput> & {
   selectionColor?: string
   underlineColor?: string
   dense?: boolean
+  desc?: string
   multiline?: boolean
   numberOfLines?: number
   onFocus?: (args: any) => void
@@ -593,6 +594,7 @@ class TextInputOutlined extends React.Component<ChildTextInputProps, {}> {
       innerRef,
       onFocus,
       onBlur,
+      desc,
       onChangeText,
       onLayoutAnimatedText,
       rightIcon,
@@ -737,16 +739,25 @@ class TextInputOutlined extends React.Component<ChildTextInputProps, {}> {
                 }}>
                 {rest.value ? (
                   <>
-                    <Font
-                      size={12}
-                      color={colors.black70}
-                      _margin="0px 0px 1px">
-                      {label}
-                    </Font>
+                    <View
+                      style={{
+                        position: 'absolute',
+                        top: -8,
+                        left: 10,
+                        paddingHorizontal: 2,
+                        backgroundColor: 'white',
+                      }}>
+                      <Font
+                        size={12}
+                        color={colors.black70}
+                        _margin="0px 0px 1px">
+                        {label}
+                      </Font>
+                    </View>
+
                     <Font
                       size={16}
                       color={colors.black100}
-                      weight="bold"
                       type="HelveticaNeue">
                       {rest.value}
                     </Font>
@@ -806,11 +817,21 @@ class TextInputOutlined extends React.Component<ChildTextInputProps, {}> {
         </View>
         {!!error && (
           <Font
+            size={10}
             color={colors.redBookmark}
             _margin="8px 4px 0px"
             weight="bold"
             type="HelveticaNeue">
             {error}
+          </Font>
+        )}
+        {desc && !error && (
+          <Font
+            size={10}
+            color={colors.black70}
+            _margin="8px 4px 0px"
+            type="HelveticaNeue">
+            {desc}
           </Font>
         )}
       </View>

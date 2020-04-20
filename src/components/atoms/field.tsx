@@ -1,5 +1,11 @@
 import React, { ReactElement } from 'react'
-import { ViewStyle, StyleSheet, TextInput, Platform } from 'react-native'
+import {
+  ViewStyle,
+  StyleSheet,
+  TextInput,
+  Platform,
+  TextInputProps,
+} from 'react-native'
 import { Div } from '@components/atoms/basic'
 import { colors } from '@utils/constants'
 

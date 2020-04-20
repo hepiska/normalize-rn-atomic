@@ -20,8 +20,12 @@ export const Div = styled.View`
     _width ? `width:${_width};` : wdth ? `width:${wdth};` : ''}
   flex-wrap: ${({ wrap }) => wrap || 'nowrap'};
   z-index: ${({ zIndex }) => zIndex || '0'};
-  border-radius: ${({ radius, borderRadius }) =>
-    borderRadius || radius || '0px'};
+  ${({ radius, borderRadius }) =>
+    radius
+      ? `border-radius:${radius};`
+      : borderRadius
+      ? `border-radius:${borderRadius};`
+      : ''}
   flex-direction: ${({ flexDirection, _direction }) =>
     flexDirection || _direction || 'column'};
   align-items: ${({ align, alignItems }) => alignItems || align || 'center'};

@@ -6,6 +6,7 @@ import {
   Platform,
   SafeAreaView,
   View,
+  ViewStyle,
   StyleSheet,
 } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
@@ -54,7 +55,7 @@ const { width } = Dimensions.get('screen')
 interface NavbarTopProps {
   title?: string
   subtitle?: string
-  style?: View
+  style?: ViewStyle
   onBeforeBack?: () => void
   leftContent?: Array<string>
   rightContent?: Array<string>
@@ -108,7 +109,7 @@ const RenderRightContent = ({ content, rightAction }) => {
 }
 
 const NavbarTop: React.SFC<NavbarTopProps> = ({
-  style,
+  style = {},
   title,
   subtitle,
   leftContent,
@@ -119,7 +120,7 @@ const NavbarTop: React.SFC<NavbarTopProps> = ({
 }) => {
   return (
     <SafeAreaView style={styles.saveArea}>
-      <View style={styles.container}>
+      <View style={{ ...styles.container, ...style }}>
         <RenderLeftContent
           content={leftContent}
           onBeforeBack={onBeforeBack}

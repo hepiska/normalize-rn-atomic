@@ -1,7 +1,6 @@
 import React from 'react'
 import { StyleSheet, ViewStyle, View } from 'react-native'
 import { connect } from 'react-redux'
-import RNTooltips from 'react-native-tooltips'
 import { Font } from '@components/atoms/basic'
 import {
   helveticaBlackFont12,
@@ -125,14 +124,6 @@ class ItemSummaryCart extends React.PureComponent<ItemSummaryCartType, any> {
             />
             <View style={{ marginLeft: 8 }}>
               <IconMi name="help" size={14} color={colors.black100} />
-              <RNTooltips
-                text={'Long Press Description'}
-                visible
-                target={
-                  <IconMi name="help" size={14} color={colors.black100} />
-                }
-                // parent={this.state.parent}
-              />
             </View>
           </View>
         </View>
