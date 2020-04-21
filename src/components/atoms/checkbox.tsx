@@ -30,7 +30,7 @@ export const Checkbox = ({
           size={16}
           color={colors.black100}
         />
-        {text && <Font {...fontStyle}>{text}</Font>}
+        {text && <Font style={{ ...fontStyle }}>{text}</Font>}
       </View>
     </PressAbbleDiv>
   )

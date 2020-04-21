@@ -3,10 +3,8 @@ import {
   View,
   Text,
   StyleSheet,
-  Dimensions,
   ScrollView,
   TouchableOpacity,
-  Button,
 } from 'react-native'
 import NavbarTop from '@components/molecules/navbar-top'
 import Icon from 'react-native-vector-icons/FontAwesome'
@@ -15,7 +13,12 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import TextInputOutline from '@src/components/atoms/field-floating'
 import { GradientButton } from '@components/atoms/button'
-import { setnewaddress } from '@modules/address/action'
+import {
+  addNewAddress,
+  editAddress,
+  getOneUserAddressById,
+  setAddressLoading,
+} from '@modules/address/action'
 import CirleLoader from '@src/components/atoms/loaders/cirle'
 import { Checkbox } from '@components/atoms/checkbox'
 import PickerPopup from '@components/molecules/picker'
@@ -63,6 +66,21 @@ const regionMap = {
   },
 }
 
+const mapaddressValue = addressRes => {
+  const selectedLocation = {}
+  if (addressRes) {
+    Object.keys(addressRes).forEach(key => {
+      if (typeof addressRes[key] === 'object') {
+        selectedLocation[`${key}_id`] = addressRes[key].id
+      } else {
+        selectedLocation[key] = addressRes[key]
+      }
+    })
+  }
+
+  return selectedLocation
+}
+
 const getLocation = (selectedLevel, id) => {
   return shonetLocation({
     url: `${regionMap[selectedLevel].current}/${id}/${regionMap[selectedLevel].child}`,
@@ -82,8 +100,11 @@ const styles = StyleSheet.create({
   },
 })
 
-const mapDataName = (data, selectedValue) =>
-  data.find(_dat => _dat.name === selectedValue)?.label
+const mapDataName = (data, selectedValue) => {
+  return data.find(_dat => _dat.name === selectedValue)
+    ? data.find(_dat => _dat.name === selectedValue).label
+    : ''
+}
 
 const AddAddressManual = props => {
   let pickerRef = null
@@ -92,6 +113,7 @@ const AddAddressManual = props => {
     countries: 360,
   })
   const [mapsModalVisible, setModalVisible] = useState(false)
+  const [initialAddress, setInitialAddress] = useState<any>({})
   const [locationOptions, setLocationOptions] = useState<any>({})
 
   const getData = (activeLocation, id) => {
@@ -108,17 +130,61 @@ const AddAddressManual = props => {
   }
 
   useEffect(() => {
+    const { route, setAddressLoading, getOneUserAddressById } = props
+    setAddressLoading(false)
+    if (
+      route.params?.type &&
+      route.params.type === 'edit' &&
+      route.params.addressId
+    ) {
+      getOneUserAddressById(route.params.addressId)
+    }
     if (activeRegionLevel !== 'villages')
       getData(activeRegionLevel, selectedLocation[activeRegionLevel])
   }, [])
 
-  const _onSubmit = ({ isValid, state }) => {
+  useEffect(() => {
+    if (props.address) {
+      const newInitialData = {}
+      Object.keys(props.address).forEach(key => {
+        if (typeof props.address[key] === 'object') {
+          newInitialData[`${key}_id`] = {}
+          newInitialData[`${key}_id`][props.address[key].id] =
+            props.address[key].name || props.address[key].code
+        }
+      })
+      setInitialAddress(newInitialData)
+    }
+  }, [props.address])
+
+  const _onSubmit = async ({ isValid, state }) => {
+    const { route, addNewAddress, navigation, editAddress } = props
+    // const result = {}
+    // Object.keys(state).forEach(key => {
+    //   result[key] = state[key].value
+    // })
+    // await addNewAddress(result)
+
     if (isValid) {
       const result = {}
       Object.keys(state).forEach(key => {
-        result[key] = state[key].value
+        if (key === 'is_primary') {
+          result[key] = Boolean(state[key].value)
+        } else {
+          result[key] = state[key].value
+        }
       })
-      console.log(result)
+
+      if (
+        route.params?.type &&
+        route.params.type === 'edit' &&
+        route.params.addressId
+      ) {
+        editAddress(route.params.addressId, result)
+      } else {
+        await addNewAddress(result)
+      }
+      navigation.goBack()
     }
   }
 
@@ -175,10 +241,14 @@ const AddAddressManual = props => {
       },
     },
     _onSubmit,
+    {
+      reduxState: mapaddressValue(props.address),
+    },
   )
 
   const onSelect = id => {
     const newSelectedLocation = { ...selectedLocation }
+    setInitialAddress({})
     newSelectedLocation[activeRegionLevel] = id
     setSelectedLocation(newSelectedLocation)
     if (activeRegionLevel !== 'villages') getData(activeRegionLevel, id)
@@ -210,211 +280,245 @@ const AddAddressManual = props => {
   }
   const pickerOptions = locationOptions[activeRegionLevel] || []
   const pickerTitle = `Choose ${regionMap[activeRegionLevel].name}`
+  const title =
+    props.route.params?.type === 'edit' ? 'Edit Address' : 'Add New Address'
 
-  return (
-    <>
-      <NavbarTop
-        style={styles.header}
-        leftContent={['back']}
-        title="Add New Address"
-      />
-      <PickerPopup
-        pickerRef={e => (pickerRef = e)}
-        value={null}
-        title={pickerTitle}
-        items={pickerOptions}
-        onValueChange={(value, index, data) => {
-          onSelect(data.name)
-          handleOnChange(regionMap[activeRegionLevel].key)(data.name)
-        }}
-      />
-      <MapModal
-        visible={mapsModalVisible}
-        initialLocation={{
-          latitude: state.latitude.value || -6.117664,
-          longitude: state.longitude.value || 106.906349,
-        }}
-        title="Add New Address"
-        closeModal={_closeModal}
-        onLocationApplied={_locationApplied}
-      />
-      <ScrollView style={{ flex: 1, paddingHorizontal: 16 }}>
-        <Text style={formStyles.title}>Recepient Information</Text>
-        <TextInputOutline
-          label="Recepient Name"
-          style={formStyles.field}
-          value={state.recipient_name.value}
-          onChangeText={handleOnChange('recipient_name')}
-          error={state.recipient_name.error}
-          autoCapitalize="none"
-        />
-        <TextInputOutline
-          label="email"
-          style={formStyles.field}
-          value={state.email.value}
-          onChangeText={handleOnChange('email')}
-          error={state.email.error}
-          autoCapitalize="none"
-        />
-        <TextInputOutline
-          label="Phone Number"
-          keyboardType="numeric"
-          style={formStyles.field}
-          value={state.phone_number.value}
-          onChangeText={handleOnChange('phone_number')}
-          error={state.phone_number.error}
-          autoCapitalize="none"
-        />
-        <Text style={formStyles.title}>Shipping Address</Text>
-        <TouchableOpacity
-          style={{ width: '100%' }}
-          onPress={() => {
-            SetActiveRegionLevel('regions')
-            pickerRef.show()
-          }}>
-          <TextInputOutline
-            label="Province"
-            value={mapDataName(
-              locationOptions.regions || [],
-              state.region_id.value,
-            )}
-            error={state.region_id.error}
-            style={formStyles.field}
-            disabled
-            rightIcon={
-              <Icon name={'caret-down'} size={22} color={colors.black80} />
-            }
-          />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={{ width: '100%' }}
-          onPress={() => {
-            SetActiveRegionLevel('cities')
-            pickerRef.show()
-          }}>
-          <TextInputOutline
-            label="City"
-            value={mapDataName(
-              locationOptions.cities || [],
-              state.city_id.value,
-            )}
-            error={state.city_id.error}
-            style={formStyles.field}
-            disabled
-            rightIcon={
-              <Icon name={'caret-down'} size={22} color={colors.black80} />
-            }
-          />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={{ width: '100%' }}
-          onPress={() => {
-            SetActiveRegionLevel('districts')
-            pickerRef.show()
-          }}>
-          <TextInputOutline
-            style={formStyles.field}
-            label="District"
-            value={mapDataName(
-              locationOptions.districts || [],
-              state.district_id.value,
-            )}
-            error={state.district_id.error}
-            disabled
-            rightIcon={
-              <Icon name={'caret-down'} size={22} color={colors.black80} />
-            }
-          />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={{ width: '100%' }}
-          onPress={() => {
-            SetActiveRegionLevel('villages')
-            pickerRef.show()
-          }}>
-          <TextInputOutline
-            style={formStyles.field}
-            label="Sub District"
-            value={mapDataName(
-              locationOptions.villages || [],
-              state.village_id.value,
-            )}
-            error={state.district_id.error}
-            disabled
-            rightIcon={
-              <Icon name={'caret-down'} size={22} color={colors.black80} />
-            }
-          />
-        </TouchableOpacity>
-        <TextInputOutline
-          style={formStyles.field}
-          label="Zip Code"
-          value={locationOptions.zip_code?.code}
-          error={state.zip_code_id.error}
-          disabled
-        />
-        <TextInputOutline
-          style={formStyles.field}
-          label="Address Detail"
-          desc="Example: Street name, House Number, Blok, RT/RW, Building level, etc"
-          value={state.line_1.value}
-          error={state.line_1.error}
-          onChangeText={handleOnChange('line_1')}
-          autoCapitalize="none"
-        />
-        <TextInputOutline
-          style={formStyles.field}
-          label="Address Label"
-          desc="Example: Home, office, apartment"
-          value={state.label.value}
-          error={state.label.error}
-          onChangeText={handleOnChange('label')}
-          autoCapitalize="none"
-        />
-        <MapThumbnail
-          desc="For express delivery"
-          onPress={() => {
-            setModalVisible(true)
+  return useMemo(
+    () => (
+      <>
+        <NavbarTop style={styles.header} leftContent={['back']} title={title} />
+        <PickerPopup
+          pickerRef={e => (pickerRef = e)}
+          value={null}
+          title={pickerTitle}
+          items={pickerOptions}
+          onValueChange={(value, index, data) => {
+            onSelect(data.name)
+            handleOnChange(regionMap[activeRegionLevel].key)(data.name)
           }}
-          style={formStyles.distance}
-          location={{
+        />
+        <MapModal
+          visible={mapsModalVisible}
+          initialLocation={{
             latitude: state.latitude.value || -6.117664,
             longitude: state.longitude.value || 106.906349,
           }}
+          title={title}
+          closeModal={_closeModal}
+          onLocationApplied={_locationApplied}
         />
-        <View
-          style={{
-            flex: 1,
-            justifyContent: 'flex-start',
-            marginBottom: 16,
-            alignItems: 'center',
-            flexDirection: 'row',
-          }}>
-          <Checkbox
-            isChecked={state.is_primary.value}
-            onPress={() =>
-              handleOnChange('is_primary')(!state.is_primary.value)
-            }
+        <ScrollView style={{ flex: 1, paddingHorizontal: 16 }}>
+          <Text style={formStyles.title}>Recepient Information</Text>
+          <TextInputOutline
+            label="Recepient Name"
+            style={formStyles.field}
+            value={state.recipient_name.value}
+            onChangeText={handleOnChange('recipient_name')}
+            error={state.recipient_name.error}
+            autoCapitalize="none"
           />
-          <Text
-            style={{ ...styles.smallFont, marginLeft: 8, marginVertical: 0 }}>
-            Set as primary address
-          </Text>
-        </View>
-        <GradientButton
-          onPress={handleOnSubmit}
-          loading={props.loading}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 0 }}
-          colors={['#3067E4', '#8131E2']}
-          title="Add and Use Address"
-          fontStyle={formStyles.buttonText}
-          style={formStyles.button}
-          disabled={disable}
-        />
-      </ScrollView>
-    </>
+          <TextInputOutline
+            label="email"
+            style={formStyles.field}
+            value={state.email.value}
+            onChangeText={handleOnChange('email')}
+            error={state.email.error}
+            autoCapitalize="none"
+          />
+          <TextInputOutline
+            label="Phone Number"
+            keyboardType="numeric"
+            style={formStyles.field}
+            value={state.phone_number.value}
+            onChangeText={handleOnChange('phone_number')}
+            error={state.phone_number.error}
+            autoCapitalize="none"
+          />
+          <Text style={formStyles.title}>Shipping Address</Text>
+          <TouchableOpacity
+            style={{ width: '100%' }}
+            onPress={() => {
+              SetActiveRegionLevel('regions')
+              pickerRef.show()
+            }}>
+            <TextInputOutline
+              label="Province"
+              value={
+                initialAddress.region_id
+                  ? initialAddress.region_id[state.region_id.value]
+                  : mapDataName(
+                      locationOptions.regions || [],
+                      state.region_id.value,
+                    )
+              }
+              error={state.region_id.error}
+              style={formStyles.field}
+              disabled
+              rightIcon={
+                <Icon name={'caret-down'} size={22} color={colors.black80} />
+              }
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{ width: '100%' }}
+            onPress={() => {
+              SetActiveRegionLevel('cities')
+              pickerRef.show()
+            }}>
+            <TextInputOutline
+              label="City"
+              value={
+                initialAddress.city_id
+                  ? initialAddress.city_id[state.city_id.value]
+                  : mapDataName(
+                      locationOptions.cities || [],
+                      state.city_id.value,
+                    )
+              }
+              error={state.city_id.error}
+              style={formStyles.field}
+              disabled
+              rightIcon={
+                <Icon name={'caret-down'} size={22} color={colors.black80} />
+              }
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{ width: '100%' }}
+            onPress={() => {
+              SetActiveRegionLevel('districts')
+              pickerRef.show()
+            }}>
+            <TextInputOutline
+              style={formStyles.field}
+              label="District"
+              value={
+                (initialAddress.district_id &&
+                  initialAddress.district_id[state.district_id.value]) ||
+                mapDataName(
+                  locationOptions.districts || [],
+                  state.district_id.value,
+                )
+              }
+              error={state.district_id.error}
+              disabled
+              rightIcon={
+                <Icon name={'caret-down'} size={22} color={colors.black80} />
+              }
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{ width: '100%' }}
+            onPress={() => {
+              SetActiveRegionLevel('villages')
+              pickerRef.show()
+            }}>
+            <TextInputOutline
+              style={formStyles.field}
+              label="Sub District"
+              value={
+                (initialAddress.village_id &&
+                  initialAddress.village_id[state.village_id.value]) ||
+                mapDataName(
+                  locationOptions.villages || [],
+                  state.village_id.value,
+                )
+              }
+              error={state.district_id.error}
+              disabled
+              rightIcon={
+                <Icon name={'caret-down'} size={22} color={colors.black80} />
+              }
+            />
+          </TouchableOpacity>
+          <TextInputOutline
+            style={formStyles.field}
+            label="Zip Code"
+            value={
+              (initialAddress.zip_code_id &&
+                initialAddress.zip_code_id[state.zip_code_id.value]) ||
+              locationOptions.zip_code?.code
+            }
+            error={state.zip_code_id.error}
+            disabled
+          />
+          <TextInputOutline
+            style={formStyles.field}
+            label="Address Detail"
+            desc="Example: Street name, House Number, Blok, RT/RW, Building level, etc"
+            value={state.line_1.value}
+            error={state.line_1.error}
+            onChangeText={handleOnChange('line_1')}
+            autoCapitalize="none"
+          />
+          <TextInputOutline
+            style={formStyles.field}
+            label="Address Label"
+            desc="Example: Home, office, apartment"
+            value={state.label.value}
+            error={state.label.error}
+            onChangeText={handleOnChange('label')}
+            autoCapitalize="none"
+          />
+          <MapThumbnail
+            desc="For express delivery"
+            onPress={() => {
+              setModalVisible(true)
+            }}
+            style={formStyles.distance}
+            location={{
+              latitude: state.latitude.value || -6.117664,
+              longitude: state.longitude.value || 106.906349,
+            }}
+          />
+          <View
+            style={{
+              flex: 1,
+              justifyContent: 'flex-start',
+              marginBottom: 16,
+              alignItems: 'center',
+              flexDirection: 'row',
+            }}>
+            <Checkbox
+              isChecked={state.is_primary.value}
+              onPress={() =>
+                handleOnChange('is_primary')(!state.is_primary.value)
+              }
+            />
+            <Text
+              style={{ ...styles.smallFont, marginLeft: 8, marginVertical: 0 }}>
+              Set as primary address
+            </Text>
+          </View>
+          <GradientButton
+            onPress={handleOnSubmit}
+            loading={props.loading}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 0 }}
+            colors={['#3067E4', '#8131E2']}
+            title="Add and Use Address"
+            fontStyle={formStyles.buttonText}
+            style={formStyles.button}
+            disabled={disable}
+          />
+        </ScrollView>
+      </>
+    ),
+    [state, props, activeRegionLevel, selectedLocation, disable],
   )
 }
 
-export default AddAddressManual
+const mapStateToProps = (state, ownProps) => {
+  return {
+    loading: state.addresses.loading,
+    address: state.addresses.data[ownProps.route.params?.addressId],
+  }
+}
+
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    { addNewAddress, editAddress, setAddressLoading, getOneUserAddressById },
+    dispatch,
+  )
+
+export default connect(mapStateToProps, mapDispatchToProps)(AddAddressManual)

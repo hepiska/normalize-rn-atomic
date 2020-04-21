@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, ViewStyle, View } from 'react-native'
+import { StyleSheet, ViewStyle, View, Text } from 'react-native'
 import { Div, Font } from '@components/atoms/basic'
 import { setImage as changeImageUri, formatRupiah } from '@utils/helpers'
 import { images as defaultImages } from '@utils/constants'
@@ -87,14 +87,21 @@ class ProductSummaryCart extends React.PureComponent<
               flexDirection="column"
               align="flex-start"
               _margin="0 0 0 16px">
-              <Font {...helveticaBlackBoldFont12}>
+              <Font
+                ellipsizeMode="tail"
+                numberOfLines={1}
+                {...helveticaBlackBoldFont12}>
                 {brand.name ? brand.name.toUpperCase() : 'UNKNOWN'}
               </Font>
               <Font
+                ellipsizeMode="tail"
+                numberOfLines={1}
                 {...helveticaBlackFont12}
                 color={colors.black70}
                 _margin="8px 0 0 0">
-                {variant.product ? variant.product.product_name : 'UNKNOWN'}
+                {variant.product
+                  ? variant.product.product_name.replace(/(\r\n|\n|\r)/gm, '')
+                  : 'UNKNOWN'}
               </Font>
               <Div flexDirection="row" _margin="8px 0 0 0">
                 <Div flexDirection="row">

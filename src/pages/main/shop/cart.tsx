@@ -40,7 +40,6 @@ const mapDispacthToProps = dispatch =>
   bindActionCreators({ getAllCart }, dispatch)
 
 const mapStateToProps = state => ({
-  // carts: state.carts.order.map(cartId => state.carts.data[cartId]),
   carts: state.carts.order,
 })
 

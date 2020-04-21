@@ -202,7 +202,7 @@ export const Font = styled.Text`
       case 'heading':
         return `font-family: FuturaDemi`
       default:
-        return 'font-family: HelveticaNeue'
+        return ''
     }
   }};
   color: ${({ color }) => color || colors.font2};

@@ -15,32 +15,44 @@ import pageReducer from './page/reducer'
 import globalReducer from './global/reducer'
 import authReducer from './auth/reducer'
 import cartReducer from './cart/reducer'
+import addressReducer from './address/reducer'
+import shipmentReducer from './shipment/reducer'
+import shippingMethodsReducer from './shipping-methods/reducer'
 import productSavedActionType from './product-saved/reducer'
 import postLikedActionType from './post-liked/reducer'
 import commentReducer from './comment/reducer'
 import productAttributeReducer from './product-attribute/reducer'
-import addressReducer from './address/reducer'
+import checkoutReducer from './checkout/reducer'
 
 const combinedReducer: Reducer<any> = combineReducers({
-  address: addressReducer,
+  addresses: addressReducer,
   auth: authReducer,
+
   brands: brandReducer,
+
   carts: cartReducer,
   categories: categoryReducer,
+  checkout: checkoutReducer,
   collection: collectionReducer,
   comments: commentReducer,
+
   global: globalReducer,
+
   lookbooks: lookbookReducer,
+
   page: pageReducer,
   post: postReducer,
   postsLiked: postLikedActionType,
-
   productFilter: productFilterReducer,
   productsSaved: productSavedActionType,
   products: productsReducer,
   productAttribute: productAttributeReducer,
-  router: routerReducer,
+
+  shipments: shipmentReducer,
+  shippingMethods: shippingMethodsReducer,
   sort: sortReducer,
+
+  router: routerReducer,
   topPost: topPostReducer,
 
   uiInteraction: uiInteracrionReducer,

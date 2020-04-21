@@ -1,10 +1,8 @@
 import { AnyAction, Reducer } from 'redux'
 import Immutable from 'seamless-immutable'
 import { ErrorType } from '@utils/globalInterface'
-import { persistReducer } from 'redux-persist'
 import { attributeActionType } from './action'
 import { deepClone } from '@utils/helpers'
-import AsyncStorage from '@react-native-community/async-storage'
 
 interface PostState {
   readonly data: Object
@@ -46,12 +44,5 @@ const productAttributeReducer: Reducer<PostState> = (
       return newState
   }
 }
-
-const productAttributePersistConfig = {
-  key: 'product-attribute',
-  storage: AsyncStorage,
-}
-
-// export default persistReducer(productAttributePersistConfig, productAttributeReducer)
 
 export default productAttributeReducer

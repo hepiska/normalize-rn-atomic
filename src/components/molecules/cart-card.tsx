@@ -155,11 +155,20 @@ class CartCard extends React.PureComponent<CartCardType, any> {
               flexDirection="column"
               align="flex-start"
               _padding="0 0 0 16px">
-              <Font {...helveticaBlackBold}>
+              <Font
+                ellipsizeMode="tail"
+                numberOfLines={1}
+                {...helveticaBlackBold}>
                 {brand.name ? brand.name.toUpperCase() : 'UNKNOWN'}
               </Font>
-              <Font {...helveticaNormalFont12} _margin="8px 0 0 0">
-                {variant.product ? variant.product.product_name : 'UNKNOWN'}
+              <Font
+                ellipsizeMode="tail"
+                numberOfLines={1}
+                {...helveticaNormalFont12}
+                _margin="8px 0 0 0">
+                {variant.product
+                  ? variant.product.product_name.replace(/(\r\n|\n|\r)/gm, '')
+                  : 'UNKNOWN'}
               </Font>
               <Font {...helveticaBlackBold} _margin="16px 0 0 0">
                 {formatRupiah(variant.price) || '0'}

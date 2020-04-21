@@ -91,7 +91,6 @@ const RecepientData = (props: any) => {
       Object.keys(state).forEach(key => {
         result[key] = state[key].value
       })
-      console.log(result)
     }
   }
 

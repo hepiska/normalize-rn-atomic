@@ -5,18 +5,37 @@ import { formatRupiah } from '@utils/helpers'
 import {
   helveticaBlackBold,
   helveticaBlackFont12,
-  helveticaBlackBoldFont10,
 } from '@components/commont-styles'
 import { colors, images as defaultImages } from '@utils/constants'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import ImageAutoSchale from '@components/atoms/image-autoschale'
+import { RadioButton } from '@components/atoms/radio-button'
+import { setImage as changeImageUri } from '@utils/helpers'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import { changeOptionShipment } from '@modules/shipment/action'
+import { addShippingMethodData } from '@modules/checkout/action'
 
 interface CourierCartType {
   style?: ViewStyle
-  name: string
+  name?: string
   isPreffered?: boolean
-  price: string | number
-  onPress: () => void
+  price?: string | number
+  onPress?: () => void
+  changeOptionShipment?: (
+    variantId: any,
+    shippingMethodId: any,
+    addressid: any,
+  ) => void
+  addShippingMethodData?: (data: any) => void
+  type?: string
+  courier?: any
+  variantIds?: any
+  addressId?: any
+  shippingMethodId?: any
+  courierId?: any
+  warehouseId?: any
+  isSelected?: boolean
 }
 
 const styles = StyleSheet.create({
@@ -29,6 +48,12 @@ const styles = StyleSheet.create({
     borderColor: colors.black50,
     borderWidth: 1,
     padding: 16,
+  },
+  containerChooseCourier: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: 'white',
   },
   image: {
     width: 88,
@@ -55,37 +80,143 @@ class CourierCart extends React.PureComponent<CourierCartType, any> {
     defaultImage: null,
   }
 
-  render() {
-    const { style, name, isPreffered, price, onPress } = this.props
+  changeCourier = () => {
+    const {
+      changeOptionShipment,
+      variantIds,
+      addressId,
+      shippingMethodId,
+      warehouseId,
+      courier,
+      addShippingMethodData,
+    } = this.props
 
-    return (
-      <TouchableWithoutFeedback onPress={onPress}>
-        <View {...style} {...styles.container}>
-          <View style={{ flexDirection: 'row' }}>
-            <ImageAutoSchale
-              source={require('../../assets/placeholder/placeholder2.jpg')}
-              onError={() => {
-                this.setState({ defaultImage: defaultImages.product })
-              }}
-              style={styles.image}
-            />
-            <View {...styles.information}>
-              {isPreffered && (
+    changeOptionShipment(variantIds, shippingMethodId, addressId)
+
+    addShippingMethodData({
+      id: warehouseId,
+      shipping: courier,
+    })
+  }
+
+  render() {
+    const {
+      style,
+      name,
+      isPreffered,
+      price,
+      onPress,
+      type,
+      courier,
+      shippingMethodId,
+      courierId,
+      isSelected,
+    } = this.props
+
+    const image =
+      this.state.defaultImage ||
+      (!!courier.courier.image_url
+        ? changeImageUri(courier.courier.image_url, { ...styles.image })
+        : defaultImages.product)
+
+    if (type === 'choose-courier') {
+      return (
+        <TouchableWithoutFeedback
+          onPress={courier.is_available ? this.changeCourier : () => {}}>
+          <View>
+            <View
+              {...style}
+              {...styles.containerChooseCourier}
+              accessibilityState={{ disabled: Boolean(courier.is_available) }}>
+              <View style={{ flexDirection: 'row' }}>
+                <ImageAutoSchale
+                  source={{ uri: image }}
+                  onError={() => {
+                    this.setState({ defaultImage: defaultImages.product })
+                  }}
+                  style={styles.image}
+                />
+                <View {...styles.information}>
+                  {/* {isPreffered && (
                 <View {...styles.preffered}>
                   <Icon name="check-circle" size={10} color={colors.black100} />
                   <Font {...helveticaBlackBoldFont10} style={{ marginLeft: 6 }}>
                     The Shonet Preffered
                   </Font>
                 </View>
-              )}
+              )} */}
+                  <Font
+                    {...helveticaBlackFont12}
+                    colors={colors.black60}
+                    style={{ marginTop: 8 }}>
+                    {courier.courier.name}
+                  </Font>
+                  <Font {...helveticaBlackBold} style={{ marginTop: 8 }}>
+                    {formatRupiah(courier.shipping_cost)}
+                  </Font>
+                </View>
+              </View>
+              <RadioButton
+                isSelected={isSelected}
+                onPress={courier.is_available ? this.changeCourier : () => {}}
+              />
+            </View>
+            {!courier.is_available && (
+              <View
+                style={[
+                  StyleSheet.absoluteFillObject,
+                  { backgroundColor: 'rgba(255,255,255, 0.5)' },
+                ]}
+              />
+            )}
+            {!courier.is_available && (
+              <View
+                style={{
+                  marginTop: 16,
+                  backgroundColor: 'rgba(26, 26, 26, 0.04)',
+                  borderRadius: 8,
+                  paddingTop: 8,
+                  paddingBottom: 8,
+                  paddingLeft: 16,
+                  paddingRight: 16,
+                }}>
+                <Font {...helveticaBlackFont12}>
+                  Courier doesn’t support delivery into your address
+                </Font>
+              </View>
+            )}
+          </View>
+        </TouchableWithoutFeedback>
+      )
+    }
+    return (
+      <TouchableWithoutFeedback onPress={onPress}>
+        <View {...style} {...styles.container}>
+          <View style={{ flexDirection: 'row' }}>
+            <ImageAutoSchale
+              source={{ uri: image }}
+              onError={() => {
+                this.setState({ defaultImage: defaultImages.product })
+              }}
+              style={styles.image}
+            />
+            <View {...styles.information}>
+              {/* {isPreffered && (
+                <View {...styles.preffered}>
+                  <Icon name="check-circle" size={10} color={colors.black100} />
+                  <Font {...helveticaBlackBoldFont10} style={{ marginLeft: 6 }}>
+                    The Shonet Preffered
+                  </Font>
+                </View>
+              )} */}
               <Font
                 {...helveticaBlackFont12}
                 colors={colors.black60}
                 style={{ marginTop: 8 }}>
-                {name}
+                {courier.courier.name}
               </Font>
               <Font {...helveticaBlackBold} style={{ marginTop: 8 }}>
-                {formatRupiah(price)}
+                {formatRupiah(courier.shipping_cost)}
               </Font>
             </View>
           </View>
@@ -100,4 +231,29 @@ class CourierCart extends React.PureComponent<CourierCartType, any> {
   }
 }
 
-export default CourierCart
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      changeOptionShipment,
+      addShippingMethodData,
+    },
+    dispatch,
+  )
+const mapStateToProps = (state, ownProps) => {
+  const shippingMethodId = ownProps.courier.id
+  const courierId = ownProps.courier.courier.id
+  const _warehouseId = ownProps.warehouseId
+
+  /* revisi: pindah ke dalam render sebelum return */
+  const storeWarehouse = state.checkout.data.warehouse[_warehouseId]
+  const selectedShippingMethodId = storeWarehouse?.shipping.id || null
+  const selectedCourierId = storeWarehouse?.shipping.courier.id || null
+
+  return {
+    isSelected:
+      shippingMethodId === selectedShippingMethodId &&
+      courierId === selectedCourierId,
+    shippingMethodId,
+  }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(CourierCart)

@@ -9,7 +9,7 @@ interface RadioButtonType {
   text?: string
   fontStyle?: TextStyle
   isSelected?: boolean
-  onPress?: Function
+  onPress?: Function | void
   style?: ViewStyle
   disabled?: boolean
 }

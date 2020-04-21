@@ -103,3 +103,7 @@ export const page = new schema.Entity(
 )
 
 export const cart = new schema.Entity('cart')
+
+export const address = new schema.Entity('address')
+
+export const shipment = new schema.Entity('shipment')

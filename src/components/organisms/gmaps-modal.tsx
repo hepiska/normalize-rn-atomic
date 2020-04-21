@@ -86,7 +86,6 @@ class MapModal extends React.PureComponent<any, any> {
       latitude: address.geometry.location.lat,
       longitude: address.geometry.location.lng,
     }
-    console.log(newLocation)
     this.setState({ address: address, location: newLocation })
   }
 
@@ -98,7 +97,6 @@ class MapModal extends React.PureComponent<any, any> {
       if (isGranted) {
         Geolocation.getCurrentPosition(
           position => {
-            console.log(position)
             this.setState({ coords: position.coords, loading: false }, () => {
               this._getCurrentLoc(this.state.coords)
             })

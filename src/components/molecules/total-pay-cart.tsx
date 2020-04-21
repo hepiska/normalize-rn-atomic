@@ -3,8 +3,8 @@ import { View, StyleSheet } from 'react-native'
 import { Font } from '@components/atoms/basic'
 import { colors } from '@src/utils/constants'
 import {
-  helveticaTitleFont,
   helveticaBlackFont12,
+  helveticaBlackTitleBold,
 } from '@components/commont-styles'
 import { GradientButton } from '@components/atoms/button'
 import { connect } from 'react-redux'
@@ -49,7 +49,13 @@ const styles = StyleSheet.create({
 
 class TotalPayCart extends Component<any, any> {
   render() {
-    const { totalPrice, buttonText, onCheckout, items } = this.props
+    const {
+      totalPrice,
+      buttonText,
+      onCheckout,
+      items,
+      enableButton = true,
+    } = this.props
 
     return (
       <View {...styles.container}>
@@ -57,7 +63,9 @@ class TotalPayCart extends Component<any, any> {
           <Font {...helveticaBlackFont12} style={{ fontWeight: 'bold' }}>
             Total
           </Font>
-          <Font {...helveticaTitleFont}>{formatRupiah(totalPrice)}</Font>
+          <Font {...helveticaBlackTitleBold} size="18">
+            {formatRupiah(totalPrice)}
+          </Font>
         </View>
         <View {...styles.buttonContainer}>
           <GradientButton
@@ -73,7 +81,7 @@ class TotalPayCart extends Component<any, any> {
             title={buttonText}
             fontStyle={styles.buttonText}
             style={styles.button}
-            disabled={totalPrice > 0 ? false : true}
+            disabled={totalPrice > 0 && enableButton ? false : true}
           />
         </View>
       </View>
@@ -86,6 +94,8 @@ const mapDispatchToProps = dispatch =>
 
 const mapStateToProps = (state, ownProps) => {
   const cartsId = ownProps.items
+
+  /* revisi: pindah ke dalam render sebelum return */
   const shippingCost = ownProps.shippingCost || 0
   const deliveryProtection = ownProps.deliveryProtection || 0
   let totalPrice = 0

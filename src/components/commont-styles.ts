@@ -1,5 +1,5 @@
 import { colors } from '@utils/constants'
-import { StyleSheet } from 'react-native'
+import { StyleSheet, Platform } from 'react-native'
 
 export const futuraBlackFont24 = {
   size: 24,
@@ -134,3 +134,47 @@ export const helveticaBlackBoldFont10 = {
   weight: 'bold',
   color: colors.black100,
 }
+
+export const fontStyle =
+  Platform.OS === 'ios'
+    ? StyleSheet.create({
+        helvetica: {
+          fontFamily: 'Helvetica Neue',
+          fontWeight: 'normal',
+        },
+        helveticaThin: {
+          fontFamily: 'Helvetica Neue',
+          fontWeight: '200',
+        },
+        helveticaBold: {
+          fontFamily: 'Helvetica Neue',
+          fontWeight: 'bold',
+        },
+        futura: {
+          fontFamily: 'Futura',
+        },
+        futuraBold: {
+          fontFamily: 'Futura',
+          fontWeight: 'bold',
+        },
+      })
+    : StyleSheet.create({
+        helvetica: {
+          fontFamily: 'HelveticaNeue-Regular',
+          // fontWeight: 'normal',
+        },
+        helveticaThin: {
+          fontFamily: 'HelveticaNeue-Thin',
+          fontWeight: '200',
+        },
+        helveticaBold: {
+          fontFamily: 'HelveticaNeue-Regular',
+        },
+        futura: {
+          fontFamily: 'Futura',
+        },
+        futuraBold: {
+          fontFamily: 'Futura',
+          fontWeight: 'bold',
+        },
+      })

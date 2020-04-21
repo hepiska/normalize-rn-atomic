@@ -57,7 +57,6 @@ export const getFeaturedCategories = () => ({
       return setCategoryLoading(true)
     },
     success: data => {
-      // console.log('category success ---', data)
       return [
         setCategoryData(data.entities.category),
         setFeaturedCategories(data.result),

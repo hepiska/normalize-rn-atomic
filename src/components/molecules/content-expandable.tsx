@@ -5,6 +5,7 @@ import HTML from 'react-native-render-html'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import { colors } from '@utils/constants'
 import { capilEachWord } from '@utils/helpers'
+import { ViewStyle } from 'react-native'
 
 const { Value, timing, interpolate, concat } = Animated
 
@@ -12,8 +13,10 @@ interface ContentExpandableType {
   id: string
   title: any
   rightTitle?: any
-  content?: string
+  content?: any
   isFirst?: boolean
+  style?: ViewStyle
+  divider?: any
 }
 
 const getborderStyle = isFirst => {
@@ -53,7 +56,15 @@ class ContentExpandable extends React.Component<ContentExpandableType, any> {
   }
 
   render() {
-    const { id, title, rightTitle, content, isFirst } = this.props
+    const {
+      id,
+      title,
+      rightTitle,
+      content,
+      isFirst,
+      style,
+      divider,
+    } = this.props
     const rotation = interpolate(this.iconAnimatedValue, {
       inputRange: [0, 1],
       outputRange: [0, 180],
@@ -65,7 +76,7 @@ class ContentExpandable extends React.Component<ContentExpandableType, any> {
     const transform: any = [{ rotate: concat(rotation, 'deg') }]
 
     return (
-      <Div _width="100%" style={getborderStyle(isFirst)}>
+      <Div _width="100%" style={style || getborderStyle(isFirst)}>
         <Div
           _direction="row"
           _width="100%"
@@ -87,11 +98,16 @@ class ContentExpandable extends React.Component<ContentExpandableType, any> {
             </PressAbbleDiv>
           </Div>
         </Div>
+        {!this.state.isOpen && divider}
         <Animated.ScrollView
           style={{ width: '100%', height: height, overflow: 'scroll' }}>
-          <HTML
-            html={content.replace(/\\\\r\\\\n/g, '').replace(/\\r\\n/g, '')}
-          />
+          {typeof content === 'string' ? (
+            <HTML
+              html={content.replace(/\\\\r\\\\n/g, '').replace(/\\r\\n/g, '')}
+            />
+          ) : (
+            content
+          )}
         </Animated.ScrollView>
       </Div>
     )

@@ -61,5 +61,3 @@ const brandersistConfig = {
 }
 
 export default persistReducer(brandersistConfig, registerReducer)
-
-// export default registerReducer

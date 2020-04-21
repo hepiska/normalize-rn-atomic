@@ -235,6 +235,8 @@ const mapDispatchToProps = dispatch =>
 
 const mapStateToProps = (state, ownProps) => {
   const dataCarts = ownProps.carts
+
+  /* revisi: pindah ke dalam render sebelum return */
   let manipulatedData = []
   let groupData = dataCarts.reduce((total, currentValue) => {
     let selectedItem = state.carts.data[currentValue]

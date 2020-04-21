@@ -151,7 +151,6 @@ class GooglePlace extends Component<any, any> {
       if (isGranted) {
         Geolocation.getCurrentPosition(
           position => {
-            console.log(position)
             this.setState({ coords: position.coords, loading: false }, () => {
               this._getCurrentLoc(this.state.coords)
             })

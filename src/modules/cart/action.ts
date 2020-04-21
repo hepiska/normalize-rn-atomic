@@ -139,7 +139,7 @@ export const changeCartQty = ({ qty, cart_id }) => ({
     },
     startNetwork: () => setLoading(true),
     success: data => {
-      console.log(data)
+      // console.log(data)
       return [changeQtyData({ qty, cart_id }), setLoading(false)]
     },
   },

@@ -122,7 +122,6 @@ class HorizontalList extends React.Component<HorizontalListType, any> {
             title={data.link_text}
             onPress={() => {
               if (data.type === 'brand') navigate('BrandList', {}) // revisi: diganti navigasi ke data.link
-              console.log(data.link)
             }}
             {...helveticaNormalFont}
             style={styles.button}

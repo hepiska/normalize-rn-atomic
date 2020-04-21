@@ -5,6 +5,7 @@ import {
   View,
   TouchableWithoutFeedback,
   Image,
+  Text,
 } from 'react-native'
 import styled from 'styled-components'
 import ImageAutoSchale from '@components/atoms/image-autoschale'
@@ -12,6 +13,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons'
 import { Div, Font, PressAbbleDiv } from '@components/atoms/basic'
 import { colors, images as defaultImages } from '@utils/constants'
 import Price from '@src/components/atoms/price'
+import { fontStyle } from '@components/commont-styles'
 import { OutlineButton } from '@components/atoms/button'
 // import { useNavigation } from '@react-navigation/native'
 import RangePrice from '@components/molecules/range-price'
@@ -141,16 +143,14 @@ const ProductCard = ({
     product.variants.find(variant => variant.id === selectedVariantId) ||
     product.variants[0]
   const images = selectedVariant.image_urls || product.image_urls || []
-  const random = Math.floor(Math.random() * images.length)
+  // const random = Math.floor(Math.random() * images.length)
   const variantPrice = selectedVariantId && {
     price: selectedVariant.price,
     discount_price: selectedVariant.price_after_disc,
   }
   const image =
     defaultImage ||
-    (!!images[random]
-      ? chageImageUri(images[random], { width })
-      : defaultImages.product)
+    (!!images[0] ? chageImageUri(images[0], { width }) : defaultImages.product)
 
   return horizontal ? (
     <ProductCardHorizontal
@@ -360,9 +360,10 @@ const ProductCardVertical = ({
             paddingHorizontal: composeStyle.paddingHorizontal,
           }}>
           <Font
-            type="HelveticaNeue"
+            // type="HelveticaNeue"
+            style={fontStyle.helveticaBold}
             size={typeDict[type].main}
-            weight="bold"
+            // weight="bold"
             _margin="4px"
             color={colors.black100}>
             {brand.name}
