@@ -107,3 +107,9 @@ export const cart = new schema.Entity('cart')
 export const address = new schema.Entity('address')
 
 export const shipment = new schema.Entity('shipment')
+
+export const payment = new schema.Entity('payment')
+
+export const transaction = new schema.Entity('transaction')
+
+export const transactionPayment = new schema.Entity('transactions_payments')

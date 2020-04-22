@@ -64,8 +64,14 @@ class Checkout extends Component<any, any> {
   }
 
   onPayNow = (item, totalPrice) => () => {
-    const { payNow, userCheckoutAddress } = this.props
-    payNow(item, userCheckoutAddress.id)
+    const { payNow, userCheckoutAddress, loadingCheckout } = this.props
+    // payNow(item, userCheckoutAddress.id)
+
+    if (!loadingCheckout) {
+      navigate('Screens', {
+        screen: 'PaymentMethod',
+      })
+    }
   }
 
   render() {
@@ -76,6 +82,7 @@ class Checkout extends Component<any, any> {
       userCheckoutAddress,
       shippingCost,
       availablePayNow,
+      loadingCheckout,
     } = this.props
     const { deliveryProtection } = this.state
 
@@ -163,6 +170,7 @@ const mapDispatchToProps = dispatch =>
   )
 
 const mapStateToProps = (state, ownProps) => {
+  console.log('state ---', state)
   const dataCarts = ownProps.carts
 
   /* revisi: pindah ke dalam render sebelum return */
@@ -217,6 +225,7 @@ const mapStateToProps = (state, ownProps) => {
     userCheckoutAddress,
     shippingCost,
     availablePayNow,
+    loadingCheckout: state.checkout.loading,
   }
 }
 

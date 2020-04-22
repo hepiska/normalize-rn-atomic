@@ -18,11 +18,14 @@ import cartReducer from './cart/reducer'
 import addressReducer from './address/reducer'
 import shipmentReducer from './shipment/reducer'
 import shippingMethodsReducer from './shipping-methods/reducer'
+import orderReducer from './order/reducer'
 import productSavedActionType from './product-saved/reducer'
 import postLikedActionType from './post-liked/reducer'
+import transactionPaymentReducer from './transactions-payments/reducer'
 import commentReducer from './comment/reducer'
 import productAttributeReducer from './product-attribute/reducer'
 import checkoutReducer from './checkout/reducer'
+import transactionReducer from './transaction/reducer'
 
 const combinedReducer: Reducer<any> = combineReducers({
   addresses: addressReducer,
@@ -40,6 +43,8 @@ const combinedReducer: Reducer<any> = combineReducers({
 
   lookbooks: lookbookReducer,
 
+  orders: orderReducer,
+
   page: pageReducer,
   post: postReducer,
   postsLiked: postLikedActionType,
@@ -54,6 +59,8 @@ const combinedReducer: Reducer<any> = combineReducers({
 
   router: routerReducer,
   topPost: topPostReducer,
+  transaction: transactionReducer,
+  transactionsPayments: transactionPaymentReducer,
 
   uiInteraction: uiInteracrionReducer,
 
