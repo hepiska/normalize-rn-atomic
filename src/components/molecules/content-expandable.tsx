@@ -17,6 +17,7 @@ interface ContentExpandableType {
   isFirst?: boolean
   style?: ViewStyle
   divider?: any
+  paddingTitle?: string
 }
 
 const getborderStyle = isFirst => {
@@ -64,6 +65,7 @@ class ContentExpandable extends React.Component<ContentExpandableType, any> {
       isFirst,
       style,
       divider,
+      paddingTitle,
     } = this.props
     const rotation = interpolate(this.iconAnimatedValue, {
       inputRange: [0, 1],
@@ -81,7 +83,7 @@ class ContentExpandable extends React.Component<ContentExpandableType, any> {
           _direction="row"
           _width="100%"
           justify="space-between"
-          padd="32px 0px">
+          padd={paddingTitle || '32px 0'}>
           {typeof title === 'string' ? (
             <Font type="Futura" weight="bold" size="18px">
               {capilEachWord(title.replace('-', ' '))}

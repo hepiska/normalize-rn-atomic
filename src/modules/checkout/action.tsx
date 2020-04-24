@@ -2,6 +2,7 @@ import { store } from '@src/init-store'
 import { API } from '../action-types'
 import * as schema from '@modules/normalize-schema'
 import { removeShipmentData, removeShipmentOrder } from '../shipment/action'
+import { setOrderData, setOrderOrder, setActiveOrder } from '../order/action'
 
 export const checkoutActionType = {
   FETCH: 'post/FETCH',
@@ -64,9 +65,13 @@ export const payNow = (cart_ids, user_address_id) => {
         method: 'POST',
         data: { ...params },
       },
+      schema: schema.payment,
       startNetwork: () => setCheckoutLoading(true),
       success: data => {
         return [
+          setOrderData(data.entities.payment),
+          setOrderOrder(data.result),
+          setActiveOrder(data.result),
           removeCheckoutAddressData(),
           removeShipmentData(),
           removeShipmentOrder(),
