@@ -6,13 +6,11 @@ import {
   TouchableOpacity,
   ViewStyle,
 } from 'react-native'
-import { connect } from 'react-redux'
+import { fontStyle } from '@components/commont-styles'
 import { colors } from '@utils/constants'
-import { bindActionCreators } from 'redux'
-import { getFeaturedCategories } from '@modules/category/action'
 
 const styles = StyleSheet.create({
-  text: { fontFamily: 'Helvetica Neue', fontSize: 14 },
+  text: { ...fontStyle.helvetica, fontSize: 14 },
   container: {
     paddingHorizontal: 20,
     paddingVertical: 12,

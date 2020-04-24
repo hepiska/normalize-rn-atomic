@@ -157,6 +157,9 @@ export const fontStyle =
           fontFamily: 'Futura',
           fontWeight: 'bold',
         },
+        futuraDemi: {
+          fontFamily: 'FuturaDemi',
+        },
       })
     : StyleSheet.create({
         helvetica: {
@@ -165,16 +168,14 @@ export const fontStyle =
         },
         helveticaThin: {
           fontFamily: 'HelveticaNeue-Thin',
-          fontWeight: '200',
         },
         helveticaBold: {
-          fontFamily: 'HelveticaNeue-Regular',
+          fontFamily: 'HelveticaNeue-Bold',
         },
         futura: {
           fontFamily: 'Futura',
         },
-        futuraBold: {
-          fontFamily: 'Futura',
-          fontWeight: 'bold',
+        futuraDemi: {
+          fontFamily: 'FuturaDemi',
         },
       })

@@ -185,7 +185,7 @@ export const Font = styled.Text`
         if (weight) {
           return `font-family: HelveticaNeue-${weight}`
         }
-        return `font-family: HelveticaNeue`
+        return `font-family: HelveticaNeue-Regular`
       case 'Futura':
         if (weight) {
           return `font-family: Futura-${weight}`
@@ -202,7 +202,8 @@ export const Font = styled.Text`
       case 'heading':
         return `font-family: FuturaDemi`
       default:
-        return ''
+        return 'HelveticaNeue-Regular'
+      // return ''
     }
   }};
   color: ${({ color }) => color || colors.font2};

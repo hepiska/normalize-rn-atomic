@@ -4,6 +4,7 @@ import { Div, Font } from '@components/atoms/basic'
 import {
   futuraTitleFont,
   helveticaNormalFont,
+  fontStyle,
 } from '@components/commont-styles'
 import { OutlineButton } from '@components/atoms/button'
 import { colors } from '@utils/constants'
@@ -142,7 +143,7 @@ class SectionGridList extends React.Component<SectionGridListType, any> {
         align="flex-start"
         mar="12px 0"
         style={style}>
-        <Font {...futuraTitleFont} size="24px" mar="0 0 24px 16px">
+        <Font style={fontStyle.futuraDemi} size="24px" mar="0 0 24px 16px">
           {data.title}
         </Font>
         {this._renderItem()}

@@ -35,14 +35,13 @@
 	<string>2034068290174004</string>
 	<key>FacebookDisplayName</key>
 	<string>The Shonet</string>
-  <key>NSCameraUsageDescription</key>
-  <string>The Shonet need access for the camera so that yout can capture your receipt directly from your camera</string>
-  <key>NSLocationAlwaysUsageDescription</key>
-  <string>The Shonet need access for the location.
+	<key>NSCameraUsageDescription</key>
+	<string>The Shonet need access for the camera so that yout can capture your receipt directly from your camera</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>The Shonet need access for the location.
   </string>
-    <key>NSLocationWhenInUseUsageDescription</key>
-    <string>The Shonet need access for the location .
-  </string>  
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string/>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>fbapi</string>
@@ -81,8 +80,6 @@
 			</dict>
 		</dict>
 	</dict>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>$(PRODUCT_NAME) wants to save photos</string>
 	<key>UIAppFonts</key>
@@ -110,6 +107,16 @@
 		<string>HelveticaNeue-Regular.ttf</string>
 		<string>HelveticaNeue-Thin.ttf</string>
 		<string>HelveticaNeue1-Light.ttf</string>
+		<string>FuturaDemi.ttf</string>
+		<string>FuturaDemi.woff2</string>
+		<string>FuturaRegular.ttf</string>
+		<string>HelveticaNeue-Bold.otf</string>
+		<string>HelveticaNeue-Light.otf</string>
+		<string>HelveticaNeue-Medium.otf</string>
+		<string>HelveticaNeue-Regular.otf</string>
+		<string>HelveticaNeue-RegularItalic.otf</string>
+		<string>HelveticaNeue-Thin.otf</string>
+		<string>HelveticaNeue-Ultralight.otf</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>

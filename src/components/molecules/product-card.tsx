@@ -250,14 +250,14 @@ const ProductCardHorizontal = ({
             paddingHorizontal: composeStyle.paddingHorizontal,
           }}>
           <Font
-            type="HelveticaNeue"
+            style={fontStyle.helveticaBold}
             size={typeDict[type].main}
-            weight="bold"
             _margin="0px 4px 4px"
             color={colors.black100}>
             {brand.name}
           </Font>
           <Font
+            style={fontStyle.helvetica}
             size={typeDict[type].sub}
             _margin="4px"
             color={colors.black80}
@@ -325,6 +325,9 @@ const ProductCardVertical = ({
     price.exTo = product.max_price
     price.withDiscount = true
   }
+
+  isShowRangePrice = product.min_price !== product.max_price
+  console.log('isShowRangePrice', isShowRangePrice)
   return (
     <TouchableWithoutFeedback onPress={onPress}>
       <Div style={{ ...composeStyle, width }}>

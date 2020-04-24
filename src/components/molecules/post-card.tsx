@@ -14,6 +14,7 @@ import { colors, images as defaultImages } from '@utils/constants'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import IconFa from 'react-native-vector-icons/FontAwesome'
 import InviniteLoader from '@components/atoms/loaders/invinite'
+import { fontStyle } from '@components/commont-styles'
 import { navigate } from '@src/root-navigation'
 
 interface PostListItemType {

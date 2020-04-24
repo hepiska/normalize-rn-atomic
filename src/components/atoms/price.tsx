@@ -2,6 +2,7 @@ import React from 'react'
 import { TextStyle } from 'react-native'
 import { Font, Div } from '@components/atoms/basic'
 import { colors } from '@utils/constants'
+import { fontStyle } from '@components/commont-styles'
 import Img from '@components/atoms/image'
 
 import { formatRupiah } from '@utils/helpers'
@@ -36,7 +37,7 @@ const Price = ({ price, discount_price, style }: Price) => {
               size={14}
               type="title"
               _margin="4px 0px 0px 4px"
-              style={style}>
+              style={{ ...fontStyle, ...style }}>
               {x}
             </Font>
           )

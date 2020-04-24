@@ -4,6 +4,7 @@ import { Div, Font } from '@components/atoms/basic'
 import {
   futuraTitleFont,
   helveticaNormalFont,
+  fontStyle,
 } from '@components/commont-styles'
 import { OutlineButton } from '@components/atoms/button'
 import { colors } from '@utils/constants'
@@ -95,7 +96,6 @@ class HorizontalList extends React.Component<HorizontalListType, any> {
             productId={item}
             key={`horizontal-list-product-${index}`}
             isAtributesShow={false}
-            isShowRangePrice={false}
             style={{ ...styles.productCard, wrappermargin: 4 }}
           />
         )
@@ -143,7 +143,7 @@ class HorizontalList extends React.Component<HorizontalListType, any> {
 
     return (
       <Div _width="100%" align="flex-start" style={style}>
-        <Font {...futuraTitleFont} size="24px" mar="0 0 24px 16px">
+        <Font style={fontStyle.futuraDemi} size="24px" mar="0 0 24px 16px">
           {data.title}
         </Font>
         <FlatList
