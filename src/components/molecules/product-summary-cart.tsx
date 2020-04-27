@@ -50,15 +50,24 @@ class ProductSummaryCart extends React.PureComponent<
   render() {
     const { style, cart, brand, variant, index } = this.props
 
-    const images = variant.image_urls
-    const random = Math.floor(Math.random() * images.length)
+    let image
+    if (variant.image_urls) {
+      const images = variant.image_urls
+      const random = Math.floor(Math.random() * images.length)
 
-    const image =
-      this.state.defaultImage ||
-      (!!variant.image_urls[random]
-        ? changeImageUri(images[random], { ...styles.image })
-        : defaultImages.product)
-
+      image =
+        this.state.defaultImage ||
+        (!!variant.image_urls[random]
+          ? changeImageUri(images[random], { ...styles.image })
+          : defaultImages.product)
+    }
+    if (variant.image_url) {
+      image =
+        this.state.defaultImage ||
+        (!!variant.image_url
+          ? changeImageUri(variant.image_url, { ...styles.image })
+          : defaultImages.product)
+    }
     return (
       <>
         <View

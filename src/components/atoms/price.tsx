@@ -37,7 +37,7 @@ const Price = ({ price, discount_price, style }: Price) => {
               size={14}
               type="title"
               _margin="4px 0px 0px 4px"
-              style={{ ...fontStyle, ...style }}>
+              style={{ ...fontStyle.helveticaBold, ...style }}>
               {x}
             </Font>
           )

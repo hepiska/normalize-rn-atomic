@@ -2,7 +2,12 @@ import React, { useState } from 'react'
 import { Div, Font, PressAbbleDiv, ScrollDiv } from '@components/atoms/basic'
 import colorString from 'color-string'
 import { colors } from '@utils/constants'
-import { futuraTitleFont, helveticaNormalFont } from '../commont-styles'
+
+import {
+  futuraTitleFont,
+  helveticaNormalFont,
+  fontStyle,
+} from '../commont-styles'
 import { OutlineButton } from '@components/atoms/button'
 
 // export interface AtributeValueType {
@@ -95,10 +100,7 @@ const AtributesList = ({
   return (
     <Div width="100%" align="flex-start" padd="0px 0px 16px">
       <Div _direction="row" align="flex-end" _margin="8px 0px">
-        <Font
-          {...futuraTitleFont}
-          style={{ fontWeight: '500' }}
-          _margin="0px 8px 0px 0px">
+        <Font type="heading" size="18" _margin="0px 8px 0px 0px">
           {label}
         </Font>
         <Font {...helveticaNormalFont}>{selectedAttribute.label}</Font>
@@ -119,8 +121,7 @@ const AtributesList = ({
       {label.toLowerCase() === 'size' && (
         <PressAbbleDiv onPress={() => {}} _margin="8px 0">
           <Font
-            {...helveticaNormalFont}
-            style={{ textDecorationLine: 'underline' }}>
+            style={{ textDecorationLine: 'underline', ...fontStyle.helvetica }}>
             Size guide
           </Font>
         </PressAbbleDiv>

@@ -10,6 +10,7 @@ import {
 import styled from 'styled-components'
 import ImageAutoSchale from '@components/atoms/image-autoschale'
 import Icon from 'react-native-vector-icons/MaterialIcons'
+import IconFa from 'react-native-vector-icons/FontAwesome'
 import { Div, Font, PressAbbleDiv } from '@components/atoms/basic'
 import { colors, images as defaultImages } from '@utils/constants'
 import Price from '@src/components/atoms/price'
@@ -76,10 +77,9 @@ const styles = StyleSheet.create({
     borderColor: '#EFEFEF',
   },
   buttonText: {
-    fontSize: 12,
+    ...fontStyle.helveticaBold,
     color: colors.black80,
     marginLeft: 8,
-    fontWeight: 'bold',
   },
   defaultStyle: {
     width: 156,
@@ -275,9 +275,13 @@ const ProductCardHorizontal = ({
             <Div _flex={1} justify="flex-end" _margin="16px 0px 0px">
               <OutlineButton
                 title="Add to Cart"
-                onPress={() => {}}
+                onPress={onAddtoCart}
                 leftIcon={
-                  <Icon name="shopping-bag" size={12} color={colors.black80} />
+                  <IconFa
+                    name="shopping-bag"
+                    size={12}
+                    color={colors.black80}
+                  />
                 }
                 style={styles.button}
                 fontStyle={styles.buttonText}
@@ -327,7 +331,6 @@ const ProductCardVertical = ({
   }
 
   isShowRangePrice = product.min_price !== product.max_price
-  console.log('isShowRangePrice', isShowRangePrice)
   return (
     <TouchableWithoutFeedback onPress={onPress}>
       <Div style={{ ...composeStyle, width }}>
@@ -395,12 +398,16 @@ const ProductCardVertical = ({
           )}
 
           {onAddtoCart && (
-            <Div _flex={1} justify="flex-end" _margin="16px 0px 0px">
+            <Div _width="100%" justify="flex-end" _margin="16px 0px 0px">
               <OutlineButton
                 title="Add to Cart"
-                onPress={() => {}}
+                onPress={onAddtoCart}
                 leftIcon={
-                  <Icon name="shopping-bag" size={12} color={colors.black80} />
+                  <IconFa
+                    name="shopping-bag"
+                    size={12}
+                    color={colors.black80}
+                  />
                 }
                 style={styles.button}
                 fontStyle={styles.buttonText}

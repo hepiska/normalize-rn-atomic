@@ -11,7 +11,6 @@ import ProductOverviewCart from '@components/molecules/product-overview-cart'
 import ProductAttributes from '@components/organisms/product-attributes'
 import { getProductById } from '@modules/product/action'
 import { addCart, changeVariant } from '@modules/cart/action'
-
 import { images, colors } from '@utils/constants'
 import { formatRupiah, deepClone } from '@utils/helpers'
 
@@ -202,9 +201,10 @@ const mapStateToProps = (state, ownProps) => {
   const productId = ownProps.route.params?.product
   const product = state.products.data[productId]
   const _product = deepClone(product)
-  _product.attributes = _product.attributes.map(v => {
+  _product.attributes = _product.attributes?.map(v => {
     return state.productAttribute.data[v]
   })
+  console.log(_product)
   return {
     product: _product,
     brand: state.brands.data[product.brand],

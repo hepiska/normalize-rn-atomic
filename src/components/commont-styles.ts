@@ -74,7 +74,7 @@ export const helveticaBlackBold = {
 export const helveticaBlackTitleBold = {
   size: 16,
   type: 'HelveticaNeue',
-  weight: 'bold',
+  weight: 'Bold',
   color: colors.black100,
 }
 
@@ -163,7 +163,7 @@ export const fontStyle =
       })
     : StyleSheet.create({
         helvetica: {
-          fontFamily: 'HelveticaNeue-Regular',
+          fontFamily: 'HelveticaNeue',
           // fontWeight: 'normal',
         },
         helveticaThin: {
@@ -179,3 +179,32 @@ export const fontStyle =
           fontFamily: 'FuturaDemi',
         },
       })
+
+export const borderStyle = StyleSheet.create({
+  all: {
+    borderStyle: 'solid',
+    borderWidth: 1,
+    borderColor: colors.black50,
+    borderRadius: 8,
+  },
+  bottom: {
+    borderStyle: 'solid',
+    borderBottomWidth: 1,
+    borderColor: colors.black50,
+  },
+  top: {
+    borderStyle: 'solid',
+    borderTopWidth: 1,
+    borderColor: colors.black50,
+  },
+  left: {
+    borderStyle: 'solid',
+    borderLeftWidth: 1,
+    borderColor: colors.black50,
+  },
+  right: {
+    borderStyle: 'solid',
+    borderRightWidth: 1,
+    borderColor: colors.black50,
+  },
+})

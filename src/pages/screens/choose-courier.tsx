@@ -49,48 +49,53 @@ class ChooseCourierPage extends Component<any, any> {
     const { shipments, cartId, addressId, variantIds, warehouseId } = this.props
 
     return (
-      <ScrollDiv>
+      <>
         <NavbarTop title="Shipment Courier" leftContent={['back']} />
-        <View {...styles.container}>
-          <View {...styles.shipmentCourier}>
-            <Icon name="business-time" size={16} color={colors.black100} />
-            <Font {...helveticaBlackFont12} _margin="0 0 0 16px">
-              Shipment duration starts when items have been received by the
-              courier
-            </Font>
-          </View>
+        <ScrollDiv>
+          <View {...styles.container}>
+            <View {...styles.shipmentCourier}>
+              <Icon name="business-time" size={16} color={colors.black100} />
+              <Font {...helveticaBlackFont12} _margin="0 0 0 16px">
+                Shipment duration starts when items have been received by the
+                courier
+              </Font>
+            </View>
 
-          <View
-            {...styles.shipmentCourier}
-            style={{ backgroundColor: 'rgba(0, 184, 0, 0.05)', marginTop: 8 }}>
-            <Icon
-              name="star-and-crescent"
-              size={16}
-              color={colors.greenAccent}
-            />
-            <Font
-              {...helveticaBlackFont12}
-              color={colors.greenAccent}
-              _margin="0 0 0 16px">
-              Ramadhan content courier will be write here so let’s make space
-            </Font>
-          </View>
-
-          {shipments[warehouseId]?.map((value, key) => {
-            return (
-              <ShipmentHoc
-                key={`shipment-${key}`}
-                style={{ marginTop: 16 }}
-                shipmentId={value}
-                index={key}
-                variantIds={variantIds}
-                addressId={addressId}
-                warehouseId={warehouseId}
+            <View
+              {...styles.shipmentCourier}
+              style={{
+                backgroundColor: 'rgba(0, 184, 0, 0.05)',
+                marginTop: 8,
+              }}>
+              <Icon
+                name="star-and-crescent"
+                size={16}
+                color={colors.greenAccent}
               />
-            )
-          })}
-        </View>
-      </ScrollDiv>
+              <Font
+                {...helveticaBlackFont12}
+                color={colors.greenAccent}
+                _margin="0 0 0 16px">
+                Ramadhan content courier will be write here so let’s make space
+              </Font>
+            </View>
+
+            {shipments[warehouseId]?.map((value, key) => {
+              return (
+                <ShipmentHoc
+                  key={`shipment-${key}`}
+                  style={{ marginTop: 16 }}
+                  shipmentId={value}
+                  index={key}
+                  variantIds={variantIds}
+                  addressId={addressId}
+                  warehouseId={warehouseId}
+                />
+              )
+            })}
+          </View>
+        </ScrollDiv>
+      </>
     )
   }
 }

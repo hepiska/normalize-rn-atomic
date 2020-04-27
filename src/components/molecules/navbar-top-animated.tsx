@@ -7,6 +7,7 @@ import { globalDimention, colors } from '@utils/constants'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import Animated from 'react-native-reanimated'
 import styled from 'styled-components/native'
+import { fontStyle } from '@components/commont-styles'
 import CartAction from '@components/atoms/cart-action-button'
 import { useNavigation } from '@react-navigation/native'
 
@@ -143,6 +144,7 @@ const NavbarTopAnimated: React.SFC<NavbarBottomProps> = ({
           <Animated.Text
             style={[
               {
+                ...fontStyle.helveticaBold,
                 flexWrap: 'wrap',
                 color: 'black',
                 fontSize: 16,

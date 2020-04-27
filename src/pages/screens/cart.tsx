@@ -26,7 +26,7 @@ class CartPage extends Component<any, any> {
               align="flex-start"
               justify="flex-start"
               _padding="0px 16px">
-              <Wishlist />
+              <Wishlist navigation={navigation} />
               <ProductSimilarList />
             </Div>
           }

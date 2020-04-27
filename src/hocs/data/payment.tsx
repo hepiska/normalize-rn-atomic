@@ -1,15 +1,15 @@
 import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 
-const paymentListMap = (state, ownProps) => {
-  const { orderId } = ownProps
-  const order = state.orders.data[orderId]
-  const transaction = state.transaction.data[orderId]
+const transactionListMap = (state, ownProps) => {
+  const { transactionId } = ownProps
+  const transaction = state.transaction.data[transactionId]
 
   return {
-    order,
     transaction,
   }
 }
-export function paymentListData(WrappedComponent) {
-  return connect(paymentListMap, null)(WrappedComponent)
+
+export function transactionListData(WrappedComponent) {
+  return connect(transactionListMap, null)(WrappedComponent)
 }

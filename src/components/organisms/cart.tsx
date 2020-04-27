@@ -240,7 +240,7 @@ const mapStateToProps = (state, ownProps) => {
   let manipulatedData = []
   let groupData = dataCarts.reduce((total, currentValue) => {
     let selectedItem = state.carts.data[currentValue]
-    let warehouse = selectedItem.variant.product.address
+    let warehouse = selectedItem && selectedItem.variant.product.address
     if (total[warehouse.id]) {
       total[warehouse.id].data.push(currentValue)
     } else {

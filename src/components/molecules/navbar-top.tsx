@@ -14,6 +14,7 @@ import { Div, PressAbbleDiv, Font } from '@components/atoms/basic'
 import {
   helveticaBlackBold,
   helveticaBlackTitleBold,
+  fontStyle,
   helveticaNormalFont12,
 } from '@components/commont-styles'
 import NotificationAction from '@components/atoms/notification-action-button'
@@ -128,14 +129,14 @@ const NavbarTop: React.SFC<NavbarTopProps> = ({
         />
         {subtitle ? (
           <Div justify="center" _width="100%">
-            <Font {...helveticaBlackTitleBold}>{title}</Font>
+            <Font style={fontStyle.helveticaBold}>{title}</Font>
             <Font {...helveticaNormalFont12} color={colors.black60}>
               {subtitle}
             </Font>
           </Div>
         ) : (
           <Div justify="center" _width="100%">
-            <Font {...helveticaBlackBold} size="18">
+            <Font style={fontStyle.helveticaBold} size="18">
               {title}
             </Font>
           </Div>

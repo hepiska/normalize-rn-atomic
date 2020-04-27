@@ -81,7 +81,7 @@ export const GradientButton = ({
             ? colors
             : [constantsColors.black60, constantsColors.black60]
         }
-        style={styles.linearGradient}>
+        style={[styles.linearGradient, StyleSheet.absoluteFill]}>
         {leftIcon && typeof leftIcon === 'string' ? (
           <Icon
             name={leftIcon}

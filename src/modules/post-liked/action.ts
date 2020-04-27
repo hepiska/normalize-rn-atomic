@@ -4,10 +4,7 @@ import { API } from '../action-types'
 import { setUserData } from '../user/action'
 import { setPostData } from '../post/action'
 import { setCommentData } from '../comment/action'
-
-const getMe = () => {
-  return store.getState().auth.data.user || {}
-}
+import { getMe } from '@utils/helpers'
 
 export const postLikedActionType = {
   CLEAR: 'postLiked/CLEAR',

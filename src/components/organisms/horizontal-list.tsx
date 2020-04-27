@@ -14,6 +14,7 @@ import BrandCard from '@components/molecules/brand-card'
 import ProductCard from '@components/molecules/product-card'
 import { postListData } from '@hocs/data/post'
 import { collectionListData } from '@hocs/data/collection'
+import { nestedScreenMap } from '@utils/constants'
 import { productListData } from '@hocs/data/product'
 import { brandListData } from '@hocs/data/brand'
 import { navigate } from '@src/root-navigation'
@@ -114,15 +115,32 @@ class HorizontalList extends React.Component<HorizontalListType, any> {
     }
   }
 
+  _onLinkPress = slug => () => {
+    const parsedUri = slug.split('/')
+    const screenKey = parsedUri[parsedUri.length - 2]
+    const screenParams = parsedUri[parsedUri.length - 1]
+    if (screenKey) {
+      const params = { from: screenKey }
+      params[
+        Number(screenParams) ? `${screenKey}Id` : `${screenKey}Slug`
+      ] = screenParams
+
+      const screen = nestedScreenMap(screenKey, params)
+      console.log(screen.screen, screen.params)
+      navigate(screen.screen, screen.params)
+    } else {
+      const screen = nestedScreenMap(screenParams)
+      navigate(screen.defaultScreen, {})
+    }
+  }
+
   _renderButton = data => {
     if (data.link_text) {
       return (
         <Div _width="100%" padd="0px 16px">
           <OutlineButton
             title={data.link_text}
-            onPress={() => {
-              if (data.type === 'brand') navigate('BrandList', {}) // revisi: diganti navigasi ke data.link
-            }}
+            onPress={this._onLinkPress(data.link)}
             {...helveticaNormalFont}
             style={styles.button}
           />

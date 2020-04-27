@@ -31,7 +31,9 @@ const productReducer: Reducer<ProductState> = (
   const newState = { ...state }
   switch (action.type) {
     case productActionType.SET_PRODUCT_DATA:
-      newState.data = Immutable.merge(newState.data, action.payload)
+      newState.data = Immutable.merge(newState.data, action.payload, {
+        deep: true,
+      })
       return newState
 
     case productActionType.CHANGE_VALUE:

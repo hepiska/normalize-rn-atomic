@@ -4,11 +4,7 @@ import { API } from '../action-types'
 import { setProductData } from '../product/action'
 import { setBrandData } from '../brand/action'
 import { setCategoryData } from '../category/action'
-
-const getMe = () => {
-  if (store) return store.getState().auth.data.user || {}
-  return {}
-}
+import { getMe } from '@utils/helpers'
 
 export const productSavedActionType = {
   CLEAR: 'productSaved/CLEAR',

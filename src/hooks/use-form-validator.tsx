@@ -1,7 +1,16 @@
 import { useState, useCallback, useEffect } from 'react'
 import { splitCamelCaseToString } from '@utils/helpers'
 
-export const useFormValidator = (schema, callback, reduxProps?: any) => {
+interface extraPropsType {
+  onChangeCallback: (disabled, state) => void
+}
+
+export const useFormValidator = (
+  schema,
+  callback,
+  reduxProps?: any,
+  extraProps?: extraPropsType,
+) => {
   const stateSchema = Object.assign(
     {},
     ...Object.keys(schema).map(key => ({
@@ -125,6 +134,9 @@ export const useFormValidator = (schema, callback, reduxProps?: any) => {
   useEffect(() => {
     if (isDirty) {
       setDisable(validateState())
+    }
+    if (extraProps && extraProps.onChangeCallback) {
+      extraProps.onChangeCallback(validateState(), state)
     }
   }, [state, isDirty])
 

@@ -85,7 +85,7 @@ class GroupPaymentMethod extends Component<any, any> {
   }
 
   render() {
-    const { item, style, orderId } = this.props
+    const { item, style, transactionId } = this.props
 
     return (
       <View {...style} style={{ marginTop: 24 }}>
@@ -96,7 +96,7 @@ class GroupPaymentMethod extends Component<any, any> {
               key={key}
               paymentMethodId={_item}
               index={key}
-              orderId={orderId}
+              transactionId={transactionId}
             />
           )
         })}

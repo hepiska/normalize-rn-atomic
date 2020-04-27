@@ -29,8 +29,10 @@ const MainScreens = () => (
 
 class Pages extends React.Component<any, any> {
   componentDidMount() {
-    this.props.getProductSaved()
-    this.props.getPostLiked()
+    if (this.props.isAuth) {
+      this.props.getProductSaved()
+      this.props.getPostLiked()
+    }
   }
   render() {
     return (
@@ -59,6 +61,10 @@ class Pages extends React.Component<any, any> {
   }
 }
 
+const mapStateToProps = state => ({
+  isAuth: state.auth.isAuth,
+})
+
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
@@ -68,4 +74,4 @@ const mapDispatchToProps = dispatch =>
     dispatch,
   )
 
-export default connect(null, mapDispatchToProps)(Pages)
+export default connect(mapStateToProps, mapDispatchToProps)(Pages)

@@ -2,6 +2,7 @@ import React from 'react'
 import { StyleSheet } from 'react-native'
 import { Div, Font } from '@components/atoms/basic'
 import Img from '@components/atoms/image'
+import { fontStyle } from '@components/commont-styles'
 import { images, colors } from '@src/utils/constants'
 
 interface ProductOverviewCart {
@@ -49,7 +50,10 @@ const ProductOverviewCart: React.FC<ProductOverviewCart> = ({
           _margin="0px 0px 8px">
           {brand}
         </Font>
-        <Font type="HelveticaNeue" size={14}>
+        <Font
+          style={{ ...fontStyle.helvetica }}
+          size={14}
+          color={colors.black100}>
           {name}
         </Font>
       </Div>

@@ -2,6 +2,7 @@ import Config from 'react-native-config'
 import { ToastAndroid, Alert, Platform } from 'react-native'
 import { uriSchreenMap } from './constants'
 import { PERMISSIONS, check, request } from 'react-native-permissions'
+import { store } from '@src/init-store'
 
 const currencyNum = inp => {
   const a = inp
@@ -123,4 +124,23 @@ export const checkLocationPermit = async (): Promise<boolean> => {
   } catch (error) {
     throw error
   }
+}
+
+export const getMe = () => {
+  if (store) return store.getState().auth.data.user || {}
+  return {}
+}
+
+export const countdown = (date, callback) => {
+  return setInterval(() => {
+    const now = new Date()
+    const distance = date.getTime() - now.getTime()
+    const days = Math.floor(distance / (1000 * 60 * 60 * 24))
+    const hours = Math.floor(
+      (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
+    )
+    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60))
+    const seconds = Math.floor((distance % (1000 * 60)) / 1000)
+    callback({ days, hours, minutes, seconds })
+  }, 1000)
 }

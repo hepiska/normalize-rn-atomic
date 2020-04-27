@@ -28,6 +28,12 @@
 				<string>fb2034068290174004</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>theshonetdev</string>
+			</array>
+		</dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>1</string>
@@ -35,13 +41,6 @@
 	<string>2034068290174004</string>
 	<key>FacebookDisplayName</key>
 	<string>The Shonet</string>
-	<key>NSCameraUsageDescription</key>
-	<string>The Shonet need access for the camera so that yout can capture your receipt directly from your camera</string>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>The Shonet need access for the location.
-  </string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string/>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>fbapi</string>
@@ -80,6 +79,13 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSCameraUsageDescription</key>
+	<string>The Shonet need access for the camera so that yout can capture your receipt directly from your camera</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>The Shonet need access for the location.
+  </string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string/>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>$(PRODUCT_NAME) wants to save photos</string>
 	<key>UIAppFonts</key>
@@ -101,12 +107,6 @@
 		<string>SimpleLineIcons.ttf</string>
 		<string>Zocial.ttf</string>
 		<string>Futura-Book.ttf</string>
-		<string>Futura-Demi.ttf</string>
-		<string>Futura-Regular.ttf</string>
-		<string>HelveticaNeue-Light.ttf</string>
-		<string>HelveticaNeue-Regular.ttf</string>
-		<string>HelveticaNeue-Thin.ttf</string>
-		<string>HelveticaNeue1-Light.ttf</string>
 		<string>FuturaDemi.ttf</string>
 		<string>FuturaDemi.woff2</string>
 		<string>FuturaRegular.ttf</string>
@@ -117,6 +117,7 @@
 		<string>HelveticaNeue-RegularItalic.otf</string>
 		<string>HelveticaNeue-Thin.otf</string>
 		<string>HelveticaNeue-Ultralight.otf</string>
+		<string>HelveticaNeue.otf</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>

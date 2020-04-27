@@ -18,19 +18,37 @@ const styles = StyleSheet.create({
 })
 
 class PaymentMethodPage extends Component<any, any> {
-  componentDidMount() {
+  async componentDidMount() {
     const {
-      orderId,
       getTransactionPaymentById,
       getTransactionById,
+      route,
+      transactionId,
     } = this.props
 
-    getTransactionById(orderId)
-    getTransactionPaymentById(orderId)
+    const _transactionId = route.params.transactionId || transactionId
+    if (_transactionId) {
+      getTransactionById(_transactionId)
+      getTransactionPaymentById(_transactionId)
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    const {
+      getTransactionPaymentById,
+      getTransactionById,
+      transactionLoading,
+      transactionId,
+    } = this.props
+    if (!transactionLoading) {
+      if (prevProps.transactionId !== this.props.transactionId) {
+        getTransactionById(transactionId)
+        getTransactionPaymentById(transactionId)
+      }
+    }
   }
   render() {
     const {
-      orderId,
       transactionId,
       transactionPaymentOrder,
       transactionPaymentData,
@@ -68,7 +86,7 @@ class PaymentMethodPage extends Component<any, any> {
                   key={`payment-method-${key}`}
                   item={groupingPayment[value]}
                   title={value}
-                  orderId={orderId}
+                  transactionId={transactionId}
                 />
               )
             })}
@@ -89,31 +107,16 @@ const mapDispatchToProps = dispatch =>
   )
 
 const mapStateToProps = (state, ownProps) => {
-  const orderId = state.orders.active
-  const transactionId = state.transaction.order
+  const transactionId = state.transaction.active
   const transactionPaymentOrder = state.transactionsPayments.order
   const transactionPaymentData = state.transactionsPayments.data
-
-  // const groupingPayment = paymentMethods.reduce((total, currentValue) => {
-  //   const payment = state.transactionsPayments.data[currentValue]
-  //   const groupName = payment.group_payment.replace(/\s+/g, '_')
-  //   let _groupName =
-  //     groupName === 'Dana' || groupName === 'Gopay' ? 'E_Wallet' : groupName
-
-  //   if (total[_groupName]) {
-  //     total[_groupName].push(currentValue)
-  //   } else {
-  //     total[_groupName] = [currentValue]
-  //   }
-  //   return total
-  // }, {})
+  const transactionLoading = state.transaction.loading
 
   return {
-    orderId,
     transactionId,
+    transactionLoading,
     transactionPaymentOrder,
     transactionPaymentData,
-    // groupingPayment,
   }
 }
 

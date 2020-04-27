@@ -85,7 +85,7 @@ export const addCart = (data: {
       return [
         setCartData(data.entities.cart),
         addOneCartOrder(data.result),
-        setLoading(false),
+        getAllCart(),
       ]
     },
   },

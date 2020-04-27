@@ -29,7 +29,6 @@ class FeaturedCategory extends React.Component<any, any> {
       ] = screenParams
 
       const screen = nestedScreenMap(screenKey, params)
-      console.log(screenKey, params)
       this.props.navigation.navigate(screen.screen, screen.params)
     } else {
       const screen = nestedScreenMap(screenParams)

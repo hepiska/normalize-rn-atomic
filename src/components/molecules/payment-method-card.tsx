@@ -39,15 +39,14 @@ class PaymentMethodCart extends Component<any, any> {
       screen: 'PaymentDetails',
       params: {
         details: this.props.paymentMethod,
-        orderId: this.props.orderId,
+        transactionId: this.props.transactionId,
       },
     })
   }
 
   render() {
-    const { paymentMethod, onPress, style, index, orderId } = this.props
+    const { paymentMethod, onPress, style, index } = this.props
     console.log('paymentMethod ---', paymentMethod)
-    console.log('orderId ---', orderId)
 
     const image =
       this.state.defaultImage ||

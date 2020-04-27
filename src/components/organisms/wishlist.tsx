@@ -9,6 +9,7 @@ import { getProductSaved } from '@modules/product-saved/action'
 import ProductCard from '@components/molecules/product-card'
 import { productListData } from '@hocs/data/product'
 import { productApi } from '@modules/product/action'
+// import { addCart } from '@modules/cart/action'
 
 const { width } = Dimensions.get('window')
 
@@ -26,6 +27,14 @@ class Wishlist extends Component<any, any> {
 
   componentDidMount() {
     this.freshfetch()
+  }
+
+  _openCartModal = productId => () => {
+    const { navigation, product } = this.props
+    navigation.navigate('modals', {
+      screen: 'CartModal',
+      params: { product: productId },
+    })
   }
 
   freshfetch = async () => {
@@ -48,6 +57,7 @@ class Wishlist extends Component<any, any> {
           style={{ fontWeight: '500' }}>
           Wishlist
         </Font>
+        {/* revisit: need change to flatlist */}
         <Div
           _direction="row"
           _flex={1}
@@ -59,6 +69,7 @@ class Wishlist extends Component<any, any> {
             : products.map((item, k) => (
                 <ProductWithCardHoc
                   key={item}
+                  onAddtoCart={this._openCartModal(item)}
                   productId={item}
                   style={{
                     wrappermargin: 8,

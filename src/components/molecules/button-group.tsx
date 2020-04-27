@@ -7,6 +7,7 @@ import {
   Text,
 } from 'react-native'
 import { colors } from '@utils/constants'
+import { fontStyle } from '@components/commont-styles'
 import Icon from 'react-native-vector-icons/FontAwesome'
 
 interface BottonItem {
@@ -74,7 +75,12 @@ const ButtonGroup = ({ items, style }: ButtonGroupProps) => {
               color={item.color || colors.black100}
             />
           )}
-          <Text style={{ ...styles.fontStyle, color: item.color }}>
+          <Text
+            style={{
+              ...styles.fontStyle,
+              ...fontStyle.helveticaBold,
+              color: item.color,
+            }}>
             {item.name}
           </Text>
         </TouchableOpacity>

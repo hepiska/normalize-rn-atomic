@@ -24,6 +24,7 @@ import { addCart } from '@modules/cart/action'
 import RangePrice from '@components/molecules/range-price'
 import Price from '@components/atoms/price'
 import ButtonGroup from '@components/molecules/button-group'
+import { fontStyle } from '@components/commont-styles'
 import { GradientButton } from '@components/atoms/button'
 import { getProductById } from '@modules/product/action'
 import { setImage, deepClone } from '@utils/helpers'
@@ -88,7 +89,7 @@ class ProductListPage extends React.Component<any, any> {
   }
 
   groupButton = [
-    { name: 'Save', icon: 'bookmark', onPress: () => {} },
+    { name: 'Save to Collection', icon: 'bookmark', onPress: () => {} },
     {
       name: 'Share',
       icon: 'share',
@@ -163,10 +164,10 @@ class ProductListPage extends React.Component<any, any> {
             <Div bg="white" _width="100%" padd="0px 16px 96px">
               <Div width="100%" align="flex-start" padd="16px 0px">
                 <Font
-                  family="Futura-Bold"
+                  style={fontStyle.futuraDemi}
                   size={18}
                   _margin="4px"
-                  color="black">
+                  color={colors.black100}>
                   {product.brand.name}
                 </Font>
                 <Font size={18} _margin="4px" color={colors.gray3}>
@@ -207,7 +208,7 @@ class ProductListPage extends React.Component<any, any> {
                 onPress={this._addToCart}
                 fontStyle={{
                   color: colors.white,
-                  fontWeight: '500',
+                  ...fontStyle.helveticaBold,
                   fontSize: 14,
                 }}
                 style={{
@@ -240,6 +241,7 @@ const mapStateToProps = (state, ownProps) => {
   const _product = deepClone(
     state.products.data[ownProps.route.params?.productId],
   )
+  _product.brand = state.brands.data[_product.brand]
   if (_product.attributes) {
     _product.attributes = _product.attributes.map(v => {
       return state.productAttribute.data[v]

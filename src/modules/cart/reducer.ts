@@ -10,6 +10,7 @@ interface CartStateType {
   readonly data: Object
   readonly order: Array<number>
   readonly error?: ErrorType
+  readonly itemError: Object
   activeCart: number
   pagination: Object
   loading: Boolean
@@ -19,6 +20,7 @@ const initialState: CartStateType = {
   data: Immutable({}),
   order: Immutable([]),
   error: null,
+  itemError: Immutable({}),
   pagination: null,
   activeCart: null,
   loading: false,

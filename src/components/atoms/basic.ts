@@ -185,7 +185,7 @@ export const Font = styled.Text`
         if (weight) {
           return `font-family: HelveticaNeue-${weight}`
         }
-        return `font-family: HelveticaNeue-Regular`
+        return `font-family: HelveticaNeue`
       case 'Futura':
         if (weight) {
           return `font-family: Futura-${weight}`

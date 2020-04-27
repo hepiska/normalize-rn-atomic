@@ -9,7 +9,9 @@ import AsyncStorage from '@react-native-community/async-storage'
 interface OrderState {
   readonly data: Object
   readonly order: Object
+  pagination: Object
   active: number
+  orderStatuses: Array<string>
   readonly loading: Boolean
   readonly error?: ErrorType
 }
@@ -17,7 +19,17 @@ interface OrderState {
 const initialState: any = {
   data: Immutable({}),
   order: Immutable([]),
+  pagination: {},
   active: null,
+  orderStatuses: [
+    'paid',
+    'confirmed',
+    'shipping',
+    'delivered',
+    'completed',
+    'cancelled',
+    'refund',
+  ],
   loading: false,
   error: null,
 }
@@ -34,6 +46,18 @@ const orderReducer: Reducer<OrderState> = (
     case orderActionType.SET_ORDER_ORDER:
       newState.order = Immutable(action.payload)
       return newState
+    case orderActionType.SET_ORDER_ORDER_PAGINATION:
+      if (
+        action.payload.pagination.offset &&
+        action.payload.pagination.total &&
+        newState.order.length <= action.payload.pagination.total
+      ) {
+        newState.order = newState.order.concat(Immutable(action.payload.order))
+      } else {
+        newState.order = Immutable(action.payload.order)
+      }
+      newState.pagination = action.payload.pagination
+      return newState
     case orderActionType.SET_ORDER_LOADING:
       newState.loading = action.payload
       return newState
@@ -47,9 +71,10 @@ const orderReducer: Reducer<OrderState> = (
   }
 }
 
-const orderPersistConfig = {
-  key: 'order',
-  storage: AsyncStorage,
-}
+// const orderPersistConfig = {
+//   key: 'order',
+//   storage: AsyncStorage,
+// }
 
-export default persistReducer(orderPersistConfig, orderReducer)
+// export default persistReducer(orderPersistConfig, orderReducer)
+export default orderReducer

@@ -5,6 +5,7 @@ import {
   deleteProductSaved,
 } from '@modules/product-saved/action'
 import { navigate } from '@src/root-navigation'
+import { addCart } from '@modules/cart/action'
 import { deepClone } from '@utils/helpers'
 
 const productListMap = (state, ownProps) => {
@@ -23,7 +24,7 @@ const productListMap = (state, ownProps) => {
   if (!_product) return {}
   // const product = ownProps.product
   ownProps.onPress = () => {
-    navigate('ProductDetail', { productId })
+    navigate('Screens', { screen: 'ProductDetail', params: { productId } })
   }
   return {
     product: _product,

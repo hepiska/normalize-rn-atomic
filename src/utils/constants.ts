@@ -52,11 +52,20 @@ export const colors = {
   black80: '#454545',
   black90: '#949494',
   black100: '#1A1A1A',
+  ActivePurple: {
+    start: { x: 0, y: 0 },
+    end: { x: 1, y: 0 },
+    colors: ['#3067E4', '#8131E2'],
+  },
 }
 
 export const regex: any = {
   phoneNumber: /^(^\+62\s?|^0)(\d{3,4}){2}\d{3,4}$/,
   email: /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/,
+  // card_number: /^(?:(4[0-9]{12}(?:[0-9]{3})?)|(5[1-5][0-9]{2}(?:\s[0-9]{4}){3})|(6(?:011|5[0-9]{2})[0-9]{12})|(3[47][0-9]{13})|(3(?:0[0-5]|[68][0-9])[0-9]{11})|((?:2131|1800|35[0-9]{3})[0-9]{11}))\s?$/, //latest
+  card_number: /^(?:(4[0-9]{12}(?:[0-9]{3})?)|(5[1-5][0-9]{2}(?:\s[0-9]{4}){3})|(6(?:011|5[0-9]{2})[0-9]{12})|(3[47][0-9]{13})|(3(?:0[0-5]|[68][0-9])[0-9]{11})|((?:2131|1800|35[0-9]{3})[0-9]{11}))(\s{0,5})?$/,
+  expired_date: /^((0[1-9])|(1[0-2]))[\/]*(([1-4][0-9]))$/,
+  cvv: /^[0-9]{3,4}$/,
 }
 export const images = {
   product: require('@assets/placeholder/placeholder2.jpg'),
@@ -91,7 +100,15 @@ export const uriSchreenMap = {
 export const nestedScreenMap = (key, params?) => {
   const map = {
     collections: {
-      screen: 'Shop',
+      screen: 'Screens',
+      defaultScreen: 'ColectionList',
+      params: {
+        screen: 'ProductList',
+        params,
+      },
+    },
+    collection: {
+      screen: 'Screens',
       defaultScreen: 'ColectionList',
       params: {
         screen: 'ProductList',
@@ -99,7 +116,7 @@ export const nestedScreenMap = (key, params?) => {
       },
     },
     categories: {
-      screen: 'Shop',
+      screen: 'Screens',
       defaultScreen: 'CategoryList',
       params: {
         screen: 'ProductList',
@@ -107,7 +124,7 @@ export const nestedScreenMap = (key, params?) => {
       },
     },
     brands: {
-      screen: 'Shop',
+      screen: 'Screens',
       defaultScreen: 'BrandList',
       params: {
         screen: 'ProductList',

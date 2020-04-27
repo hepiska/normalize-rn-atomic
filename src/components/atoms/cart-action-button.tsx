@@ -37,11 +37,15 @@ const CartActionButton = props => {
   const navigation = useNavigation()
 
   React.useEffect(() => {
-    props.getAllCart()
+    if (props.isAuth) {
+      props.getAllCart()
+    }
   }, [])
 
   const _gotoCart = () => {
-    navigation.navigate('Cart')
+    navigation.navigate('Screens', {
+      screen: 'Cart',
+    })
   }
   return (
     <PressAbbleDiv onPress={_gotoCart} style={styles.rightAction}>
@@ -62,6 +66,7 @@ const CartActionButton = props => {
 }
 
 const mapStateToProps = state => ({
+  isAuth: state.auth.isAuth,
   totalCart: state.carts.order.length,
 })
 const mapDispatchToProps = dispatch =>

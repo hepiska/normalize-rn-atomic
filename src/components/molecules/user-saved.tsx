@@ -20,7 +20,6 @@ const UserSaved = ({ imageUrl }: UserSaved) => {
       <Font size={14} color={colors.black100} style={{ fontWeight: '500' }}>
         agungganteng
         <Font size={14} style={{ fontWeight: 'normal' }}>
-          {' '}
           save this
         </Font>
       </Font>

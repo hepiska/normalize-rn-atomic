@@ -1,5 +1,7 @@
 import React from 'react'
 import { StyleSheet, View, Image } from 'react-native'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 import ContentExpandable from '@components/molecules/content-expandable'
 import { Font, ScrollDiv } from '@components/atoms/basic'
 import {
@@ -14,6 +16,9 @@ import Icon from 'react-native-vector-icons/FontAwesome5'
 import IconMi from 'react-native-vector-icons/MaterialIcons'
 import { Checkbox } from '../atoms/checkbox'
 import ImageAutoSchale from '@components/atoms/image-autoschale'
+import PaymentCreditCard from '@components/molecules/payment-credit-card'
+import OrderCard from '@components/molecules/order-card'
+import { payTransaction } from '@modules/transaction/action'
 import TextInputOutline from '@src/components/atoms/field-floating'
 
 // interface PaymentDetailType {
@@ -84,9 +89,8 @@ const styles = StyleSheet.create({
 class PaymentDetail extends React.PureComponent<any, any> {
   state = {
     isChecked: false,
-    cardNumber: { required: true, value: null },
-    expiredDate: { required: true, value: null },
-    cvv: { required: true, value: null },
+    dataCreditCard: {},
+    isDisabled: true,
   }
 
   renderTitleExpandable = () => {
@@ -166,6 +170,13 @@ class PaymentDetail extends React.PureComponent<any, any> {
     )
   }
 
+  onChangeCreditCard = (disable, state) => {
+    this.setState({
+      dataCreditCard: state,
+      isDisabled: disable,
+    })
+  }
+
   renderInformation = name => {
     switch (name) {
       case 'GoPay':
@@ -198,42 +209,11 @@ class PaymentDetail extends React.PureComponent<any, any> {
         )
       case 'Credit Card':
         return (
-          <>
-            <View style={{ marginTop: 24, width: '100%' }}>
-              <TextInputOutline
-                label="Card Number"
-                value={this.state.cardNumber.value}
-                // value="100 100 100 100"
-                // onChangeText={handleOnChange('username')}
-                // error={state.username.error}
-                autoCapitalize="none"
-              />
-            </View>
-            <View
-              style={{ marginTop: 22, width: '100%', flexDirection: 'row' }}>
-              <View style={{ flex: 0.5 }}>
-                <TextInputOutline
-                  label="Expired Date"
-                  value={this.state.expiredDate.value}
-                  // value="22/20"
-                  // onChangeText={handleOnChange('username')}
-                  // error={state.username.error}
-                  autoCapitalize="none"
-                />
-              </View>
-              <View style={{ flex: 0.5, marginLeft: 16 }}>
-                <TextInputOutline
-                  label="CVV"
-                  value={this.state.cvv.value}
-                  // value="111"
-                  // onChangeText={handleOnChange('username')}
-                  // error={state.username.error}
-                  secureTextEntry
-                  autoCapitalize="none"
-                />
-              </View>
-            </View>
-          </>
+          <PaymentCreditCard
+            transaction={this.props.transaction}
+            details={this.props.details}
+            onChangeCreditCard={this.onChangeCreditCard}
+          />
         )
       default:
         return (
@@ -305,9 +285,30 @@ class PaymentDetail extends React.PureComponent<any, any> {
     })
   }
 
+  handlePayment = () => {
+    // console.log('handle payment')
+    const { payTransaction, transaction, details } = this.props
+    const { dataCreditCard } = this.state
+    console.log('dataCreditCard ---', dataCreditCard, transaction, details)
+
+    // payTransaction(transaction.id, details.id) -> buat yang tidak credit card
+    // payTransaction(transaction.id, token) -> buat credit card
+  }
+
   render() {
     const { details, style, order, transaction } = this.props
-    const { isChecked } = this.state
+    const { isChecked, isDisabled, dataCreditCard } = this.state
+
+    console.log('disable parent ---', isDisabled)
+    let disableButton = true
+    if (details.name.toLowerCase() !== 'credit card') {
+      disableButton = !isChecked
+    } else {
+      if (!isDisabled && isChecked) {
+        disableButton = false
+      }
+    }
+    console.log('disableButton ---', disableButton)
 
     return (
       <>
@@ -336,6 +337,24 @@ class PaymentDetail extends React.PureComponent<any, any> {
           </View>
         </ScrollDiv>
         <View {...styles.footer}>
+          {details.name.toLowerCase() === 'credit card' && (
+            <View style={{ flexDirection: 'row', marginTop: 36 }}>
+              <ImageAutoSchale
+                source={require('@src/assets/icons/visa.png')}
+                width={56}
+              />
+              <ImageAutoSchale
+                source={require('@src/assets/icons/master-card.png')}
+                width={56}
+                style={{ marginLeft: 17 }}
+              />
+              <ImageAutoSchale
+                source={require('@src/assets/icons/norton.png')}
+                width={56}
+                style={{ marginLeft: 17 }}
+              />
+            </View>
+          )}
           <View
             style={{
               flexDirection: 'row',
@@ -379,14 +398,12 @@ class PaymentDetail extends React.PureComponent<any, any> {
                 <Icon name="lock" color={colors.white} size={14} />
               </View>
             }
-            onPress={() => {}}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 0 }}
-            colors={['#3067E4', '#8131E2']}
+            onPress={this.handlePayment}
+            {...colors.ActivePurple}
             title="Pay Now"
             fontStyle={styles.buttonText}
             style={styles.button}
-            disabled={!isChecked}
+            disabled={disableButton}
           />
         </View>
       </>
@@ -394,4 +411,12 @@ class PaymentDetail extends React.PureComponent<any, any> {
   }
 }
 
-export default PaymentDetail
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      payTransaction,
+    },
+    dispatch,
+  )
+
+export default connect(null, mapDispatchToProps)(PaymentDetail)

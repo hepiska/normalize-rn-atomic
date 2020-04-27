@@ -1,11 +1,6 @@
-import { store } from '@src/init-store'
 import { API } from '../action-types'
 import * as schema from '@modules/normalize-schema'
-
-const getMe = () => {
-  if (store) return store.getState().auth.data.user || {}
-  return {}
-}
+import { getMe } from '@utils/helpers'
 
 export const addressActionType = {
   FETCH: 'post/FETCH',

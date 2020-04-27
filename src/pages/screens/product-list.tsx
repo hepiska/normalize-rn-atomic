@@ -5,6 +5,7 @@ import {
   StyleSheet,
   SectionList,
   View,
+  Image,
 } from 'react-native'
 import { Div, Font } from '@components/atoms/basic'
 import { bindActionCreators } from 'redux'
@@ -55,7 +56,7 @@ const styles = StyleSheet.create({
 
 const ProductWithCardHoc = productListData(ProductCard)
 
-const imageHeight = 205
+const imageHeight = 103
 
 class Productlist extends Component<any, any> {
   state = {
@@ -241,7 +242,7 @@ class Productlist extends Component<any, any> {
       if (this.props.loading) {
         return
       }
-      if (this.props.pagination.total > this.props.products.length) {
+      if (this.props.pagination?.total > this.props.products.length) {
         this._fetchData(this.skip)
       }
     }
@@ -313,20 +314,31 @@ class Productlist extends Component<any, any> {
     return this.props.headerError ? (
       <ErrorOrg />
     ) : (
-      <ImageBackground
-        style={{
-          width: '100%',
-          height: imageHeight,
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-        source={{
-          uri: setImage(headerData.image || '', { width, height: imageHeight }),
-        }}>
-        <Font {...futuraTitleFont} color="white" size="24">
-          {headerData.title}
-        </Font>
-      </ImageBackground>
+      <View style={{ padding: 16 }}>
+        <View
+          style={{
+            height: imageHeight,
+            alignItems: 'center',
+            backgroundColor: colors.black100,
+            borderRadius: 8,
+            justifyContent: 'center',
+          }}>
+          {headerData.image && (
+            <Image
+              style={StyleSheet.absoluteFillObject}
+              source={{
+                uri: setImage(headerData.image, {
+                  width,
+                  height: imageHeight,
+                }),
+              }}
+            />
+          )}
+          <Font {...futuraTitleFont} color="white" size="24">
+            {headerData.title}
+          </Font>
+        </View>
+      </View>
     )
   }
 
@@ -363,7 +375,7 @@ class Productlist extends Component<any, any> {
       headerData.title = collection.title
       headerData.image = collection.landscape_image_url || headerData.image
     } else if (category) {
-      headerData.title = category.title
+      headerData.title = category.name
     }
     const sectionData = products.length
       ? [
@@ -458,7 +470,8 @@ const mapStateToProps = (state, { route }) => {
   // }
 
   if (
-    route.params.from === 'collections' &&
+    (route.params.from === 'collections' ||
+      route.params.from === 'collection') &&
     (collectionId || route.params.collectionsSlug)
   ) {
     return {
@@ -474,7 +487,10 @@ const mapStateToProps = (state, { route }) => {
 
   const brandId = route.params.brandId || route.params.brandsId
 
-  if (route.params.from === 'brands' && (brandId || route.params.brandsSlug)) {
+  if (
+    (route.params.from === 'brands' || route.params.from === 'brand') &&
+    (brandId || route.params.brandsSlug)
+  ) {
     return {
       brand: state.brands.data[brandId] || { id: brandId },
       headerError: state.global.error,
@@ -494,7 +510,7 @@ const mapStateToProps = (state, { route }) => {
     state.categories.activeCategory
 
   if (
-    route.params.from === 'categories' &&
+    (route.params.from === 'categories' || route.params.from === 'category') &&
     (categoriesId || route.params.categoriesSlug)
   ) {
     return {

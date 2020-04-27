@@ -3,14 +3,14 @@ import { ScrollDiv } from '@components/atoms/basic'
 import { connect } from 'react-redux'
 import NavbarTop from '@src/components/molecules/navbar-top'
 import { colors } from '@src/utils/constants'
-import { paymentListData } from '@hocs/data/payment'
+import { transactionListData } from '@hocs/data/payment'
 import PaymentDetailPage from '@components/organisms/payment-details'
 
-const PaymentHoc = paymentListData(PaymentDetailPage)
+const PaymentHoc = transactionListData(PaymentDetailPage)
 
 class PaymentDetails extends Component<any, any> {
   render() {
-    const { details, orderId } = this.props
+    const { details, transactionId } = this.props
     return (
       <>
         <NavbarTop
@@ -18,7 +18,7 @@ class PaymentDetails extends Component<any, any> {
           leftContent={['back']}
           style={{ borderBottomWidth: 1, borderBottomColor: colors.black50 }}
         />
-        <PaymentHoc details={details} orderId={orderId} />
+        <PaymentHoc details={details} transactionId={transactionId} />
       </>
     )
   }
@@ -26,11 +26,11 @@ class PaymentDetails extends Component<any, any> {
 
 const mapStateToProps = (state, ownProps) => {
   const details = ownProps.route.params.details
-  const orderId = ownProps.route.params.orderId
+  const transactionId = ownProps.route.params.transactionId
 
   return {
     details,
-    orderId,
+    transactionId,
   }
 }
 

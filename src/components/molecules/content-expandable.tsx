@@ -85,7 +85,7 @@ class ContentExpandable extends React.Component<ContentExpandableType, any> {
           justify="space-between"
           padd={paddingTitle || '32px 0'}>
           {typeof title === 'string' ? (
-            <Font type="Futura" weight="bold" size="18px">
+            <Font type="heading" size="18px">
               {capilEachWord(title.replace('-', ' '))}
             </Font>
           ) : (

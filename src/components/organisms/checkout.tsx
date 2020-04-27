@@ -63,15 +63,12 @@ class Checkout extends Component<any, any> {
     navigate('ChooseAddress', {})
   }
 
-  onPayNow = (item, totalPrice) => () => {
+  onPayNow = (item, totalPrice) => async () => {
     const { payNow, userCheckoutAddress, loadingCheckout } = this.props
-    // payNow(item, userCheckoutAddress.id)
-
-    if (!loadingCheckout) {
-      navigate('Screens', {
-        screen: 'PaymentMethod',
-      })
-    }
+    await payNow(item, userCheckoutAddress.id)
+    navigate('Screens', {
+      screen: 'PaymentMethod',
+    })
   }
 
   render() {
@@ -170,7 +167,6 @@ const mapDispatchToProps = dispatch =>
   )
 
 const mapStateToProps = (state, ownProps) => {
-  console.log('state ---', state)
   const dataCarts = ownProps.carts
 
   /* revisi: pindah ke dalam render sebelum return */
