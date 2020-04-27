@@ -7,6 +7,7 @@ import {
   ScrollView,
   ViewStyle,
   StyleSheet,
+  TextInputProps,
 } from 'react-native'
 import Field from '@components/atoms/field'
 import { colors } from '@utils/constants'
@@ -26,6 +27,7 @@ interface SearchIconType {
   selectedFilter: Array<string>
   onfilterSelected?: (FilterItemType) => void
   style?: ViewStyle
+  inputProps?: TextInputProps
 }
 
 const styles = StyleSheet.create({
@@ -45,6 +47,7 @@ const SearchFilter = ({
   onfilterSelected,
   style,
   filterItems,
+  inputProps,
 }: SearchIconType) => {
   const _onPress = item => () => {
     if (onfilterSelected) {
@@ -64,6 +67,7 @@ const SearchFilter = ({
             color={colors.black90}
           />
         }
+        inputProps={{ ...inputProps }}
       />
       <View style={{ flexDirection: 'row' }}>
         {filterItems && (

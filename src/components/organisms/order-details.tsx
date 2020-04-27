@@ -47,6 +47,7 @@ const buttonAction = [
       onPress: () => {
         console.log('button')
       },
+      showWhen: ['sent', 'delivered', 'completed'],
     },
     text: {
       style: {
@@ -69,6 +70,7 @@ const buttonAction = [
       onPress: () => {
         console.log('button 2')
       },
+      showWhen: ['sent', 'delivered'],
     },
     text: {
       style: {
@@ -91,6 +93,7 @@ const buttonAction = [
       onPress: () => {
         console.log('button 3')
       },
+      showWhen: ['sent', 'delivered', 'refunded'],
     },
     text: {
       style: {
@@ -152,6 +155,21 @@ class OrderDetails extends Component<any, any> {
     } else {
       return channel + ' ' + name
     }
+  }
+
+  renderButton = (item, key) => {
+    if (item.button.showWhen.includes(this.props.order.status.toLowerCase())) {
+      return (
+        <OutlineButton
+          key={`button-order-detail-${key}`}
+          title={item.text.label}
+          onPress={item.button.onPress}
+          fontStyle={{ ...item.text.style }}
+          style={item.button.style}
+        />
+      )
+    }
+    return null
   }
   render() {
     const { order, style, products } = this.props
@@ -553,15 +571,7 @@ class OrderDetails extends Component<any, any> {
         {/* button action */}
         <View>
           {buttonAction.map((item, key) => {
-            return (
-              <OutlineButton
-                key={`button-order-detail-${key}`}
-                title={item.text.label}
-                onPress={item.button.onPress}
-                fontStyle={item.text.style}
-                style={item.button.style}
-              />
-            )
+            return this.renderButton(item, key)
           })}
         </View>
       </View>

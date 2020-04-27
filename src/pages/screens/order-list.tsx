@@ -16,6 +16,7 @@ import SearchFilter from '@components/organisms/search-filter'
 import { orderListData } from '@hocs/data/order'
 import OrderCard from '@components/molecules/order-card'
 import InviniteLoader from '@components/atoms/loaders/invinite'
+import OrderEmptyState from '@src/components/molecules/order-empty-state'
 
 const OrderHoc = orderListData(OrderCard)
 
@@ -43,13 +44,7 @@ class OrderList extends Component<any, any> {
     this.setState({ selectedFilter: _selectedFilter }, () => this._freshfetch())
   }
   _onSearchChange = text => {
-    if (this.timeout) {
-      this.timeout = null
-    }
-
-    this.setState({ searchKey: text }, () => {
-      this.timeout(() => {}, 500)
-    })
+    this.setState({ searchKey: text })
   }
 
   _freshfetch = () => {
@@ -88,6 +83,10 @@ class OrderList extends Component<any, any> {
     }
   }
 
+  submitEditing = () => {
+    this._freshfetch()
+  }
+
   _renderFilter = () => {
     const { selectedFilter } = this.state
     const { filterOptions } = this.props
@@ -112,6 +111,9 @@ class OrderList extends Component<any, any> {
         filterItems={options}
         searchKey={this.state.searchKey}
         style={{ paddingTop: 24, paddingHorizontal: 16 }}
+        inputProps={{
+          onSubmitEditing: this.submitEditing,
+        }}
       />
     )
   }
@@ -129,6 +131,14 @@ class OrderList extends Component<any, any> {
     )
   }
 
+  _emptyComponent = () => {
+    return (
+      <View>
+        <OrderEmptyState />
+      </View>
+    )
+  }
+
   _keyExtractor = (item, index) => '' + item + index
   render() {
     const { orders } = this.props
@@ -141,11 +151,12 @@ class OrderList extends Component<any, any> {
           }}>
           <FlatList
             keyExtractor={this._keyExtractor}
-            ListHeaderComponent={this._renderFilter}
+            ListHeaderComponent={this._renderFilter()}
             data={orders}
             renderItem={this._renderItem}
             onEndReached={this._fetchMore}
             onEndReachedThreshold={0.97}
+            ListEmptyComponent={this._emptyComponent}
           />
           {this.props.loading && (
             <View
