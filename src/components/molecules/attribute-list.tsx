@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { Text } from 'react-native'
 import { Div, Font, PressAbbleDiv, ScrollDiv } from '@components/atoms/basic'
 import colorString from 'color-string'
 import { colors } from '@utils/constants'
@@ -103,7 +104,10 @@ const AtributesList = ({
         <Font type="heading" size="18" _margin="0px 8px 0px 0px">
           {label}
         </Font>
-        <Font {...helveticaNormalFont}>{selectedAttribute.label}</Font>
+        <Text
+          style={{ ...fontStyle.helvetica, fontSize: 14, color: colors.gray3 }}>
+          {selectedAttribute.label}
+        </Text>
       </Div>
       <ScrollDiv horizontal _margin="8px 0px" radius="0px">
         {values.map((option, k) => (

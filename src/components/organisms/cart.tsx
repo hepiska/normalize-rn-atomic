@@ -54,10 +54,11 @@ class Cart extends Component<any, any> {
       <CartHoc
         key={`cart-${index}`}
         cartId={item}
-        style={{ ...styles.cartMargin }}
+        style={{ paddingHorizontal: 16 }}
         index={index}
         isChecked={isChecked}
         chooseCart={this.onChooseCartByItem}
+        removeSelectedVariant={this.onRemoveSelectedVariant}
       />
     )
   }
@@ -96,6 +97,14 @@ class Cart extends Component<any, any> {
           return Boolean(sum * carts.includes(_dat))
         }, true)
       : false
+
+  onRemoveSelectedVariant = cartId => {
+    const { selectedVariant } = this.state
+    const newSelectedVariant = selectedVariant.filter(value => value !== cartId)
+    this.setState({
+      selectedVariant: [...newSelectedVariant],
+    })
+  }
 
   onChooseCartByItem = cartId => () => {
     const { selectedVariant } = this.state
@@ -157,9 +166,6 @@ class Cart extends Component<any, any> {
           </PressAbbleDiv>
           <PressAbbleDiv onPress={this._removeCart}>
             <View {...styles.cartMargin}>
-              {/* <Font {...helveticaBlackBold} color={colors.blue60}>
-                Remove
-              </Font> */}
               <Text style={{ ...styles.helveticaBold14, color: colors.blue60 }}>
                 Remove
               </Text>
@@ -180,7 +186,6 @@ class Cart extends Component<any, any> {
         <Div
           _width="100%"
           flexDirection="row"
-          // _margin="25px 0 0 0"
           _padding="25px 16px"
           alignItems="flex-start"
           justifyContent="flex-start"
@@ -217,9 +222,34 @@ class Cart extends Component<any, any> {
   }
 
   render() {
-    const { carts, footer, data } = this.props
+    const { footer, stateCarts, carts } = this.props
     const { selectedVariant } = this.state
 
+    let data = []
+    let groupData = carts.reduce((total, currentValue) => {
+      let selectedItem = stateCarts[currentValue]
+      let warehouse = selectedItem && selectedItem.variant.product.address
+      if (total[warehouse.id]) {
+        total[warehouse.id].data.push(currentValue)
+      } else {
+        total[warehouse.id] = {
+          title: warehouse.label,
+          data: [currentValue],
+        }
+      }
+      return total
+    }, {})
+    data = Object.keys(groupData).map(k => groupData[k])
+
+    const enableCheckout = selectedVariant.reduce((isAvail, value) => {
+      isAvail *=
+        stateCarts[value].is_stock_available * stateCarts[value].is_available
+      return Boolean(isAvail)
+    }, true)
+
+    if (!data && data.length === 0) {
+      return null
+    }
     return (
       <>
         <SectionList
@@ -236,6 +266,7 @@ class Cart extends Component<any, any> {
           items={selectedVariant}
           buttonText="Checkout"
           onCheckout={this._onCheckout}
+          enableButton={enableCheckout}
         />
       </>
     )
@@ -245,28 +276,9 @@ class Cart extends Component<any, any> {
 const mapDispatchToProps = dispatch =>
   bindActionCreators({ removeCart }, dispatch)
 
-const mapStateToProps = (state, ownProps) => {
-  const dataCarts = ownProps.carts
-
-  /* revisi: pindah ke dalam render sebelum return */
-  let manipulatedData = []
-  let groupData = dataCarts.reduce((total, currentValue) => {
-    let selectedItem = state.carts.data[currentValue]
-    let warehouse = selectedItem && selectedItem.variant.product.address
-    if (total[warehouse.id]) {
-      total[warehouse.id].data.push(currentValue)
-    } else {
-      total[warehouse.id] = {
-        title: warehouse.label,
-        data: [currentValue],
-      }
-    }
-    return total
-  }, {})
-  manipulatedData = Object.keys(groupData).map(k => groupData[k])
+const mapStateToProps = (state: any) => {
   return {
-    data: manipulatedData,
-    totalCart: state.carts.order.length,
+    stateCarts: state.carts.data,
   }
 }
 

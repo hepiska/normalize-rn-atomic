@@ -130,6 +130,7 @@ export const changeVariant = ({ cart, variant_id }: any) => ({
 export const changeCartQty = ({ qty, cart_id }) => ({
   type: API,
   payload: {
+    schema: schema.cart,
     url: '/carts/' + cart_id,
     requestParams: {
       method: 'PUT',
@@ -139,8 +140,11 @@ export const changeCartQty = ({ qty, cart_id }) => ({
     },
     startNetwork: () => setLoading(true),
     success: data => {
-      // console.log(data)
-      return [changeQtyData({ qty, cart_id }), setLoading(false)]
+      return [
+        setCartData(data.entities.cart),
+        changeQtyData({ qty, cart_id }),
+        setLoading(false),
+      ]
     },
   },
 })

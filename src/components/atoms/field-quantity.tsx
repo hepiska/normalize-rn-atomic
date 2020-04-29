@@ -21,6 +21,7 @@ interface FieldType {
   qty: string | number
   inputProps?: any
   style?: any
+  incDisable?: Boolean
 }
 
 const styles = StyleSheet.create({
@@ -78,6 +79,7 @@ const FieldQuantity = ({
   onDecrease,
   style,
   inputProps,
+  incDisable = true,
 }: FieldType) => {
   const _onInc = () => {
     onIncrease(Number(qty) + 1)
@@ -97,10 +99,18 @@ const FieldQuantity = ({
           {qty}
         </Text>
       </Div>
-      <PressAbbleDiv onPress={_onInc}>
+      <PressAbbleDiv onPress={incDisable ? () => {} : _onInc}>
         <Div {...styles.rightButton} {...styles.button}>
           <Icon name="plus" size={8} color={colors.black60} />
         </Div>
+        {incDisable && (
+          <View
+            style={[
+              StyleSheet.absoluteFillObject,
+              { backgroundColor: 'rgba(255,255,255, 0.5)' },
+            ]}
+          />
+        )}
       </PressAbbleDiv>
     </Div>
   )

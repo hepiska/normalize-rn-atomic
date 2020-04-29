@@ -27,6 +27,7 @@ interface CartCardType {
   chooseCart: Function
   removeCart: (data: any) => void
   changeCartQty: (data: any) => void
+  removeSelectedVariant: (data: any) => void
 }
 
 const styles = StyleSheet.create({
@@ -34,6 +35,7 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'flex-start',
     justifyContent: 'flex-start',
+    flex: 1,
   },
   buttonText: {
     color: colors.white,
@@ -78,13 +80,23 @@ const styles = StyleSheet.create({
   },
 })
 
-class CartCard extends React.PureComponent<CartCardType, any> {
+const Overlay = () => (
+  <View
+    style={[
+      StyleSheet.absoluteFillObject,
+      { backgroundColor: 'rgba(255,255,255, 0.5)' },
+    ]}
+  />
+)
+
+class CartCard extends React.Component<CartCardType, any> {
   state = {
     defaultImage: null,
   }
 
   _deleteCart = () => {
     this.props.removeCart(this.props.cart.id)
+    this.props.removeSelectedVariant(this.props.cart.id)
   }
 
   _incQty = val => {
@@ -109,8 +121,44 @@ class CartCard extends React.PureComponent<CartCardType, any> {
     })
   }
 
+  renderAttention = () => {
+    const { cart } = this.props
+    let bgColor
+    let label
+    let textColor
+
+    if (!cart.is_stock_available) {
+      if (cart.is_available) {
+        bgColor = 'rgba(255,160,16,.05)'
+        textColor = '#ffa010'
+        label = 'Attention, the quantity exceeds the available stock'
+      } else {
+        bgColor = 'rgba(26,26,26,.04)'
+        textColor = colors.gray1
+        label = 'Sorry, this product is not available'
+      }
+      return (
+        <View
+          style={{
+            width: '100%',
+            height: 30,
+            backgroundColor: bgColor,
+            paddingVertical: 8,
+            paddingHorizontal: 20,
+            borderRadius: 8,
+            marginBottom: 10,
+            alignItems: 'flex-start',
+          }}>
+          <Text style={{ ...styles.helvetica12, color: textColor }}>
+            {label}
+          </Text>
+        </View>
+      )
+    }
+    return <View />
+  }
+
   render() {
-    console.log('varian', this.props)
     const {
       cart,
       brand,
@@ -131,7 +179,8 @@ class CartCard extends React.PureComponent<CartCardType, any> {
         : defaultImages.product)
 
     return (
-      <View {...(styles.container, style)}>
+      <View style={{ ...styles.container, ...style }}>
+        {/* divider */}
         <View
           style={
             index !== 0 && {
@@ -142,156 +191,159 @@ class CartCard extends React.PureComponent<CartCardType, any> {
             }
           }
         />
-        <Div _margin="24px 0 0 0">
-          <Div
-            _width="100%"
-            bg="rgba(255,160,16,.05)"
-            _padding="8px 20px"
-            radius="8px"
-            _margin="0 0 10px 0"
-            alignItems="flex-start">
-            <Text style={{ ...styles.helvetica12, color: '#ffa010' }}>
-              Attention, the quantity exceeds the available stock
-            </Text>
-          </Div>
-          <Div flexDirection="row" {...styles.container} alignItems="center">
+        <View style={{ marginTop: index !== 0 ? 24 : 0, width: '100%' }}>
+          {this.renderAttention()}
+          <View
+            style={{
+              ...styles.container,
+              flexDirection: 'row',
+            }}>
             <Checkbox
               isChecked={isChecked}
               onPress={chooseCart(cart.id)}
-              style={{ marginRight: 16 }}
+              style={{ marginRight: 16, marginTop: 52 }}
             />
-            <ImageAutoSchale
-              source={{
-                uri: image,
-              }}
-              onError={() => {
-                this.setState({ defaultImage: defaultImages.product })
-              }}
-              style={styles.image}
-            />
-            <Div
-              _flex="1"
-              flexDirection="column"
-              align="flex-start"
-              _padding="0 0 0 16px">
-              <Text
-                ellipsizeMode="tail"
-                numberOfLines={1}
-                style={{
-                  ...styles.helveticaBold12,
-                  color: colors.black100,
-                }}>
-                {brand.name ? brand.name.toUpperCase() : 'UNKNOWN'}
-              </Text>
-              <View style={{ marginTop: 8 }}>
-                <Text
-                  ellipsizeMode="tail"
-                  numberOfLines={1}
-                  style={{
-                    ...styles.helvetica12,
-                    color: colors.black70,
-                  }}>
-                  {variant.product
-                    ? variant.product.product_name.replace(/(\r\n|\n|\r)/gm, '')
-                    : 'UNKNOWN'}
-                </Text>
-              </View>
-              <View style={{ marginTop: 16 }}>
-                <Text
-                  style={{ ...styles.helveticaBold12, color: colors.black100 }}>
-                  {formatRupiah(variant.price) || '0'}
-                </Text>
-              </View>
-              <Div
-                _width="100%"
-                flexDirection="row"
-                justify="space-between"
-                align="center"
-                _margin="16px 0 0 0">
-                <FieldQuantity
-                  qty={cart.qty}
-                  onChangeQty={() => {}}
-                  placeholder="1"
-                  onIncrease={this._incQty}
-                  onDecrease={this._decQty}
+            <View style={{ width: '100%', flex: 1 }}>
+              {/* image, desc */}
+              <View style={{ flexDirection: 'row' }}>
+                <ImageAutoSchale
+                  source={{
+                    uri: image,
+                  }}
+                  onError={() => {
+                    this.setState({ defaultImage: defaultImages.product })
+                  }}
+                  style={styles.image}
                 />
-                <Div style={{ flexDirection: 'row' }}>
-                  {/* remove cart */}
-                  <PressAbbleDiv onPress={this._deleteCart}>
-                    <Div {...styles.icon}>
-                      <IconFa
-                        name="trash-alt"
-                        size={16}
-                        color={colors.black60}
-                      />
-                    </Div>
-                  </PressAbbleDiv>
-                  {/* bookmark */}
-                  <PressAbbleDiv onPress={() => {}}>
-                    <Div {...styles.icon}>
-                      <IconMa
-                        name="bookmark"
-                        size={16}
-                        color={colors.black60}
-                      />
-                    </Div>
-                  </PressAbbleDiv>
-                </Div>
-              </Div>
-            </Div>
-          </Div>
-        </Div>
-
-        <Div
-          flexDirection="row"
-          _margin="16px 0 24px 0"
-          justifyContent="flex-start">
-          {variant && variant.attribute_values ? (
-            variant.attribute_values?.map((_attribute, index) => {
-              return (
-                <PressAbbleDiv
-                  onPress={this._changeVariant(
-                    _attribute,
-                    variant.attribute_values,
-                  )}
-                  key={`card-attribute-${index}`}>
-                  <Div
-                    flexDirection="row"
+                {/* overlay */}
+                {!cart.is_available && <Overlay />}
+                <Div
+                  _flex="1"
+                  flexDirection="column"
+                  align="flex-start"
+                  _padding="0 0 0 16px">
+                  <Text
+                    ellipsizeMode="tail"
+                    numberOfLines={1}
                     style={{
-                      borderRadius: 8,
-                      borderWidth: 1,
-                      borderColor: colors.black10,
-                      height: 30,
-                      marginRight: 16,
-                      paddingLeft: 12,
-                      paddingRight: 12,
+                      ...styles.helveticaBold12,
+                      color: colors.black100,
                     }}>
-                    {/* <Font _margin="0 8px 0 0" {...futuraBlackFont14}>
-                      {_attribute.label}
-                    </Font> */}
-                    <View style={{ marginRight: 8 }}>
-                      <Text
-                        style={{
-                          ...styles.futuraBold14,
-                          color: colors.black100,
-                        }}>
-                        {_attribute.label}
-                      </Text>
-                    </View>
-                    <Font _margin="0 8px 0 0">{_attribute.value.label}</Font>
-                    <IconFa
-                      name="sort-down"
-                      size={6}
-                      colors={colors.black100}
+                    {brand.name ? brand.name.toUpperCase() : 'UNKNOWN'}
+                  </Text>
+                  <View style={{ marginTop: 8 }}>
+                    <Text
+                      ellipsizeMode="tail"
+                      numberOfLines={1}
+                      style={{
+                        ...styles.helvetica12,
+                        color: colors.black70,
+                      }}>
+                      {variant.product
+                        ? variant.product.product_name.replace(
+                            /(\r\n|\n|\r)/gm,
+                            '',
+                          )
+                        : 'UNKNOWN'}
+                    </Text>
+                  </View>
+                  <View style={{ marginTop: 16 }}>
+                    <Text
+                      style={{
+                        ...styles.helveticaBold12,
+                        color: colors.black100,
+                      }}>
+                      {formatRupiah(variant.price) || '0'}
+                    </Text>
+                  </View>
+                  {/* overlay */}
+                  {!cart.is_available && <Overlay />}
+                  <Div
+                    _width="100%"
+                    flexDirection="row"
+                    justify="space-between"
+                    align="center"
+                    _margin="16px 0 0 0">
+                    <FieldQuantity
+                      qty={cart.qty}
+                      onChangeQty={() => {}}
+                      placeholder="1"
+                      onIncrease={this._incQty}
+                      onDecrease={this._decQty}
+                      incDisable={!cart.is_stock_available}
                     />
+                    {/* overlay */}
+                    {!cart.is_available && <Overlay />}
+                    <View style={{ flexDirection: 'row' }}>
+                      {/* remove cart */}
+                      <PressAbbleDiv onPress={this._deleteCart}>
+                        <View style={{ ...styles.icon }}>
+                          <IconFa
+                            name="trash-alt"
+                            size={16}
+                            color={colors.black60}
+                          />
+                        </View>
+                      </PressAbbleDiv>
+                      {/* bookmark */}
+                      <PressAbbleDiv onPress={() => {}}>
+                        <View style={{ ...styles.icon }}>
+                          <IconMa
+                            name="bookmark"
+                            size={16}
+                            color={colors.black60}
+                          />
+                        </View>
+                      </PressAbbleDiv>
+                    </View>
                   </Div>
-                </PressAbbleDiv>
-              )
-            })
-          ) : (
-            <></>
-          )}
-        </Div>
+                </Div>
+              </View>
+              {/* variant */}
+              <Div
+                flexDirection="row"
+                _margin="16px 0 24px 0"
+                justifyContent="flex-start">
+                {variant &&
+                  variant.attribute_values &&
+                  variant.attribute_values?.map((_attribute, index) => {
+                    return (
+                      <PressAbbleDiv
+                        onPress={this._changeVariant(
+                          _attribute,
+                          variant.attribute_values,
+                        )}
+                        key={`card-attribute-${index}`}>
+                        <Div
+                          flexDirection="row"
+                          style={{
+                            borderRadius: 8,
+                            borderWidth: 1,
+                            borderColor: colors.black10,
+                            height: 30,
+                            marginRight: 16,
+                            paddingLeft: 12,
+                            paddingRight: 12,
+                          }}>
+                          <Font _margin="0 8px 0 0" {...futuraBlackFont14}>
+                            {_attribute.label}
+                          </Font>
+                          <Font _margin="0 8px 0 0">
+                            {_attribute.value.label}
+                          </Font>
+                          <IconFa
+                            name="sort-down"
+                            size={6}
+                            colors={colors.black100}
+                          />
+                        </Div>
+                      </PressAbbleDiv>
+                    )
+                  })}
+              </Div>
+            </View>
+          </View>
+        </View>
       </View>
     )
   }
