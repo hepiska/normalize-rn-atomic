@@ -1,5 +1,5 @@
 import Config from 'react-native-config'
-import { ToastAndroid, Alert, Platform } from 'react-native'
+import { ToastAndroid, Alert, Platform, Linking } from 'react-native'
 import { uriSchreenMap } from './constants'
 import { PERMISSIONS, check, request } from 'react-native-permissions'
 import { store } from '@src/init-store'
@@ -143,4 +143,10 @@ export const countdown = (date, callback) => {
     const seconds = Math.floor((distance % (1000 * 60)) / 1000)
     callback({ days, hours, minutes, seconds })
   }, 1000)
+}
+
+export const sendEmail = id => () => {
+  const email = 'cs@theshonet.com'
+  const subject = `Return / Exchange Order ID: ${id}`
+  Linking.openURL(`mailto:${email}?subject=${subject}`)
 }

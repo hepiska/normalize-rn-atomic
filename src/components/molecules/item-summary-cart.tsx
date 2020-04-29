@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, ViewStyle, View, Dimensions } from 'react-native'
+import { StyleSheet, ViewStyle, View, Dimensions, Text } from 'react-native'
 import { connect } from 'react-redux'
 import Tooltip from 'rn-tooltip'
 import { Font } from '@components/atoms/basic'
@@ -7,6 +7,7 @@ import {
   helveticaBlackFont12,
   helveticaBlackFont14,
   helveticaBlackTitleBold,
+  fontStyle,
 } from '@components/commont-styles'
 import { colors } from '@utils/constants'
 import { formatRupiah } from '@utils/helpers'
@@ -94,6 +95,22 @@ const styles = StyleSheet.create({
     color: colors.blue50,
     marginLeft: 0,
     fontWeight: '700',
+  },
+  helveticaBold14: {
+    ...fontStyle.helveticaBold,
+    fontSize: 14,
+  },
+  helveticaBold16: {
+    ...fontStyle.helveticaBold,
+    fontSize: 16,
+  },
+  helvetica12: {
+    ...fontStyle.helvetica,
+    fontSize: 12,
+  },
+  helvetica14: {
+    ...fontStyle.helvetica,
+    fontSize: 14,
   },
 })
 
@@ -202,9 +219,11 @@ class ItemSummaryCart extends React.PureComponent<ItemSummaryCartType, any> {
         style={{ marginTop: index !== 0 ? 40 : 24 }}>
         <View {...styles.warehouse}>
           <Icon name="warehouse" size={14} color={colors.black80} />
-          <Font {...helveticaBlackFont14} style={{ paddingLeft: 8 }}>
-            {item.title}
-          </Font>
+          <View style={{ paddingLeft: 8 }}>
+            <Text style={{ ...styles.helveticaBold14, color: colors.black100 }}>
+              {item.title}
+            </Text>
+          </View>
         </View>
         {item.data.slice(0, showItem).map((_item, key) => (
           <CartHoc cartId={_item} key={key} index={key} />
@@ -226,10 +245,12 @@ class ItemSummaryCart extends React.PureComponent<ItemSummaryCartType, any> {
           </Font>
           <View {...styles.shipmentCourier}>
             <Icon name="business-time" size={16} color={colors.black100} />
-            <Font {...helveticaBlackFont12} _margin="0 0 0 16px">
-              Shipment duration starts when items have been received by the
-              courier
-            </Font>
+            <View style={{ marginLeft: 16 }}>
+              <Text style={{ ...styles.helvetica12, color: colors.black100 }}>
+                Shipment duration starts when items have been received by the
+                courier
+              </Text>
+            </View>
           </View>
           {choosedCourier ? (
             <CourierCart
@@ -285,10 +306,11 @@ class ItemSummaryCart extends React.PureComponent<ItemSummaryCartType, any> {
                       paddingTop: 8,
                       paddingBottom: 8,
                     }}>
-                    <Font {...helveticaBlackFont12}>
+                    <Text
+                      style={{ ...styles.helvetica12, color: colors.black100 }}>
                       Sum insured up to Rp 10.000.000 with the rounded-up cost
                       of 0.1% from product price in one shipping
-                    </Font>
+                    </Text>
                     <IconMi name="cancel" size={14} color={colors.black100} />
                   </View>
                 }
@@ -314,9 +336,10 @@ class ItemSummaryCart extends React.PureComponent<ItemSummaryCartType, any> {
         <ContentExpandable
           title={
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Font {...helveticaBlackTitleBold} color={colors.black80}>
+              <Text
+                style={{ ...styles.helveticaBold16, color: colors.black80 }}>
                 Sub Total
-              </Font>
+              </Text>
               {isProtectDelivery && (
                 <View style={{ marginLeft: 8 }}>
                   <IconMi
@@ -329,38 +352,37 @@ class ItemSummaryCart extends React.PureComponent<ItemSummaryCartType, any> {
             </View>
           }
           rightTitle={
-            <Font
-              {...helveticaBlackTitleBold}
-              color={colors.black80}
-              _margin="0 18px 0 0">
-              {formatRupiah(subTotal)}
-            </Font>
+            <View style={{ marginRight: 18 }}>
+              <Text
+                style={{ ...styles.helveticaBold16, color: colors.black80 }}>
+                {formatRupiah(subTotal)}
+              </Text>
+            </View>
           }
           content={
             <>
               <View {...styles.orderSummaryDetail}>
-                <Font
-                  {...helveticaBlackFont14}
-                  color={
-                    colors.black70
-                  }>{`Product Total • ${item.data.length} Items`}</Font>
-                <Font {...helveticaBlackFont14} color={colors.black70}>
+                <Text style={{ ...styles.helvetica14, color: colors.black70 }}>
+                  {`Product Total • ${item.data.length} Items`}
+                </Text>
+                <Text style={{ ...styles.helvetica14, color: colors.black70 }}>
                   {formatRupiah(productTotal)}
-                </Font>
+                </Text>
               </View>
               <View {...styles.orderSummaryDetail}>
-                <Font
-                  {...helveticaBlackFont14}
-                  color={colors.black70}>{`Shipping Cost`}</Font>
-                <Font {...helveticaBlackFont14} color={colors.black70}>
+                <Text style={{ ...styles.helvetica14, color: colors.black70 }}>
+                  {`Shipping Cost`}
+                </Text>
+                <Text style={{ ...styles.helvetica14, color: colors.black70 }}>
                   {formatRupiah(shippingCost)}
-                </Font>
+                </Text>
               </View>
               <View {...styles.orderSummaryDetail}>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <Font
-                    {...helveticaBlackFont14}
-                    color={colors.black70}>{`Delivery Protection`}</Font>
+                  <Text
+                    style={{ ...styles.helvetica14, color: colors.black70 }}>
+                    {`Delivery Protection`}
+                  </Text>
                   {isProtectDelivery && (
                     <View style={{ marginLeft: 8 }}>
                       <IconMi
@@ -371,9 +393,9 @@ class ItemSummaryCart extends React.PureComponent<ItemSummaryCartType, any> {
                     </View>
                   )}
                 </View>
-                <Font {...helveticaBlackFont14} color={colors.black70}>
+                <Text style={{ ...styles.helvetica14, color: colors.black70 }}>
                   {formatRupiah(deliveryProtection)}
-                </Font>
+                </Text>
               </View>
             </>
           }

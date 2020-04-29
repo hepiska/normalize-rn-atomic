@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, View, Image } from 'react-native'
+import { StyleSheet, View, Image, Text } from 'react-native'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import ContentExpandable from '@components/molecules/content-expandable'
@@ -8,6 +8,7 @@ import {
   helveticaBlackFont12,
   helveticaBlackFont14,
   helveticaBlackTitleBold,
+  fontStyle,
 } from '@components/commont-styles'
 import { GradientButton } from '@components/atoms/button'
 import { formatRupiah } from '@utils/helpers'
@@ -84,6 +85,14 @@ const styles = StyleSheet.create({
     textDecorationLine: 'underline',
     fontWeight: 'bold',
   },
+  helvetica14: {
+    ...fontStyle.helvetica,
+    fontSize: 14,
+  },
+  helvetica12: {
+    ...fontStyle.helvetica,
+    fontSize: 12,
+  },
 })
 
 class PaymentDetail extends React.PureComponent<any, any> {
@@ -128,43 +137,47 @@ class PaymentDetail extends React.PureComponent<any, any> {
     return (
       <View {...styles.paddingLR16}>
         <View {...styles.totalBillDetail}>
-          <Font
-            {...helveticaBlackFont14}
-            color={
-              colors.black70
-            }>{`Product Total • ${transaction.qty} Items`}</Font>
-          <Font {...helveticaBlackFont14} color={colors.black70}>
+          <Text
+            style={{
+              ...styles.helvetica14,
+              color: colors.black70,
+            }}>{`Product Total • ${transaction.qty} Items`}</Text>
+          <Text style={{ ...styles.helvetica14, color: colors.black70 }}>
             {formatRupiah(transaction.total_amount)}
-          </Font>
+          </Text>
         </View>
         <View {...styles.totalBillDetail}>
-          <Font
-            {...helveticaBlackFont14}
-            color={colors.black70}>{`Shipping Cost`}</Font>
-          <Font {...helveticaBlackFont14} color={colors.black70}>
+          <Text
+            style={{
+              ...styles.helvetica14,
+              color: colors.black70,
+            }}>{`Shipping Cost`}</Text>
+          <Text style={{ ...styles.helvetica14, color: colors.black70 }}>
             {formatRupiah(transaction.shipping_cost)}
-          </Font>
+          </Text>
         </View>
         <View {...styles.totalBillDetail}>
           <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Font
-              {...helveticaBlackFont14}
-              color={colors.black70}>{`Insurance Fee`}</Font>
+            <Text style={{ ...styles.helvetica14, color: colors.black70 }}>
+              {`Insurance Fee`}
+            </Text>
             <View style={{ marginLeft: 8 }}>
               <IconMi name="verified-user" size={12} color={colors.blue60} />
             </View>
           </View>
-          <Font {...helveticaBlackFont14} color={colors.black70}>
+          <Text style={{ ...styles.helvetica14, color: colors.black70 }}>
             {formatRupiah(transaction.total_insurance_cost)}
-          </Font>
+          </Text>
         </View>
         <View {...styles.totalBillDetail}>
-          <Font
-            {...helveticaBlackFont14}
-            color={colors.black70}>{`Payment Fee`}</Font>
-          <Font {...helveticaBlackFont14} color={colors.black70}>
+          <Text
+            style={{
+              ...styles.helvetica14,
+              color: colors.black70,
+            }}>{`Payment Fee`}</Text>
+          <Text style={{ ...styles.helvetica14, color: colors.black70 }}>
             {formatRupiah(details.total_fee)}
-          </Font>
+          </Text>
         </View>
       </View>
     )
@@ -182,15 +195,14 @@ class PaymentDetail extends React.PureComponent<any, any> {
       case 'GoPay':
         return (
           <View style={{ marginTop: 24, width: '100%' }}>
-            <Font {...helveticaBlackFont14} color={colors.black100}>
+            <Text style={{ ...styles.helvetica14, color: colors.black100 }}>
               • Payment will be directly open your Gojek Apps
-            </Font>
-            <Font
-              {...helveticaBlackFont14}
-              color={colors.black100}
-              style={{ marginTop: 16 }}>
-              • You can scan QR code
-            </Font>
+            </Text>
+            <View style={{ marginTop: 16 }}>
+              <Text style={{ ...styles.helvetica14, color: colors.black100 }}>
+                • You can scan QR code
+              </Text>
+            </View>
           </View>
         )
       case 'Dana':
@@ -308,7 +320,6 @@ class PaymentDetail extends React.PureComponent<any, any> {
         disableButton = false
       }
     }
-    console.log('disableButton ---', disableButton)
 
     return (
       <>
@@ -368,28 +379,26 @@ class PaymentDetail extends React.PureComponent<any, any> {
               onPress={this.handleCheckPolicy}
             />
             <View style={{ width: '95%' }}>
-              <Font
-                _margin="0 0 0 8px"
-                {...helveticaBlackFont12}
-                color={colors.black70}
-                style={{ lineHeight: 17 }}>
-                By Continue to payment you agree to The Shonet{' '}
-                <Font
-                  style={{
-                    textDecorationLine: 'underline',
-                    fontWeight: 'bold',
-                  }}>
-                  Terms of Use
-                </Font>{' '}
-                and{' '}
-                <Font
-                  style={{
-                    textDecorationLine: 'underline',
-                    fontWeight: 'bold',
-                  }}>
-                  Privacy Policy
-                </Font>
-              </Font>
+              <View style={{ marginLeft: 8 }}>
+                <Text style={{ ...styles.helvetica12, color: colors.black70 }}>
+                  By Continue to payment you agree to The Shonet{' '}
+                  <Text
+                    style={{
+                      textDecorationLine: 'underline',
+                      fontWeight: 'bold',
+                    }}>
+                    Terms of Use
+                  </Text>
+                  {` `}and {` `}
+                  <Text
+                    style={{
+                      textDecorationLine: 'underline',
+                      fontWeight: 'bold',
+                    }}>
+                    Privacy Policy
+                  </Text>
+                </Text>
+              </View>
             </View>
           </View>
           <GradientButton

@@ -1,11 +1,8 @@
 import React from 'react'
-import { StyleSheet, ViewStyle, View } from 'react-native'
+import { StyleSheet, ViewStyle, View, Text } from 'react-native'
 import { Font, TouchableWithoutFeedback } from '@components/atoms/basic'
 import { formatRupiah } from '@utils/helpers'
-import {
-  helveticaBlackBold,
-  helveticaBlackFont12,
-} from '@components/commont-styles'
+import { fontStyle } from '@components/commont-styles'
 import { colors, images as defaultImages } from '@utils/constants'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import ImageAutoSchale from '@components/atoms/image-autoschale'
@@ -72,6 +69,14 @@ const styles = StyleSheet.create({
     paddingRight: 8,
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  helvetica12: {
+    ...fontStyle.helvetica,
+    fontSize: 12,
+  },
+  helveticaBold14: {
+    ...fontStyle.helveticaBold,
+    fontSize: 14,
   },
 })
 
@@ -145,15 +150,19 @@ class CourierCart extends React.PureComponent<CourierCartType, any> {
                   </Font>
                 </View>
               )} */}
-                  <Font
-                    {...helveticaBlackFont12}
-                    colors={colors.black60}
-                    style={{ marginTop: 8 }}>
-                    {courier.courier.name}
-                  </Font>
-                  <Font {...helveticaBlackBold} style={{ marginTop: 8 }}>
+                  <View style={{ marginTop: 8 }}>
+                    <Text
+                      style={{ ...styles.helvetica12, color: colors.black60 }}>
+                      {courier.courier.name}
+                    </Text>
+                  </View>
+                  <Text
+                    style={{
+                      ...styles.helveticaBold14,
+                      color: colors.black100,
+                    }}>
                     {formatRupiah(courier.shipping_cost)}
-                  </Font>
+                  </Text>
                 </View>
               </View>
               <RadioButton
@@ -180,9 +189,9 @@ class CourierCart extends React.PureComponent<CourierCartType, any> {
                   paddingLeft: 16,
                   paddingRight: 16,
                 }}>
-                <Font {...helveticaBlackFont12}>
+                <Text style={{ ...styles.helvetica12, color: colors.black100 }}>
                   Courier doesn’t support delivery into your address
-                </Font>
+                </Text>
               </View>
             )}
           </View>
@@ -209,15 +218,20 @@ class CourierCart extends React.PureComponent<CourierCartType, any> {
                   </Font>
                 </View>
               )} */}
-              <Font
-                {...helveticaBlackFont12}
-                colors={colors.black60}
-                style={{ marginTop: 8 }}>
-                {courier.courier.name}
-              </Font>
-              <Font {...helveticaBlackBold} style={{ marginTop: 8 }}>
-                {formatRupiah(courier.shipping_cost)}
-              </Font>
+              <View style={{ marginTop: 8 }}>
+                <Text style={{ ...styles.helvetica12, color: colors.black60 }}>
+                  {courier.courier.name}
+                </Text>
+              </View>
+              <View style={{ marginTop: 8 }}>
+                <Text
+                  style={{
+                    ...styles.helveticaBold14,
+                    color: colors.black100,
+                  }}>
+                  {formatRupiah(courier.shipping_cost)}
+                </Text>
+              </View>
             </View>
           </View>
           <View>

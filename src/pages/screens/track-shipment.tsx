@@ -1,9 +1,11 @@
 import React, { Component } from 'react'
-import { View, StyleSheet, ScrollView } from 'react-native'
+import { View, StyleSheet, ScrollView, Text } from 'react-native'
 import { ScrollDiv, Font } from '@components/atoms/basic'
 import NavbarTop from '@src/components/molecules/navbar-top'
 import { colors } from '@src/utils/constants'
 import { fontStyle } from '@components/commont-styles'
+import dayjs from 'dayjs'
+import Icon from 'react-native-vector-icons/FontAwesome5'
 
 const styles = StyleSheet.create({
   container: {
@@ -12,33 +14,23 @@ const styles = StyleSheet.create({
     marginTop: 24,
     marginBottom: 24,
   },
+  futuraBold16: {
+    ...fontStyle.futuraDemi,
+    fontWeight: '500',
+    fontSize: 16,
+  },
+  helveticaBold14: {
+    ...fontStyle.helveticaBold,
+    fontSize: 14,
+  },
 })
-
-const dummy = [
-  {
-    date: 'Buyer - Mon, 17 Dec 2020',
-    time: '16:26 WIB',
-    desc: 'Awaiting confirmation',
-  },
-  {
-    date: 'Buyer - Mon, 17 Dec 2020',
-    time: '16:27 WIB',
-    desc: 'Awaiting confirmation',
-  },
-  {
-    date: 'Buyer - Mon, 17 Dec 2020',
-    time: '16:28 WIB',
-    desc: 'Awaiting confirmation',
-  },
-  {
-    date: 'Buyer - Mon, 17 Dec 2020',
-    time: '16:29 WIB',
-    desc: 'Awaiting confirmation',
-  },
-]
 
 class TrackShipment extends Component<any, any> {
   render() {
+    const {
+      params: { order },
+    } = this.props.route
+
     return (
       <>
         <NavbarTop
@@ -49,24 +41,98 @@ class TrackShipment extends Component<any, any> {
         <ScrollView>
           <View {...styles.container}>
             <View>
-              <Font
-                style={{ ...fontStyle.futuraBold }}
-                size={16}
-                color={colors.black100}>
-                Receipt Number
-              </Font>
-              <Font
-                style={{ ...fontStyle.helvetica, marginTop: 8, lineHeight: 14 }}
-                size={14}
-                color={colors.black70}>
-                IN-2-00D2BBUNJSLLYQMW4Z6
-              </Font>
+              <Text style={{ ...styles.futuraBold16 }}>Receipt Number</Text>
+              <View style={{ marginTop: 8 }}>
+                <Text
+                  style={{
+                    ...styles.helveticaBold14,
+                    color: colors.black70,
+                    lineHeight: 14,
+                  }}>
+                  {order.invoice_no}
+                </Text>
+              </View>
             </View>
 
             <View style={{ marginTop: 24 }}>
-              {dummy.map((item, key) => (
-                <View key={key}>
-                  {key !== 0 && (
+              {order.logs &&
+                order.logs.map((item, key) => (
+                  <View key={key}>
+                    <View>
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                        }}>
+                        <View
+                          style={{
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                          }}>
+                          {/* bullet */}
+                          <View>
+                            <View
+                              style={{
+                                backgroundColor:
+                                  key !== 0
+                                    ? colors.black60
+                                    : colors.greenAccent,
+                                opacity: 0.1,
+                                width: 24,
+                                height: 24,
+                                borderRadius: 100,
+                              }}
+                            />
+                            <View
+                              style={{
+                                backgroundColor:
+                                  key !== 0
+                                    ? colors.black60
+                                    : colors.greenAccent,
+                                opacity: 1,
+                                width: 12,
+                                height: 12,
+                                borderRadius: 100,
+                                zIndex: 2,
+                                position: 'absolute',
+                                left: 6,
+                                top: 6,
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                              }}>
+                              {key === 0 && (
+                                <Icon
+                                  name="check"
+                                  size={8}
+                                  color={colors.white}
+                                />
+                              )}
+                            </View>
+                          </View>
+                          <Font
+                            style={{
+                              ...fontStyle.helveticaBold,
+                              marginLeft: 8,
+                            }}
+                            size={14}
+                            color={
+                              key !== 0 ? colors.black60 : colors.greenAccent
+                            }>
+                            {`System - ${dayjs(item.created_at).format(
+                              'ddd, DD MMM YYYY',
+                            )}`}
+                          </Font>
+                        </View>
+                        <Font
+                          style={{ ...fontStyle.helvetica }}
+                          size={14}
+                          color={colors.black70}>
+                          {dayjs(item.created_at).format('HH:mm WIB')}
+                        </Font>
+                      </View>
+                    </View>
+
                     <View
                       style={{
                         marginTop: 4,
@@ -74,88 +140,30 @@ class TrackShipment extends Component<any, any> {
                         flexDirection: 'row',
                         alignItems: 'center',
                       }}>
-                      <View
-                        style={{
-                          borderWidth: 1,
-                          borderColor: colors.black50,
-                          borderStyle: 'dashed',
-                          width: 1,
-                          height: 28,
-                          marginLeft: 11.5,
-                        }}
-                      />
+                      {key !== order.logs.length - 1 && (
+                        <View
+                          style={{
+                            borderWidth: 1,
+                            borderColor: colors.black50,
+                            borderStyle: 'dashed',
+                            width: 1,
+                            height: 28,
+                            marginLeft: 11.5,
+                          }}
+                        />
+                      )}
                       <Font
                         style={{
                           ...fontStyle.helvetica,
-                          marginLeft: 18,
+                          marginLeft: key !== order.logs.length - 1 ? 18 : 32,
                         }}
                         size={14}
                         color={colors.black100}>
-                        {item.desc}
-                      </Font>
-                    </View>
-                  )}
-                  <View>
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                      }}>
-                      <View
-                        style={{ flexDirection: 'row', alignItems: 'center' }}>
-                        {/* bullet */}
-                        <View>
-                          <View
-                            style={{
-                              backgroundColor:
-                                key !== dummy.length - 1
-                                  ? colors.black60
-                                  : colors.greenAccent,
-                              opacity: 0.1,
-                              width: 24,
-                              height: 24,
-                              borderRadius: 100,
-                            }}
-                          />
-                          <View
-                            style={{
-                              backgroundColor:
-                                key !== dummy.length - 1
-                                  ? colors.black60
-                                  : colors.greenAccent,
-                              opacity: 1,
-                              width: 12,
-                              height: 12,
-                              borderRadius: 100,
-                              zIndex: 2,
-                              position: 'absolute',
-                              left: 6,
-                              top: 6,
-                            }}
-                          />
-                        </View>
-                        <Font
-                          style={{ ...fontStyle.helveticaBold, marginLeft: 8 }}
-                          size={14}
-                          color={
-                            key !== dummy.length - 1
-                              ? colors.black60
-                              : colors.greenAccent
-                          }>
-                          {item.date}
-                        </Font>
-                      </View>
-                      <Font
-                        style={{ ...fontStyle.helvetica }}
-                        size={14}
-                        color={colors.black70}>
-                        {item.time}
+                        {item.status}
                       </Font>
                     </View>
                   </View>
-                </View>
-              ))}
+                ))}
             </View>
           </View>
         </ScrollView>

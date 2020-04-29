@@ -1,9 +1,9 @@
 import React from 'react'
-import { StyleSheet, ViewStyle, View, Dimensions } from 'react-native'
+import { StyleSheet, ViewStyle, View, Dimensions, Text } from 'react-native'
 import { Font, TouchableWithoutFeedback } from '@components/atoms/basic'
 import { connect } from 'react-redux'
 import Tooltip from 'rn-tooltip'
-import { futuraBlackFont24 } from '@components/commont-styles'
+import { futuraBlackFont24, fontStyle } from '@components/commont-styles'
 import { colors } from '@utils/constants'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import IconMi from 'react-native-vector-icons/MaterialIcons'
@@ -46,6 +46,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'flex-start',
   },
+  futuraBold24: {
+    ...fontStyle.futuraDemi,
+    fontWeight: '500',
+    fontSize: 24,
+  },
+  helvetica12: {
+    ...fontStyle.helvetica,
+    fontSize: 12,
+  },
 })
 
 class ShipmentCart extends React.PureComponent<ShipmentCartType, any> {
@@ -71,7 +80,7 @@ class ShipmentCart extends React.PureComponent<ShipmentCartType, any> {
       <TouchableWithoutFeedback onPress={onPress}>
         <View style={{ marginTop: index > 0 ? 22 : 24, ...style }}>
           <View {...styles.title}>
-            <Font {...futuraBlackFont24}>{shipment.name}</Font>
+            <Text style={{ ...styles.futuraBold24 }}>{shipment.name}</Text>
             <Tooltip
               actionType="press"
               popover={
@@ -82,9 +91,9 @@ class ShipmentCart extends React.PureComponent<ShipmentCartType, any> {
                     justifyContent: 'space-between',
                     width: '100%',
                   }}>
-                  <Font {...helveticaBlackFont12} _margin="0">
+                  <Text style={{ ...styles.helvetica12 }}>
                     {shipment.description}
-                  </Font>
+                  </Text>
                   <IconMi name="cancel" size={14} color={colors.black100} />
                 </View>
               }

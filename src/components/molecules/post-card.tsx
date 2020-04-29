@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { StyleSheet } from 'react-native'
+import { StyleSheet, Text, View } from 'react-native'
 import {
   Div,
   PressAbbleDiv,
@@ -9,12 +9,11 @@ import {
 } from '@components/atoms/basic'
 import ImageAutoSchale from '@components/atoms/image-autoschale'
 import { setImage } from '@utils/helpers'
-import { helveticaNormalFont } from '@components/commont-styles'
+import { helveticaNormalFont, fontStyle } from '@components/commont-styles'
 import { colors, images as defaultImages } from '@utils/constants'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import IconFa from 'react-native-vector-icons/FontAwesome'
 import InviniteLoader from '@components/atoms/loaders/invinite'
-import { fontStyle } from '@components/commont-styles'
 import { navigate } from '@src/root-navigation'
 
 interface PostListItemType {
@@ -54,6 +53,10 @@ const styles = StyleSheet.create({
     right: 16,
     top: 16,
   },
+  // helvetica14: {
+  //   ...fontStyle.helvetica,
+  //   size: 14,
+  // }
 })
 
 const userImageStyle = StyleSheet.create({
@@ -177,13 +180,16 @@ class PostListItem extends React.PureComponent<PostListItemType, any> {
             />
             <React.Fragment>
               <Div _width="100%" align="flex-start">
-                <Font
-                  {...helveticaNormalFont}
-                  size={type === 'large' ? '13px' : '12px'}
-                  color={colors.black100}
-                  mar="8px 0 0 0">
-                  {post.title}
-                </Font>
+                <View style={{ marginTop: 8 }}>
+                  <Text
+                    style={{
+                      ...fontStyle.helvetica,
+                      fontSize: type === 'large' ? 13 : 12,
+                      color: colors.black100,
+                    }}>
+                    {post.title}
+                  </Text>
+                </View>
               </Div>
 
               <Div

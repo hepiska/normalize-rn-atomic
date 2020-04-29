@@ -25,6 +25,9 @@ const userReducer: Reducer<UserState> = (
     case userActionType.SET_USER_DATA:
       newState.data = Immutable.merge(newState.data, action.payload)
       return newState
+    case userActionType.SET_USER_ORDER:
+      newState.order = Immutable(action.payload)
+      return newState
     default:
       return newState
   }

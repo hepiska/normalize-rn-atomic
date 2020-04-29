@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
-import { View, StyleSheet } from 'react-native'
+import { View, StyleSheet, Text } from 'react-native'
 import { Font, TouchableWithoutFeedback } from '@components/atoms/basic'
 import { colors, images as defaultImages } from '@src/utils/constants'
-import { helveticaBlackBold } from '@components/commont-styles'
+import { helveticaBlackBold, fontStyle } from '@components/commont-styles'
 import ImageAutoSchale from '@components/atoms/image-autoschale'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import { setImage as changeImageUri } from '@utils/helpers'
@@ -26,6 +26,10 @@ const styles = StyleSheet.create({
     marginLeft: 16,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  helveticaBold14: {
+    ...fontStyle.helveticaBold,
+    fontSize: 14,
   },
 })
 
@@ -80,9 +84,10 @@ class PaymentMethodCart extends Component<any, any> {
               style={styles.image}
             />
             <View {...styles.information}>
-              <Font {...helveticaBlackBold} colors={colors.black80}>
+              <Text
+                style={{ ...styles.helveticaBold14, color: colors.black80 }}>
                 {paymentName}
-              </Font>
+              </Text>
             </View>
           </View>
           <View>

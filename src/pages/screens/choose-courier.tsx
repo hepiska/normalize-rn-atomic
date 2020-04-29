@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
-import { StyleSheet, View } from 'react-native'
+import { StyleSheet, View, Text } from 'react-native'
 import { connect } from 'react-redux'
 import NavbarTop from '@src/components/molecules/navbar-top'
 import { ScrollDiv, Font } from '@components/atoms/basic'
 import Icon from 'react-native-vector-icons/FontAwesome5'
-import { helveticaBlackFont12 } from '@components/commont-styles'
+import { helveticaBlackFont12, fontStyle } from '@components/commont-styles'
 import { colors } from '@utils/constants'
 import { bindActionCreators } from 'redux'
 import { getOptionShipment } from '@modules/shipment/action'
@@ -29,6 +29,10 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  helvetica12: {
+    ...fontStyle.helvetica,
+    fontSize: 12,
   },
 })
 
@@ -55,10 +59,12 @@ class ChooseCourierPage extends Component<any, any> {
           <View {...styles.container}>
             <View {...styles.shipmentCourier}>
               <Icon name="business-time" size={16} color={colors.black100} />
-              <Font {...helveticaBlackFont12} _margin="0 0 0 16px">
-                Shipment duration starts when items have been received by the
-                courier
-              </Font>
+              <View style={{ marginLeft: 16 }}>
+                <Text style={{ ...styles.helvetica12, color: colors.black100 }}>
+                  Shipment duration starts when items have been received by the
+                  courier
+                </Text>
+              </View>
             </View>
 
             <View
@@ -72,12 +78,13 @@ class ChooseCourierPage extends Component<any, any> {
                 size={16}
                 color={colors.greenAccent}
               />
-              <Font
-                {...helveticaBlackFont12}
-                color={colors.greenAccent}
-                _margin="0 0 0 16px">
-                Ramadhan content courier will be write here so let’s make space
-              </Font>
+              <View style={{ marginLeft: 16 }}>
+                <Text
+                  style={{ ...styles.helvetica12, color: colors.greenAccent }}>
+                  Ramadhan content courier will be write here so let’s make
+                  space
+                </Text>
+              </View>
             </View>
 
             {shipments[warehouseId]?.map((value, key) => {

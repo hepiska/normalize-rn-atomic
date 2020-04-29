@@ -24,3 +24,43 @@ export const setUserData = (data: any) => {
     payload: data,
   }
 }
+
+export const setUserOrder = (data: any) => ({
+  type: userActionType.SET_USER_ORDER,
+  payload: data,
+})
+export const setUserLoading = (data: Boolean) => ({
+  type: userActionType.SET_USER_LOADING,
+  payload: data,
+})
+
+export const getUserByUsername = username => {
+  return {
+    type: API,
+    payload: {
+      url: `/users/${username}`,
+      schema: schema.user,
+      requestParams: {
+        params: {
+          id_type: 'username',
+        },
+      },
+      startNetwork: () => {
+        return setUserLoading(true)
+      },
+      endNetwork: () => {
+        return setUserLoading(false)
+      },
+      success: data => {
+        return [
+          setUserData(data.entities.user),
+          setUserOrder(data.result),
+          setUserLoading(false),
+        ]
+      },
+      error: err => {
+        return setUserLoading(false)
+      },
+    },
+  }
+}

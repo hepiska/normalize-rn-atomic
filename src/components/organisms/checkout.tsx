@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
-import { View, StyleSheet } from 'react-native'
+import { View, StyleSheet, Text } from 'react-native'
 import { Font, ScrollDiv } from '@components/atoms/basic'
 import { colors } from '@src/utils/constants'
 import {
   futuraBlackFont24,
   helveticaBlackFont14,
+  fontStyle,
 } from '@components/commont-styles'
 import { connect } from 'react-redux'
 import { addressListData } from '@hocs/data/address'
@@ -41,6 +42,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: 24,
+  },
+  futura24: {
+    ...fontStyle.futuraDemi,
+    fontWeight: '500',
+    fontSize: 24,
+  },
+  helvetica14: {
+    ...fontStyle.helvetica,
+    fontSize: 14,
   },
 })
 
@@ -90,7 +100,10 @@ class Checkout extends Component<any, any> {
             <View {...styles.container}>
               {/* shipment */}
               <View>
-                <Font {...futuraBlackFont24}>Shipment Address</Font>
+                {/* <Font {...futuraBlackFont24}>Shipment Address</Font> */}
+                <Text style={{ ...styles.futura24, color: colors.black100 }}>
+                  Shipment Address
+                </Text>
                 <AddressHoc
                   style={{ ...styles.checkoutAddress }}
                   type="checkout"
@@ -101,7 +114,7 @@ class Checkout extends Component<any, any> {
 
               {/* item summary */}
               <View style={{ marginTop: 40 }}>
-                <Font {...futuraBlackFont24}>Item Summary</Font>
+                <Text style={{ ...styles.futura24 }}>Item Summary</Text>
                 {data.map((item, index) => {
                   return (
                     <ItemSummaryCart
@@ -116,32 +129,36 @@ class Checkout extends Component<any, any> {
 
               {/* order summary */}
               <View style={{ marginTop: 40 }}>
-                <Font {...futuraBlackFont24}>Order Summary</Font>
+                <Text style={{ ...styles.futura24 }}>Order Summary</Text>
                 <View {...styles.orderSummaryDetail}>
-                  <Font
-                    {...helveticaBlackFont14}
-                    color={
-                      colors.black100
-                    }>{`Product Total • ${carts.length} Items`}</Font>
-                  <Font {...helveticaBlackFont14} color={colors.black100}>
+                  <Text
+                    style={{ ...styles.helvetica14, color: colors.black100 }}>
+                    {`Product Total • ${carts.length} Items`}
+                  </Text>
+                  <Text
+                    style={{ ...styles.helvetica14, color: colors.black100 }}>
                     {formatRupiah(totalPrice)}
-                  </Font>
+                  </Text>
                 </View>
                 <View {...styles.orderSummaryDetail}>
-                  <Font
-                    {...helveticaBlackFont14}
-                    color={colors.black100}>{`Shipping Cost`}</Font>
-                  <Font {...helveticaBlackFont14} color={colors.black100}>
+                  <Text
+                    style={{ ...styles.helvetica14, color: colors.black100 }}>
+                    {`Shipping Cost`}
+                  </Text>
+                  <Text
+                    style={{ ...styles.helvetica14, color: colors.black100 }}>
                     {formatRupiah(shippingCost)}
-                  </Font>
+                  </Text>
                 </View>
                 <View {...styles.orderSummaryDetail}>
-                  <Font
-                    {...helveticaBlackFont14}
-                    color={colors.black100}>{`Delivery Protection`}</Font>
-                  <Font {...helveticaBlackFont14} color={colors.black100}>
+                  <Text
+                    style={{ ...styles.helvetica14, color: colors.black100 }}>
+                    Delivery Protection
+                  </Text>
+                  <Text
+                    style={{ ...styles.helvetica14, color: colors.black100 }}>
                     {formatRupiah(deliveryProtection)}
-                  </Font>
+                  </Text>
                 </View>
               </View>
             </View>

@@ -10,6 +10,7 @@ import {
   helveticaBlackFont12,
   futuraNormalFont12,
   helveticaNormalFont10,
+  fontStyle,
 } from '@components/commont-styles'
 import { colors } from '@utils/constants'
 
@@ -37,6 +38,23 @@ const styles = StyleSheet.create({
     width: 60,
     height: 80,
     borderRadius: 8,
+  },
+  helvetica10: {
+    ...fontStyle.helvetica,
+    fontSize: 10,
+  },
+  helvetica12: {
+    ...fontStyle.helvetica,
+    fontSize: 12,
+  },
+  helveticaBold12: {
+    ...fontStyle.helveticaBold,
+    fontSize: 12,
+  },
+  futuraBold12: {
+    ...fontStyle.futuraDemi,
+    fontWeight: '500',
+    fontSize: 12,
   },
 })
 
@@ -96,40 +114,70 @@ class ProductSummaryCart extends React.PureComponent<
               flexDirection="column"
               align="flex-start"
               _margin="0 0 0 16px">
-              <Font
+              <Text
                 ellipsizeMode="tail"
                 numberOfLines={1}
-                {...helveticaBlackBoldFont12}>
+                style={{ ...styles.helveticaBold12, color: colors.black100 }}>
                 {brand.name ? brand.name.toUpperCase() : 'UNKNOWN'}
-              </Font>
-              <Font
-                ellipsizeMode="tail"
-                numberOfLines={1}
-                {...helveticaBlackFont12}
-                color={colors.black70}
-                _margin="8px 0 0 0">
-                {variant.product
-                  ? variant.product.product_name.replace(/(\r\n|\n|\r)/gm, '')
-                  : 'UNKNOWN'}
-              </Font>
+              </Text>
+              <View style={{ marginTop: 8 }}>
+                <Text
+                  ellipsizeMode="tail"
+                  numberOfLines={1}
+                  style={{ ...styles.helvetica12, color: colors.black70 }}>
+                  {variant.product
+                    ? variant.product.product_name.replace(/(\r\n|\n|\r)/gm, '')
+                    : 'UNKNOWN'}
+                </Text>
+              </View>
               <Div flexDirection="row" _margin="8px 0 0 0">
-                <Div flexDirection="row">
-                  <Font {...futuraNormalFont12}>Qty</Font>
-                  <Font
-                    {...helveticaNormalFont10}
-                    style={{ marginLeft: 8 }}>{`${cart.qty} pcs`}</Font>
-                </Div>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <Text
+                    style={{ ...styles.futuraBold12, color: colors.black70 }}>
+                    Qty
+                  </Text>
+                  <View style={{ marginLeft: 8 }}>
+                    <Text
+                      style={{ ...styles.helvetica10, color: colors.black60 }}>
+                      {`${cart.qty} pcs`}
+                    </Text>
+                  </View>
+                </View>
 
                 {variant.attribute_values?.map((dat, key) => {
                   return (
-                    <Div key={key} flexDirection="row" _margin="0 0 0 16px">
-                      <Font {...futuraNormalFont12}>{dat.label}</Font>
-                      <Font
-                        {...helveticaNormalFont10}
-                        style={{ marginLeft: 8 }}>
-                        {dat.value.label}
-                      </Font>
-                    </Div>
+                    // <Div key={key} flexDirection="row" _margin="0 0 0 16px">
+                    //   <Font {...futuraNormalFont12}>{dat.label}</Font>
+                    //   <Font
+                    //     {...helveticaNormalFont10}
+                    //     style={{ marginLeft: 8 }}>
+                    //     {dat.value.label}
+                    //   </Font>
+                    // </Div>
+                    <View
+                      key={key}
+                      style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        marginLeft: 16,
+                      }}>
+                      <Text
+                        style={{
+                          ...styles.futuraBold12,
+                          color: colors.black70,
+                        }}>
+                        {dat.label}
+                      </Text>
+                      <View style={{ marginLeft: 8 }}>
+                        <Text
+                          style={{
+                            ...styles.helvetica10,
+                            color: colors.black60,
+                          }}>
+                          {dat.value.label}
+                        </Text>
+                      </View>
+                    </View>
                   )
                 })}
               </Div>

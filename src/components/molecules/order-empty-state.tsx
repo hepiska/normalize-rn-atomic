@@ -34,7 +34,7 @@ const OrderEmptyState: React.FC = () => {
         style={styles.image}
       />
       <Font
-        style={{ ...fontStyle.futuraBold }}
+        style={{ ...fontStyle.futuraDemi }}
         colors={colors.black100}
         size={24}
         _margin="0px 0px 16px">

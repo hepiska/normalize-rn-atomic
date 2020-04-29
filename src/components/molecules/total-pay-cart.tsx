@@ -1,10 +1,11 @@
 import React, { Component } from 'react'
-import { View, StyleSheet } from 'react-native'
+import { View, StyleSheet, Text } from 'react-native'
 import { Font } from '@components/atoms/basic'
 import { colors } from '@src/utils/constants'
 import {
   helveticaBlackFont12,
   helveticaBlackTitleBold,
+  fontStyle,
 } from '@components/commont-styles'
 import { GradientButton } from '@components/atoms/button'
 import { connect } from 'react-redux'
@@ -45,6 +46,10 @@ const styles = StyleSheet.create({
     flex: 0.5,
     justifyContent: 'center',
   },
+  helveticaBold12: {
+    ...fontStyle.helveticaBold,
+    fontSize: 12,
+  },
 })
 
 class TotalPayCart extends Component<any, any> {
@@ -60,9 +65,12 @@ class TotalPayCart extends Component<any, any> {
     return (
       <View {...styles.container}>
         <View {...styles.totalText}>
-          <Font {...helveticaBlackFont12} style={{ fontWeight: 'bold' }}>
+          {/* <Font {...helveticaBlackFont12} style={{ fontWeight: 'bold' }}>
             Total
-          </Font>
+          </Font> */}
+          <Text style={{ ...styles.helveticaBold12, color: colors.black80 }}>
+            Total
+          </Text>
           <Font {...helveticaBlackTitleBold} size="18">
             {formatRupiah(totalPrice)}
           </Font>

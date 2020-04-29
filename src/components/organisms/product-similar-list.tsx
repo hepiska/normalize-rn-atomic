@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Dimensions } from 'react-native'
+import { Dimensions, StyleSheet, View, Text } from 'react-native'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { Div, Font } from '@components/atoms/basic'
@@ -8,10 +8,19 @@ import { OutlineButton } from '@src/components/atoms/button'
 import ProductCard from '@components/molecules/product-card'
 import { productListData } from '@hocs/data/product'
 import { productApi } from '@modules/product/action'
+import { fontStyle } from '../commont-styles'
 
 const { width } = Dimensions.get('window')
 
 const ProductWithCardHoc = productListData(ProductCard)
+
+const styles = StyleSheet.create({
+  futuraBold24: {
+    ...fontStyle.futuraDemi,
+    fontWeight: '500',
+    fontSize: 24,
+  },
+})
 
 class ProductSimilar extends Component<any, any> {
   state = {
@@ -58,14 +67,15 @@ class ProductSimilar extends Component<any, any> {
     const { products } = this.props
     return (
       <Div _flex={1} _margin="64px 0px" _width="100%" align="flex-start">
-        <Font
-          type="Futura"
-          size={24}
-          color={colors.black100}
-          _margin="0px 8px"
-          style={{ fontWeight: '500' }}>
-          You Might Also Like
-        </Font>
+        <View style={{ marginLeft: 8, marginRight: 8 }}>
+          <Text
+            style={{
+              ...styles.futuraBold24,
+              color: colors.black100,
+            }}>
+            You Might Also Like
+          </Text>
+        </View>
         <Div
           _direction="row"
           _flex={1}

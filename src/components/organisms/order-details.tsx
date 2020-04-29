@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, StyleSheet } from 'react-native'
+import { View, StyleSheet, Text } from 'react-native'
 import { Font } from '@components/atoms/basic'
 import ImageAutoSchale from '@components/atoms/image-autoschale'
 import { connect } from 'react-redux'
@@ -7,12 +7,14 @@ import { bindActionCreators } from 'redux'
 import { colors } from '@src/utils/constants'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import IconMi from 'react-native-vector-icons/MaterialIcons'
-import { formatRupiah, capilEachWord } from '@src/utils/helpers'
+import { formatRupiah, capilEachWord, sendEmail } from '@src/utils/helpers'
 import { OutlineButton } from '../atoms/button'
 import dayjs from 'dayjs'
 import { cartListData } from '@hocs/data/cart'
 import ProductSummaryCart from '@components/molecules/product-summary-cart'
 import { getOrderById } from '@modules/order/action'
+import { fontStyle } from '../commont-styles'
+import { navigate } from '@src/root-navigation'
 
 const CartHoc = cartListData(ProductSummaryCart)
 
@@ -33,84 +35,138 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
     marginTop: 8,
   },
+  futuraBold24: {
+    ...fontStyle.futuraDemi,
+    fontSize: 24,
+    fontWeight: '500',
+  },
+  helvetica12: {
+    ...fontStyle.helvetica,
+    fontSize: 12,
+  },
+  helvetica14: {
+    ...fontStyle.helvetica,
+    fontSize: 14,
+  },
+  helveticaBold12: {
+    ...fontStyle.helveticaBold,
+    fontSize: 12,
+  },
+  helveticaBold14: {
+    ...fontStyle.helveticaBold,
+    fontSize: 14,
+  },
+  helveticaBold16: {
+    ...fontStyle.helveticaBold,
+    fontSize: 16,
+  },
 })
 
-const buttonAction = [
-  {
-    button: {
-      style: {
-        borderColor: colors.blue60,
-        width: '100%',
-        height: 46,
-        marginTop: 16,
-      },
-      onPress: () => {
-        console.log('button')
-      },
-      showWhen: ['sent', 'delivered', 'completed'],
-    },
-    text: {
-      style: {
-        color: colors.blue60,
-        fontFamily: 'Helvetica Neue',
-        fontSize: 14,
-        fontWeight: '500',
-      },
-      label: 'Track Shipment',
-    },
-  },
-  {
-    button: {
-      style: {
-        borderColor: colors.black60,
-        width: '100%',
-        height: 46,
-        marginTop: 16,
-      },
-      onPress: () => {
-        console.log('button 2')
-      },
-      showWhen: ['sent', 'delivered'],
-    },
-    text: {
-      style: {
-        color: colors.black80,
-        fontFamily: 'HelveticaNeue',
-        fontSize: 14,
-        fontWeight: '500',
-      },
-      label: 'Complete Order',
-    },
-  },
-  {
-    button: {
-      style: {
-        borderColor: colors.black60,
-        width: '100%',
-        height: 46,
-        marginTop: 16,
-      },
-      onPress: () => {
-        console.log('button 3')
-      },
-      showWhen: ['sent', 'delivered', 'refunded'],
-    },
-    text: {
-      style: {
-        color: colors.black80,
-        fontFamily: 'HelveticaNeue',
-        fontSize: 14,
-        fontWeight: '500',
-      },
-      label: 'Return or Exchange',
-    },
-  },
-]
+const handleNavigate = (screen, screenName, params = {}) => () => {
+  return navigate(screen, {
+    screen: screenName,
+    params,
+  })
+}
 
 class OrderDetails extends Component<any, any> {
   componentDidMount() {
     this.props.getOrderById(this.props.order.id)
   }
+
+  buttonAction = [
+    {
+      button: {
+        style: {
+          borderColor: colors.blue60,
+          width: '100%',
+          height: 46,
+          marginTop: 16,
+        },
+        onPress: handleNavigate('Screens', 'TrackShipment', {
+          order: this.props.order,
+        }),
+        showWhen: ['sent', 'shipping', 'delivered', 'completed'],
+      },
+      text: {
+        style: {
+          ...fontStyle.helvetica,
+          color: colors.blue60,
+          fontSize: 14,
+          fontWeight: '500',
+        },
+        label: 'Track Shipment',
+      },
+    },
+    {
+      button: {
+        style: {
+          borderColor: colors.black60,
+          width: '100%',
+          height: 46,
+          marginTop: 16,
+        },
+        onPress: () => {
+          console.log('button 2')
+        },
+        showWhen: ['sent', 'shipping', 'delivered'],
+      },
+      text: {
+        style: {
+          ...fontStyle.helvetica,
+          color: colors.black80,
+          fontSize: 14,
+          fontWeight: '500',
+        },
+        label: 'Complete Order',
+      },
+    },
+    {
+      button: {
+        style: {
+          borderColor: colors.black60,
+          width: '100%',
+          height: 46,
+          marginTop: 16,
+        },
+        onPress: sendEmail(this.props.order.id),
+        showWhen: ['sent', 'shipping', 'delivered'],
+      },
+      text: {
+        style: {
+          ...fontStyle.helvetica,
+          color: colors.black80,
+          fontSize: 14,
+          fontWeight: '500',
+        },
+        label: 'Return or Exchange',
+      },
+      showWhen: ['sent', 'delivered', 'refunded'],
+    },
+    {
+      button: {
+        style: {
+          borderColor: colors.black60,
+          width: '100%',
+          height: 46,
+          marginTop: 16,
+        },
+        onPress: () => {
+          console.log('button 4')
+        },
+        showWhen: ['refunded'],
+      },
+      text: {
+        style: {
+          color: colors.black80,
+          fontFamily: 'HelveticaNeue',
+          fontSize: 14,
+          fontWeight: '500',
+        },
+        label: 'Refund Details',
+      },
+    },
+  ]
 
   orderStatus = () => {
     const {
@@ -172,7 +228,13 @@ class OrderDetails extends Component<any, any> {
     return null
   }
   render() {
-    const { order, style, products } = this.props
+    const { order, style, products, dataProducts } = this.props
+
+    let productTotal = 0
+    productTotal = products.reduce((total, value) => {
+      total += dataProducts.data[value].variant.qty
+      return total
+    }, 0)
 
     const getColor = this.orderStatus()
     if (!order) {
@@ -182,73 +244,65 @@ class OrderDetails extends Component<any, any> {
       <View {...style} {...styles.container}>
         {/* order summary */}
         <View>
-          <Font
-            type="Futura"
-            size={24}
-            style={{ fontWeight: '500' }}
-            color={colors.black100}>
+          <Text style={{ ...styles.futuraBold24, color: colors.black100 }}>
             Order Summary
-          </Font>
+          </Text>
 
           {/* order Status */}
           <View {...styles.row} style={{ marginTop: 24 }}>
-            <Font type="HelveticaNeue" size={14} color={colors.black70}>
+            <Text style={{ ...styles.helvetica14, color: colors.black70 }}>
               Order Status
-            </Font>
-            <Font
-              type="HelveticaNeue"
-              size={14}
-              style={{ fontWeight: '500' }}
-              color={getColor.textColor}>
+            </Text>
+            <Text
+              style={{
+                ...styles.helveticaBold14,
+                color: getColor.textColor,
+              }}>
               {capilEachWord(order.status.toLowerCase())}
-            </Font>
+            </Text>
           </View>
 
           <View {...styles.row} style={{ marginTop: 16 }}>
-            <Font type="HelveticaNeue" size={14} color={colors.black70}>
+            <Text style={{ ...styles.helvetica14, color: colors.black70 }}>
               Purchase Date
-            </Font>
-            <Font
-              type="HelveticaNeue"
-              size={14}
-              style={{ fontWeight: '500' }}
-              color={colors.black80}>
+            </Text>
+            <Text style={{ ...styles.helveticaBold14, color: colors.black80 }}>
               {dayjs(order.created_at).format('DD MMMM YYYY')}
-            </Font>
+            </Text>
           </View>
 
           <View {...styles.row} style={{ marginTop: 16 }}>
-            <Font type="HelveticaNeue" size={14} color={colors.black70}>
+            <Text style={{ ...styles.helvetica14, color: colors.black70 }}>
               Invoice
-            </Font>
-            <Font
-              type="HelveticaNeue"
-              size={14}
-              style={{ fontWeight: '500', lineHeight: 14 }}
-              color={colors.black80}>
+            </Text>
+            <Text
+              style={{
+                ...styles.helveticaBold14,
+                color: colors.black80,
+                lineHeight: 14,
+              }}>
               {order.invoice_no}
-            </Font>
+            </Text>
           </View>
         </View>
 
         {/* item summary */}
         <View style={{ marginTop: 40 }}>
-          <Font
-            type="Futura"
-            color={colors.black100}
-            size={24}
-            style={{ fontWeight: '500' }}>
+          <Text style={{ ...styles.futuraBold24, color: colors.black100 }}>
             Item Summary
-          </Font>
+          </Text>
           <View {...styles.warehouse}>
             <Icon name="warehouse" size={14} color={colors.black80} />
-            <Font
-              size={14}
-              type="HelveticaNeue"
-              color={colors.black80}
-              style={{ paddingLeft: 8 }}>
-              {`${order.origin.label} - ${order.origin.city}`}
-            </Font>
+            <View style={{ marginLeft: 8 }}>
+              <Text
+                style={{
+                  ...styles.helvetica14,
+                  color: colors.black80,
+                  lineHeight: 14,
+                }}>
+                {`${order.origin.label} - ${order.origin.city}`}
+              </Text>
+            </View>
           </View>
           {products &&
             products.map((_item, key) => {
@@ -264,23 +318,15 @@ class OrderDetails extends Component<any, any> {
 
         {/* shipment detail */}
         <View style={{ marginTop: 40 }}>
-          <Font
-            type="Futura"
-            color={colors.black100}
-            size={24}
-            style={{ fontWeight: '500' }}>
+          <Text style={{ ...styles.futuraBold24, color: colors.black100 }}>
             Shipment Detail
-          </Font>
+          </Text>
 
           {/* shipment package */}
           <View style={{ marginTop: 24 }}>
-            <Font
-              type="HelveticaNeue"
-              color={colors.black80}
-              size={16}
-              style={{ fontWeight: 'bold' }}>
+            <Text style={{ ...styles.helveticaBold16, color: colors.black100 }}>
               Shipment Package
-            </Font>
+            </Text>
             {/* card 1 */}
             <View
               style={{
@@ -318,22 +364,24 @@ class OrderDetails extends Component<any, any> {
                 style={{ borderRadius: 8, marginLeft: 16 }}
               />
               <View style={{ marginLeft: 16 }}>
-                <Font
-                  type="HelveticaNeue"
-                  size={14}
-                  color={colors.black80}
-                  style={{ fontWeight: '500' }}>
+                <Text
+                  style={{
+                    ...styles.helveticaBold14,
+                    color: colors.black80,
+                  }}>
                   Official The Shonet
-                </Font>
+                </Text>
                 <View {...styles.warehouse}>
                   <Icon name="warehouse" size={12} color={colors.black60} />
-                  <Font
-                    type="HelveticaNeue"
-                    size={12}
-                    color={colors.black60}
-                    style={{ marginLeft: 8 }}>
-                    {`${order.origin.label} - ${order.origin.city}`}
-                  </Font>
+                  <View style={{ marginLeft: 8 }}>
+                    <Text
+                      style={{
+                        ...styles.helvetica12,
+                        color: colors.black60,
+                      }}>
+                      {`${order.origin.label} - ${order.origin.city}`}
+                    </Text>
+                  </View>
                 </View>
               </View>
             </View>
@@ -386,17 +434,24 @@ class OrderDetails extends Component<any, any> {
                 style={{ borderRadius: 8, marginLeft: 16 }}
               />
               <View style={{ marginLeft: 16 }}>
-                <Font
-                  type="HelveticaNeue"
-                  size={14}
-                  color={colors.black80}
-                  style={{ fontWeight: '500' }}>
+                <Text
+                  style={{
+                    ...styles.helveticaBold14,
+                    color: colors.black80,
+                  }}>
                   {order.courier.name}
-                </Font>
+                </Text>
                 <View {...styles.warehouse}>
-                  <Font type="HelveticaNeue" size={12} color={colors.black60}>
-                    {order.courier.shipping_method.category.name}
-                  </Font>
+                  <Icon name="warehouse" size={12} color={colors.black60} />
+                  <View style={{ marginLeft: 8 }}>
+                    <Text
+                      style={{
+                        ...styles.helvetica12,
+                        color: colors.black60,
+                      }}>
+                      {order.courier.shipping_method.category.name}
+                    </Text>
+                  </View>
                 </View>
               </View>
             </View>
@@ -404,58 +459,53 @@ class OrderDetails extends Component<any, any> {
 
           {/* shipment address */}
           <View style={{ marginTop: 24 }}>
-            <Font
-              type="HelveticaNeue"
-              color={colors.black80}
-              size={14}
-              style={{ fontWeight: 'bold' }}>
+            <Text style={{ ...styles.helveticaBold14, color: colors.black80 }}>
               Shipment Address
-            </Font>
-            <Font
-              type="HelveticaNeue"
-              color={colors.black80}
-              size={12}
-              style={{ fontWeight: 'bold', marginTop: 16 }}>
-              {order.destination.name}
-            </Font>
-            <Font
-              type="HelveticaNeue"
-              color={colors.black70}
-              size={12}
-              style={{ lineHeight: 19, marginTop: 8 }}>
-              {`${order.destination.address}, ${order.destination.district}, ${order.destination.city}, ${order.destination.region}, ${order.destination.zip_code}`}
-            </Font>
-            <Font
-              type="HelveticaNeue"
-              color={colors.black80}
-              size={12}
-              style={{ marginTop: 8 }}>
-              {order.destination.phone}
-            </Font>
+            </Text>
+            <View style={{ marginTop: 16 }}>
+              <Text
+                style={{
+                  ...styles.helveticaBold12,
+                  color: colors.black80,
+                }}>
+                {order.destination.name}
+              </Text>
+            </View>
+            <View style={{ marginTop: 8 }}>
+              <Text
+                style={{
+                  ...styles.helvetica12,
+                  color: colors.black70,
+                  lineHeight: 19,
+                }}>
+                {`${order.destination.address}, ${order.destination.district}, ${order.destination.city}, ${order.destination.region}, ${order.destination.zip_code}`}
+              </Text>
+            </View>
+            <View style={{ marginTop: 8 }}>
+              <Text style={{ ...styles.helvetica12, color: colors.black80 }}>
+                {order.destination.phone}
+              </Text>
+            </View>
           </View>
         </View>
 
         {/* payment information */}
         <View style={{ marginTop: 40 }}>
-          <Font
-            type="Futura"
-            color={colors.black100}
-            size={24}
-            style={{ fontWeight: '500' }}>
+          <Text style={{ ...styles.futuraBold24, color: colors.black100 }}>
             Payment Information
-          </Font>
+          </Text>
 
           {/* payment method */}
           <View style={{ marginTop: 24 }}>
             {order.provider_payment_method && (
               <>
-                <Font
-                  type="HelveticaNeue"
-                  color={colors.black80}
-                  size={16}
-                  style={{ fontWeight: 'bold' }}>
+                <Text
+                  style={{
+                    ...styles.helveticaBold16,
+                    color: colors.black80,
+                  }}>
                   Payment Method
-                </Font>
+                </Text>
 
                 <View
                   style={{
@@ -468,13 +518,15 @@ class OrderDetails extends Component<any, any> {
                     width={88}
                     style={{ borderRadius: 8 }}
                   />
-                  <Font
-                    type="HelveticaNeue"
-                    color={colors.black80}
-                    size={14}
-                    style={{ fontWeight: 'bold', marginLeft: 16 }}>
-                    {this.renderPaymentName()}
-                  </Font>
+                  <View style={{ marginLeft: 16 }}>
+                    <Text
+                      style={{
+                        ...styles.helveticaBold14,
+                        color: colors.black80,
+                      }}>
+                      {this.renderPaymentName()}
+                    </Text>
+                  </View>
                 </View>
               </>
             )}
@@ -493,29 +545,40 @@ class OrderDetails extends Component<any, any> {
             {/* product total, shipping, delivery insurance */}
             <View>
               <View {...styles.row} style={{ marginTop: 24 }}>
-                <Font
-                  type="HelveticaNeue"
-                  size={14}
-                  color={colors.black100}>{`Product Total • 3 Items`}</Font>
-                <Font type="HelveticaNeue" size={14} color={colors.black100}>
+                <Text
+                  style={{
+                    ...styles.helvetica14,
+                    color: colors.black100,
+                  }}>
+                  {`Product Total • ${productTotal} Items`}
+                </Text>
+                <Text style={{ ...styles.helvetica14, color: colors.black100 }}>
                   {formatRupiah(order.total_amount)}
-                </Font>
+                </Text>
               </View>
 
               <View {...styles.row} style={{ marginTop: 24 }}>
-                <Font type="HelveticaNeue" size={14} color={colors.black100}>
+                <Text
+                  style={{
+                    ...styles.helvetica14,
+                    color: colors.black100,
+                  }}>
                   Total Shipping Cost
-                </Font>
-                <Font type="HelveticaNeue" size={14} color={colors.black100}>
+                </Text>
+                <Text style={{ ...styles.helvetica14, color: colors.black100 }}>
                   {formatRupiah(order.shipping_cost)}
-                </Font>
+                </Text>
               </View>
 
               <View {...styles.row} style={{ marginTop: 24 }}>
                 <View {...styles.row} style={{ alignItems: 'center' }}>
-                  <Font type="HelveticaNeue" size={14} color={colors.black100}>
+                  <Text
+                    style={{
+                      ...styles.helvetica14,
+                      color: colors.black100,
+                    }}>
                     Delivery Protection
-                  </Font>
+                  </Text>
                   <View style={{ marginLeft: 8 }}>
                     <IconMi
                       name="verified-user"
@@ -524,9 +587,13 @@ class OrderDetails extends Component<any, any> {
                     />
                   </View>
                 </View>
-                <Font type="HelveticaNeue" size={14} color={colors.black100}>
+                <Text
+                  style={{
+                    ...styles.helvetica14,
+                    color: colors.black100,
+                  }}>
                   {formatRupiah(order.insurance_cost)}
-                </Font>
+                </Text>
               </View>
             </View>
           </View>
@@ -545,32 +612,32 @@ class OrderDetails extends Component<any, any> {
           {/* total */}
           <View {...styles.row} style={{ marginTop: 24, marginBottom: 43 }}>
             <View {...styles.row} style={{ alignItems: 'center' }}>
-              <Font
-                type="HelveticaNeue"
-                size={14}
-                color={colors.black100}
-                style={{ fontWeight: 'bold' }}>
+              <Text
+                style={{
+                  ...styles.helveticaBold14,
+                  color: colors.black100,
+                }}>
                 Total
-              </Font>
+              </Text>
               <View style={{ marginLeft: 8 }}>
                 <IconMi name="verified-user" size={12} color={colors.blue60} />
               </View>
             </View>
-            <Font
-              type="HelveticaNeue"
-              size={14}
-              color={colors.black100}
-              style={{ fontWeight: 'bold' }}>
+            <Text
+              style={{
+                ...styles.helveticaBold14,
+                color: colors.black100,
+              }}>
               {formatRupiah(
                 order.total_amount + order.shipping_cost + order.insurance_cost,
               )}
-            </Font>
+            </Text>
           </View>
         </View>
 
         {/* button action */}
         <View>
-          {buttonAction.map((item, key) => {
+          {this.buttonAction.map((item, key) => {
             return this.renderButton(item, key)
           })}
         </View>
@@ -588,23 +655,16 @@ const mapDispatchToProps = dispatch =>
   )
 
 const mapStateToProps = (state, ownProps) => {
-  console.log('state enu ---', state)
   const orderId = ownProps.orderId
-  console.log('enu ---', orderId)
   const order = state.orders.data[orderId]
-  console.log('order enu ---', order)
   const products = order.product
-  // console.log('products ---', products)
   const user = state.user.data[order.user]
-  // const brands = state.brands.data[]
+  const dataProducts = state.products
   return {
     order,
     products,
     user,
-    // products: state.products.order,
-    // brands: state.brands.order,
-    // categories: state.categories.order,
-    // user: state.user.order,
+    dataProducts,
   }
 }
 

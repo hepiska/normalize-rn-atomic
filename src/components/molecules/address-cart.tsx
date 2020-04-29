@@ -1,18 +1,12 @@
 import React from 'react'
-import { StyleSheet, ViewStyle, View } from 'react-native'
+import { StyleSheet, ViewStyle, View, Text } from 'react-native'
 import {
   Font,
   TouchableWithoutFeedback,
   PressAbbleDiv,
 } from '@components/atoms/basic'
 import styled from 'styled-components'
-import {
-  helveticaBlackBold,
-  helveticaBlackFont12,
-  futuraTitleFont,
-  helveticaBlackFont14,
-  helveticaBlackBoldFont10,
-} from '@components/commont-styles'
+import { fontStyle, helveticaBlackBoldFont10 } from '@components/commont-styles'
 import { colors } from '@utils/constants'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import { RadioButton } from '../atoms/radio-button'
@@ -66,6 +60,35 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 8,
+  },
+  helveticaBold14: {
+    ...fontStyle.helveticaBold,
+    fontSize: 14,
+  },
+  helveticaBold12: {
+    ...fontStyle.helveticaBold,
+    fontSize: 12,
+  },
+  helveticaBold10: {
+    ...fontStyle.helveticaBold,
+    fontSize: 10,
+  },
+  helvetica10: {
+    ...fontStyle.helveticaBold,
+    fontSize: 10,
+  },
+  helvetica12: {
+    ...fontStyle.helvetica,
+    fontSize: 12,
+  },
+  helvetica14: {
+    ...fontStyle.helvetica,
+    fontSize: 14,
+  },
+  futuraBold18: {
+    ...fontStyle.futuraDemi,
+    fontWeight: '500',
+    fontSize: 18,
   },
 })
 
@@ -129,27 +152,38 @@ class AddressCart extends React.PureComponent<AddressCartType, any> {
       return (
         <TouchableWithoutFeedback onPress={onPress}>
           <View {...style} {...styles.divider}>
-            <View style={{ flex: 0.9, alignItems: 'flex-start' }}>
-              <Font {...helveticaBlackBold}>{address.label}</Font>
-              <Font {...helveticaBlackFont12} style={{ marginTop: 16 }}>
-                {address.recipient_name}
-              </Font>
-              <Font
-                {...helveticaBlackFont12}
-                style={{ marginTop: 8, color: colors.black70 }}>
-                {address.label +
-                  ', ' +
-                  address.district.name +
-                  ', ' +
-                  address.village.name +
-                  ', ' +
-                  address.city.name +
-                  ', ' +
-                  address.region.name}
-              </Font>
-              <Font {...helveticaBlackFont12} style={{ marginTop: 8 }}>
-                {address.phone_number}
-              </Font>
+            <View
+              style={{ flex: 0.9, width: '100%', alignItems: 'flex-start' }}>
+              <Text
+                style={{ ...styles.helveticaBold14, color: colors.black100 }}>
+                {address.label}
+              </Text>
+              <View style={{ width: '100%', marginTop: 16 }}>
+                <Text
+                  style={{ ...styles.helveticaBold12, color: colors.black80 }}>
+                  {address.recipient_name}
+                </Text>
+              </View>
+              <View style={{ width: '100%', marginTop: 8 }}>
+                <Text style={{ ...styles.helvetica12, color: colors.black70 }}>
+                  {address.label +
+                    ', ' +
+                    address.district.name +
+                    ', ' +
+                    address.village.name +
+                    ', ' +
+                    address.city.name +
+                    ', ' +
+                    address.region.name +
+                    ', ' +
+                    address.zip_code.code}
+                </Text>
+              </View>
+              <View style={{ width: '100%', marginTop: 8 }}>
+                <Text style={{ ...styles.helvetica12, color: colors.black80 }}>
+                  {address.phone_number}
+                </Text>
+              </View>
             </View>
             <View style={{ flex: 0.1, alignItems: 'flex-end' }}>
               <Icon name="chevron-right" size={12} color={colors.black100} />
@@ -192,9 +226,13 @@ class AddressCart extends React.PureComponent<AddressCartType, any> {
                         height: 42,
                         justifyContent: 'center',
                       }}>
-                      <Font {...helveticaBlackBoldFont10} color="#3067E4">
+                      <Text
+                        style={{
+                          ...styles.helveticaBold10,
+                          color: '#3067E4',
+                        }}>
                         Set as Primary Address
-                      </Font>
+                      </Text>
                     </View>
                   </PressAbbleDiv>
                   <PressAbbleDiv onPress={this._editAddress}>
@@ -204,12 +242,13 @@ class AddressCart extends React.PureComponent<AddressCartType, any> {
                         height: 42,
                         justifyContent: 'center',
                       }}>
-                      <Font
-                        type="HelveticaNeue"
-                        size="10px"
-                        color={colors.black60}>
+                      <Text
+                        style={{
+                          ...styles.helvetica10,
+                          color: colors.black60,
+                        }}>
                         Edit Address
-                      </Font>
+                      </Text>
                     </View>
                   </PressAbbleDiv>
                   <PressAbbleDiv onPress={this._deleteAddress}>
@@ -219,12 +258,13 @@ class AddressCart extends React.PureComponent<AddressCartType, any> {
                         height: 42,
                         justifyContent: 'center',
                       }}>
-                      <Font
-                        type="HelveticaNeue"
-                        size="10px"
-                        color={colors.black60}>
+                      <Text
+                        style={{
+                          ...styles.helvetica10,
+                          color: colors.black60,
+                        }}>
                         Delete Address
-                      </Font>
+                      </Text>
                     </View>
                   </PressAbbleDiv>
                 </View>
@@ -247,40 +287,43 @@ class AddressCart extends React.PureComponent<AddressCartType, any> {
           {address.is_primary && (
             <AbsDiv top="16px" right="34px" zIndex="2">
               <View {...styles.primaryChips}>
-                <Font
-                  type="HelveticaNeue"
-                  color="#3067E4"
-                  weight="bold"
-                  size="10">
+                <Text style={{ ...styles.helveticaBold10, color: '#3067E4' }}>
                   Primary Address
-                </Font>
+                </Text>
               </View>
             </AbsDiv>
           )}
-          <Font {...futuraTitleFont}>{address.label}</Font>
+          <Text style={{ ...styles.futuraBold18, color: colors.black100 }}>
+            {address.label}
+          </Text>
           <View {...styles.divider}>
             <View style={{ flex: 0.9, alignItems: 'flex-start' }}>
-              <Font {...helveticaBlackFont14} style={{ marginTop: 16 }}>
-                {address.recipient_name}
-              </Font>
-              <Font
-                {...helveticaBlackFont14}
-                style={{ marginTop: 8, color: colors.black70 }}>
-                {address.label +
-                  ', ' +
-                  address.district.name +
-                  ', ' +
-                  address.village.name +
-                  ', ' +
-                  address.city.name +
-                  ', ' +
-                  address.region.name}
-              </Font>
-              <Font
-                {...helveticaBlackFont14}
-                style={{ marginTop: 8, color: colors.black70 }}>
-                {address.phone_number}
-              </Font>
+              <View style={{ marginTop: 16 }}>
+                <Text
+                  style={{ ...styles.helveticaBold14, color: colors.black100 }}>
+                  {address.recipient_name}
+                </Text>
+              </View>
+              <View style={{ marginTop: 8 }}>
+                <Text style={{ ...styles.helvetica14, color: colors.black70 }}>
+                  {address.label +
+                    ', ' +
+                    address.district.name +
+                    ', ' +
+                    address.village.name +
+                    ', ' +
+                    address.city.name +
+                    ', ' +
+                    address.region.name +
+                    ', ' +
+                    address.zip_code.code}
+                </Text>
+              </View>
+              <View style={{ marginTop: 8 }}>
+                <Text style={{ ...styles.helvetica14, color: colors.black70 }}>
+                  {address.phone_number}
+                </Text>
+              </View>
             </View>
             <View style={{ flex: 0.1, alignItems: 'flex-end' }}>
               <RadioButton

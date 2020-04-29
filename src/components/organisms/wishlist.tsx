@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Dimensions } from 'react-native'
+import { Dimensions, StyleSheet, View, Text } from 'react-native'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { Div, Font } from '@components/atoms/basic'
@@ -9,11 +9,20 @@ import { getProductSaved } from '@modules/product-saved/action'
 import ProductCard from '@components/molecules/product-card'
 import { productListData } from '@hocs/data/product'
 import { productApi } from '@modules/product/action'
+import { fontStyle } from '../commont-styles'
 // import { addCart } from '@modules/cart/action'
 
 const { width } = Dimensions.get('window')
 
 const ProductWithCardHoc = productListData(ProductCard)
+
+const styles = StyleSheet.create({
+  futuraBold24: {
+    ...fontStyle.futuraDemi,
+    fontWeight: '500',
+    fontSize: 24,
+  },
+})
 
 class Wishlist extends Component<any, any> {
   state = {
@@ -49,14 +58,15 @@ class Wishlist extends Component<any, any> {
     const { products, loading } = this.props
     return (
       <Div _flex={1} _margin="64px 0px 0px" _width="100%" align="flex-start">
-        <Font
-          type="Futura"
-          size={24}
-          color={colors.black100}
-          _margin="0px 8px"
-          style={{ fontWeight: '500' }}>
-          Wishlist
-        </Font>
+        <View style={{ marginLeft: 8, marginRight: 8 }}>
+          <Text
+            style={{
+              ...styles.futuraBold24,
+              color: colors.black100,
+            }}>
+            Wishlist
+          </Text>
+        </View>
         {/* revisit: need change to flatlist */}
         <Div
           _direction="row"

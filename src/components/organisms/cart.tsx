@@ -1,12 +1,9 @@
 import React, { Component } from 'react'
-import { View, StyleSheet, SectionList } from 'react-native'
+import { View, StyleSheet, SectionList, Text } from 'react-native'
 import { Font, PressAbbleDiv, Div } from '@components/atoms/basic'
 import { colors } from '@src/utils/constants'
 import { Checkbox } from '@components/atoms/checkbox'
-import {
-  helveticaBlackFont14,
-  helveticaBlackBold,
-} from '@components/commont-styles'
+import { helveticaBlackBold, fontStyle } from '@components/commont-styles'
 import CartCard from '@components/molecules/cart-card'
 import CartEmptyState from '@components/molecules/cart-empty-state'
 import TotalPayCart from '@components/molecules/total-pay-cart'
@@ -27,6 +24,14 @@ const styles = StyleSheet.create({
   cartMargin: {
     marginLeft: 16,
     marginRight: 16,
+  },
+  helvetica14: {
+    ...fontStyle.helvetica,
+    fontSize: 14,
+  },
+  helveticaBold14: {
+    ...fontStyle.helveticaBold,
+    fontSize: 14,
   },
 })
 const CartHoc = cartListData(CartCard)
@@ -143,16 +148,21 @@ class Cart extends Component<any, any> {
           <PressAbbleDiv onPress={this._chooseAll}>
             <View {...styles.cartMargin} style={{ flexDirection: 'row' }}>
               <Checkbox isChecked={isChecked} onPress={this._chooseAll} />
-              <Font {...helveticaBlackFont14} style={{ marginLeft: 16 }}>
-                Choose All
-              </Font>
+              <View style={{ marginLeft: 16 }}>
+                <Text style={{ ...styles.helvetica14, color: colors.black100 }}>
+                  Choose All
+                </Text>
+              </View>
             </View>
           </PressAbbleDiv>
           <PressAbbleDiv onPress={this._removeCart}>
             <View {...styles.cartMargin}>
-              <Font {...helveticaBlackBold} color={colors.blue60}>
+              {/* <Font {...helveticaBlackBold} color={colors.blue60}>
                 Remove
-              </Font>
+              </Font> */}
+              <Text style={{ ...styles.helveticaBold14, color: colors.blue60 }}>
+                Remove
+              </Text>
             </View>
           </PressAbbleDiv>
         </View>
@@ -181,9 +191,11 @@ class Cart extends Component<any, any> {
             style={{ marginRight: 16 }}
           />
           <IconFa name="warehouse" size={14} color={colors.black80} />
-          <Font {...helveticaBlackFont14} style={{ paddingLeft: 8 }}>
-            {item.section.title}
-          </Font>
+          <View style={{ marginLeft: 8 }}>
+            <Text style={{ ...styles.helvetica14, color: colors.black80 }}>
+              {item.section.title}
+            </Text>
+          </View>
         </Div>
       </PressAbbleDiv>
     )

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Dimensions, StyleSheet } from 'react-native'
+import { View, Dimensions, StyleSheet, Text } from 'react-native'
 import { Font } from '@components/atoms/basic'
 import { colors } from '@utils/constants'
 import Tooltip from 'rn-tooltip'
@@ -7,6 +7,7 @@ import PaymentMethodCard from '@src/components/molecules/payment-method-card'
 import {
   futuraBlackFont24,
   helveticaBlackFont12,
+  fontStyle,
 } from '@src/components/commont-styles'
 import { paymentMethodListData } from '@hocs/data/payments-methods'
 import IconMi from 'react-native-vector-icons/MaterialIcons'
@@ -23,6 +24,15 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     width: 32,
     height: 24,
+  },
+  helvetica12: {
+    ...fontStyle.helvetica,
+    fontSize: 12,
+  },
+  futuraBold24: {
+    ...fontStyle.futuraDemi,
+    fontSize: 24,
+    fontWeight: '500',
   },
 })
 
@@ -43,7 +53,9 @@ class GroupPaymentMethod extends Component<any, any> {
     const { title } = this.props
     return (
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-        <Font {...futuraBlackFont24}>{this.changeTitle(title)}</Font>
+        <Text style={{ ...styles.futuraBold24 }}>
+          {this.changeTitle(title)}
+        </Text>
         {title === 'Virtual_Account' && (
           <Tooltip
             actionType="press"
@@ -55,9 +67,12 @@ class GroupPaymentMethod extends Component<any, any> {
                   justifyContent: 'space-between',
                   width: '100%',
                 }}>
-                <Font {...helveticaBlackFont12} _margin="0">
-                  Each bank account have different service payment fee
-                </Font>
+                <View style={{ margin: 0 }}>
+                  <Text
+                    style={{ ...styles.helvetica12, color: colors.black100 }}>
+                    Each bank account have different service payment fee
+                  </Text>
+                </View>
                 <IconMi name="cancel" size={14} color={colors.black100} />
               </View>
             }

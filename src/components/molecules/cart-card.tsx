@@ -1,10 +1,11 @@
 import React from 'react'
-import { StyleSheet, View, ViewStyle } from 'react-native'
+import { StyleSheet, View, ViewStyle, Text } from 'react-native'
 import { Div, Font, PressAbbleDiv } from '@components/atoms/basic'
 import {
   helveticaNormalFont12,
   helveticaBlackBold,
   futuraBlackFont14,
+  fontStyle,
 } from '@components/commont-styles'
 import { Checkbox } from '@components/atoms/checkbox'
 import ImageAutoSchale from '@components/atoms/image-autoschale'
@@ -57,6 +58,23 @@ const styles = StyleSheet.create({
   icon: {
     height: 24,
     width: 24,
+  },
+  helveticaBold12: {
+    ...fontStyle.helveticaBold,
+    fontSize: 12,
+  },
+  helveticaBold14: {
+    ...fontStyle.helveticaBold,
+    fontSize: 14,
+  },
+  helvetica12: {
+    ...fontStyle.helvetica,
+    fontSize: 12,
+  },
+  futuraBold14: {
+    ...fontStyle.futuraDemi,
+    fontWeight: '500',
+    fontSize: 14,
   },
 })
 
@@ -132,9 +150,9 @@ class CartCard extends React.PureComponent<CartCardType, any> {
             radius="8px"
             _margin="0 0 10px 0"
             alignItems="flex-start">
-            <Font color="#ffa010">
+            <Text style={{ ...styles.helvetica12, color: '#ffa010' }}>
               Attention, the quantity exceeds the available stock
-            </Font>
+            </Text>
           </Div>
           <Div flexDirection="row" {...styles.container} alignItems="center">
             <Checkbox
@@ -156,24 +174,34 @@ class CartCard extends React.PureComponent<CartCardType, any> {
               flexDirection="column"
               align="flex-start"
               _padding="0 0 0 16px">
-              <Font
+              <Text
                 ellipsizeMode="tail"
                 numberOfLines={1}
-                {...helveticaBlackBold}>
+                style={{
+                  ...styles.helveticaBold12,
+                  color: colors.black100,
+                }}>
                 {brand.name ? brand.name.toUpperCase() : 'UNKNOWN'}
-              </Font>
-              <Font
-                ellipsizeMode="tail"
-                numberOfLines={1}
-                {...helveticaNormalFont12}
-                _margin="8px 0 0 0">
-                {variant.product
-                  ? variant.product.product_name.replace(/(\r\n|\n|\r)/gm, '')
-                  : 'UNKNOWN'}
-              </Font>
-              <Font {...helveticaBlackBold} _margin="16px 0 0 0">
-                {formatRupiah(variant.price) || '0'}
-              </Font>
+              </Text>
+              <View style={{ marginTop: 8 }}>
+                <Text
+                  ellipsizeMode="tail"
+                  numberOfLines={1}
+                  style={{
+                    ...styles.helvetica12,
+                    color: colors.black70,
+                  }}>
+                  {variant.product
+                    ? variant.product.product_name.replace(/(\r\n|\n|\r)/gm, '')
+                    : 'UNKNOWN'}
+                </Text>
+              </View>
+              <View style={{ marginTop: 16 }}>
+                <Text
+                  style={{ ...styles.helveticaBold12, color: colors.black100 }}>
+                  {formatRupiah(variant.price) || '0'}
+                </Text>
+              </View>
               <Div
                 _width="100%"
                 flexDirection="row"
@@ -238,9 +266,18 @@ class CartCard extends React.PureComponent<CartCardType, any> {
                       paddingLeft: 12,
                       paddingRight: 12,
                     }}>
-                    <Font _margin="0 8px 0 0" {...futuraBlackFont14}>
+                    {/* <Font _margin="0 8px 0 0" {...futuraBlackFont14}>
                       {_attribute.label}
-                    </Font>
+                    </Font> */}
+                    <View style={{ marginRight: 8 }}>
+                      <Text
+                        style={{
+                          ...styles.futuraBold14,
+                          color: colors.black100,
+                        }}>
+                        {_attribute.label}
+                      </Text>
+                    </View>
                     <Font _margin="0 8px 0 0">{_attribute.value.label}</Font>
                     <IconFa
                       name="sort-down"

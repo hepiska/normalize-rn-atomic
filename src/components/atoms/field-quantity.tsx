@@ -1,9 +1,16 @@
 import React, { ReactElement, memo } from 'react'
-import { ViewStyle, TextStyle, StyleSheet, View, TextInput } from 'react-native'
+import {
+  ViewStyle,
+  TextStyle,
+  StyleSheet,
+  View,
+  TextInput,
+  Text,
+} from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import { Font, PressAbbleDiv, Div } from '@components/atoms/basic'
 import { colors } from '@src/utils/constants'
-import { helveticaBlackFont12 } from '@components/commont-styles'
+import { helveticaBlackFont12, fontStyle } from '@components/commont-styles'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 
 interface FieldType {
@@ -57,6 +64,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  helvetica12: {
+    ...fontStyle.helvetica,
+    fontSize: 12,
+  },
 })
 
 const FieldQuantity = ({
@@ -81,17 +92,10 @@ const FieldQuantity = ({
           <Icon name="minus" size={8} color={colors.black60} />
         </Div>
       </PressAbbleDiv>
-      {/* <TextInput
-        value={typeof qty === 'number' ? qty.toString() : qty}
-        style={{ textAlign: 'center' }}
-        onChangeText={onChangeQty}
-        placeholder={placeholder}
-        {...inputProps}
-        {...helveticaBlackFont12}
-        {...styles.input}
-      /> */}
       <Div {...styles.input}>
-        <Font {...helveticaBlackFont12}>{qty}</Font>
+        <Text style={{ ...styles.helvetica12, color: colors.black80 }}>
+          {qty}
+        </Text>
       </Div>
       <PressAbbleDiv onPress={_onInc}>
         <Div {...styles.rightButton} {...styles.button}>
