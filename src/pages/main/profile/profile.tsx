@@ -103,21 +103,25 @@ const myOrder = [
     label: 'Waiting for Payment',
     image: require('@src/assets/icons/waiting-for-payment.png'),
     filterTransaction: ['unpaid', 'waiting'],
+    screenName: 'PaymentList',
   },
   {
     label: 'In Process',
     image: require('@src/assets/icons/in-process.png'),
-    filterTransaction: ['in process'],
+    filterTransaction: 'confirmed',
+    screenName: 'OrderList',
   },
   {
     label: 'Sent',
     image: require('@src/assets/icons/sent.png'),
-    filterTransaction: ['sent'],
+    filterTransaction: 'shipping',
+    screenName: 'OrderList',
   },
   {
     label: 'Done',
     image: require('@src/assets/icons/done.png'),
-    filterTransaction: ['done'],
+    filterTransaction: 'completed',
+    screenName: 'OrderList',
   },
 ]
 
@@ -264,8 +268,8 @@ class ProfilPage extends React.PureComponent<any, any> {
     }
   }
 
-  onPressStatusOrder = filter => () => {
-    navigateTo('Screens', 'PaymentList', {
+  onPressStatusOrder = (filter, screenName) => () => {
+    navigateTo('Screens', screenName, {
       selectedFilter: filter,
       hideHeader: true,
     })
@@ -432,6 +436,7 @@ class ProfilPage extends React.PureComponent<any, any> {
                           key={`myorder-${key}`}
                           onPress={this.onPressStatusOrder(
                             value.filterTransaction,
+                            value.screenName,
                           )}>
                           <View
                             style={{

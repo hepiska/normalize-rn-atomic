@@ -23,7 +23,8 @@ const OrderHoc = orderListData(OrderCard)
 class OrderList extends Component<any, any> {
   state = {
     searchKey: '',
-    selectedFilter: this.props.filterOptions,
+    selectedFilter:
+      [this.props.route.params.selectedFilter] || this.props.filterOptions,
   }
   timeout = null
   limit = 5
@@ -55,14 +56,21 @@ class OrderList extends Component<any, any> {
   _fetchData = skip => {
     const { searchKey, selectedFilter } = this.state
 
-    this.props.getAllOrder({
+    let selectedStatus = selectedFilter.join(',')
+
+    const params = {
       limit: this.limit,
       offset: this.limit * skip,
-      invoice_no: searchKey,
       sort_by: 'date',
       sort_direction: 'desc',
-      status: selectedFilter.join(','),
-    })
+      status: selectedStatus,
+    }
+
+    if (searchKey !== '') {
+      params['invoice_no'] = searchKey
+    }
+
+    this.props.getAllOrder({ ...params })
   }
 
   _fetchMore = () => {
@@ -77,7 +85,7 @@ class OrderList extends Component<any, any> {
         return
       }
 
-      if (this.props.pagination.total > this.props.orders.length) {
+      if (30 > this.props.orders.length) {
         this._fetchData(this.skip)
       }
     }
@@ -110,7 +118,6 @@ class OrderList extends Component<any, any> {
         onfilterSelected={this._selectFilter}
         filterItems={options}
         searchKey={this.state.searchKey}
-        style={{ paddingTop: 24, paddingHorizontal: 16 }}
         inputProps={{
           onSubmitEditing: this.submitEditing,
         }}
@@ -119,15 +126,12 @@ class OrderList extends Component<any, any> {
   }
   _renderItem = ({ item, index }) => {
     return (
-      <View style={{ paddingHorizontal: 16 }}>
-        <OrderHoc
-          orderId={item}
-          style={{
-            backgroundColor: colors.blue50,
-            width: '100%',
-          }}
-        />
-      </View>
+      <OrderHoc
+        orderId={item}
+        style={{
+          width: '100%',
+        }}
+      />
     )
   }
 
@@ -147,18 +151,19 @@ class OrderList extends Component<any, any> {
         <NavbarTop leftContent={['back']} title="Order List" />
         <View
           style={{
-            marginBottom: 100,
+            flex: 1,
           }}>
           <FlatList
+            style={{ paddingHorizontal: 16, paddingTop: 12 }}
             keyExtractor={this._keyExtractor}
             ListHeaderComponent={this._renderFilter()}
             data={orders}
             renderItem={this._renderItem}
             onEndReached={this._fetchMore}
-            onEndReachedThreshold={0.97}
+            onEndReachedThreshold={0.99}
             ListEmptyComponent={this._emptyComponent}
           />
-          {this.props.loading && (
+          {/* {this.props.loading && (
             <View
               style={{
                 position: 'absolute',
@@ -171,7 +176,7 @@ class OrderList extends Component<any, any> {
               }}>
               <InviniteLoader />
             </View>
-          )}
+          )} */}
         </View>
       </>
     )

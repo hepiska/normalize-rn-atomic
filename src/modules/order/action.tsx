@@ -79,16 +79,11 @@ export const getAllOrder = params => {
       url: 'users/' + getMe().id + '/orders/',
       requestParams: { params },
       schema: [order],
-      startNetwork: () => {
-        return setOrderLoading(true)
-      },
-      endNetwork: (status, error) => {
-        if (status === 'error') {
-          return [setOrderLoading(true)]
-        }
-        return setOrderLoading(true)
-      },
+      startNetwork: () => setOrderLoading(true),
       success: (data, { pagination }) => {
+        if (!data) {
+          return [setOrderLoading(false)]
+        }
         return [
           setProductData(data.entities.product),
           setBrandData(data.entities.brand),
@@ -98,6 +93,9 @@ export const getAllOrder = params => {
           setOrderOrderPage({ order: data.result, pagination }),
           setOrderLoading(false),
         ]
+      },
+      error: err => {
+        return [setOrderLoading(false)]
       },
     },
   }

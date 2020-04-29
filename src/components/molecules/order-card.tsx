@@ -24,7 +24,6 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     padding: 16,
     marginTop: 16,
-    marginBottom: 16,
     borderWidth: 1,
     borderColor: colors.black50,
     width: '100%',
@@ -118,7 +117,7 @@ class OrderCard extends Component<any, any> {
 
     return (
       <TouchableWithoutFeedback onPress={this.orderDetail}>
-        <View {...style} {...styles.container}>
+        <View style={{ ...styles.container, ...style }}>
           <StatusAlert
             status={order.status}
             text={order.status}

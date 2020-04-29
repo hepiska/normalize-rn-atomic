@@ -89,7 +89,11 @@ class PaymentCard extends React.PureComponent<any, any> {
           <View style={{ marginLeft: 16, flex: 1 }}>
             <Text style={styles.smallFont}>Payment Total</Text>
             <Text style={styles.boldFont}>
-              {formatRupiah(transaction.total_amount)}
+              {formatRupiah(
+                transaction.total_amount +
+                  transaction.shipping_cost +
+                  transaction.total_insurance_cost,
+              )}
             </Text>
             {Boolean(transaction.va_number) && (
               <>

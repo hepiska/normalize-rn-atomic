@@ -129,8 +129,9 @@ class OrderList extends Component<any, any> {
     return (
       <>
         <NavbarTop leftContent={['back']} title="Payment List" />
-        <View style={{ paddingTop: 24, paddingHorizontal: 16 }}>
+        <View style={{ flex: 1 }}>
           <FlatList
+            style={{ paddingTop: 12, paddingHorizontal: 16 }}
             onRefresh={this._freshfetch}
             refreshing={transactionLoading}
             ListHeaderComponent={this._renderFilter}
