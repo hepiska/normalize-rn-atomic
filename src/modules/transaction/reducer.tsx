@@ -31,7 +31,9 @@ const transactionReducer: Reducer<TransactionState> = (
   const newState = { ...state }
   switch (action.type) {
     case transactionActionType.SET_TRANSACTION_DATA:
-      newState.data = Immutable.merge(newState.data, action.payload)
+      newState.data = Immutable.merge(newState.data, action.payload, {
+        deep: true,
+      })
       return newState
     case transactionActionType.SET_TRANSACTION_ORDER:
       newState.order = Immutable(action.payload)

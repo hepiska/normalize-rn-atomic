@@ -45,7 +45,6 @@ class PaymentCard extends React.PureComponent<any, any> {
   _getAction = provider_payment_method => {
     return !provider_payment_method
       ? () => {
-          console.log('++++++')
           navigate('PaymentMethod', {
             transactionId: this.props.transaction.id,
           })
@@ -53,6 +52,7 @@ class PaymentCard extends React.PureComponent<any, any> {
       : () => {
           navigate('PaymentWaiting', {
             transactionId: this.props.transaction.id,
+            holdOpenWeb: true,
           })
         }
   }

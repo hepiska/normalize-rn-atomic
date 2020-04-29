@@ -111,7 +111,6 @@ class Productlist extends Component<any, any> {
       this.props.isCategoryLoading !== prevProps.isCategoryLoading
     ) {
       if (!this.props.isCategoryLoading) {
-        console.log('set initial state')
         this._setInitialState()
         return
       }

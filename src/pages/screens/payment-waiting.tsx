@@ -158,11 +158,16 @@ class PaymentWaiting extends Component<any, any> {
   interval = null
   count = null
   state: any = {
-    countdownTimer: null,
+    countdownTimer: {
+      minutes: 0,
+      seconds: 0,
+      hours: 0,
+    },
   }
 
   async componentDidMount() {
-    const { transactionId, transaction } = this.props
+    const { transactionId, transaction, route } = this.props
+    const { holdOpenWeb } = route.params || {}
 
     if (transactionId) {
       this.callApi
@@ -171,6 +176,9 @@ class PaymentWaiting extends Component<any, any> {
 
     if (transaction) {
       const expired = transaction.expiring_at
+      if (!holdOpenWeb) {
+        this.handleTransaction()
+      }
       this.count = countdown(new Date(expired), data => {
         this.setState({
           countdownTimer: data,
@@ -181,6 +189,27 @@ class PaymentWaiting extends Component<any, any> {
 
   callApi = () => {
     this.props.getTransactionById(this.props.transactionId)
+  }
+
+  handleTransaction = () => {
+    const { transaction } = this.props
+
+    const method = transaction.provider_payment_method.channel.toLowerCase()
+    let redirectUri
+    switch (method) {
+      case 'gopay':
+        redirectUri = transaction.actions.find(
+          _act => _act?.name === 'deeplink-redirect',
+        ).url
+        this.props.navigation.navigate('PaymentWebView', { uri: redirectUri })
+        break
+      case 'dana':
+        redirectUri = transaction.redirect_url
+        this.props.navigation.navigate('PaymentWebView', { uri: redirectUri })
+        break
+      default:
+        break
+    }
   }
 
   componentWillUnmount() {
@@ -241,6 +270,9 @@ class PaymentWaiting extends Component<any, any> {
 
   renderRightTitleExpandable = () => {
     const { transaction } = this.props
+    if (!transaction) {
+      return null
+    }
     return (
       <View style={{ marginRight: 16 }}>
         <Text style={styles.helveticaBold14}>
@@ -293,6 +325,9 @@ class PaymentWaiting extends Component<any, any> {
 
   renderVirtualAccountInfo = () => {
     const { transaction } = this.props
+    if (!transaction.provider_payment_method) {
+      return null
+    }
     if (!transaction) {
       return null
     }
@@ -349,6 +384,9 @@ class PaymentWaiting extends Component<any, any> {
   }
 
   renderPaymentGuide = () => {
+    if (!this.props.transaction.provider_payment_method) {
+      return null
+    }
     const {
       transaction: {
         provider_payment_method: { name, channel },
@@ -402,6 +440,9 @@ class PaymentWaiting extends Component<any, any> {
 
   renderFooterButton = () => {
     const { transaction } = this.props
+    if (!transaction.provider_payment_method) {
+      return null
+    }
 
     if (
       transaction.provider_payment_method?.group_payment === 'Virtual Account'
@@ -442,7 +483,7 @@ class PaymentWaiting extends Component<any, any> {
               <Icon name="lock" color={colors.white} size={14} />
             </View>
           }
-          onPress={() => {}} // notes: go to pay now
+          onPress={this.handleTransaction} // notes: go to pay now
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 0 }}
           colors={['#3067E4', '#8131E2']}
@@ -471,7 +512,6 @@ class PaymentWaiting extends Component<any, any> {
 
   render() {
     const { transaction } = this.props
-
     if (!transaction) {
       return null
     }
@@ -512,7 +552,8 @@ class PaymentWaiting extends Component<any, any> {
             divider={<Divider marginTop={0} />}
           />
           {/* QR Code khusus gopay */}
-          {transaction.provider_payment_method.name.toLowerCase() === 'gopay' &&
+          {transaction.provider_payment_method?.name.toLowerCase() ===
+            'gopay' &&
             transaction.actions[0]?.url && (
               <View
                 style={{

@@ -64,6 +64,7 @@ export const getAllTransaction = params => {
       schema: [schema.transaction],
       startNetwork: () => setTransactionLoading(true),
       success: (data, { pagination }) => {
+        console.log('data', data.entities.transaction)
         return [
           setTransactionData(data.entities.transaction),
           setTransactionOrderPagination({ order: data.result, pagination }),
@@ -98,24 +99,31 @@ export const getTransactionById = id => {
   }
 }
 
-export const payTransaction = (trans_id, payment_method_id) => {
+export const payTransaction = (trans_id, payment_method_id, token_id) => {
+  const data: any = {
+    payment_method_id,
+  }
+  if (token_id) {
+    data.token_id = token_id
+  }
   return {
     type: API,
     payload: {
       url: `/transactions/${trans_id}`,
       requestParams: {
         method: 'PUT',
-        data: {
-          payment_method_id,
-        },
+        data,
       },
       startNetwork: () => setTransactionLoading(true),
       success: data => {
-        console.log('data payment code ---', data)
+        const updatedData = {}
+        updatedData[trans_id] = { id: trans_id, ...data }
+
         return [
-          // setTransactionData(data.entities.transaction),
+          setTransactionData(updatedData),
           // setTransactionOrder(data.result),
           setTransactionLoading(false),
+          // getTransactionById(trans_id),
         ]
       },
       error: err => {

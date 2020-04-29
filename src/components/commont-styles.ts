@@ -48,7 +48,7 @@ export const helveticaNormalFont12 = {
 export const helveticaBlackFont12 = {
   size: 12,
   type: 'HelveticaNeue',
-  color: colors.black80,
+  color: colors.black100,
 }
 
 export const helveticaBlackBoldFont12 = {
@@ -134,6 +134,9 @@ export const fontStyle =
         },
         helveticaBold: {
           fontFamily: 'HelveticaNeue-Bold',
+        },
+        futuraBold: {
+          fontFamily: 'Futura-Bold',
         },
         futura: {
           fontFamily: 'Futura',

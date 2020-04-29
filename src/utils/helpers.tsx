@@ -126,22 +126,40 @@ export const checkLocationPermit = async (): Promise<boolean> => {
   }
 }
 
+export const queryStringToObj = qs => {
+  qs = qs.replace('?', '')
+
+  const result = qs.split('&').reduce((obj, keyvalue) => {
+    const [key, value] = keyvalue.split('=')
+    obj[key] = value
+    return obj
+  }, {})
+  return result
+}
+
 export const getMe = () => {
   if (store) return store.getState().auth.data.user || {}
   return {}
 }
 
-export const countdown = (date, callback) => {
+export const countdown = (date, callback, onEndCallback?) => {
   return setInterval(() => {
     const now = new Date()
     const distance = date.getTime() - now.getTime()
+
+    if (distance <= 1 && onEndCallback) {
+      onEndCallback()
+    }
+
     const days = Math.floor(distance / (1000 * 60 * 60 * 24))
     const hours = Math.floor(
       (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
     )
     const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60))
     const seconds = Math.floor((distance % (1000 * 60)) / 1000)
-    callback({ days, hours, minutes, seconds })
+    if (distance >= 1) {
+      callback({ days, hours, minutes, seconds })
+    }
   }, 1000)
 }
 

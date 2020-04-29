@@ -125,12 +125,14 @@ class OrderList extends Component<any, any> {
 
   _keyExtractor = (item, id) => `trans-${item} -${id}`
   render() {
-    const { transactions } = this.props
+    const { transactions, transactionLoading } = this.props
     return (
       <>
         <NavbarTop leftContent={['back']} title="Payment List" />
         <View style={{ paddingTop: 24, paddingHorizontal: 16 }}>
           <FlatList
+            onRefresh={this._freshfetch}
+            refreshing={transactionLoading}
             ListHeaderComponent={this._renderFilter}
             data={transactions}
             onEndReached={this._fetchMore}

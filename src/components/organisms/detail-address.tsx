@@ -85,7 +85,6 @@ class DetailAddress extends Component<any, any> {
     this.setState({ detail: e })
   }
   _setData = () => {
-    console.log('====sas')
     this.props.getDetail(this.state.detail)
   }
   render() {

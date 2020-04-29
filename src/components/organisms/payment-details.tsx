@@ -18,6 +18,7 @@ import IconMi from 'react-native-vector-icons/MaterialIcons'
 import { Checkbox } from '../atoms/checkbox'
 import ImageAutoSchale from '@components/atoms/image-autoschale'
 import PaymentCreditCard from '@components/molecules/payment-credit-card'
+import { navigate } from '@src/root-navigation'
 import OrderCard from '@components/molecules/order-card'
 import { payTransaction } from '@modules/transaction/action'
 import TextInputOutline from '@src/components/atoms/field-floating'
@@ -117,6 +118,9 @@ class PaymentDetail extends React.PureComponent<any, any> {
 
   renderRightTitleExpandable = () => {
     const { transaction, details } = this.props
+    if (!transaction) {
+      return null
+    }
     return (
       <Font
         {...helveticaBlackTitleBold}
@@ -134,6 +138,9 @@ class PaymentDetail extends React.PureComponent<any, any> {
 
   renderContentExpandable = () => {
     const { transaction, details } = this.props
+    if (!transaction) {
+      return null
+    }
     return (
       <View {...styles.paddingLR16}>
         <View {...styles.totalBillDetail}>
@@ -297,21 +304,28 @@ class PaymentDetail extends React.PureComponent<any, any> {
     })
   }
 
-  handlePayment = () => {
-    // console.log('handle payment')
+  handlePayment = async () => {
     const { payTransaction, transaction, details } = this.props
     const { dataCreditCard } = this.state
-    console.log('dataCreditCard ---', dataCreditCard, transaction, details)
-
-    // payTransaction(transaction.id, details.id) -> buat yang tidak credit card
+    if (details.name.toLowerCase() !== 'credit card') {
+      await payTransaction(transaction.id, details.id)
+      navigate('PaymentWaiting', { transactionId: transaction.id })
+    } else {
+      navigate('PaymentWebView', {
+        transactionId: transaction.id,
+        dataCreditCard,
+        method: details,
+        type: details.name.toLowerCase(),
+      })
+    }
+    // await payTransaction(transaction.id, details.id, transaction.token_id)
+    // payTransacti  on(transaction.id, details.id) -> buat yang tidak credit card
     // payTransaction(transaction.id, token) -> buat credit card
   }
 
   render() {
     const { details, style, order, transaction } = this.props
     const { isChecked, isDisabled, dataCreditCard } = this.state
-
-    console.log('disable parent ---', isDisabled)
     let disableButton = true
     if (details.name.toLowerCase() !== 'credit card') {
       disableButton = !isChecked
