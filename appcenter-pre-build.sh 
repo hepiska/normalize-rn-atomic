@@ -1,0 +1,7 @@
+# android script
+if[$OS =="android"];then 
+  if[$env == ''beta];then 
+      npm run build:js
+  fi
+
+fi
