@@ -64,12 +64,21 @@ export const getAllTransaction = params => {
       schema: [schema.transaction],
       startNetwork: () => setTransactionLoading(true),
       success: (data, { pagination }) => {
-        console.log('data', data.entities.transaction)
-        return [
-          setTransactionData(data.entities.transaction),
-          setTransactionOrderPagination({ order: data.result, pagination }),
-          setTransactionLoading(false),
-        ]
+        if (params.offset === 0) {
+          return [
+            setTransactionData(data.entities.transaction),
+            setTransactionOrder(data.result),
+            setTransactionLoading(false),
+          ]
+        }
+        if (data && data.result.length) {
+          return [
+            setTransactionData(data.entities.transaction),
+            setTransactionOrderPagination({ order: data.result, pagination }),
+            setTransactionLoading(false),
+          ]
+        }
+        return setTransactionLoading(false)
       },
       error: err => {
         return [setTransactionLoading(false)]

@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, StyleSheet } from 'react-native'
+import { View, StyleSheet, RefreshControl } from 'react-native'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { collectionApi } from '@modules/collection/action'
@@ -17,6 +17,7 @@ import FeaturedCategory from '@components/organisms/featured-category'
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    paddingTop: 0,
     justifyContent: 'flex-start',
   },
   firstSectionMargin: {
@@ -33,10 +34,14 @@ const y = new Value(0)
 
 class ShopPage extends React.Component<any, any> {
   componentDidMount() {
-    this.props.getPage('shop')
+    this._fetchData()
   }
   dimentionConstant = {
     imageHeight: globalDimention.jumbotronSize.height,
+  }
+
+  _fetchData = () => {
+    this.props.getPage('shop')
   }
 
   _renderSection = (section, key) => {
@@ -49,7 +54,7 @@ class ShopPage extends React.Component<any, any> {
             data={section.images}
             navigation={this.props.navigation}
             style={
-              section.order === 1
+              section.order <= 1
                 ? styles.firstSectionMargin
                 : styles.sectionMargin
             }
@@ -78,7 +83,7 @@ class ShopPage extends React.Component<any, any> {
     }
   }
   render() {
-    const { page, navigation } = this.props
+    const { page, navigation, loading } = this.props
 
     return (
       <>
@@ -91,6 +96,12 @@ class ShopPage extends React.Component<any, any> {
         />
         <View style={styles.container}>
           <Animated.ScrollView
+            refreshControl={
+              <RefreshControl
+                refreshing={loading}
+                onRefresh={this._fetchData}
+              />
+            }
             onScroll={onScroll({ y })}
             scrollEventThrottle={5}>
             {page.section &&

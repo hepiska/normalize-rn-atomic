@@ -47,15 +47,16 @@ const orderReducer: Reducer<OrderState> = (
       newState.order = Immutable(action.payload)
       return newState
     case orderActionType.SET_ORDER_ORDER_PAGINATION:
-      if (
-        action.payload.pagination.offset &&
-        action.payload.pagination.total &&
-        newState.order.length <= action.payload.pagination.total
-      ) {
-        newState.order = newState.order.concat(Immutable(action.payload.order))
-      } else {
-        newState.order = Immutable(action.payload.order)
-      }
+      // if (
+      //   action.payload.pagination.offset &&
+      //   action.payload.pagination.total &&
+      //   newState.order.length <= action.payload.pagination.total
+      // ) {
+      //   newState.order = newState.order.concat(Immutable(action.payload.order))
+      // } else {
+      //   newState.order = Immutable(action.payload.order)
+      // }
+      newState.order = newState.order.concat(Immutable(action.payload.order))
       newState.pagination = action.payload.pagination
       return newState
     case orderActionType.SET_ORDER_LOADING:

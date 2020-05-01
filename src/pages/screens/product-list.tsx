@@ -393,6 +393,8 @@ class Productlist extends Component<any, any> {
         />
         <Div _width="100%" _flex="1" justify="flex-start">
           <SectionList
+            onRefresh={this._freshfetch}
+            refreshing={loading}
             ListHeaderComponent={this._header}
             style={styles.sectionContainer}
             onEndReachedThreshold={0.97}

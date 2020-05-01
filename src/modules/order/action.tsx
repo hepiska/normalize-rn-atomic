@@ -81,18 +81,31 @@ export const getAllOrder = params => {
       schema: [order],
       startNetwork: () => setOrderLoading(true),
       success: (data, { pagination }) => {
-        if (!data) {
-          return [setOrderLoading(false)]
+        if (params.offset === 0) {
+          return [
+            setProductData(data.entities.product),
+            setBrandData(data.entities.brand),
+            setCategoryData(data.entities.category),
+            setUserData(data.entities.user),
+            setOrderData(data.entities.order),
+            setOrderOrder(data.result),
+            setOrderLoading(false),
+          ]
         }
-        return [
-          setProductData(data.entities.product),
-          setBrandData(data.entities.brand),
-          setCategoryData(data.entities.category),
-          setUserData(data.entities.user),
-          setOrderData(data.entities.order),
-          setOrderOrderPage({ order: data.result, pagination }),
-          setOrderLoading(false),
-        ]
+
+        if (data && data.result.length) {
+          return [
+            setProductData(data.entities.product),
+            setBrandData(data.entities.brand),
+            setCategoryData(data.entities.category),
+            setUserData(data.entities.user),
+            setOrderData(data.entities.order),
+            setOrderOrderPage({ order: data.result, pagination }),
+            setOrderLoading(false),
+          ]
+        }
+
+        return [setOrderLoading(false)]
       },
       error: err => {
         return [setOrderLoading(false)]

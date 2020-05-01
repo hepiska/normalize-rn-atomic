@@ -41,6 +41,10 @@ class ProductListPage extends React.Component<any, any> {
   }
 
   componentDidMount() {
+    this._fetchData()
+  }
+
+  _fetchData = () => {
     this.props.getProductById(this.props.route.params?.productId)
   }
 
@@ -116,7 +120,7 @@ class ProductListPage extends React.Component<any, any> {
   }
 
   render() {
-    const { product } = this.props
+    const { product, loading } = this.props
     const { selectedVariant, isUserSelectVariant } = this.state
 
     const varianData = this.getVariantData(selectedVariant)

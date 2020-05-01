@@ -49,6 +49,7 @@ class OrderList extends Component<any, any> {
 
   _freshfetch = () => {
     this.skip = 0
+    this.lastskip = 0
     this._fetchData(this.skip)
   }
 
@@ -111,10 +112,12 @@ class OrderList extends Component<any, any> {
       if (this.props.transactionLoading) {
         return
       }
+      console.log('=====', this.skip)
+      this._fetchData(this.skip)
 
-      if (30 > this.props.transactions.length) {
-        this._fetchData(this.skip)
-      }
+      // if (30 > this.props.transactions.length) {
+      //   this._fetchData(this.skip)
+      // }
     }
 
     // if (!this.props.transactionLoading) {

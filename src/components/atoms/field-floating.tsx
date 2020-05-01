@@ -12,6 +12,7 @@ import {
   Text,
 } from 'react-native'
 import { colors } from '@src/utils/constants'
+import { fontStyle } from '@components/commont-styles'
 import { Font } from './basic'
 
 // CONSTANTS
@@ -426,6 +427,7 @@ const InputLabel = (props: InputLabelProps) => {
             top: topPosition,
           },
           labelStyle,
+
           paddingOffset || {},
           {
             color: activeColor,
@@ -446,6 +448,7 @@ const InputLabel = (props: InputLabelProps) => {
           },
           labelStyle,
           paddingOffset,
+          fontStyle.helvetica,
           {
             color: placeholderColor,
             opacity: placeholderOpacity,
@@ -539,6 +542,7 @@ function AnimatedText({ style, ...rest }: AnimatedTextProps) {
           color: 'black',
           textAlign: 'left',
         },
+        fontStyle.helvetica,
         style,
       ]}
     />
@@ -556,7 +560,6 @@ const Outline = ({
     pointerEvents="none"
     style={[
       styles.outline,
-      // eslint-disable-next-line react-native/no-inline-styles
       {
         backgroundColor,
         borderRadius: 5,
@@ -749,6 +752,7 @@ class TextInputOutlined extends React.Component<ChildTextInputProps, {}> {
                       }}>
                       <Font
                         size={12}
+                        style={fontStyle.helvetica}
                         color={colors.black70}
                         _margin="0px 0px 1px">
                         {label}
@@ -758,12 +762,17 @@ class TextInputOutlined extends React.Component<ChildTextInputProps, {}> {
                     <Font
                       size={16}
                       color={colors.black100}
-                      type="HelveticaNeue">
+                      style={fontStyle.helvetica}>
                       {rest.value}
                     </Font>
                   </>
                 ) : (
-                  <Text style={{ color: colors.black60, fontSize: 17 }}>
+                  <Text
+                    style={{
+                      color: colors.black60,
+                      fontSize: 17,
+                      ...fontStyle.helvetica,
+                    }}>
                     {label}
                   </Text>
                 )}
@@ -799,9 +808,9 @@ class TextInputOutlined extends React.Component<ChildTextInputProps, {}> {
                       : {},
                     paddingOut,
                     {
-                      fontFamily: font,
+                      ...fontStyle.helvetica,
+
                       fontSize,
-                      fontWeight,
                       color: inputTextColor,
                       textAlignVertical: multiline ? 'top' : 'center',
                     },

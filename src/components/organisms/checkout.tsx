@@ -184,7 +184,6 @@ const mapDispatchToProps = dispatch =>
   )
 
 const mapStateToProps = (state, ownProps) => {
-  console.log('state ---', state)
   const dataCarts = ownProps.carts
 
   /* revisi: pindah ke dalam render sebelum return */
