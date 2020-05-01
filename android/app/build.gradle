@@ -78,6 +78,10 @@ import com.android.build.OutputFile
 project.ext.react = [
     entryFile: "index.js",
     enableHermes: false,  // clean and rebuild if changing
+    bundleInBeta: true,
+    jsBundleDirBeta: "$buildDir/intermediates/assets/beta",
+    devDisabledInBeta: true,
+    resourcesDirDebug: "$buildDir/intermediates/res/merged/beta",
 ]
 
 apply from: "../../node_modules/react-native/react.gradle"
@@ -157,8 +161,10 @@ android {
             signingConfig signingConfigs.debug
         }
         beta {
-           applicationIdSuffix = ".debug"
+          initWith debug
+          applicationIdSuffix = ".debug"
           signingConfig signingConfigs.debug
+          matchingFallbacks = ['debug']
         }
         release {
             // Caution! In production, you need to generate your own keystore file.

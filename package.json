@@ -7,6 +7,7 @@
     "android:prod": "react-native run-android",
     "build:js":"export ENVFILE=.env && react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res/",
     "build-apk": "npm run build:js && cd android && ./gradlew assembleDebug && cd ..",
+    "build-beta": "cd android && ./gradlew assembleBeta && cd ..",
     "ios": "react-native run-ios",
     "ios:prod": "react-native run-ios",
     "start": "react-native start",
