@@ -260,11 +260,12 @@ class ProfilPage extends React.PureComponent<any, any> {
     defaultImage: null,
   }
 
-  componentDidMount() {
+  componentDidUpdate(prevProps) {
     const { isAuth, username, getUserByUsername } = this.props
-
-    if (isAuth && username) {
-      getUserByUsername(username)
+    if (prevProps.isAuth !== isAuth) {
+      if (isAuth && username) {
+        getUserByUsername(username)
+      }
     }
   }
 
@@ -278,7 +279,6 @@ class ProfilPage extends React.PureComponent<any, any> {
   onPressDetailOrder = () => {
     navigateTo('Screens', 'OrderList', {})
   }
-
   render() {
     const { isAuth, navigation, user } = this.props
     const { defaultImage } = this.state

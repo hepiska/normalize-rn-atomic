@@ -9,6 +9,12 @@ import { Button, OutlineButton } from '@components/atoms/button'
 import TextInputOutline from '@src/components/atoms/field-floating'
 import { loginApi, setAuthError, _authSelector } from '@modules/auth/action'
 import { useFormValidator } from '@src/hooks/use-form-validator'
+import {
+  AccessToken,
+  LoginManager,
+  GraphRequest,
+  GraphRequestManager,
+} from 'react-native-fbsdk'
 
 const styles = StyleSheet.create({
   width100: {
@@ -82,6 +88,60 @@ const FormLogin: React.FC<FormLogin> = ({ navigation }) => {
 
   const _onBack = () => {
     navigation.goBack()
+  }
+
+  const FBGraphRequest = async (fields, callback) => {
+    const accessData = await AccessToken.getCurrentAccessToken()
+    // Create a graph request asking for user information
+    const infoRequest = new GraphRequest(
+      '/me',
+      {
+        accessToken: accessData.accessToken,
+        parameters: {
+          fields: {
+            string: fields,
+          },
+        },
+      },
+      callback.bind(this),
+    )
+    // Execute the graph request created above
+    new GraphRequestManager().addRequest(infoRequest).start()
+  }
+
+  const callbackFacebook = async (error, result) => {
+    if (error) {
+      console.log('error callFacebook ---', error)
+    } else {
+      try {
+        console.log('result ---', result)
+      } catch (err) {
+        console.log('err ---', err)
+      }
+    }
+  }
+
+  const handleLoginFacebook = () => {
+    // await LoginManager.logOut()
+    LoginManager.logInWithPermissions([
+      'public_profile, email, user_friends',
+    ]).then(
+      result => {
+        if (result.isCancelled) {
+          console.log('Login cancelled')
+        } else {
+          console.log(
+            'Login success with permissions: ' +
+              result.grantedPermissions.toString(),
+          )
+
+          FBGraphRequest('id, email, first_name, last_name', callbackFacebook)
+        }
+      },
+      error => {
+        console.log('Login fail with error: ' + error)
+      },
+    )
   }
 
   const { state, disable, handleOnChange, handleOnSubmit } = useFormValidator(
@@ -232,7 +292,7 @@ const FormLogin: React.FC<FormLogin> = ({ navigation }) => {
               />
               <OutlineButton
                 title="Facebook"
-                onPress={null}
+                onPress={handleLoginFacebook}
                 leftIcon={
                   <Image
                     source={require('../../assets/icons/facebook-icon-login.png')}
