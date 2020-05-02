@@ -141,7 +141,6 @@ class OrderDetails extends Component<any, any> {
         },
         label: 'Return or Exchange',
       },
-      showWhen: ['sent', 'delivered', 'refunded'],
     },
     {
       button: {
