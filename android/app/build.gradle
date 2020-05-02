@@ -137,6 +137,7 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         multiDexEnabled true
         versionCode 1
+        resValue "string", "build_config_package", "com.shonet"
         versionName "1.0"
     }
     splits {
