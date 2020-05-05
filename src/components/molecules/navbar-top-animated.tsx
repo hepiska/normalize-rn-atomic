@@ -82,7 +82,9 @@ const NavbarTopAnimated: React.SFC<NavbarBottomProps> = ({
     navigation.goBack()
   }
 
-  const _onBurger = () => {}
+  const _onBurger = () => {
+    ;(navigation as any).toggleDrawer()
+  }
   const textOpacity = interpolate(y, {
     inputRange: [
       parentDim.coverheight - headerHeight,

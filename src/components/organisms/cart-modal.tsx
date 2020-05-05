@@ -80,6 +80,39 @@ class CartModal extends React.Component<any, any> {
     }
   }
 
+  _filterVariants = attribute => {
+    const { product } = this.props
+    const variants = product.variants.filter(_var => {
+      return _var.attribute_values.find(
+        _att =>
+          _att.attribute_id === attribute.attribute_id &&
+          _att.attribute_value_id === attribute.attribute_value_id,
+      )
+    })
+
+    const filteredAttributes = variants.reduce((sum, _variant) => {
+      _variant.attribute_values.forEach(_attribute => {
+        if (sum[_attribute.attribute_id]) {
+          if (
+            !sum[_attribute.attribute_id].values.includes(
+              _attribute.attribute_value_id,
+            )
+          ) {
+            sum[_attribute.attribute_id].values.push(
+              _attribute.attribute_value_id,
+            )
+          }
+        } else {
+          sum[_attribute.attribute_id] = {}
+          sum[_attribute.attribute_id].values = [_attribute.attribute_value_id]
+        }
+      })
+      return sum
+    }, {})
+    delete filteredAttributes[attribute.attribute_id]
+    this.setState({ filteredAttributes })
+  }
+
   _addToCart = async () => {
     const { navigation } = this.props
     const { type, cart } = this.props.route.params
@@ -105,8 +138,8 @@ class CartModal extends React.Component<any, any> {
   }
 
   render() {
-    const { selectedVariant } = this.state
-    const { product, brand, route } = this.props
+    const { selectedVariant, filteredAttributes } = this.state as any
+    const { product, brand, route, loading } = this.props
     const varianData = this.getVariantData(selectedVariant || 1)
     const { fixAttributes, type, changeAttribute } = route.params
 
@@ -146,6 +179,8 @@ class CartModal extends React.Component<any, any> {
             sale // revisi: diubah data dari BE
           />
           <ProductAttributes
+            filteredAttributes={filteredAttributes}
+            onAttributesChanged={this._filterVariants}
             fixAttributesIds={fixAttributesIds}
             selectedAttributes={selectedAttributes}
             attributes={product.attributes}
@@ -177,7 +212,7 @@ class CartModal extends React.Component<any, any> {
                 title={buttonText}
                 fontStyle={styles.buttonText}
                 style={styles.button}
-                disabled={selectedVariant ? false : true}
+                disabled={selectedVariant && !loading ? false : true}
               />
             </Div>
           </AbsDiv>
@@ -204,7 +239,6 @@ const mapStateToProps = (state, ownProps) => {
   _product.attributes = _product.attributes?.map(v => {
     return state.productAttribute.data[v]
   })
-  console.log(_product)
   return {
     product: _product,
     brand: state.brands.data[product.brand],

@@ -9,7 +9,9 @@ interface ProductAttributesPropsType {
   attributes: any
   fixAttributesIds?: Array<any>
   selectedAttributes?: Array<any>
+  filteredAttributes: any
   onAllAttributesSelected(any): void
+  onAttributesChanged?: (any) => void
 }
 
 class ProductAttributes extends Component<ProductAttributesPropsType, any> {
@@ -18,7 +20,11 @@ class ProductAttributes extends Component<ProductAttributesPropsType, any> {
   }
   onSelectAttributes = atribute => {
     const { selectedAttributes } = this.state
-    const { attributes } = this.props
+    const { attributes, onAttributesChanged } = this.props
+
+    if (onAttributesChanged) {
+      onAttributesChanged(atribute)
+    }
 
     const newAttributes = [...selectedAttributes]
     const indexanttribute = newAttributes.findIndex(
@@ -37,19 +43,36 @@ class ProductAttributes extends Component<ProductAttributesPropsType, any> {
   }
 
   render() {
-    const { attributes, fixAttributesIds = [] } = this.props
+    const {
+      attributes,
+      fixAttributesIds = [],
+      filteredAttributes = {},
+    } = this.props
+
     const data = moveToFront(attributes, (e: any) => e.label === 'Color')
     return (
       <>
         {data
           .filter(_att => !fixAttributesIds.includes(_att.attribute_id))
-          .map((attribute, key) => (
-            <AttributeList
-              key={`product-attribute-${key}`}
-              onAttributesChanged={this.onSelectAttributes}
-              attribute={attribute}
-            />
-          ))}
+          .map((attribute, key) => {
+            const newAttribute = { ...attribute }
+            if (filteredAttributes[newAttribute.attribute_id]) {
+              newAttribute.values = newAttribute.values.filter(
+                value =>
+                  !!filteredAttributes[
+                    newAttribute.attribute_id
+                  ].values.includes(value.id),
+              )
+            }
+
+            return (
+              <AttributeList
+                key={`product-attribute-${key}`}
+                onAttributesChanged={this.onSelectAttributes}
+                attribute={newAttribute}
+              />
+            )
+          })}
       </>
     )
   }

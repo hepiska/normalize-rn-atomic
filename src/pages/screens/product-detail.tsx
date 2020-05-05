@@ -79,6 +79,39 @@ class ProductListPage extends React.Component<any, any> {
     }
   }
 
+  _filterVariants = attribute => {
+    const { product } = this.props
+    const variants = product.variants.filter(_var => {
+      return _var.attribute_values.find(
+        _att =>
+          _att.attribute_id === attribute.attribute_id &&
+          _att.attribute_value_id === attribute.attribute_value_id,
+      )
+    })
+
+    const filteredAttributes = variants.reduce((sum, _variant) => {
+      _variant.attribute_values.forEach(_attribute => {
+        if (sum[_attribute.attribute_id]) {
+          if (
+            !sum[_attribute.attribute_id].values.includes(
+              _attribute.attribute_value_id,
+            )
+          ) {
+            sum[_attribute.attribute_id].values.push(
+              _attribute.attribute_value_id,
+            )
+          }
+        } else {
+          sum[_attribute.attribute_id] = {}
+          sum[_attribute.attribute_id].values = [_attribute.attribute_value_id]
+        }
+      })
+      return sum
+    }, {})
+    delete filteredAttributes[attribute.attribute_id]
+    this.setState({ filteredAttributes })
+  }
+
   static navigationOptions = {
     headerTransparent: true,
     headerShown: false,
@@ -125,7 +158,8 @@ class ProductListPage extends React.Component<any, any> {
 
   render() {
     const { product, loading } = this.props
-    const { selectedVariant, isUserSelectVariant } = this.state
+    const { selectedVariant, isUserSelectVariant, filteredAttributes } = this
+      .state as any
 
     const varianData = this.getVariantData(selectedVariant)
     const price: any = {}
@@ -192,6 +226,8 @@ class ProductListPage extends React.Component<any, any> {
               </Div>
               {product.attributes && (
                 <ProductAttributes
+                  filteredAttributes={filteredAttributes}
+                  onAttributesChanged={this._filterVariants}
                   attributes={product.attributes}
                   onAllAttributesSelected={this._selectVariant}
                 />
@@ -211,6 +247,7 @@ class ProductListPage extends React.Component<any, any> {
               <GradientButton
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 1 }}
+                disabled={loading}
                 colors={['#3067E4', '#8131E2']}
                 title="Add to cart"
                 onPress={this._addToCart}

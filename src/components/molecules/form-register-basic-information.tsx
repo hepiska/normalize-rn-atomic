@@ -73,7 +73,7 @@ const FormRegisterBasicInformation: React.FC<FormRegisterBasicInformation> = ({
 }) => {
   let pickerRef = null
   let datePickerRef = null
-  let recapthcaRef = null
+  let recapthcaRef: any = useRef(null)
   let scrollRef = useRef<ScrollView>(null)
 
   const dispatch = useDispatch()
@@ -95,13 +95,14 @@ const FormRegisterBasicInformation: React.FC<FormRegisterBasicInformation> = ({
 
   const _getCapthca = (token: string) => {
     if (!token) {
-      recapthcaRef.refreshToken()
+      recapthcaRef.current.refreshToken()
     } else {
       setRecaptcha(token)
     }
   }
 
   const _onSubmit = ({ isValid, state }) => {
+    // recapthcaRef.refreshToken()()
     if (isValid) {
       const {
         email,
@@ -126,7 +127,7 @@ const FormRegisterBasicInformation: React.FC<FormRegisterBasicInformation> = ({
       dispatch(registerApi(params))
     } else {
       if (!recaptcha) {
-        recapthcaRef.refreshToken()
+        recapthcaRef.current.refreshToken()
       }
       _scrollToTop()
     }
@@ -208,238 +209,235 @@ const FormRegisterBasicInformation: React.FC<FormRegisterBasicInformation> = ({
   }, [debounceInputTerm])
 
   useEffect(() => {
+    if (recapthcaRef) {
+      recapthcaRef.current.refreshToken()
+    }
     return () => {
       dispatch(setAuthError(null))
     }
   }, [])
 
-  return useMemo(
-    () => (
-      <SafeAreaView style={{ flex: 1, width: '100%', height: '100%' }}>
-        <Div _flex={1} _width="100%" _padding="16px">
-          <Div
-            _width="100%"
-            _direction="row"
-            justify="space-between"
-            _margin="0px 0px 16px">
-            <Font
-              size="24"
-              fontFamily="Futura"
-              weight="500"
-              color={colors.black100}>
-              Create New Account
-            </Font>
-            <PressAbbleDiv onPress={_onBack}>
-              <Icon name="close" size={24} color={colors.black70} />
-            </PressAbbleDiv>
-          </Div>
-          <ScrollDiv
-            ref={scrollRef}
-            style={{ width: '100%' }}
-            showsVerticalScrollIndicator={false}>
-            <Div _width="100%" _padding="0px 0px 24px">
-              {(state.tnc.error || error) && (
-                <Div
-                  align="flex-start"
-                  borderRadius="5px"
-                  _width="100%"
-                  _background="rgba(225, 54, 97, 0.25)"
-                  _padding="8px"
-                  _margin="0px 0px -16px">
-                  <Font size={11} color={colors.redBookmark}>
-                    {state.tnc.error || error}
-                  </Font>
-                </Div>
-              )}
-
-              <Div _width="100%" _margin="32px 0px 24px">
-                <TextInputOutline
-                  label="Your Email"
-                  value={state.email.value}
-                  onChangeText={handleOnChange('email')}
-                  keyboardType="email-address"
-                  error={state.email.error}
-                  autoCapitalize="none"
-                />
-              </Div>
-
-              <Div _width="100%" _margin="0px 0px 24px">
-                <TextInputOutline
-                  label="First Name"
-                  value={state.firstName.value}
-                  onChangeText={handleOnChange('firstName')}
-                  autoCapitalize="none"
-                  error={state.firstName.error}
-                />
-              </Div>
-
-              <Div _width="100%" _margin="0px 0px 24px">
-                <TextInputOutline
-                  label="Last Name"
-                  value={state.lastName.value}
-                  onChangeText={handleOnChange('lastName')}
-                  autoCapitalize="none"
-                  error={state.lastName.error}
-                />
-              </Div>
-
-              <Div _width="100%" _margin="0px 0px 24px">
-                <TextInputOutline
-                  label="Username"
-                  value={state.username.value}
-                  onChangeText={value => {
-                    handleOnChange('username')(value)
-                    setUsername(value)
-                  }}
-                  autoCapitalize="none"
-                  error={state.username.error}
-                />
-              </Div>
-
-              <Div _width="100%" _margin="0px 0px 24px">
-                <TextInputOutline
-                  label="Password"
-                  value={state.password.value}
-                  onChangeText={handleOnChange('password')}
-                  secureTextEntry={!showPassword ? true : false}
-                  autoCapitalize="none"
-                  error={state.password.error}
-                  rightIcon={
-                    <PressAbbleDiv onPress={_onShowPassword}>
-                      <Icon
-                        name={showPassword ? 'eye' : 'eye-slash'}
-                        size={22}
-                        color={colors.black80}
-                      />
-                    </PressAbbleDiv>
-                  }
-                />
-              </Div>
-
-              <Div _width="100%" _margin="0px 0px 24px">
-                <TextInputOutline
-                  label="Confirm Password"
-                  value={state.confirmPassword.value}
-                  onChangeText={handleOnChange('confirmPassword')}
-                  secureTextEntry={true}
-                  autoCapitalize="none"
-                  error={state.confirmPassword.error}
-                />
-              </Div>
-
-              <Div _width="100%" _margin="0px 0px 24px">
-                <PickerPopup
-                  pickerRef={e => (pickerRef = e)}
-                  value={null}
-                  title={'Select a gender'}
-                  items={gender}
-                  onValueChange={(value, index, data) => {
-                    handleOnChange('gender')(value)
-                  }}
-                />
-                <PressAbbleDiv
-                  style={{ width: '100%' }}
-                  onPress={() => pickerRef.show()}>
-                  <TextInputOutline
-                    label="Gender"
-                    value={
-                      state.gender.value
-                        ? gender.find(x => x.value === state.gender.value).label
-                        : null
-                    }
-                    error={state.gender.error}
-                    disabled
-                    rightIcon={
-                      <Icon
-                        name={'caret-down'}
-                        size={22}
-                        color={colors.black80}
-                      />
-                    }
-                  />
-                </PressAbbleDiv>
-              </Div>
-
-              <Div _width="100%" _margin="0px 0px 24px">
-                <DatePicker
-                  datePickerRef={e => (datePickerRef = e)}
-                  value={
-                    state.dateOfBirth.value
-                      ? new Date(state.dateOfBirth.value)
-                      : new Date()
-                  }
-                  onChange={date =>
-                    handleOnChange('dateOfBirth')(date.toLocaleDateString())
-                  }
-                />
-                <PressAbbleDiv
-                  onPress={() => datePickerRef.open()}
-                  style={{ width: '100%' }}>
-                  <TextInputOutline
-                    label="Date Of Birth"
-                    value={state.dateOfBirth.value}
-                    error={state.dateOfBirth.error}
-                    disabled
-                    rightIcon={
-                      <Icon
-                        name={'calendar'}
-                        size={22}
-                        color={colors.black80}
-                      />
-                    }
-                  />
-                </PressAbbleDiv>
-              </Div>
-
+  return (
+    <SafeAreaView style={{ flex: 1, width: '100%', height: '100%' }}>
+      <Div _flex={1} _width="100%" _padding="16px">
+        <Div
+          _width="100%"
+          _direction="row"
+          justify="space-between"
+          _margin="0px 0px 16px">
+          <Font
+            size="24"
+            fontFamily="Futura"
+            weight="500"
+            color={colors.black100}>
+            Create New Account
+          </Font>
+          <PressAbbleDiv onPress={_onBack}>
+            <Icon name="close" size={24} color={colors.black70} />
+          </PressAbbleDiv>
+        </Div>
+        <ScrollDiv
+          ref={scrollRef}
+          style={{ width: '100%' }}
+          showsVerticalScrollIndicator={false}>
+          <Div _width="100%" _padding="0px 0px 24px">
+            {(state.tnc.error || error) && (
               <Div
-                width="100%"
-                _direction="row"
-                _padding="0px 22px"
-                _justify="center"
-                align="flex-start">
-                <CheckBox
-                  onClick={() => {
-                    handleOnChange('tnc')(!state.tnc.value)
-                  }}
-                  isChecked={!!state.tnc.value}
-                />
-                <Div
-                  _width="100%"
-                  _margin="0px 0px 24px 12px"
-                  _direction="row"
-                  justify="flex-start"
-                  style={{
-                    flexWrap: 'wrap',
-                    widht: '100%',
-                  }}>
-                  <Font size={12}>By register you agree to The Shonet </Font>
-                  <PressAbbleDiv style={{ borderBottomWidth: 1 }}>
-                    <Font color={colors.black100}>Terms of Use</Font>
-                  </PressAbbleDiv>
-                  <Font> and </Font>
-                  <PressAbbleDiv style={{ borderBottomWidth: 1 }}>
-                    <Font color={colors.black100}>Privacy Policy</Font>
-                  </PressAbbleDiv>
-                </Div>
+                align="flex-start"
+                borderRadius="5px"
+                _width="100%"
+                _background="rgba(225, 54, 97, 0.25)"
+                _padding="8px"
+                _margin="0px 0px -16px">
+                <Font size={11} color={colors.redBookmark}>
+                  {state.tnc.error || error}
+                </Font>
               </Div>
-              <ReCaptcha
-                recaptchaRef={e => (recapthcaRef = e)}
-                captchaDomain={Config.SHONET_URI}
-                siteKey={Config.SHONET_SITEKEY}
-                onReceiveToken={_getCapthca}
-              />
-              <Button
-                title="Register"
-                onPress={handleOnSubmit}
-                style={styles.btnSubmit}
-                fontStyle={styles.btnSubmitText}
+            )}
+
+            <Div _width="100%" _margin="32px 0px 24px">
+              <TextInputOutline
+                label="Your Email"
+                value={state.email.value}
+                onChangeText={handleOnChange('email')}
+                keyboardType="email-address"
+                error={state.email.error}
+                autoCapitalize="none"
               />
             </Div>
-          </ScrollDiv>
-        </Div>
-      </SafeAreaView>
-    ),
-    [state, showPassword, error],
+
+            <Div _width="100%" _margin="0px 0px 24px">
+              <TextInputOutline
+                label="First Name"
+                value={state.firstName.value}
+                onChangeText={handleOnChange('firstName')}
+                autoCapitalize="none"
+                error={state.firstName.error}
+              />
+            </Div>
+
+            <Div _width="100%" _margin="0px 0px 24px">
+              <TextInputOutline
+                label="Last Name"
+                value={state.lastName.value}
+                onChangeText={handleOnChange('lastName')}
+                autoCapitalize="none"
+                error={state.lastName.error}
+              />
+            </Div>
+
+            <Div _width="100%" _margin="0px 0px 24px">
+              <TextInputOutline
+                label="Username"
+                value={state.username.value}
+                onChangeText={value => {
+                  handleOnChange('username')(value)
+                  setUsername(value)
+                }}
+                autoCapitalize="none"
+                error={state.username.error}
+              />
+            </Div>
+
+            <Div _width="100%" _margin="0px 0px 24px">
+              <TextInputOutline
+                label="Password"
+                value={state.password.value}
+                onChangeText={handleOnChange('password')}
+                secureTextEntry={!showPassword ? true : false}
+                autoCapitalize="none"
+                error={state.password.error}
+                rightIcon={
+                  <PressAbbleDiv onPress={_onShowPassword}>
+                    <Icon
+                      name={showPassword ? 'eye' : 'eye-slash'}
+                      size={22}
+                      color={colors.black80}
+                    />
+                  </PressAbbleDiv>
+                }
+              />
+            </Div>
+
+            <Div _width="100%" _margin="0px 0px 24px">
+              <TextInputOutline
+                label="Confirm Password"
+                value={state.confirmPassword.value}
+                onChangeText={handleOnChange('confirmPassword')}
+                secureTextEntry={true}
+                autoCapitalize="none"
+                error={state.confirmPassword.error}
+              />
+            </Div>
+
+            <Div _width="100%" _margin="0px 0px 24px">
+              <PickerPopup
+                pickerRef={e => (pickerRef = e)}
+                value={null}
+                title={'Select a gender'}
+                items={gender}
+                onValueChange={(value, index, data) => {
+                  handleOnChange('gender')(value)
+                }}
+              />
+              <PressAbbleDiv
+                style={{ width: '100%' }}
+                onPress={() => pickerRef.show()}>
+                <TextInputOutline
+                  label="Gender"
+                  value={
+                    state.gender.value
+                      ? gender.find(x => x.value === state.gender.value).label
+                      : null
+                  }
+                  error={state.gender.error}
+                  disabled
+                  rightIcon={
+                    <Icon
+                      name={'caret-down'}
+                      size={22}
+                      color={colors.black80}
+                    />
+                  }
+                />
+              </PressAbbleDiv>
+            </Div>
+
+            <Div _width="100%" _margin="0px 0px 24px">
+              <DatePicker
+                datePickerRef={e => (datePickerRef = e)}
+                value={
+                  state.dateOfBirth.value
+                    ? new Date(state.dateOfBirth.value)
+                    : new Date()
+                }
+                onChange={date =>
+                  handleOnChange('dateOfBirth')(date.toLocaleDateString())
+                }
+              />
+              <PressAbbleDiv
+                onPress={() => datePickerRef.open()}
+                style={{ width: '100%' }}>
+                <TextInputOutline
+                  label="Date Of Birth"
+                  value={state.dateOfBirth.value}
+                  error={state.dateOfBirth.error}
+                  disabled
+                  rightIcon={
+                    <Icon name={'calendar'} size={22} color={colors.black80} />
+                  }
+                />
+              </PressAbbleDiv>
+            </Div>
+
+            <Div
+              width="100%"
+              _direction="row"
+              _padding="0px 22px"
+              _justify="center"
+              align="flex-start">
+              <CheckBox
+                onClick={() => {
+                  handleOnChange('tnc')(!state.tnc.value)
+                }}
+                isChecked={!!state.tnc.value}
+              />
+              <Div
+                _width="100%"
+                _margin="0px 0px 24px 12px"
+                _direction="row"
+                justify="flex-start"
+                style={{
+                  flexWrap: 'wrap',
+                  widht: '100%',
+                }}>
+                <Font size={12}>By register you agree to The Shonet </Font>
+                <PressAbbleDiv style={{ borderBottomWidth: 1 }}>
+                  <Font color={colors.black100}>Terms of Use</Font>
+                </PressAbbleDiv>
+                <Font> and </Font>
+                <PressAbbleDiv style={{ borderBottomWidth: 1 }}>
+                  <Font color={colors.black100}>Privacy Policy</Font>
+                </PressAbbleDiv>
+              </Div>
+            </Div>
+            <ReCaptcha
+              recaptchaRef={e => {}}
+              ref={recapthcaRef}
+              captchaDomain={Config.SHONET_URI}
+              siteKey={Config.SHONET_SITEKEY}
+              onReceiveToken={_getCapthca}
+            />
+            <Button
+              title="Register"
+              onPress={handleOnSubmit}
+              style={styles.btnSubmit}
+              fontStyle={styles.btnSubmitText}
+            />
+          </Div>
+        </ScrollDiv>
+      </Div>
+    </SafeAreaView>
   )
 }
 

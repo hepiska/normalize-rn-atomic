@@ -240,10 +240,6 @@ const AddAddressManual = props => {
       },
       is_primary: {
         initialValue: false,
-        pattern: {
-          message: 'please input correct phone number',
-          regEx: regex.phoneNumber,
-        },
       },
     },
     _onSubmit,
@@ -510,7 +506,14 @@ const AddAddressManual = props => {
         </ScrollView>
       </>
     ),
-    [state, props, activeRegionLevel, selectedLocation, disable],
+    [
+      state,
+      props,
+      activeRegionLevel,
+      selectedLocation,
+      disable,
+      mapsModalVisible,
+    ],
   )
 }
 

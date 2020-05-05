@@ -57,10 +57,10 @@ export const setImage = (uri, size, params?) => {
   const defaultParams = '&fit=clamp'
   let queryString = `?`
   if (size.width) {
-    queryString += `&width=${size.width}`
+    queryString += `&width=${Math.round(size.width)}`
   }
   if (size.height) {
-    queryString += `&height=${size.height}`
+    queryString += `&height=${Math.round(size.height)}`
   }
   if (params) {
     queryString += `${params}`

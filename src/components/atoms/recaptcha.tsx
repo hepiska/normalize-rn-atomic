@@ -23,13 +23,26 @@ const patchPostMessageJsCode = `(${String(function() {
   window.postMessage = patchedPostMessage
 })})();`
 
-const getExecutionFunction = (siteKey: string) => {
-  return `window.grecaptcha.execute('${siteKey}', { action: 'login' }).then(
+// const getExecutionFunction = (siteKey: string) => {
+//   return `window.grecaptcha.execute('${siteKey}', { action: 'login' }).then(
+//     function(args) {
+//       window.ReactNativeWebView.postMessage(args);
+//     }
+//   )`
+// }
+
+const getExecutionFunction = siteKey => `
+(function(){
+  window.ReactNativeWebView.postMessage("asaddasasddas");
+
+  window.grecaptcha.execute('${siteKey}', { action: 'login' }).then(
     function(args) {
       window.ReactNativeWebView.postMessage(args);
     }
-  )`
-}
+  )
+
+})(); true;
+`
 
 const getInvisibleRecaptchaContent = (siteKey: string) => {
   return `<!DOCTYPE html><html><head>

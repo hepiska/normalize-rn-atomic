@@ -1,5 +1,18 @@
 import React, { useState, useEffect } from 'react'
-import { Image, ViewStyle } from 'react-native'
+import { Image, ViewStyle, View, StyleSheet, Animated } from 'react-native'
+
+const styles = StyleSheet.create({
+  imageOverlay: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
+    top: 0,
+  },
+  container: {
+    backgroundColor: '#e1e4e8',
+  },
+})
 
 interface ImageType {
   uri: any
@@ -8,6 +21,8 @@ interface ImageType {
 interface ImageAutoSchaleType {
   source: any
   onError?: any
+  thumbnailSource?: any
+  containerStyle?: ViewStyle
   width?: number | string
   height?: number
   style?: ViewStyle
@@ -56,7 +71,7 @@ class ImageAutoSchale extends React.Component<ImageAutoSchaleType, any> {
     }
     if (!height) {
       const height = Number(newHeight)
-        ? Math.floor(width * (newHeight / newWidth))
+        ? Math.floor((width as number) * (newHeight / newWidth))
         : width
       return this.setState({
         size: {
@@ -76,13 +91,53 @@ class ImageAutoSchale extends React.Component<ImageAutoSchaleType, any> {
     this.mounted = false
   }
 
-  render() {
-    const { source, style } = this.props
-    const { size } = this.state
+  imageAnimated = new Animated.Value(0)
+  thumbnailAnimated = new Animated.Value(0)
 
-    return this.state.size ? (
-      <Image source={source} style={{ ...size, ...style }} />
-    ) : null
+  handleThumbnailLoad = () => {
+    Animated.timing(this.thumbnailAnimated, {
+      toValue: 1,
+    }).start()
+  }
+  onImageLoad = () => {
+    Animated.timing(this.imageAnimated, {
+      toValue: 1,
+    }).start()
+  }
+
+  render() {
+    const {
+      source,
+      style,
+      width,
+      thumbnailSource,
+      containerStyle,
+      ...props
+    } = this.props
+    const { size } = this.state
+    const imageStyles = thumbnailSource
+      ? [styles.imageOverlay, style as any, { opacity: this.imageAnimated }]
+      : { ...size, ...style }
+
+    return (
+      <View style={{ ...styles.container, ...style, ...containerStyle }}>
+        {thumbnailSource && (
+          <Animated.Image
+            onLoad={this.handleThumbnailLoad}
+            source={thumbnailSource}
+            blurRadius={2}
+            style={[{ ...size, ...style }, { opacity: this.thumbnailAnimated }]}
+            {...props}
+          />
+        )}
+        <Animated.Image
+          source={source}
+          style={imageStyles}
+          onLoad={this.onImageLoad}
+          {...props}
+        />
+      </View>
+    )
   }
 }
 

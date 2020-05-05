@@ -82,11 +82,7 @@ export const addCart = (data: {
     url: '/carts',
     startNetwork: () => setLoading(true),
     success: data => {
-      return [
-        setCartData(data.entities.cart),
-        addOneCartOrder(data.result),
-        getAllCart(),
-      ]
+      return [setCartData(data.entities.cart), getAllCart()]
     },
   },
 })

@@ -6,8 +6,8 @@ const Stack = createStackNavigator()
 
 function ProfileStack() {
   return (
-    <Stack.Navigator initialRouteName="MainShop">
-      <Stack.Screen name="Main Profile" component={ProfilPage} />
+    <Stack.Navigator initialRouteName="MainProfile" headerMode="none">
+      <Stack.Screen name="MainProfile" component={ProfilPage} />
     </Stack.Navigator>
   )
 }

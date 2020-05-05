@@ -317,6 +317,7 @@ class ProfilPage extends React.PureComponent<any, any> {
           : defaultImages.product)
       return (
         <>
+          <NavbarTop title="Profile" />
           <ScrollView style={{ backgroundColor: colors.white }}>
             <View style={{ paddingHorizontal: 16, paddingVertical: 26 }}>
               {/* photo, name, fols */}

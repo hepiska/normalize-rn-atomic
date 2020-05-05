@@ -89,11 +89,12 @@ export const registerApi = params => ({
     startNetwork: () => {
       return setAuthFetching(true)
     },
-    endNetwork: () => {
-      return setAuthFetching(false)
-    },
     success: data => {
-      return [setRegisterSuccess(data)]
+      return [
+        loginApi({ email: params.email, password: params.password }),
+        setRegisterSuccess(data),
+        setAuthFetching(false),
+      ]
     },
     error: err => {
       const error = err.response.data.meta.message

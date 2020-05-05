@@ -163,11 +163,18 @@ const ProductCard = ({
     defaultImage ||
     (!!images[0] ? chageImageUri(images[0], { width }) : defaultImages.product)
 
+  const thumbnailImage =
+    defaultImage ||
+    (!!images[0]
+      ? chageImageUri(images[0], { width: width / 20 })
+      : defaultImages.product)
+
   return horizontal ? (
     <ProductCardHorizontal
       composeStyle={composeStyle}
       width={width}
       image={image}
+      thumbnailImage={thumbnailImage}
       setImage={setImage}
       isAtributesShow={isAtributesShow}
       type={type}
@@ -187,6 +194,7 @@ const ProductCard = ({
       composeStyle={composeStyle}
       width={width}
       isSaved={isSaved}
+      thumbnailImage={thumbnailImage}
       onPress={onPress}
       image={image}
       isShowRangePrice={isShowRangePrice}
@@ -216,6 +224,7 @@ const ProductCardHorizontal = ({
   onPress,
   onSave,
   onAddtoCart,
+  thumbnailImage,
   variantPrice,
   isShowRangePrice,
   colorAttributes,
@@ -246,6 +255,11 @@ const ProductCardHorizontal = ({
         align="flex-start">
         <Div _width="40%">
           <ImageAutoSchale
+            thumbnailSource={
+              typeof thumbnailImage === 'string'
+                ? { uri: thumbnailImage }
+                : thumbnailImage
+            }
             source={typeof image === 'string' ? { uri: image } : image}
             onError={() => {
               setImage(defaultImages.product)
@@ -314,6 +328,7 @@ const ProductCardVertical = ({
   type,
   brand,
   product,
+  thumbnailImage,
   onPress,
   onSave,
   isShowRangePrice,
@@ -360,6 +375,11 @@ const ProductCardVertical = ({
             />
           </AbsDiv>
           <ImageAutoSchale
+            thumbnailSource={
+              typeof thumbnailImage === 'string'
+                ? { uri: thumbnailImage }
+                : thumbnailImage
+            }
             source={typeof image === 'string' ? { uri: image } : image}
             onError={() => {
               setImage(defaultImages.product)
