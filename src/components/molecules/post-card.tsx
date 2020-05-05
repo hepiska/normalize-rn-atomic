@@ -26,6 +26,7 @@ interface PostListItemType {
   horizontal?: boolean
   isLiked?: boolean
   style?: any
+  isAuth?: boolean
 }
 
 const styles = StyleSheet.create({
@@ -91,7 +92,11 @@ class PostListItem extends React.PureComponent<PostListItemType, any> {
   }
 
   _onLike = () => {
-    this.props.onLike(this.props.post.id)
+    if (!this.props.isAuth) {
+      navigate('modals', { screen: 'LoginModal' })
+    } else {
+      this.props.onLike(this.props.post.id)
+    }
   }
 
   _onUserCliked = () => {

@@ -42,6 +42,11 @@ const registerReducer: Reducer<RegisterState> = (
       newState.data = Immutable.merge(newState.data, action.payload.data)
       newState.isAuth = action.payload.isAuth
       return newState
+    case authActionType.SET_LOGOUT_SUCCESS:
+      newState.called = true
+      newState.data = Immutable({})
+      newState.isAuth = action.payload.isAuth
+      return newState
     case authActionType.SET_REGISTER_SUCCESS:
       newState.called = true
       newState.data.user = Immutable.merge(newState.data, action.payload)

@@ -13,6 +13,7 @@ import { bindActionCreators } from 'redux'
 import { removeCart } from '@modules/cart/action'
 import IconFa from 'react-native-vector-icons/FontAwesome5'
 import { navigate } from '@src/root-navigation'
+import { getUserAddressById } from '@modules/address/action'
 import CartListLoader from '@components/atoms/loaders/cart-list'
 
 const styles = StyleSheet.create({
@@ -43,6 +44,7 @@ class Cart extends Component<any, any> {
   }
 
   componentDidMount() {
+    this.props.getUserAddressById()
     this._chooseAll()
   }
   _keyExtractor = (item, index) => '' + item + index
@@ -216,10 +218,22 @@ class Cart extends Component<any, any> {
   }
 
   _onCheckout = (item, totalPrice) => () => {
-    navigate('Screens', {
-      screen: 'Checkout',
-      params: { cartsId: item, totalPrice: totalPrice },
-    })
+    if (this.props.addresses.length > 0) {
+      navigate('Screens', {
+        screen: 'Checkout',
+        params: { cartsId: item, totalPrice: totalPrice },
+      })
+    } else {
+      navigate('Screens', {
+        screen: 'AddNewAddressManual',
+        params: {
+          afterSubmit: {
+            screen: 'Checkout',
+            params: { cartsId: item, totalPrice: totalPrice },
+          },
+        },
+      })
+    }
   }
 
   render() {
@@ -275,10 +289,11 @@ class Cart extends Component<any, any> {
 }
 
 const mapDispatchToProps = dispatch =>
-  bindActionCreators({ removeCart }, dispatch)
+  bindActionCreators({ removeCart, getUserAddressById }, dispatch)
 
 const mapStateToProps = (state: any) => {
   return {
+    addresses: state.addresses.order,
     stateCarts: state.carts.data,
   }
 }

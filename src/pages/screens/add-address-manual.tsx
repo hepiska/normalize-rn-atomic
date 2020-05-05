@@ -28,6 +28,7 @@ import { useFormValidator } from '@src/hooks/use-form-validator'
 import MapThumbnail from '@components/molecules/map-thumbnail'
 import { colors, regex } from '@utils/constants'
 import MapModal from '@components/organisms/gmaps-modal'
+import { navigate } from '@src/root-navigation'
 
 const headerHeight = 54
 
@@ -184,7 +185,12 @@ const AddAddressManual = props => {
       } else {
         await addNewAddress(result)
       }
-      navigation.goBack()
+
+      if (route.params?.afterSubmit) {
+        navigate('Screens', route.params?.afterSubmit)
+      } else {
+        navigation.goBack()
+      }
     }
   }
 

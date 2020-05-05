@@ -32,6 +32,7 @@ const productListMap = (state, ownProps) => {
     isSaved,
     // brand: product.brand,
     category: state.categories[state.products[productId]],
+    isAuth: state.auth.isAuth,
   }
 }
 

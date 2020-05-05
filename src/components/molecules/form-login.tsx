@@ -154,7 +154,7 @@ const FormLogin: React.FC<FormLogin> = ({ navigation }) => {
 
   useEffect(() => {
     if (data?.id_token && called) {
-      navigation.navigate('Profile')
+      navigation.goBack()
     }
   }, [called])
 
@@ -166,7 +166,7 @@ const FormLogin: React.FC<FormLogin> = ({ navigation }) => {
 
   return useMemo(
     () => (
-      <Div _flex={1} _width="100%" _padding="16px">
+      <Div _flex={1} _width="100%" _padding="16px" bg="rgba(255,255,255, 0.5)">
         <Div
           _background="white"
           _margin="16px"

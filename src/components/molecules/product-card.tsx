@@ -21,6 +21,7 @@ import RangePrice from '@components/molecules/range-price'
 import { setImage as chageImageUri } from '@utils/helpers'
 import UserSaved from '@components/molecules/user-saved'
 import ColorList from '@components/molecules/color-list'
+import { navigate } from '@src/root-navigation'
 
 const AbsDiv = styled(PressAbbleDiv)`
   position: absolute;
@@ -48,6 +49,7 @@ interface ProductCardType {
   onSave: (productId) => void
   style?: ViewExtend
   horizontal?: boolean
+  isAuth?: boolean
 }
 
 const typeDict = {
@@ -63,6 +65,10 @@ const typeDict = {
     main: 14,
     sub: 12,
   },
+}
+
+const triggerLogin = () => {
+  navigate('modals', { screen: 'LoginModal' })
 }
 
 // revisit : handle on save handle add to cart
@@ -103,6 +109,7 @@ const ProductCard = ({
   isSaved,
   onPress,
   horizontal = false,
+  isAuth,
 }: ProductCardType) => {
   const type = 'med'
   const composeStyle = { ...styles.defaultStyle, ...style }
@@ -136,7 +143,11 @@ const ProductCard = ({
   }
 
   const _onSave = () => {
-    onSave(product.id)
+    if (!isAuth) {
+      triggerLogin()
+    } else {
+      onSave(product.id)
+    }
   }
 
   const selectedVariant =
@@ -165,7 +176,7 @@ const ProductCard = ({
       onPress={onPress}
       brand={brand}
       onSave={_onSave}
-      onAddtoCart={onAddtoCart}
+      onAddtoCart={isAuth ? onAddtoCart : triggerLogin}
       product={product}
       colorAttributes={colorAttributes}
       attributeSelected={attributeSelected}
@@ -183,7 +194,7 @@ const ProductCard = ({
       setImage={setImage}
       variantPrice={variantPrice}
       onSave={_onSave}
-      onAddtoCart={onAddtoCart}
+      onAddtoCart={isAuth ? onAddtoCart : triggerLogin}
       type={type}
       colorAttributes={colorAttributes}
       brand={brand}

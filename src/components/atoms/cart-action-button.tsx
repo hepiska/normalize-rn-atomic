@@ -43,9 +43,13 @@ const CartActionButton = props => {
   }, [])
 
   const _gotoCart = () => {
-    navigation.navigate('Screens', {
-      screen: 'Cart',
-    })
+    if (!props.isAuth) {
+      navigation.navigate('modals', { screen: 'LoginModal' })
+    } else {
+      navigation.navigate('Screens', {
+        screen: 'Cart',
+      })
+    }
   }
   return (
     <PressAbbleDiv onPress={_gotoCart} style={styles.rightAction}>

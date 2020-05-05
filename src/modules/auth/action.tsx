@@ -6,6 +6,7 @@ export const authActionType = {
   ERROR: 'auth/ERROR',
   SET_USERNAME_AVAILABLE: 'auth/SET_USER_AVAILABLE',
   SET_LOGIN_SUCCESS: 'auth/SET_LOGIN_SUCCESS',
+  SET_LOGOUT_SUCCESS: 'auth/SET_LOGOUT_SUCCESS',
   SET_REGISTER_SUCCESS: 'auth/SET_REGISTER_SUCCESS',
 }
 
@@ -31,6 +32,17 @@ const setRegisterSuccess = (data: any) => ({
   type: authActionType.SET_REGISTER_SUCCESS,
   payload: data,
 })
+
+export const setLogout = () => {
+  AsyncStorage.removeItem('token')
+  console.log('masuk setlogout')
+  return {
+    type: authActionType.SET_LOGOUT_SUCCESS,
+    payload: {
+      isAuth: false,
+    },
+  }
+}
 
 export const setAuthError = (data: any) => ({
   type: authActionType.ERROR,

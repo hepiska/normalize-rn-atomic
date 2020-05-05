@@ -15,6 +15,7 @@ const postListMap = (state, ownProps) => {
     post,
     user,
     isLiked,
+    isAuth: state.auth.isAuth,
   }
 }
 

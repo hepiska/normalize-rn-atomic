@@ -22,6 +22,8 @@ import { getUserByUsername } from '@modules/user/action'
 import { fontStyle, borderStyle } from '@src/components/commont-styles'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { navigate } from '@src/root-navigation'
+import { setLogout } from '@modules/auth/action'
+import ProfileEmptyState from '@components/molecules/profile-empty-state'
 
 const headerHeight = 54
 
@@ -125,71 +127,6 @@ const myOrder = [
   },
 ]
 
-const myOrderList = [
-  {
-    source: 'material-icon',
-    icon: 'location-on',
-    title: 'My Delivery Address',
-    desc: 'Add or edit your delivery address',
-    onPress: () => navigateTo('Screens', 'ChooseAddress', {}),
-  },
-  {
-    source: 'material-icon',
-    icon: 'save',
-    title: 'My Return or Exchange',
-    desc: 'Track your past and current return or exchange',
-    onPress: () => {},
-  },
-]
-
-const mySocialList = [
-  {
-    source: 'material-icon',
-    icon: 'save',
-    title: 'Beauty Profile',
-    desc: 'View and edit your beauty profile',
-  },
-  {
-    source: 'material-icon',
-    icon: 'save',
-    title: 'Topic and Interest',
-    desc: 'Manage your topic and interest',
-  },
-  {
-    source: 'material-icon',
-    icon: 'save',
-    title: 'Become an Insider',
-    desc: 'Be the part of the Insiders Community',
-  },
-  {
-    source: 'material-icon',
-    icon: 'save',
-    title: 'My Revenue',
-    desc: 'Manage your revenue with ease',
-  },
-]
-
-const othersList = [
-  {
-    source: 'material-icon',
-    icon: 'save',
-    title: 'Settings',
-    desc: 'View and set your account preferences',
-  },
-  {
-    source: 'material-icon',
-    icon: 'save',
-    title: 'Help',
-    desc: 'Find the best answer to your question',
-  },
-  {
-    source: 'material-icon',
-    icon: 'save',
-    title: 'Log Out',
-    desc: 'It’s okay to leave sometimes',
-  },
-]
-
 interface ProfileCardType {
   source: string
   icon: string
@@ -260,6 +197,81 @@ class ProfilPage extends React.PureComponent<any, any> {
     defaultImage: null,
   }
 
+  myOrderList = [
+    {
+      source: 'material-icon',
+      icon: 'location-on',
+      title: 'My Delivery Address',
+      desc: 'Add or edit your delivery address',
+      onPress: () => navigateTo('Screens', 'ChooseAddress', {}),
+    },
+    {
+      source: 'material-icon',
+      icon: 'save',
+      title: 'My Return or Exchange',
+      desc: 'Track your past and current return or exchange',
+      onPress: () => {},
+    },
+  ]
+
+  mySocialList = [
+    {
+      source: 'material-icon',
+      icon: 'save',
+      title: 'Beauty Profile',
+      desc: 'View and edit your beauty profile',
+    },
+    {
+      source: 'material-icon',
+      icon: 'save',
+      title: 'Topic and Interest',
+      desc: 'Manage your topic and interest',
+    },
+    {
+      source: 'material-icon',
+      icon: 'save',
+      title: 'Become an Insider',
+      desc: 'Be the part of the Insiders Community',
+    },
+    {
+      source: 'material-icon',
+      icon: 'save',
+      title: 'My Revenue',
+      desc: 'Manage your revenue with ease',
+    },
+  ]
+
+  othersList = [
+    {
+      source: 'material-icon',
+      icon: 'save',
+      title: 'Settings',
+      desc: 'View and set your account preferences',
+    },
+    {
+      source: 'material-icon',
+      icon: 'save',
+      title: 'Help',
+      desc: 'Find the best answer to your question',
+    },
+    {
+      source: 'material-icon',
+      icon: 'save',
+      title: 'Log Out',
+      desc: 'It’s okay to leave sometimes',
+      onPress: async () => {
+        await this.props.setLogout()
+      },
+    },
+  ]
+
+  componentDidMount() {
+    const { isAuth, username, getUserByUsername } = this.props
+    if (isAuth && username) {
+      getUserByUsername(username)
+    }
+  }
+
   componentDidUpdate(prevProps) {
     const { isAuth, username, getUserByUsername } = this.props
     if (prevProps.isAuth !== isAuth) {
@@ -285,20 +297,11 @@ class ProfilPage extends React.PureComponent<any, any> {
 
     if (!isAuth) {
       return (
-        <Div _flex={1}>
-          <Font>Profil page</Font>
-          <PressAbbleDiv
-            onPress={() =>
-              navigation.navigate('modals', { screen: 'LoginModal' })
-            }
-            _width={200}
-            _height={30}
-            _background="red"
-            _margin="24px"
-            radius={24}>
-            <Font color="white">Login</Font>
-          </PressAbbleDiv>
-        </Div>
+        <ProfileEmptyState
+          onPress={() =>
+            navigation.navigate('modals', { screen: 'LoginModal' })
+          }
+        />
       )
     }
 
@@ -468,7 +471,7 @@ class ProfilPage extends React.PureComponent<any, any> {
                   </View>
                 </View>
                 <View style={{ marginTop: 16 }}>
-                  {myOrderList.map((value, key) => {
+                  {this.myOrderList.map((value, key) => {
                     return (
                       <ProfileCard
                         isFirst
@@ -499,7 +502,7 @@ class ProfilPage extends React.PureComponent<any, any> {
                 </Text>
 
                 <View>
-                  {mySocialList.map((value, key) => {
+                  {this.mySocialList.map((value, key) => {
                     return (
                       <ProfileCard
                         key={`sociallist-card-${key}`}
@@ -530,7 +533,7 @@ class ProfilPage extends React.PureComponent<any, any> {
                 </Text>
 
                 <View>
-                  {othersList.map((value, key) => {
+                  {this.othersList.map((value, key) => {
                     return (
                       <ProfileCard
                         key={`otherlist-card-${key}`}
@@ -539,7 +542,7 @@ class ProfilPage extends React.PureComponent<any, any> {
                         title={value.title}
                         desc={value.desc}
                         index={key}
-                        onPress={() => {}}
+                        onPress={value.onPress}
                       />
                     )
                   })}
@@ -556,7 +559,7 @@ class ProfilPage extends React.PureComponent<any, any> {
 }
 
 const mapDispatchToProps = dispatch =>
-  bindActionCreators({ getUserByUsername }, dispatch)
+  bindActionCreators({ getUserByUsername, setLogout }, dispatch)
 
 const mapStateToProps = state => {
   const isAuth = state.auth.isAuth

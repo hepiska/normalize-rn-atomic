@@ -112,10 +112,14 @@ class ProductListPage extends React.Component<any, any> {
   ]
 
   _addToCart = () => {
-    if (this.state.isUserSelectVariant) {
-      this.props.addCart({ variant_id: this.state.selectedVariant, qty: 1 })
+    if (!this.props.isAuth) {
+      this.props.navigation.navigate('modals', { screen: 'LoginModal' })
     } else {
-      this.openCartModal()
+      if (this.state.isUserSelectVariant) {
+        this.props.addCart({ variant_id: this.state.selectedVariant, qty: 1 })
+      } else {
+        this.openCartModal()
+      }
     }
   }
 
@@ -254,6 +258,7 @@ const mapStateToProps = (state, ownProps) => {
 
   return {
     product: _product,
+    isAuth: state.auth.isAuth,
   }
 }
 
