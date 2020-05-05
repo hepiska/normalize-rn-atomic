@@ -8,6 +8,7 @@ import {
   View,
   ViewStyle,
   StyleSheet,
+  Text,
 } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { Div, PressAbbleDiv, Font } from '@components/atoms/basic'
@@ -129,16 +130,21 @@ const NavbarTop: React.SFC<NavbarTopProps> = ({
         />
         {subtitle ? (
           <Div justify="center" _width="100%">
-            <Font style={fontStyle.helveticaBold}>{title}</Font>
-            <Font {...helveticaNormalFont12} color={colors.black60}>
+            <Text style={{ ...fontStyle.helveticaBold }}>{title}</Text>
+            <Text
+              style={{
+                ...fontStyle.helvetica,
+                fontSize: 12,
+                color: colors.black60,
+              }}>
               {subtitle}
-            </Font>
+            </Text>
           </Div>
         ) : (
           <Div justify="center" _width="100%">
-            <Font style={fontStyle.helveticaBold} size="18">
+            <Text style={{ ...fontStyle.helveticaBold, fontSize: 18 }}>
               {title}
-            </Font>
+            </Text>
           </Div>
         )}
         <RenderRightContent content={rightContent} rightAction={rightAction} />

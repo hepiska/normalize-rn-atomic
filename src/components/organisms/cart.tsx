@@ -13,6 +13,7 @@ import { bindActionCreators } from 'redux'
 import { removeCart } from '@modules/cart/action'
 import IconFa from 'react-native-vector-icons/FontAwesome5'
 import { navigate } from '@src/root-navigation'
+import CartListLoader from '@components/atoms/loaders/cart-list'
 
 const styles = StyleSheet.create({
   solidDivider: {
@@ -222,7 +223,7 @@ class Cart extends Component<any, any> {
   }
 
   render() {
-    const { footer, stateCarts, carts } = this.props
+    const { footer, stateCarts, carts, cartsLoading } = this.props
     const { selectedVariant } = this.state
 
     let data = []
@@ -247,8 +248,8 @@ class Cart extends Component<any, any> {
       return Boolean(isAvail)
     }, true)
 
-    if (!data && data.length === 0) {
-      return null
+    if (data.length === 0 && cartsLoading) {
+      return <CartListLoader />
     }
     return (
       <>

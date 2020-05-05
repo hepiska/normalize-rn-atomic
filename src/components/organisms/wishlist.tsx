@@ -10,6 +10,7 @@ import ProductCard from '@components/molecules/product-card'
 import { productListData } from '@hocs/data/product'
 import { productApi } from '@modules/product/action'
 import { fontStyle } from '../commont-styles'
+import WishlistLoader from '@components/atoms/loaders/wishlist'
 // import { addCart } from '@modules/cart/action'
 
 const { width } = Dimensions.get('window')
@@ -67,27 +68,29 @@ class Wishlist extends Component<any, any> {
             Wishlist
           </Text>
         </View>
-        {/* revisit: need change to flatlist */}
         <Div
           _direction="row"
           _flex={1}
           justify="space-between"
           align="flex-start"
           style={{ flexWrap: 'wrap' }}>
-          {loading
-            ? null
-            : products.map((item, k) => (
-                <ProductWithCardHoc
-                  key={item}
-                  onAddtoCart={this._openCartModal(item)}
-                  productId={item}
-                  style={{
-                    wrappermargin: 8,
-                    paddingHorizontal: 0,
-                    width: width / 2 - 16,
-                  }}
-                />
-              ))}
+          {loading && products.length === 0 ? (
+            <WishlistLoader />
+          ) : (
+            products &&
+            products.map((item, k) => (
+              <ProductWithCardHoc
+                key={item}
+                onAddtoCart={this._openCartModal(item)}
+                productId={item}
+                style={{
+                  wrappermargin: 8,
+                  paddingHorizontal: 0,
+                  width: width / 2 - 16,
+                }}
+              />
+            ))
+          )}
         </Div>
         <Div _padding="0px 8px" _width="100%">
           <OutlineButton

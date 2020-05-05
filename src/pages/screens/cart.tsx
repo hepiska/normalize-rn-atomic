@@ -14,12 +14,13 @@ class CartPage extends Component<any, any> {
   }
 
   render() {
-    const { navigation, carts } = this.props
+    const { navigation, carts, cartsLoading } = this.props
     return (
       <>
         <NavbarTop title="Cart" leftContent={['back']} />
         <Cart
           carts={carts}
+          cartsLoading={cartsLoading}
           footer={
             <Div align="flex-start" justify="flex-start" _padding="0px 16px">
               <Wishlist navigation={navigation} />
@@ -37,6 +38,7 @@ const mapDispacthToProps = dispatch =>
 
 const mapStateToProps = state => ({
   carts: state.carts.order,
+  cartsLoading: state.carts.loading,
 })
 
 export default connect(mapStateToProps, mapDispacthToProps)(CartPage)
