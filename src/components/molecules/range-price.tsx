@@ -1,6 +1,7 @@
 import React from 'react'
 import { TextStyle } from 'react-native'
 import { Div, Font } from '@components/atoms/basic'
+import { fontStyle } from '@components/commont-styles'
 import Img from '@components/atoms/image'
 import { colors } from '@utils/constants'
 import { formatRupiah } from '@utils/helpers'
@@ -35,11 +36,13 @@ const RangePrice = ({
     <Div align="flex-start" _margin="8px 0px 0px 0px">
       {exFrom && exTo && (
         <Font
-          type="HelveticaNeue"
           size={11}
           _margin="4px"
           color={colors.black60}
-          style={{ textDecorationLine: 'line-through' }}>
+          style={{
+            ...fontStyle.helvetica,
+            textDecorationLine: 'line-through',
+          }}>
           {`${formatRupiah(exFrom)} - ${formatRupiah(exTo)}`}
         </Font>
       )}

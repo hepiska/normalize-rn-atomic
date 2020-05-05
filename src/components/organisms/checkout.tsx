@@ -100,7 +100,6 @@ class Checkout extends Component<any, any> {
             <View {...styles.container}>
               {/* shipment */}
               <View>
-                {/* <Font {...futuraBlackFont24}>Shipment Address</Font> */}
                 <Text style={{ ...styles.futura24, color: colors.black100 }}>
                   Shipment Address
                 </Text>
@@ -150,7 +149,7 @@ class Checkout extends Component<any, any> {
                     {formatRupiah(shippingCost)}
                   </Text>
                 </View>
-                <View {...styles.orderSummaryDetail}>
+                {/* <View {...styles.orderSummaryDetail}>
                   <Text
                     style={{ ...styles.helvetica14, color: colors.black100 }}>
                     Delivery Protection
@@ -159,7 +158,7 @@ class Checkout extends Component<any, any> {
                     style={{ ...styles.helvetica14, color: colors.black100 }}>
                     {formatRupiah(deliveryProtection)}
                   </Text>
-                </View>
+                </View> */}
               </View>
             </View>
           </ScrollDiv>
@@ -195,7 +194,7 @@ const mapStateToProps = (state, ownProps) => {
       total[warehouse.id].data.push(currentValue)
     } else {
       total[warehouse.id] = {
-        title: warehouse.label,
+        title: warehouse.label + ' - ' + warehouse.city.name,
         data: [currentValue],
         id: warehouse.id,
       }

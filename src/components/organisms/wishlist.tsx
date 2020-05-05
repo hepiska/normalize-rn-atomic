@@ -69,6 +69,7 @@ class Wishlist extends Component<any, any> {
           </Text>
         </View>
         <Div
+          _width="100%"
           _direction="row"
           _flex={1}
           justify="space-between"

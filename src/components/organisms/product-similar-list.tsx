@@ -9,6 +9,7 @@ import ProductCard from '@components/molecules/product-card'
 import { productListData } from '@hocs/data/product'
 import { productApi } from '@modules/product/action'
 import { fontStyle } from '../commont-styles'
+import YouMightAlsoLikeLoader from '../atoms/loaders/you-might-also-like'
 
 const { width } = Dimensions.get('window')
 
@@ -64,7 +65,7 @@ class ProductSimilar extends Component<any, any> {
   }
 
   render() {
-    const { products } = this.props
+    const { products, loading } = this.props
     return (
       <Div _flex={1} _margin="64px 0px" _width="100%" align="flex-start">
         <View style={{ marginLeft: 8, marginRight: 8 }}>
@@ -76,17 +77,21 @@ class ProductSimilar extends Component<any, any> {
             You Might Also Like
           </Text>
         </View>
-        <Div
-          _direction="row"
-          _flex={1}
-          align="flex-start"
-          style={{ flexWrap: 'wrap' }}>
-          {products.map(item => (
-            <Div key={item} _width="100%">
-              {this._renderItem({ item })}
-            </Div>
-          ))}
-        </Div>
+        {loading && products.length === 0 ? (
+          <YouMightAlsoLikeLoader />
+        ) : (
+          <Div
+            _direction="row"
+            _flex={1}
+            align="flex-start"
+            style={{ flexWrap: 'wrap' }}>
+            {products.map(item => (
+              <Div key={item} _width="100%">
+                {this._renderItem({ item })}
+              </Div>
+            ))}
+          </Div>
+        )}
       </Div>
     )
   }

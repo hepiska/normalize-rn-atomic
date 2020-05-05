@@ -47,6 +47,16 @@ class Cart extends Component<any, any> {
     this.props.getUserAddressById()
     this._chooseAll()
   }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.carts !== this.props.carts) {
+      let _selected = [...this.props.carts]
+
+      this.setState({
+        selectedVariant: _selected,
+      })
+    }
+  }
   _keyExtractor = (item, index) => '' + item + index
 
   _renderItem = ({ item, index }) => {
@@ -248,7 +258,7 @@ class Cart extends Component<any, any> {
         total[warehouse.id].data.push(currentValue)
       } else {
         total[warehouse.id] = {
-          title: warehouse.label,
+          title: warehouse.label + ' - ' + warehouse.city.name,
           data: [currentValue],
         }
       }
@@ -277,12 +287,14 @@ class Cart extends Component<any, any> {
           ListFooterComponent={footer && footer}
           ListEmptyComponent={this._emptyComponent}
         />
-        <TotalPayCart
-          items={selectedVariant}
-          buttonText="Checkout"
-          onCheckout={this._onCheckout}
-          enableButton={enableCheckout}
-        />
+        {carts.length > 0 && (
+          <TotalPayCart
+            items={selectedVariant}
+            buttonText="Checkout"
+            onCheckout={this._onCheckout}
+            enableButton={enableCheckout}
+          />
+        )}
       </>
     )
   }

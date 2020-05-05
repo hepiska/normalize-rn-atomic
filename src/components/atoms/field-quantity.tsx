@@ -89,17 +89,25 @@ const FieldQuantity = ({
   }
   return (
     <Div style={style} {...styles.div}>
-      <PressAbbleDiv onPress={_onDec}>
+      <PressAbbleDiv onPress={qty > 1 ? _onDec : null}>
         <Div {...styles.leftButton} {...styles.button}>
           <Icon name="minus" size={8} color={colors.black60} />
         </Div>
+        {qty <= 1 && (
+          <View
+            style={[
+              StyleSheet.absoluteFillObject,
+              { backgroundColor: 'rgba(255,255,255, 0.5)' },
+            ]}
+          />
+        )}
       </PressAbbleDiv>
       <Div {...styles.input}>
         <Text style={{ ...styles.helvetica12, color: colors.black80 }}>
           {qty}
         </Text>
       </Div>
-      <PressAbbleDiv onPress={incDisable ? () => {} : _onInc}>
+      <PressAbbleDiv onPress={incDisable ? null : _onInc}>
         <Div {...styles.rightButton} {...styles.button}>
           <Icon name="plus" size={8} color={colors.black60} />
         </Div>

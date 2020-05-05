@@ -171,8 +171,13 @@ class ItemSummaryCart extends React.PureComponent<ItemSummaryCartType, any> {
   }
 
   onProtectDelivery = () => {
+    let cost = 0
+    if (!this.state.isProtectDelivery) {
+      cost = 300
+    }
     this.setState({
       isProtectDelivery: !this.state.isProtectDelivery,
+      deliveryProtection: cost,
     })
   }
 
@@ -271,7 +276,7 @@ class ItemSummaryCart extends React.PureComponent<ItemSummaryCartType, any> {
         </View>
 
         {/* Shipping insurance */}
-        <View style={{ marginTop: 32, alignItems: 'flex-start' }}>
+        {/* <View style={{ marginTop: 32, alignItems: 'flex-start' }}>
           <Font {...helveticaBlackTitleBold} color={colors.black80}>
             Shipping insurance
           </Font>
@@ -330,7 +335,7 @@ class ItemSummaryCart extends React.PureComponent<ItemSummaryCartType, any> {
               </Tooltip>
             </View>
           </View>
-        </View>
+        </View> */}
 
         {/* Sub Total */}
         <ContentExpandable
@@ -377,7 +382,7 @@ class ItemSummaryCart extends React.PureComponent<ItemSummaryCartType, any> {
                   {formatRupiah(shippingCost)}
                 </Text>
               </View>
-              <View {...styles.orderSummaryDetail}>
+              {/* <View {...styles.orderSummaryDetail}>
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                   <Text
                     style={{ ...styles.helvetica14, color: colors.black70 }}>
@@ -396,7 +401,7 @@ class ItemSummaryCart extends React.PureComponent<ItemSummaryCartType, any> {
                 <Text style={{ ...styles.helvetica14, color: colors.black70 }}>
                   {formatRupiah(deliveryProtection)}
                 </Text>
-              </View>
+              </View> */}
             </>
           }
           id={`sub-total-${item.data}`}

@@ -20,11 +20,14 @@ interface CartCardType {
   brand: any
   cart: any
   variant: any
+  product: any
   idx: any
   style: ViewStyle
   index: string | number
   isChecked: boolean
   chooseCart: Function
+  isSaved?: boolean
+  onSave?: (productId: any) => void
   removeCart: (data: any) => void
   changeCartQty: (data: any) => void
   removeSelectedVariant: (data: any) => void
@@ -158,6 +161,10 @@ class CartCard extends React.Component<CartCardType, any> {
     return <View />
   }
 
+  _onSave = () => {
+    this.props.onSave(this.props.product.id)
+  }
+
   render() {
     const {
       cart,
@@ -167,6 +174,7 @@ class CartCard extends React.Component<CartCardType, any> {
       index,
       isChecked,
       chooseCart,
+      isSaved,
     } = this.props
 
     const images = variant.image_urls
@@ -286,12 +294,12 @@ class CartCard extends React.Component<CartCardType, any> {
                         </View>
                       </PressAbbleDiv>
                       {/* bookmark */}
-                      <PressAbbleDiv onPress={() => {}}>
+                      <PressAbbleDiv onPress={this._onSave}>
                         <View style={{ ...styles.icon }}>
                           <IconMa
-                            name="bookmark"
+                            name={isSaved ? 'bookmark' : 'bookmark-border'}
                             size={16}
-                            color={colors.black60}
+                            color={isSaved ? colors.black60 : colors.black90}
                           />
                         </View>
                       </PressAbbleDiv>

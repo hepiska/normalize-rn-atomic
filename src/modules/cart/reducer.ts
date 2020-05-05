@@ -50,9 +50,7 @@ const cartReducer: Reducer<CartStateType> = (
       return newState
     case actionType.ADD_ONE_CART_ORDER:
       if (!newState.order.includes(action.payload)) {
-        newState.order = newState.order.concat(
-          Immutable([action.payload.order]),
-        )
+        newState.order = newState.order.concat(Immutable([action.payload]))
       }
       return newState
     case actionType.CHANGE_QTY_DATA:
