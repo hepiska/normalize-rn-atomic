@@ -43,6 +43,9 @@ class Cart extends Component<any, any> {
     selectedVariant: [],
   }
 
+  skip = 0
+  lastSkip = 0
+
   componentDidMount() {
     this.props.getUserAddressById()
     this._chooseAll()
@@ -246,6 +249,23 @@ class Cart extends Component<any, any> {
     }
   }
 
+  _fetchMore = () => {
+    if (!this.props.cartsLoading) {
+      const newSkip = this.skip + 1
+
+      if (newSkip > this.lastSkip) {
+        this.skip = newSkip
+        this.lastSkip = newSkip
+      }
+      if (this.props.cartsLoading) {
+        return
+      }
+      // if (30 > this.props.carts.length) {
+      //   this.props.getAllCart()
+      // }
+    }
+  }
+
   render() {
     const { footer, stateCarts, carts, cartsLoading } = this.props
     const { selectedVariant } = this.state
@@ -272,7 +292,7 @@ class Cart extends Component<any, any> {
       return Boolean(isAvail)
     }, true)
 
-    if (data.length === 0 && cartsLoading) {
+    if (cartsLoading && this.skip === 0) {
       return <CartListLoader />
     }
     return (
@@ -286,6 +306,8 @@ class Cart extends Component<any, any> {
           stickyHeaderIndices={[0]}
           ListFooterComponent={footer && footer}
           ListEmptyComponent={this._emptyComponent}
+          onEndReachedThreshold={0.97}
+          onEndReached={this._fetchMore}
         />
         {carts.length > 0 && (
           <TotalPayCart

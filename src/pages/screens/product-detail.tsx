@@ -1,8 +1,9 @@
 import React from 'react'
-import { Dimensions } from 'react-native'
+import { Dimensions, View, Text } from 'react-native'
 import {
   Div,
   Font,
+  Image,
   // Image,
   // ScrollDiv,
   // PressAbbleDiv,
@@ -27,7 +28,13 @@ import ButtonGroup from '@components/molecules/button-group'
 import { fontStyle } from '@components/commont-styles'
 import { GradientButton } from '@components/atoms/button'
 import { getProductById } from '@modules/product/action'
-import { setImage, deepClone } from '@utils/helpers'
+import { setImage, deepClone, getDetailContent } from '@utils/helpers'
+import Icon from 'react-native-vector-icons/FontAwesome5'
+import {
+  addProductSaved,
+  deleteProductSaved,
+} from '@modules/product-saved/action'
+import CircleLoader from '@components/atoms/loaders/cirle'
 
 const { Value } = Animated
 const { width, height } = Dimensions.get('screen')
@@ -125,24 +132,41 @@ class ProductListPage extends React.Component<any, any> {
     })
   }
 
-  groupButton = [
-    { name: 'Save to Collection', icon: 'bookmark', onPress: () => {} },
-    {
-      name: 'Share',
-      icon: 'share',
-      onPress: () => {
-        const { product } = this.props
-        this.props.navigation.navigate('modals', {
-          screen: 'Share',
-          params: {
-            title: 'The shonet product' + product.name,
-            uri: Config.SHONET_URI + '/products/' + product.id,
-            message: product.description,
-          },
-        })
+  onSaveProduct = () => {
+    const { isSaved, product, deleteProductSaved, addProductSaved } = this.props
+
+    const onSave = isSaved
+      ? deleteProductSaved(product.id)
+      : addProductSaved(product.id)
+    return onSave
+  }
+
+  groupButton = isSaved => {
+    return [
+      {
+        name: isSaved ? 'Saved' : 'Save',
+        icon: 'bookmark',
+        iconColor: isSaved ? '#8131e2' : colors.black100,
+        onPress: this.onSaveProduct,
+        apasih: isSaved,
       },
-    },
-  ]
+      {
+        name: 'Share',
+        icon: 'share',
+        onPress: () => {
+          const { product } = this.props
+          this.props.navigation.navigate('modals', {
+            screen: 'Share',
+            params: {
+              title: 'The shonet product' + product.name,
+              uri: Config.SHONET_URI + '/products/' + product.id,
+              message: product.description,
+            },
+          })
+        },
+      },
+    ]
+  }
 
   _addToCart = () => {
     if (!this.props.isAuth) {
@@ -156,10 +180,24 @@ class ProductListPage extends React.Component<any, any> {
     }
   }
 
+  _addToCollection = () => {}
+
   render() {
-    const { product, loading } = this.props
+    const { product, loading, isSaved } = this.props
     const { selectedVariant, isUserSelectVariant, filteredAttributes } = this
       .state as any
+    let returnExchange = ''
+
+    if (
+      product.flags?.includes('returnable') &&
+      product.flags?.includes('exchangeable')
+    ) {
+      returnExchange = 'return or exchange'
+    } else if (product.flags?.includes('returnable')) {
+      returnExchange = 'return'
+    } else if (product.flags?.includes('exchangeable')) {
+      returnExchange = 'exchange'
+    }
 
     const varianData = this.getVariantData(selectedVariant)
     const price: any = {}
@@ -175,6 +213,49 @@ class ProductListPage extends React.Component<any, any> {
       price.withDiscount = true
     }
 
+    const productType = product.is_commerce ? 'cart' : 'collection'
+    const actionButton = {
+      cart: {
+        buttonText: 'Add to cart',
+        action: this._addToCart,
+      },
+      collection: {
+        buttonText: 'Add to Collection',
+        action: this._addToCollection,
+      },
+    }
+
+    let userSaveProduct = []
+    if (product.saved && product.saved.user) {
+      userSaveProduct.push(
+        <Font
+          key="product-save-username"
+          style={{
+            ...fontStyle.helveticaBold,
+            color: colors.black100,
+            fontSize: 12,
+          }}>
+          {product.saved.user[0].name}
+        </Font>,
+      )
+      if (product.saved.count > 1) {
+        userSaveProduct.push(
+          <React.Fragment key="product-save-wrapper">
+            <Font key="product-save-connection">{` and `}</Font>
+            <Font
+              key="product-save-count"
+              style={{
+                ...fontStyle.helveticaBold,
+                color: colors.black100,
+                fontSize: 12,
+              }}>
+              {product.saved.count - 1 + ' others'}
+            </Font>
+          </React.Fragment>,
+        )
+      }
+      userSaveProduct.push(<Font key="product-save-end">{` saved this`}</Font>)
+    }
     return (
       <>
         <NavbarTopAnimated
@@ -232,25 +313,32 @@ class ProductListPage extends React.Component<any, any> {
                   onAllAttributesSelected={this._selectVariant}
                 />
               )}
-              <Button
-                leftIcon="save"
-                title="Available for return or exchange"
-                onPress={() => {}}
-                style={{
-                  width: '100%',
-                  marginVertical: 12,
-                  justifyContent: 'flex-start',
-                  height: 32,
-                  backgroundColor: 'rgba(26, 26, 26, 0.04)',
-                }}
-              />
+              {returnExchange !== '' && (
+                <View
+                  style={{
+                    width: '100%',
+                    marginVertical: 12,
+                    justifyContent: 'flex-start',
+                    alignItems: 'center',
+                    height: 32,
+                    backgroundColor: 'rgba(26, 26, 26, 0.04)',
+                    flexDirection: 'row',
+                    paddingHorizontal: 16,
+                    paddingVertical: 8,
+                  }}>
+                  <Icon name="save" size={16} color={colors.black100} />
+                  <View style={{ marginLeft: 8 }}>
+                    <Text>Available for {returnExchange}</Text>
+                  </View>
+                </View>
+              )}
               <GradientButton
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 1 }}
                 disabled={loading}
                 colors={['#3067E4', '#8131E2']}
-                title="Add to cart"
-                onPress={this._addToCart}
+                title={actionButton[productType].buttonText}
+                onPress={actionButton[productType].action}
                 fontStyle={{
                   color: colors.white,
                   ...fontStyle.helveticaBold,
@@ -264,18 +352,105 @@ class ProductListPage extends React.Component<any, any> {
                 }}
               />
 
-              <ButtonGroup items={this.groupButton} />
-              {product?.details?.map((detail, idx) => (
-                <ContentExpandable
-                  title={detail.type}
-                  content={detail.content}
-                  key={`product-detail-${idx}`}
-                  id={'expanable' + idx}
-                  isFirst={idx === 0}
-                />
-              ))}
+              <ButtonGroup items={this.groupButton(isSaved)} />
+
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'flex-start',
+                  alignItems: 'center',
+                  width: '100%',
+                  marginBottom: 12,
+                }}>
+                {product.saved &&
+                  product.saved.count > 0 &&
+                  product.saved.user?.map((value, key) => {
+                    const img = value.photo_url
+                    if (key >= 3) return null
+                    return (
+                      <View
+                        key={`user-saved-${key}`}
+                        style={{
+                          borderColor: colors.white,
+                          borderRadius: 20,
+                          borderWidth: 1,
+                          marginLeft: key !== 0 ? -16 : 0,
+                        }}>
+                        <Image
+                          key={`image-user-saved-${key}`}
+                          source={
+                            img
+                              ? { uri: img }
+                              : require('@src/assets/placeholder/placeholder2.jpg')
+                          }
+                          style={{
+                            width: 24,
+                            height: 24,
+                            borderRadius: 20,
+                          }}
+                        />
+                      </View>
+                    )
+                  })}
+                <View style={{ marginLeft: 8, flexDirection: 'row' }}>
+                  {product.saved && userSaveProduct}
+                </View>
+              </View>
+              {product?.details?.map((detail, idx) => {
+                const contentItem = getDetailContent(
+                  detail.type,
+                  detail.content,
+                )
+                return (
+                  <ContentExpandable
+                    title={detail.type}
+                    content={
+                      <>
+                        {contentItem && typeof contentItem !== 'string' ? (
+                          contentItem.map((value, key) => {
+                            return (
+                              <Font
+                                key={`desc-${value}-${key}`}
+                                style={{
+                                  ...fontStyle.helvetica,
+                                  color: colors.black70,
+                                  fontSize: 14,
+                                }}>
+                                {'\u2022' + '  ' + value.trim()}
+                              </Font>
+                            )
+                          })
+                        ) : (
+                          <Font
+                            style={{
+                              ...fontStyle.helvetica,
+                              color: colors.black70,
+                              fontSize: 14,
+                            }}>
+                            {contentItem}
+                          </Font>
+                        )}
+                      </>
+                    }
+                    key={`product-detail-${idx}`}
+                    id={'expanable' + idx}
+                    isFirst={idx === 0}
+                  />
+                )
+              })}
             </Div>
           </ImageCoverContentLayout>
+
+          {loading && (
+            <Div
+              style={{ position: 'absolute', bottom: 0, left: 0 }}
+              justify="center"
+              _width="100%"
+              _background="rgba(0,0,0,0.3)"
+              _height="64px">
+              <CircleLoader />
+            </Div>
+          )}
         </Div>
       </>
     )
@@ -283,9 +458,8 @@ class ProductListPage extends React.Component<any, any> {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const _product = deepClone(
-    state.products.data[ownProps.route.params?.productId],
-  )
+  const productId = ownProps.route.params?.productId
+  const _product = deepClone(state.products.data[productId])
   _product.brand = state.brands.data[_product.brand]
   if (_product.attributes) {
     _product.attributes = _product.attributes.map(v => {
@@ -296,10 +470,15 @@ const mapStateToProps = (state, ownProps) => {
   return {
     product: _product,
     isAuth: state.auth.isAuth,
+    isSaved: !!state.productsSaved.data[productId],
+    loading: state.products.productLoading,
   }
 }
 
 const mapDispatchToProps = dispatch =>
-  bindActionCreators({ getProductById, addCart }, dispatch)
+  bindActionCreators(
+    { getProductById, addCart, addProductSaved, deleteProductSaved },
+    dispatch,
+  )
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProductListPage)

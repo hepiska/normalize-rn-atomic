@@ -75,7 +75,7 @@ class Wishlist extends Component<any, any> {
           justify="space-between"
           align="flex-start"
           style={{ flexWrap: 'wrap' }}>
-          {loading && products.length === 0 ? (
+          {loading ? (
             <WishlistLoader />
           ) : (
             products &&

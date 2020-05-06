@@ -15,6 +15,7 @@ interface BottonItem {
   color?: string
   onPress: () => void
   icon?: string
+  iconColor?: string
 }
 
 interface ButtonGroupProps {
@@ -72,7 +73,7 @@ const ButtonGroup = ({ items, style }: ButtonGroupProps) => {
             <Icon
               name={item.icon}
               size={16}
-              color={item.color || colors.black100}
+              color={item.iconColor || colors.black100}
             />
           )}
           <Text

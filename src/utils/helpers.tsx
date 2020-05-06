@@ -168,3 +168,16 @@ export const sendEmail = (id?, sub?) => () => {
   const subject = sub || `Return / Exchange Order ID: ${id}`
   Linking.openURL(`mailto:${email}?subject=${subject}`)
 }
+
+export const getDetailContent = (type: string, content: any) => {
+  if (
+    type === 'description' ||
+    type === 'care-label' ||
+    type === 'size-and-fit'
+  ) {
+    /* ini yang csv (comma separated value) */
+    return content ? content.split(';') : []
+  } else {
+    return content
+  }
+}

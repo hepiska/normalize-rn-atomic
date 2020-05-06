@@ -10,6 +10,7 @@ import {
   fontStyle,
 } from '../commont-styles'
 import { OutlineButton } from '@components/atoms/button'
+import { navigate } from '@src/root-navigation'
 
 // export interface AtributeValueType {
 //   label: String
@@ -97,6 +98,12 @@ const AtributesList = ({
     onAttributesChanged,
   })
 
+  const handleSizeGuide = () => {
+    navigate('Screens', {
+      screen: 'SizeGuideWebView',
+    })
+  }
+
   const { values, label, id } = attribute
   return (
     <Div width="100%" align="flex-start" padd="0px 0px 16px">
@@ -123,7 +130,7 @@ const AtributesList = ({
         ))}
       </ScrollDiv>
       {label.toLowerCase() === 'size' && (
-        <PressAbbleDiv onPress={() => {}} _margin="8px 0">
+        <PressAbbleDiv onPress={handleSizeGuide} _margin="8px 0">
           <Font
             style={{ textDecorationLine: 'underline', ...fontStyle.helvetica }}>
             Size guide

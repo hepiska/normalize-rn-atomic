@@ -77,7 +77,7 @@ class ProductSimilar extends Component<any, any> {
             You Might Also Like
           </Text>
         </View>
-        {loading && products.length === 0 ? (
+        {loading ? (
           <YouMightAlsoLikeLoader />
         ) : (
           <Div
@@ -109,7 +109,7 @@ const mapStateToProps = state => {
   return {
     products: state.products.order,
     pagination: state.products.pagination,
-    loading: state.products.loading,
+    loading: state.products.productsLoading,
     error: state.products.error,
   }
 }
