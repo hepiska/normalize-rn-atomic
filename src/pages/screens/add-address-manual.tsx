@@ -19,7 +19,6 @@ import {
   getOneUserAddressById,
   setAddressLoading,
 } from '@modules/address/action'
-import CirleLoader from '@src/components/atoms/loaders/cirle'
 import { Checkbox } from '@components/atoms/checkbox'
 import PickerPopup from '@components/molecules/picker'
 import { shonetLocation } from '@utils/services'
@@ -115,6 +114,7 @@ const AddAddressManual = props => {
   })
   const [mapsModalVisible, setModalVisible] = useState(false)
   const [initialAddress, setInitialAddress] = useState<any>({})
+  const [selectedDataPos, setSelectedDataPos] = useState<any>({})
   const [locationOptions, setLocationOptions] = useState<any>({})
 
   const getData = (activeLocation, id) => {
@@ -128,6 +128,12 @@ const AddAddressManual = props => {
       )
       setLocationOptions(newLocationOptions)
     })
+  }
+
+  const _changeSelectedDataPos = (name, pos) => {
+    const newSelectedData = { ...selectedDataPos }
+    newSelectedData[name] = pos
+    setSelectedDataPos(newSelectedData)
   }
 
   useEffect(() => {
@@ -291,12 +297,15 @@ const AddAddressManual = props => {
         <NavbarTop style={styles.header} leftContent={['back']} title={title} />
         <PickerPopup
           pickerRef={e => (pickerRef = e)}
-          value={null}
+          value={selectedDataPos[activeRegionLevel]}
           title={pickerTitle}
           items={pickerOptions}
           onValueChange={(value, index, data) => {
-            onSelect(data.name)
-            handleOnChange(regionMap[activeRegionLevel].key)(data.name)
+            if (data) {
+              _changeSelectedDataPos(activeRegionLevel, value)
+              onSelect(data.name)
+              handleOnChange(regionMap[activeRegionLevel].key)(data.name)
+            }
           }}
         />
         <MapModal
@@ -508,6 +517,7 @@ const AddAddressManual = props => {
     ),
     [
       state,
+      selectedDataPos,
       props,
       activeRegionLevel,
       selectedLocation,

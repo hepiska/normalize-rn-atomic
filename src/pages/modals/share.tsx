@@ -12,7 +12,7 @@ import {
 import { Div, Font, PressAbbleDiv } from '@components/atoms/basic'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import Share from 'react-native-share'
-import BottomSheet from '@components/layouts/bottom-sheet-modal'
+import BottomSheet from '@src/components/layouts/bottom-sheet'
 import Clipboard from '@react-native-community/clipboard'
 import { colors } from '@utils/constants'
 const { height, width } = Dimensions.get('screen')

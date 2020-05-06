@@ -121,7 +121,7 @@ class ItemSummaryCart extends React.PureComponent<ItemSummaryCartType, any> {
     isProductExpand: false,
   }
 
-  componentWillUpdate(nextProps, nextState) {
+  componentDidUpdate(nextProps, nextState) {
     if (this.props.address.id !== nextProps.address.id) {
       const params = {
         variant_ids: this.props.variantIds.toString(),
@@ -134,7 +134,7 @@ class ItemSummaryCart extends React.PureComponent<ItemSummaryCartType, any> {
           params,
         })
         .then(res => {
-          const result = res.data.data
+          const result = res.data.data || []
           const temp = this.props.checkoutWarehouse
 
           const reduceResult = result.reduce((totalResult, value) => {
@@ -145,6 +145,7 @@ class ItemSummaryCart extends React.PureComponent<ItemSummaryCartType, any> {
           let tempFound
           const isFound = reduceResult.reduce((found, value) => {
             let resFound =
+              temp &&
               value.id === temp.shipping.id &&
               value.courier.id === temp.shipping.courier.id
             if (resFound) {

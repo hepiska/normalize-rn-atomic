@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import { View, StyleSheet } from 'react-native'
 import WebView from 'react-native-webview'
 import Config from 'react-native-config'
 import { colors } from '@utils/constants'

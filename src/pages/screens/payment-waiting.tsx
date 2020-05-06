@@ -1,5 +1,13 @@
 import React, { Component } from 'react'
-import { ScrollView, View, Text, StyleSheet } from 'react-native'
+import {
+  ScrollView,
+  View,
+  Text,
+  StyleSheet,
+  Dimensions,
+  Button,
+  TouchableOpacity,
+} from 'react-native'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import NavbarTop from '@src/components/molecules/navbar-top'
@@ -18,6 +26,9 @@ import ContentExpandable from '@components/molecules/content-expandable'
 import day from 'dayjs'
 import { payment_guide } from '@utils/payment-guide'
 import { navigate, goBack } from '@src/root-navigation'
+import BottomSheetModal from '@src/components/layouts/bottom-sheet-modal'
+import ActionListCard from '@components/molecules/action-list-card'
+import { sendEmail } from '@utils/helpers'
 
 const Divider = ({ marginTop }) => (
   <View
@@ -30,6 +41,8 @@ const Divider = ({ marginTop }) => (
     }}
   />
 )
+
+const { width, height } = Dimensions.get('screen')
 
 const statusToIcon = status => {
   switch (status.toLowerCase()) {
@@ -158,6 +171,7 @@ class PaymentWaiting extends Component<any, any> {
   interval = null
   count = null
   state: any = {
+    isBottomSheetOpen: false,
     countdownTimer: {
       minutes: 0,
       seconds: 0,
@@ -510,6 +524,75 @@ class PaymentWaiting extends Component<any, any> {
     })
   }
 
+  moreAction = [
+    // {
+    //   source: 'material-icon',
+    //   icon: 'error',
+    //   title: 'Cancel Transaction',
+    //   onPress: () => {
+    //     this._toggleBottomSheet()
+    //     this.props.navigation.navigate('modals', {
+    //       screen: 'ConfirmationModal',
+    //       params: {
+    //         title: 'Cancel Transaction',
+    //         actiontext: {
+    //           approve: 'Yes',
+    //           cancel: 'No',
+    //         },
+    //         empesizeApprove: false,
+    //         desc: 'Are you sure you want to cancel the transaction?',
+    //         onApprove: () => {
+    //           console.log('=====', this)
+    //         },
+    //       },
+    //     })
+    //   },
+    // },
+    {
+      icon: 'bullhorn',
+      title: 'Ask for Information or Help',
+      onPress: () => {
+        sendEmail('', 'I Need Help')
+      },
+    },
+  ]
+
+  renderBottomSheet = () => {
+    return (
+      <BottomSheetModal
+        snapPoints={[0.5 * height, 0]}
+        isOpen={this.state.isBottomSheetOpen}
+        initialSnap={0}
+        title="More"
+        onClose={this._toggleBottomSheet}>
+        <View
+          style={{
+            paddingHorizontal: 16,
+            display: 'flex',
+            width,
+            height: 200,
+            backgroundColor: 'white',
+          }}>
+          {this.moreAction.map((action, index) => (
+            <TouchableOpacity
+              onPress={action.onPress}
+              key={`more-action${index}`}>
+              <ActionListCard
+                {...action}
+                index={index}
+                key={`more-action${index}`}
+              />
+            </TouchableOpacity>
+          ))}
+        </View>
+      </BottomSheetModal>
+    )
+  }
+
+  _toggleBottomSheet = () => {
+    this.setState({ isBottomSheetOpen: !this.state.isBottomSheetOpen })
+  }
+
   render() {
     const { transaction } = this.props
     if (!transaction) {
@@ -521,12 +604,14 @@ class PaymentWaiting extends Component<any, any> {
           title="Transaction Detail"
           leftContent={['back']}
           rightAction={
-            <PressAbbleDiv onPress={() => {}}>
+            <PressAbbleDiv onPress={this._toggleBottomSheet}>
               <IconMi name="more-vert" size={22} color={colors.black100} />
             </PressAbbleDiv>
           }
           style={{ borderBottomWidth: 1, borderBottomColor: colors.black50 }}
         />
+        {this.renderBottomSheet()}
+
         <ScrollView
           showsVerticalScrollIndicator={false}
           style={{ paddingHorizontal: 16, marginTop: 24, marginBottom: 24 }}>

@@ -163,8 +163,8 @@ export const countdown = (date, callback, onEndCallback?) => {
   }, 1000)
 }
 
-export const sendEmail = id => () => {
+export const sendEmail = (id?, sub?) => () => {
   const email = 'cs@theshonet.com'
-  const subject = `Return / Exchange Order ID: ${id}`
+  const subject = sub || `Return / Exchange Order ID: ${id}`
   Linking.openURL(`mailto:${email}?subject=${subject}`)
 }

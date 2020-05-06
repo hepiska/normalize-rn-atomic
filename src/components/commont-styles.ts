@@ -210,3 +210,38 @@ export const formStyles = StyleSheet.create({
     marginVertical: 12,
   },
 })
+
+export const modalSyle = StyleSheet.create({
+  modalContainer: {
+    flex: 1,
+    backgroundColor: 'transparent',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContent: {
+    width: '90%',
+    backgroundColor: 'white',
+    zIndex: 2,
+    borderRadius: 8,
+  },
+  titleContainer: {
+    borderBottomWidth: 1,
+    padding: 16,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    borderColor: colors.gray6,
+  },
+  actionContainer: {
+    borderBottomWidth: 1,
+    paddingHorizontal: 8,
+    paddingBottom: 16,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    borderColor: colors.gray6,
+  },
+  descContainer: { paddingHorizontal: 16, paddingVertical: 24 },
+  titleFont: { ...fontStyle.futuraDemi, fontSize: 20 },
+  descStyle: { ...fontStyle.helvetica, fontSize: 16 },
+})

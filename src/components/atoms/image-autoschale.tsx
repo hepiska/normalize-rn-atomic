@@ -100,6 +100,7 @@ class ImageAutoSchale extends React.Component<ImageAutoSchaleType, any> {
     }).start()
   }
   onImageLoad = () => {
+    this.setState({ imageLoaded: true })
     Animated.timing(this.imageAnimated, {
       toValue: 1,
     }).start()
@@ -114,13 +115,17 @@ class ImageAutoSchale extends React.Component<ImageAutoSchaleType, any> {
       containerStyle,
       ...props
     } = this.props
-    const { size } = this.state
+    const { size, imageLoaded } = this.state
     const imageStyles = thumbnailSource
       ? [styles.imageOverlay, style as any, { opacity: this.imageAnimated }]
       : { ...size, ...style }
 
+    const aplliedContainerStyle = imageLoaded
+      ? { ...style, ...containerStyle }
+      : { ...styles.container, ...style, ...containerStyle }
+
     return (
-      <View style={{ ...styles.container, ...style, ...containerStyle }}>
+      <View style={aplliedContainerStyle}>
         {thumbnailSource && (
           <Animated.Image
             onLoad={this.handleThumbnailLoad}

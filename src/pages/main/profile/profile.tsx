@@ -24,6 +24,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler'
 import { navigate } from '@src/root-navigation'
 import { setLogout } from '@modules/auth/action'
 import ProfileEmptyState from '@components/molecules/profile-empty-state'
+import ActionListCard from '@components/molecules/action-list-card'
 
 const headerHeight = 54
 
@@ -126,71 +127,6 @@ const myOrder = [
     screenName: 'OrderList',
   },
 ]
-
-interface ProfileCardType {
-  source: string
-  icon: string
-  title: string
-  desc: string
-  index: number
-  isFirst?: Boolean
-  backgroundColor?: string
-  borderRadius?: number
-  style?: ViewStyle
-  onPress?: any
-}
-
-const ProfileCard = ({
-  isFirst,
-  source,
-  icon,
-  title,
-  desc,
-  index,
-  backgroundColor,
-  borderRadius,
-  style,
-  onPress,
-}: ProfileCardType) => {
-  const IconComponent = source === 'material-icon' ? IconMi : Icon
-  return (
-    <TouchableOpacity onPress={onPress}>
-      <View
-        style={{
-          ...style,
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          borderTopColor:
-            isFirst && index === 0 ? colors.black50 : colors.white,
-          borderTopWidth: 1,
-          ...borderStyle.bottom,
-          paddingVertical: 24,
-          backgroundColor,
-          borderRadius,
-        }}>
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-          }}>
-          <IconComponent name={icon} size={18} color={colors.black100} />
-          <View style={{ marginLeft: 22 }}>
-            <Text style={{ ...styles.helveticaBold14, color: colors.black100 }}>
-              {title}
-            </Text>
-            <View style={{ marginTop: 8 }}>
-              <Text style={{ ...styles.helvetica12, color: colors.black70 }}>
-                {desc}
-              </Text>
-            </View>
-          </View>
-        </View>
-        <Icon name="chevron-right" size={16} color={colors.black100} />
-      </View>
-    </TouchableOpacity>
-  )
-}
 
 class ProfilPage extends React.PureComponent<any, any> {
   state = {
@@ -375,7 +311,7 @@ class ProfilPage extends React.PureComponent<any, any> {
               </View>
 
               {/* my payment */}
-              <ProfileCard
+              <ActionListCard
                 source="material-icon"
                 icon="account-balance-wallet"
                 title="My Payment"
@@ -474,7 +410,7 @@ class ProfilPage extends React.PureComponent<any, any> {
                 <View style={{ marginTop: 16 }}>
                   {this.myOrderList.map((value, key) => {
                     return (
-                      <ProfileCard
+                      <ActionListCard
                         isFirst
                         key={`orderlist-card-${key}`}
                         source={value.source}
@@ -505,7 +441,7 @@ class ProfilPage extends React.PureComponent<any, any> {
                 <View>
                   {this.mySocialList.map((value, key) => {
                     return (
-                      <ProfileCard
+                      <ActionListCard
                         key={`sociallist-card-${key}`}
                         source={value.source}
                         icon={value.icon}
@@ -536,7 +472,7 @@ class ProfilPage extends React.PureComponent<any, any> {
                 <View>
                   {this.othersList.map((value, key) => {
                     return (
-                      <ProfileCard
+                      <ActionListCard
                         key={`otherlist-card-${key}`}
                         source={value.source}
                         icon={value.icon}

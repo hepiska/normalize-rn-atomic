@@ -32,6 +32,13 @@ const MainScreens = () => (
   </Stack.Navigator>
 )
 
+const Stack2 = createStackNavigator()
+const MainWithModal = () => (
+  <Drawer.Navigator drawerContent={props => <ConstumeDrawer {...props} />}>
+    <Drawer.Screen name="MainScreen" component={MainScreens} />
+  </Drawer.Navigator>
+)
+
 class Pages extends React.Component<any, any> {
   componentDidMount() {
     if (this.props.isAuth) {
@@ -43,11 +50,24 @@ class Pages extends React.Component<any, any> {
     return (
       <>
         <GlobalErrorAndWarning />
-        <Drawer.Navigator
-          drawerContent={props => <ConstumeDrawer {...props} />}>
-          <Drawer.Screen name="MainScreen" component={MainScreens} />
-          <Drawer.Screen name="modals" component={ModalPages} />
-        </Drawer.Navigator>
+        <Stack2.Navigator mode="modal">
+          <Stack2.Screen
+            name="RootScreens"
+            options={{
+              headerShown: false,
+              cardStyle: { backgroundColor: 'transparent' },
+            }}
+            component={MainWithModal}
+          />
+          <Stack2.Screen
+            name="modals"
+            component={ModalPages}
+            options={{
+              headerShown: false,
+              cardStyle: { backgroundColor: 'transparent' },
+            }}
+          />
+        </Stack2.Navigator>
       </>
     )
   }

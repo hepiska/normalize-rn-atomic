@@ -50,7 +50,6 @@ class PaymentMethodCart extends Component<any, any> {
 
   render() {
     const { paymentMethod, onPress, style, index } = this.props
-    console.log('paymentMethod ---', paymentMethod)
 
     const image =
       this.state.defaultImage ||

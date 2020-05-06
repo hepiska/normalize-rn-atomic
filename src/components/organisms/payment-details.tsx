@@ -94,6 +94,9 @@ const styles = StyleSheet.create({
     ...fontStyle.helvetica,
     fontSize: 12,
   },
+  paddingBottom: {
+    paddingBottom: 32,
+  },
 })
 
 class PaymentDetail extends React.PureComponent<any, any> {
@@ -215,13 +218,12 @@ class PaymentDetail extends React.PureComponent<any, any> {
       case 'Dana':
         return (
           <View style={{ marginTop: 24, width: '100%' }}>
-            <Font {...helveticaBlackFont14} color={colors.black100}>
+            <Font style={styles.helvetica14} color={colors.black100}>
               • Payment will be directly open your Dana Apps
             </Font>
             <Font
-              {...helveticaBlackFont14}
               color={colors.black100}
-              style={{ marginTop: 16 }}>
+              style={{ marginTop: 16, ...styles.helvetica14 }}>
               • You can scan QR code
             </Font>
           </View>
@@ -238,9 +240,8 @@ class PaymentDetail extends React.PureComponent<any, any> {
         return (
           <View style={{ marginTop: 24, width: '100%' }}>
             <Font
-              {...helveticaBlackFont14}
               color={colors.black100}
-              style={{ lineHeight: 20 }}>
+              style={{ lineHeight: 20, ...styles.helvetica14 }}>
               • Copy virtual account number into your bank account and total
               payment will auto generate
             </Font>
@@ -271,7 +272,9 @@ class PaymentDetail extends React.PureComponent<any, any> {
             width: '100%',
             marginTop: 24,
           }}>
-          <Font {...helveticaBlackTitleBold} color={colors.black80}>
+          <Font
+            style={{ ...fontStyle.helveticaBold, fontSize: 16 }}
+            color={colors.black80}>
             {name}
           </Font>
           <ImageAutoSchale
@@ -334,11 +337,17 @@ class PaymentDetail extends React.PureComponent<any, any> {
         disableButton = false
       }
     }
-
+    console.log('bener masuk sini')
     return (
       <>
         <ScrollDiv>
-          <View {...style} {...styles.container} {...styles.paddingLR16}>
+          <View
+            style={[
+              styles.container,
+              styles.paddingLR16,
+              styles.paddingBottom,
+              style,
+            ]}>
             <View {...styles.border}>
               <ContentExpandable
                 paddingTitle="24px 16px"

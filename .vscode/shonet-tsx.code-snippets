@@ -1,0 +1,57 @@
+{
+	// Place your shonet-mobile-react-native workspace snippets here. Each snippet is defined under a snippet name and has a scope, prefix, body and 
+	// description. Add comma separated ids of the languages where the snippet is applicable in the scope field. If scope 
+	// is left empty or omitted, the snippet gets applied to all languages. The prefix is what is 
+	// used to trigger the snippet and the body will be expanded and inserted. Possible variables are: 
+	// $1, $2 for tab stops, $0 for the final cursor position, and ${1:label}, ${2:another} for placeholders. 
+	// Placeholders with the same ids are connected.
+	// Example:
+	// "Print to console": {
+	// 	"scope": "javascript,typescript",
+	// 	"prefix": "log",
+	// 	"body": [
+	// 		"console.log('$1');",
+	// 		"$2"
+	// 	],
+	// 	"description": "Log output to console"
+  // }
+  "react-native-import": {
+    "scope": "typescript,typescriptreact",
+    "prefix": ["rni","react-native-import"],
+    "body": ["import React from 'react'", "import { View, Text } from 'react-native'"]
+  },
+  "redux-import": {
+    "scope": "typescript,typescriptreact",
+   "prefix": ["rdxi","redux-import"],
+   "body": ["import {connect} from 'react-redux'", "import {bindActionCreators} from 'redux'"]
+   },
+   "redux-map-state":{
+    "scope": "typescript,typescriptreact",
+
+     "prefix": ["rdxms","rdx-ms","redux-map-state"],
+     "body": ["const mapStateToProps = state => ({${1:propsName}:state})"]
+   },
+     "redux-map-dispatch":{
+      "scope": "typescript,typescriptreact",
+
+     "prefix": ["rdxms","rdx-ms","redux-map-dispatch"],
+     "body": ["const mapDispatchToProps = dispatch => bindActionCreators({), dispatch)"]
+   },
+   "redux-connect":{
+    "scope": "typescript,typescriptreact",
+
+     "prefix": ["rdxc","rdx-c","redux-connect"],
+     "body": ["export default connect(mapStateToProps,mapDispatchToProps )(${1:Component})"]
+   },
+   "react-native-fuctional-component": {
+    "scope": "typescript,typescriptreact",
+
+     "prefix": ["rnfc","react native fc","react native functional"],
+     "body": ["const ${1:Component} = (${2:props}: any) => {", "return(", "<View>"," <Text>test</Text>",  "</View>)}"]
+   },
+   "export-comp":{
+    "scope": "typescript,typescriptreact",
+     "prefix": ["react-ex","react ex",],
+     "body": ["export default ${1:Component} "]
+   }
+}

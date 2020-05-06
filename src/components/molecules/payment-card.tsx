@@ -63,6 +63,9 @@ class PaymentCard extends React.PureComponent<any, any> {
     const title = provider_payment_method
       ? 'How To Pay'
       : 'Choose Payment Method'
+    const isActive = new Date() < new Date(transaction.expiring_at)
+    // console.log(isActive)
+    // const isActive = true
 
     return (
       <View style={{ padding: 16, ...borderStyle.all, marginBottom: 16 }}>
@@ -113,6 +116,7 @@ class PaymentCard extends React.PureComponent<any, any> {
         </View>
         <GradientButton
           {...colors.ActivePurple}
+          disabled={!isActive}
           style={{ paddingVertical: 16 }}
           onPress={this._getAction(provider_payment_method)}
           title={title}

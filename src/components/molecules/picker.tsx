@@ -143,6 +143,15 @@ class PickerIOS extends React.Component<PickerProps> {
     )
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.isVisible !== this.state.isVisible) {
+      this.setSelectedValue(this.props.value)
+    }
+  }
+  setSelectedValue = props => {
+    this.setState({ selectedValue: props })
+  }
+
   onChangeHandler = (val, index) => {
     this.setState({
       selectedValue: val,
@@ -170,6 +179,9 @@ class PickerIOS extends React.Component<PickerProps> {
   onSubmit = () => {
     const { items, value, onValueChange, ios, onDismiss } = this.props
     const { animation, selectedValue, selectedIndex } = this.state
+    if (items.length === 0) {
+      return
+    }
     if (selectedValue === null || selectedValue !== value) {
       const isNull = selectedValue === null
       const valueIndex = isNull ? 0 : selectedValue

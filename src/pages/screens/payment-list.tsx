@@ -9,7 +9,6 @@ import PaymentCard from '@components/molecules/payment-card'
 import { capilEachWord } from '@utils/helpers'
 import { colors } from '@utils/constants'
 import { transactionListData } from '@hocs/data/payment'
-import Icon from 'react-native-vector-icons/FontAwesome'
 import SearchFilter from '@components/organisms/search-filter'
 
 const PayMentCardWithData = transactionListData(PaymentCard)
@@ -112,7 +111,6 @@ class OrderList extends Component<any, any> {
       if (this.props.transactionLoading) {
         return
       }
-      console.log('=====', this.skip)
       this._fetchData(this.skip)
 
       // if (30 > this.props.transactions.length) {

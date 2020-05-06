@@ -135,7 +135,7 @@ class CourierCart extends React.PureComponent<CourierCartType, any> {
               accessibilityState={{ disabled: Boolean(courier.is_available) }}>
               <View style={{ flexDirection: 'row' }}>
                 <ImageAutoSchale
-                  source={{ uri: image }}
+                  source={typeof image === 'string' ? { uri: image } : image}
                   onError={() => {
                     this.setState({ defaultImage: defaultImages.product })
                   }}
