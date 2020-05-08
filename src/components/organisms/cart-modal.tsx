@@ -212,7 +212,7 @@ class CartModal extends React.Component<any, any> {
                 title={buttonText}
                 fontStyle={styles.buttonText}
                 style={styles.button}
-                disabled={selectedVariant && !loading ? false : true}
+                disabled={!selectedVariant || loading || !product.is_commerce}
               />
             </Div>
           </AbsDiv>

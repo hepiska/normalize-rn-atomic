@@ -10,6 +10,7 @@ import styled from 'styled-components/native'
 import { fontStyle } from '@components/commont-styles'
 import CartAction from '@components/atoms/cart-action-button'
 import { useNavigation } from '@react-navigation/native'
+import { navigate } from '@src/root-navigation'
 
 const { interpolate, Extrapolate } = Animated
 
@@ -82,6 +83,9 @@ const NavbarTopAnimated: React.SFC<NavbarBottomProps> = ({
     navigation.goBack()
   }
 
+  const _onSearch = () => {
+    navigate('Screens', { screen: 'SearchList' })
+  }
   const _onBurger = () => {
     ;(navigation as any).toggleDrawer()
   }
@@ -161,7 +165,7 @@ const NavbarTopAnimated: React.SFC<NavbarBottomProps> = ({
 
         <RightDiv _flex="1" _height={55} _direction="row">
           {showSearch && (
-            <PressAbbleDiv onPress={_onBack} style={styles.rightAction}>
+            <PressAbbleDiv onPress={_onSearch} style={styles.rightAction}>
               <Icon name="search" size={20} color={colors.black100} />
             </PressAbbleDiv>
           )}

@@ -121,12 +121,12 @@ class ItemSummaryCart extends React.PureComponent<ItemSummaryCartType, any> {
     isProductExpand: false,
   }
 
-  componentDidUpdate(nextProps, nextState) {
-    if (this.props.address.id !== nextProps.address.id) {
+  componentDidUpdate(prevProps) {
+    if (this.props.address.id !== prevProps.address.id) {
       const params = {
         variant_ids: this.props.variantIds.toString(),
         qtys: this.props.qtys.toString(),
-        address_id: nextProps.address.id,
+        address_id: this.props.address.id,
       }
       request
         .request({
@@ -135,37 +135,39 @@ class ItemSummaryCart extends React.PureComponent<ItemSummaryCartType, any> {
         })
         .then(res => {
           const result = res.data.data || []
-          const temp = this.props.checkoutWarehouse
+          const checkoutWarehouse = this.props.checkoutWarehouse || null
 
-          const reduceResult = result.reduce((totalResult, value) => {
-            totalResult.push(...value.shipping_methods)
-            return totalResult
-          }, [])
+          if (result) {
+            const flatResult = result.reduce((totalResult, value) => {
+              totalResult.push(...value.shipping_methods)
+              return totalResult
+            }, [])
 
-          let tempFound
-          const isFound = reduceResult.reduce((found, value) => {
-            let resFound =
-              temp &&
-              value.id === temp.shipping.id &&
-              value.courier.id === temp.shipping.courier.id
-            if (resFound) {
-              tempFound = value
+            let tempFound
+            const isFound = flatResult.reduce((found, value) => {
+              let resFound =
+                checkoutWarehouse &&
+                checkoutWarehouse.shipping.is_available &&
+                value.id === checkoutWarehouse.shipping.id &&
+                value.courier.id === checkoutWarehouse.shipping.courier.id
+              if (resFound) {
+                tempFound = value
+              }
+              return Boolean(found + resFound)
+            }, false)
+
+            if (isFound) {
+              this.props.addShippingMethodData({
+                id: checkoutWarehouse.id,
+                shipping: tempFound,
+              })
+            } else {
+              this.props.removeShippingData({
+                id: checkoutWarehouse.id,
+              })
             }
-            return Boolean(found + resFound)
-          }, false)
-
-          if (isFound) {
-            this.props.addShippingMethodData({
-              id: temp.id,
-              shipping: tempFound,
-            })
-          } else {
-            this.props.removeShippingData({
-              id: temp.id,
-            })
           }
-
-          return 'a'
+          return
         })
         .catch(err => console.log('err ---', err))
     }
@@ -453,6 +455,9 @@ const mapStateToProps = (state, ownProps) => {
   const subTotal = productTotal + shippingCost
 
   const choosedCourier = state.checkout.data.warehouse[ownProps.item.id] || null
+
+  console.log('state ---', state)
+  console.log('choosedCourier ---', choosedCourier)
 
   let qtys = []
   let variantIds = []

@@ -1,6 +1,6 @@
 import Config from 'react-native-config'
 import { ToastAndroid, Alert, Platform, Linking } from 'react-native'
-import { uriSchreenMap } from './constants'
+import { uriSchreenMap, colors } from './constants'
 import { PERMISSIONS, check, request } from 'react-native-permissions'
 import { store } from '@src/init-store'
 
@@ -175,9 +175,21 @@ export const getDetailContent = (type: string, content: any) => {
     type === 'care-label' ||
     type === 'size-and-fit'
   ) {
+    var isHTML = RegExp.prototype.test.bind(/(<([^>]+)>)/i)
+    var isContentHTML = isHTML(content)
+
+    if (isContentHTML) {
+      return content
+    }
     /* ini yang csv (comma separated value) */
-    return content ? content.split(';') : []
+    let result = content || []
+    if (result) {
+      result = result.split(';')
+      result = result.map(item => `<li>${item.trim()}</li>`)
+    }
+
+    return `<ul>${result.join('')}</ul>`
   } else {
-    return content
+    return `<p>${content}</p>`
   }
 }

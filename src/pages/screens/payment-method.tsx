@@ -8,6 +8,8 @@ import { getTransactionPaymentById } from '@modules/transactions-payments/action
 import GroupPaymentMethod from '@components/molecules/group-payment-method'
 import { colors } from '@src/utils/constants'
 import { getTransactionById } from '@modules/transaction/action'
+import Icon from 'react-native-vector-icons/FontAwesome'
+import { CommonActions } from '@react-navigation/native'
 
 const styles = StyleSheet.create({
   container: {
@@ -47,6 +49,18 @@ class PaymentMethodPage extends Component<any, any> {
       }
     }
   }
+
+  _toPaymentList = () => {
+    this.props.navigation.dispatch(
+      CommonActions.reset({
+        index: 1,
+        routes: [
+          { name: 'Main', params: { screen: 'Shop' } },
+          { name: 'Screens', params: { screen: 'PaymentList' } },
+        ],
+      }),
+    )
+  }
   render() {
     const {
       transactionId,
@@ -75,7 +89,9 @@ class PaymentMethodPage extends Component<any, any> {
       <>
         <NavbarTop
           title="Payment Method"
-          leftContent={['back']}
+          leftAction={
+            <Icon name="chevron-left" size={24} onPress={this._toPaymentList} />
+          }
           style={{ borderBottomWidth: 1, borderBottomColor: colors.black50 }}
         />
         <ScrollDiv>

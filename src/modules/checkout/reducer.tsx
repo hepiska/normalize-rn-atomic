@@ -60,8 +60,26 @@ const checkoutReducer: Reducer<CheckoutState> = (
     case checkoutActionType.SET_CHECKOUT_ORDER:
       newState.order = Immutable(action.payload)
       return newState
+    case checkoutActionType.UPDATE_COURIER_DATA:
+      const newWarehouseData =
+        newState.data['warehouse'][action.payload.warehouseId]
+      const newShippingMethod = action.payload.shipping.shipping_methods.find(
+        item => item.id === newWarehouseData.shipping.courier.id,
+      )
+
+      if (newShippingMethod) {
+        newWarehouseData.shipping.courier = newShippingMethod
+
+        newState.data['warehouse'][
+          action.payload.warehouseId
+        ] = newWarehouseData
+      }
+      return newState
     case checkoutActionType.SET_CHECKOUT_LOADING:
       newState.loading = action.payload
+      return newState
+    case checkoutActionType.SET_ERROR:
+      newState.error = action.payload
       return newState
     case checkoutActionType.SET_DEFAULT:
       return newState

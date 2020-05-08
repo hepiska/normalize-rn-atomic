@@ -310,6 +310,7 @@ const ProductCardHorizontal = ({
                 }
                 style={styles.button}
                 fontStyle={styles.buttonText}
+                disabled={!product.is_commerce}
               />
             </Div>
           )}
@@ -442,6 +443,7 @@ const ProductCardVertical = ({
                 }
                 style={styles.button}
                 fontStyle={styles.buttonText}
+                disabled={!product.is_commerce}
               />
             </Div>
           )}

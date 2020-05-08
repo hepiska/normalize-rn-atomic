@@ -20,6 +20,7 @@ import Cart from './cart'
 import PaymentWaiting from './payment-waiting'
 import PaymentResponse from './payment-status-response'
 import PaymentWebView from './payment-webview'
+import Search from './search-list'
 import SizeGuideWebView from './size-guide-webview'
 
 const Stack = createStackNavigator()
@@ -53,6 +54,7 @@ function InsiderStack() {
       <Stack.Screen name="SizeGuideWebView" component={SizeGuideWebView} />
       <Stack.Screen name="PaymentResponse" component={PaymentResponse} />
       <Stack.Screen name="OrderList" component={OrderList} />
+      <Stack.Screen name="SearchList" component={Search} />
       <Stack.Screen
         name="AddNewAddressManual"
         component={AddNewAddressManual}

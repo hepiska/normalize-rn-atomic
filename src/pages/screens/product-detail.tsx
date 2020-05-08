@@ -17,6 +17,7 @@ import CoverImageAnimated from '@src/components/organisms/cover-image-animated'
 import ImagesWithPreviews from '@components/organisms/images-with-preview'
 import ContentExpandable from '@components/molecules/content-expandable'
 import ImageCoverContentLayout from '@src/components/layouts/image-cover-animated-content'
+import HTML from 'react-native-render-html'
 // import ProductOverviewCard from '@src/components/molecules/product-overview-card-body'
 import ProductAttributes from '@components/organisms/product-attributes'
 import Animated from 'react-native-reanimated'
@@ -335,7 +336,7 @@ class ProductListPage extends React.Component<any, any> {
               <GradientButton
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 1 }}
-                disabled={loading}
+                disabled={loading || !product.is_commerce}
                 colors={['#3067E4', '#8131E2']}
                 title={actionButton[productType].buttonText}
                 onPress={actionButton[productType].action}
@@ -405,32 +406,44 @@ class ProductListPage extends React.Component<any, any> {
                   <ContentExpandable
                     title={detail.type}
                     content={
-                      <>
-                        {contentItem && typeof contentItem !== 'string' ? (
-                          contentItem.map((value, key) => {
+                      <HTML
+                        html={contentItem
+                          .replace(/\\\\r\\\\n/g, '')
+                          .replace(/\\r\\n/g, '')}
+                        tagsStyles={{
+                          li: {
+                            ...fontStyle.helvetica,
+                            color: colors.black70,
+                            fontSize: 14,
+                          },
+                          p: {
+                            ...fontStyle.helvetica,
+                            color: colors.black70,
+                            fontSize: 14,
+                          },
+                        }}
+                        listsPrefixesRenderers={{
+                          ul: (
+                            _htmlAttribs,
+                            _children,
+                            _convertedCSSStyles,
+                            passProps,
+                          ) => {
                             return (
-                              <Font
-                                key={`desc-${value}-${key}`}
+                              <View
                                 style={{
-                                  ...fontStyle.helvetica,
-                                  color: colors.black70,
-                                  fontSize: 14,
-                                }}>
-                                {'\u2022' + '  ' + value.trim()}
-                              </Font>
+                                  marginRight: 10,
+                                  width: 14 / 2.8,
+                                  height: 14 / 2.8,
+                                  marginTop: 14 / 2,
+                                  borderRadius: 14 / 2.8,
+                                  backgroundColor: colors.black70,
+                                }}
+                              />
                             )
-                          })
-                        ) : (
-                          <Font
-                            style={{
-                              ...fontStyle.helvetica,
-                              color: colors.black70,
-                              fontSize: 14,
-                            }}>
-                            {contentItem}
-                          </Font>
-                        )}
-                      </>
+                          },
+                        }}
+                      />
                     }
                     key={`product-detail-${idx}`}
                     id={'expanable' + idx}

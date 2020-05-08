@@ -9,9 +9,14 @@ import { addressListData } from '@hocs/data/address'
 import AddressCart from '@components/molecules/address-cart'
 import { colors } from '@src/utils/constants'
 import { getUserAddressById } from '@modules/address/action'
+import { getOptionShipment } from '@modules/shipment/action'
 
 import Icon from 'react-native-vector-icons/FontAwesome'
-import { setCheckoutAddressData } from '@modules/checkout/action'
+import {
+  setCheckoutAddressData,
+  addShippingMethodData,
+  updateCourier,
+} from '@modules/checkout/action'
 
 const AddressHoc = addressListData(AddressCart)
 
@@ -35,6 +40,31 @@ class ChooseAddressPage extends Component<any, any> {
 
   componentDidMount() {
     this.props.getUserAddressById()
+  }
+
+  componentWillUnmount() {
+    const data = this.props.route.params.checkoutList
+    const addressId = this.state.tempSelectedAddress
+
+    data.map(v => {
+      const warehouseId = v.id
+      const cartsId = v.data
+      const qty = cartsId.reduce((result, item) => {
+        const quantity = this.props.cartState[item].qty
+        result.push(quantity)
+        return result
+      }, [])
+      const variantsId = cartsId.map(item => {
+        const data = this.props.cartState[item].variant.id
+        return data
+      })
+      this.props.getOptionShipment(variantsId, qty, addressId, warehouseId)
+      const shipping = this.props.shipmentState[warehouseId]
+      updateCourier({
+        warehouseId,
+        shipping,
+      })
+    })
   }
   onBackCheckoutPage = () => {
     this.props.navigation.goBack()
@@ -129,6 +159,8 @@ const mapDispatchToProps = dispatch =>
     {
       getUserAddressById,
       setCheckoutAddressData,
+      getOptionShipment,
+      updateCourier,
     },
     dispatch,
   )
@@ -146,6 +178,8 @@ const mapStateToProps = (state, ownProps) => {
   return {
     addresses,
     selectedAddress,
+    cartState: state.carts.data,
+    shipmentState: state.shipments.data,
   }
 }
 

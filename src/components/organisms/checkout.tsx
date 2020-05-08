@@ -70,15 +70,15 @@ class Checkout extends Component<any, any> {
   }
 
   onChooseAddress = () => {
-    navigate('ChooseAddress', {})
+    const checkoutList = this.props.data
+    navigate('ChooseAddress', {
+      checkoutList,
+    })
   }
 
   onPayNow = (item, totalPrice) => async () => {
-    const { payNow, userCheckoutAddress, loadingCheckout } = this.props
+    const { payNow, userCheckoutAddress } = this.props
     await payNow(item, userCheckoutAddress.id)
-    navigate('Screens', {
-      screen: 'PaymentMethod',
-    })
   }
 
   render() {
@@ -169,6 +169,7 @@ class Checkout extends Component<any, any> {
             shippingCost={shippingCost}
             deliveryProtection={deliveryProtection}
             enableButton={availablePayNow}
+            loading={loadingCheckout}
           />
         </>
       )

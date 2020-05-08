@@ -1,6 +1,7 @@
 import { QueryParams } from '@utils/globalInterface'
 import { API } from '../action-types'
 import * as schema from '@modules/normalize-schema'
+import { getAllCart } from '../cart/action'
 
 export const transactionPaymentActionType = {
   FETCH: 'transaction_payment/FETCH',
@@ -54,6 +55,7 @@ export const getTransactionPaymentById = id => ({
       return [
         setTransactionPaymentData(data.entities.transactions_payments),
         setTransactionPaymentOrder(data.result),
+        getAllCart(),
         setTransactionPaymentLoading(false),
       ]
     },

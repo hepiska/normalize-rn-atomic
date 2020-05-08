@@ -60,6 +60,7 @@ class TotalPayCart extends Component<any, any> {
       onCheckout,
       items,
       enableButton = true,
+      loading,
     } = this.props
 
     return (
@@ -78,9 +79,11 @@ class TotalPayCart extends Component<any, any> {
         <View {...styles.buttonContainer}>
           <GradientButton
             leftIcon={
-              <View style={{ marginRight: 8 }}>
-                <Icon name="lock" color={colors.white} size={14} />
-              </View>
+              !loading && (
+                <View style={{ marginRight: 8 }}>
+                  <Icon name="lock" color={colors.white} size={14} />
+                </View>
+              )
             }
             onPress={onCheckout(items, totalPrice)}
             start={{ x: 0, y: 0 }}
@@ -90,6 +93,7 @@ class TotalPayCart extends Component<any, any> {
             fontStyle={styles.buttonText}
             style={styles.button}
             disabled={totalPrice > 0 && enableButton ? false : true}
+            loading={loading}
           />
         </View>
       </View>
