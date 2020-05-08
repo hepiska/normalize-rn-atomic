@@ -113,6 +113,7 @@ class ImageAutoSchale extends React.Component<ImageAutoSchaleType, any> {
       width,
       thumbnailSource,
       containerStyle,
+      height,
       ...props
     } = this.props
     const { size, imageLoaded } = this.state
@@ -123,7 +124,6 @@ class ImageAutoSchale extends React.Component<ImageAutoSchaleType, any> {
     const aplliedContainerStyle = imageLoaded
       ? { ...style, ...containerStyle }
       : { ...styles.container, ...style, ...containerStyle }
-
     return (
       <View style={aplliedContainerStyle}>
         {thumbnailSource && (

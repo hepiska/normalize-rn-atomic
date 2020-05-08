@@ -19,6 +19,7 @@ const setAuthFetching = (isFetching: boolean) => ({
 
 const setLoginSuccess = (data: any) => {
   AsyncStorage.setItem('token', data.id_token)
+  console.log('=====', data)
   return {
     type: authActionType.SET_LOGIN_SUCCESS,
     payload: {
@@ -58,6 +59,30 @@ export const loginApi = params => ({
   type: API,
   payload: {
     url: '/account/login',
+    requestParams: {
+      method: 'POST',
+      data: { ...params },
+    },
+    startNetwork: () => {
+      return setAuthFetching(true)
+    },
+    endNetwork: () => {
+      return setAuthFetching(false)
+    },
+    success: (data, { pagination }) => {
+      return [setLoginSuccess(data)]
+    },
+    error: err => {
+      const error = err.response.data.meta.message
+      return setAuthError(error)
+    },
+  },
+})
+
+export const oauthApi = params => ({
+  type: API,
+  payload: {
+    url: '/account/oauth',
     requestParams: {
       method: 'POST',
       data: { ...params },

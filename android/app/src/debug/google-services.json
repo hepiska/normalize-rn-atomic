@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "581479277593",
+    "firebase_url": "https://the-shonet-dev.firebaseio.com",
+    "project_id": "the-shonet-dev",
+    "storage_bucket": "the-shonet-dev.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:581479277593:android:270fcb874b639cbc8bf688",
+        "android_client_info": {
+          "package_name": "com.shonet.debug"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "581479277593-vghu18jv1g48a8pq5k8li6gaafcetm6i.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.shonet.debug",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "581479277593-ockpbk3ubgi4c2p3ekpohph33g27fm93.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDHEIDk60Ysjm1tmAEHhVhHSFRAkUOhyF0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "581479277593-ockpbk3ubgi4c2p3ekpohph33g27fm93.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

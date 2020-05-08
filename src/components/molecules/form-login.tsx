@@ -7,8 +7,17 @@ import { Div, Font, PressAbbleDiv } from '@components/atoms/basic'
 import { colors } from '@src/utils/constants'
 import { Button, OutlineButton } from '@components/atoms/button'
 import TextInputOutline from '@src/components/atoms/field-floating'
-import { loginApi, setAuthError, _authSelector } from '@modules/auth/action'
+import {
+  loginApi,
+  setAuthError,
+  _authSelector,
+  oauthApi,
+} from '@modules/auth/action'
 import { useFormValidator } from '@src/hooks/use-form-validator'
+import {
+  ButtonFacebookSignin,
+  ButtonGoogleSignIn,
+} from '@components/atoms/button-social-auth'
 import {
   AccessToken,
   LoginManager,
@@ -90,58 +99,23 @@ const FormLogin: React.FC<FormLogin> = ({ navigation }) => {
     navigation.goBack()
   }
 
-  const FBGraphRequest = async (fields, callback) => {
-    const accessData = await AccessToken.getCurrentAccessToken()
-    // Create a graph request asking for user information
-    const infoRequest = new GraphRequest(
-      '/me',
-      {
-        accessToken: accessData.accessToken,
-        parameters: {
-          fields: {
-            string: fields,
-          },
-        },
-      },
-      callback.bind(this),
-    )
-    // Execute the graph request created above
-    new GraphRequestManager().addRequest(infoRequest).start()
-  }
-
-  const callbackFacebook = async (error, result) => {
-    if (error) {
-      console.log('error callFacebook ---', error)
-    } else {
-      try {
-        console.log('result ---', result)
-      } catch (err) {
-        console.log('err ---', err)
+  const _handleGoogleSignIn = async data => {
+    if (data) {
+      const oauthPayload = {
+        provider: 'google',
+        token: data.tokens.idToken,
       }
+      await dispatch(oauthApi(oauthPayload))
     }
   }
-
-  const handleLoginFacebook = () => {
-    // await LoginManager.logOut()
-    LoginManager.logInWithPermissions([
-      'public_profile, email, user_friends',
-    ]).then(
-      result => {
-        if (result.isCancelled) {
-          console.log('Login cancelled')
-        } else {
-          console.log(
-            'Login success with permissions: ' +
-              result.grantedPermissions.toString(),
-          )
-
-          FBGraphRequest('id, email, first_name, last_name', callbackFacebook)
-        }
-      },
-      error => {
-        console.log('Login fail with error: ' + error)
-      },
-    )
+  const _handleFacebookSignIn = async data => {
+    if (data) {
+      const oauthPayload = {
+        provider: 'facebook',
+        token: data.tokens.token,
+      }
+      await dispatch(oauthApi(oauthPayload))
+    }
   }
 
   const { state, disable, handleOnChange, handleOnSubmit } = useFormValidator(
@@ -278,30 +252,8 @@ const FormLogin: React.FC<FormLogin> = ({ navigation }) => {
             </Div>
 
             <Div _width="100%" _direction="row" justify="space-between">
-              <OutlineButton
-                title="Google"
-                onPress={null}
-                leftIcon={
-                  <Image
-                    source={require('../../assets/icons/google-icon-login.png')}
-                    style={styles.googleIcon}
-                  />
-                }
-                style={styles.btnSocialMedia}
-                fontStyle={styles.btnSocialMediaText}
-              />
-              <OutlineButton
-                title="Facebook"
-                onPress={handleLoginFacebook}
-                leftIcon={
-                  <Image
-                    source={require('../../assets/icons/facebook-icon-login.png')}
-                    style={styles.fbIcon}
-                  />
-                }
-                style={styles.btnSocialMedia}
-                fontStyle={styles.btnSocialMediaText}
-              />
+              <ButtonGoogleSignIn onSuccess={_handleGoogleSignIn} />
+              <ButtonFacebookSignin onSuccess={_handleFacebookSignIn} />
             </Div>
           </Div>
         </Div>

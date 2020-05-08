@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>581479277593-rkachscoctqrbpdkj17sr8h6k99k3fg2.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.581479277593-rkachscoctqrbpdkj17sr8h6k99k3fg2</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>581479277593-vghu18jv1g48a8pq5k8li6gaafcetm6i.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyCT2We-e-NH8NHEq7rFeLs9LIVqXUk70tA</string>
+	<key>GCM_SENDER_ID</key>
+	<string>581479277593</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.shonet-dev</string>
+	<key>PROJECT_ID</key>
+	<string>the-shonet-dev</string>
+	<key>STORAGE_BUCKET</key>
+	<string>the-shonet-dev.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:581479277593:ios:f8f2cadef1aafda28bf688</string>
+	<key>DATABASE_URL</key>
+	<string>https://the-shonet-dev.firebaseio.com</string>
+</dict>
+</plist>

@@ -188,7 +188,7 @@ class ProductListPage extends React.Component<any, any> {
     const { selectedVariant, isUserSelectVariant, filteredAttributes } = this
       .state as any
     let returnExchange = ''
-
+    console.log('=====')
     if (
       product.flags?.includes('returnable') &&
       product.flags?.includes('exchangeable')
@@ -459,7 +459,7 @@ class ProductListPage extends React.Component<any, any> {
               style={{ position: 'absolute', bottom: 0, left: 0 }}
               justify="center"
               _width="100%"
-              _background="rgba(0,0,0,0.3)"
+              _background="rgba(64,64,64,0.3)"
               _height="64px">
               <CircleLoader />
             </Div>

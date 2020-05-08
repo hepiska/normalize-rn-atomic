@@ -34,6 +34,17 @@
 				<string>theshonetdev</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>google-sign-in</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.581479277593-rkachscoctqrbpdkj17sr8h6k99k3fg2</string>
+			</array>
+		</dict>
+		<dict/>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>1</string>
@@ -85,7 +96,7 @@
 	<string>The Shonet need access for the location.
   </string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string/>
+	<string></string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>$(PRODUCT_NAME) wants to save photos</string>
 	<key>UIAppFonts</key>
@@ -118,6 +129,10 @@
 		<string>HelveticaNeue-Thin.otf</string>
 		<string>HelveticaNeue-Ultralight.otf</string>
 		<string>HelveticaNeue.otf</string>
+	</array>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>remote-notification</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>

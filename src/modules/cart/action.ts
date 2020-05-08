@@ -115,9 +115,8 @@ export const changeVariant = ({ cart, variant_id }: any) => ({
     success: data => {
       return [
         setCartData(data.entities.cart),
-        replaceOrder({ to: data.result, from: cart.id }),
         removeCart(cart.id),
-        // addOneCartOrder(data.result),
+        getAllCart(),
       ]
     },
   },

@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
+import { View, Text } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { colors } from '@utils/constants'
 import CenterButton from '@components/atoms/tab-bar-center-button'
@@ -9,6 +10,7 @@ import DiscoverPage from './discover/index'
 import NotificationPage from './notifications/index'
 import CreatePage from './create/index'
 import ProfilPage from './profile/index'
+import MyTabBar from '@components/molecules/navigation-bottom'
 
 const Tab = createBottomTabNavigator()
 
@@ -19,10 +21,7 @@ class MainPages extends React.Component<any, any> {
     return (
       <Tab.Navigator
         initialRouteName={initialPageConfig.main}
-        tabBarOptions={{
-          activeTintColor: colors.purple1,
-          inactiveTintColor: colors.gray3,
-        }}>
+        tabBar={props => <MyTabBar {...props} />}>
         <Tab.Screen
           name="Discover"
           options={{

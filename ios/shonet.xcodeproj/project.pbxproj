@@ -30,6 +30,7 @@
 		C904D03C7EC0DEB8F2A995EF /* libPods-shonetTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BB4CB78D9A6534012778698B /* libPods-shonetTests.a */; };
 		D828A74D242B1B7D007C4AA4 /* lottie.swift in Sources */ = {isa = PBXBuildFile; fileRef = D828A74C242B1B7D007C4AA4 /* lottie.swift */; };
 		D828A74E242B1B7D007C4AA4 /* lottie.swift in Sources */ = {isa = PBXBuildFile; fileRef = D828A74C242B1B7D007C4AA4 /* lottie.swift */; };
+		D88CDD1D24652BEA006EF692 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D88CDD1C24652BEA006EF692 /* GoogleService-Info.plist */; };
 		D8CDB827245C342900DC131B /* AppCenter-Config.plist in Resources */ = {isa = PBXBuildFile; fileRef = D8CDB826245C342900DC131B /* AppCenter-Config.plist */; };
 		F309BA0A81724752ABFFFBB0 /* HelveticaNeue-Thin.otf in Resources */ = {isa = PBXBuildFile; fileRef = 7BA3025266E7459B8400918D /* HelveticaNeue-Thin.otf */; };
 		F95C89844F7B634CA17FAA53 /* libPods-shonet-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 47146A0A7C0603E935EC9F57 /* libPods-shonet-tvOSTests.a */; };
@@ -103,6 +104,7 @@
 		D828A74A242B1B7D007C4AA4 /* shonet-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "shonet-Bridging-Header.h"; sourceTree = "<group>"; };
 		D828A74B242B1B7D007C4AA4 /* shonet-tvOS-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "shonet-tvOS-Bridging-Header.h"; sourceTree = "<group>"; };
 		D828A74C242B1B7D007C4AA4 /* lottie.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = lottie.swift; sourceTree = "<group>"; };
+		D88CDD1C24652BEA006EF692 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "dev/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		D8CDB826245C342900DC131B /* AppCenter-Config.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "AppCenter-Config.plist"; path = "shonet/AppCenter-Config.plist"; sourceTree = "<group>"; };
 		E2D97BC2BE7548CFA5CFEDA3 /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
 		E746AFC10023D478301116AF /* Pods-shonet-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-shonet-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-shonet-tvOSTests/Pods-shonet-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -203,6 +205,7 @@
 			children = (
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
+				D8BD697E2462A57E0075A06B /* dev */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
@@ -276,6 +279,14 @@
 				C081CFC97B0A548E3F0501DD /* Pods-shonetTests.release.xcconfig */,
 			);
 			path = Pods;
+			sourceTree = "<group>";
+		};
+		D8BD697E2462A57E0075A06B /* dev */ = {
+			isa = PBXGroup;
+			children = (
+				D88CDD1C24652BEA006EF692 /* GoogleService-Info.plist */,
+			);
+			name = dev;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -437,6 +448,7 @@
 				F309BA0A81724752ABFFFBB0 /* HelveticaNeue-Thin.otf in Resources */,
 				2A64B71E32BF4275862850DF /* HelveticaNeue-Ultralight.otf in Resources */,
 				4277434D2CCD420FA380CD76 /* HelveticaNeue.otf in Resources */,
+				D88CDD1D24652BEA006EF692 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -562,6 +574,7 @@
 				"${PODS_ROOT}/FBSDKCoreKit/FacebookSDKStrings.bundle",
 				"${PODS_ROOT}/GoogleMaps/Maps/Frameworks/GoogleMaps.framework/Resources/GoogleMaps.bundle",
 				"${PODS_ROOT}/GooglePlaces/Frameworks/GooglePlaces.framework/Resources/GooglePlaces.bundle",
+				"${PODS_ROOT}/GoogleSignIn/Resources/GoogleSignIn.bundle",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/AntDesign.ttf",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/Entypo.ttf",
 				"${PODS_ROOT}/../../node_modules/react-native-vector-icons/Fonts/EvilIcons.ttf",
@@ -584,6 +597,7 @@
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FacebookSDKStrings.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GoogleMaps.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GooglePlaces.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/GoogleSignIn.bundle",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/AntDesign.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Entypo.ttf",
 				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/EvilIcons.ttf",
@@ -838,7 +852,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.shonet-dev";
 				PRODUCT_NAME = shonet;
 				SWIFT_OBJC_BRIDGING_HEADER = "shonet-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -902,7 +916,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.shonet-dev";
 				PRODUCT_NAME = shonet;
 				SWIFT_OBJC_BRIDGING_HEADER = "shonet-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;

@@ -4,7 +4,7 @@ import { Div, PressAbbleDiv, Image } from '@components/atoms/basic'
 
 const AddButton = () => {
   return (
-    <Div _position="absolute" align="center">
+    <Div _position="absolute" align="center" style={{ top: -16 }}>
       <PressAbbleDiv
         _width="32px"
         _height="32px"

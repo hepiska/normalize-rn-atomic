@@ -3,6 +3,7 @@ import { StyleSheet } from 'react-native'
 import { Div, Font } from '@components/atoms/basic'
 import Img from '@components/atoms/image'
 import { fontStyle } from '@components/commont-styles'
+import { setImage } from '@utils/helpers'
 import { images, colors } from '@src/utils/constants'
 
 interface ProductOverviewCart {
@@ -32,6 +33,13 @@ const ProductOverviewCart: React.FC<ProductOverviewCart> = ({
   name,
   sale = false,
 }) => {
+  if (image.uri) {
+    image.uri = setImage(image.uri, {
+      width: styles.image.width,
+      height: styles.image.height,
+    })
+  }
+
   return (
     <Div _direction="row" align="flex-start" _margin="0px 0px 24px">
       <Img source={image} style={styles.image} />

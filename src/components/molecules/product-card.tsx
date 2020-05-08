@@ -183,7 +183,9 @@ const ProductCard = ({
       onPress={onPress}
       brand={brand}
       onSave={_onSave}
-      onAddtoCart={isAuth ? onAddtoCart : triggerLogin}
+      isAuth={isAuth}
+      trigerLogin={triggerLogin}
+      onAddtoCart={onAddtoCart}
       product={product}
       colorAttributes={colorAttributes}
       attributeSelected={attributeSelected}
@@ -202,7 +204,9 @@ const ProductCard = ({
       setImage={setImage}
       variantPrice={variantPrice}
       onSave={_onSave}
-      onAddtoCart={isAuth ? onAddtoCart : triggerLogin}
+      isAuth={isAuth}
+      trigerLogin={triggerLogin}
+      onAddtoCart={onAddtoCart}
       type={type}
       colorAttributes={colorAttributes}
       brand={brand}
@@ -221,8 +225,10 @@ const ProductCardHorizontal = ({
   type,
   brand,
   product,
+  isAuth,
   onPress,
   onSave,
+  triggerLogin,
   onAddtoCart,
   thumbnailImage,
   variantPrice,
@@ -300,7 +306,7 @@ const ProductCardHorizontal = ({
             <Div _flex={1} justify="flex-end" _margin="16px 0px 0px">
               <OutlineButton
                 title="Add to Cart"
-                onPress={onAddtoCart}
+                onPress={isAuth ? onAddtoCart : triggerLogin}
                 leftIcon={
                   <IconFa
                     name="shopping-bag"
@@ -334,6 +340,8 @@ const ProductCardVertical = ({
   onSave,
   isShowRangePrice,
   onAddtoCart,
+  isAuth,
+  triggerLogin,
   variantPrice,
   isAtributesShow,
   colorAttributes,
@@ -433,7 +441,7 @@ const ProductCardVertical = ({
             <Div _width="100%" justify="flex-end" _margin="16px 0px 0px">
               <OutlineButton
                 title="Add to Cart"
-                onPress={onAddtoCart}
+                onPress={isAuth ? onAddtoCart : triggerLogin}
                 leftIcon={
                   <IconFa
                     name="shopping-bag"

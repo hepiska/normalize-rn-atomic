@@ -18,7 +18,7 @@ import { images as defaultImages, colors } from '@utils/constants'
 import { OutlineButton } from '@components/atoms/button'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import IconMi from 'react-native-vector-icons/MaterialIcons'
-import { getUserByUsername } from '@modules/user/action'
+import { getUserByUsername, getUserById } from '@modules/user/action'
 import { fontStyle, borderStyle } from '@src/components/commont-styles'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { navigate } from '@src/root-navigation'
@@ -202,17 +202,36 @@ class ProfilPage extends React.PureComponent<any, any> {
   ]
 
   componentDidMount() {
-    const { isAuth, username, getUserByUsername } = this.props
+    const {
+      isAuth,
+      username,
+      getUserByUsername,
+      user,
+      getUserById,
+    } = this.props
     if (isAuth && username) {
       getUserByUsername(username)
+    }
+
+    if (isAuth && user.id) {
+      getUserById(user.id)
     }
   }
 
   componentDidUpdate(prevProps) {
-    const { isAuth, username, getUserByUsername } = this.props
+    const {
+      isAuth,
+      username,
+      getUserByUsername,
+      user,
+      getUserById,
+    } = this.props
     if (prevProps.isAuth !== isAuth) {
       if (isAuth && username) {
         getUserByUsername(username)
+      }
+      if (isAuth && user.id) {
+        getUserById(user.id)
       }
     }
   }
@@ -234,13 +253,10 @@ class ProfilPage extends React.PureComponent<any, any> {
     if (!isAuth) {
       return (
         <ProfileEmptyState
-          onPress={() =>
-            navigation.navigate('modals', { screen: 'LoginModal' })
-          }
+          onPress={() => navigate('modals', { screen: 'LoginModal' })}
         />
       )
     }
-
     if (isAuth && !user) {
       return null
     }
@@ -273,8 +289,12 @@ class ProfilPage extends React.PureComponent<any, any> {
                     <Text
                       style={{
                         ...styles.helveticaBold12,
-                        color: colors.black80,
-                      }}>{`@${user.username}`}</Text>
+                        color: user.username ? colors.black80 : colors.red1,
+                      }}>
+                      {user.username
+                        ? `@${user.username}`
+                        : 'Please input Username'}
+                    </Text>
                   </View>
                   <View style={{ marginTop: 8, flexDirection: 'row' }}>
                     <Text
@@ -496,7 +516,7 @@ class ProfilPage extends React.PureComponent<any, any> {
 }
 
 const mapDispatchToProps = dispatch =>
-  bindActionCreators({ getUserByUsername, setLogout }, dispatch)
+  bindActionCreators({ getUserByUsername, setLogout, getUserById }, dispatch)
 
 const mapStateToProps = state => {
   const isAuth = state.auth.isAuth
@@ -505,7 +525,7 @@ const mapStateToProps = state => {
   let user
   if (isAuth) {
     username = state.auth.data.user.username
-    user = state.user.data[state.auth.data.user.id]
+    user = state.user.data[state.auth.data.user.id] || state.auth.data.user
   }
   return {
     isAuth,
@@ -514,7 +534,4 @@ const mapStateToProps = state => {
   }
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(withNavigation(ProfilPage))
+export default connect(mapStateToProps, mapDispatchToProps)(ProfilPage)

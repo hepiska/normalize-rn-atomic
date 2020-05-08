@@ -11,7 +11,9 @@ import apiMidleware from '@modules/middleware/api'
 import { PersistGate } from 'redux-persist/integration/react'
 import multidipacerMidleware from '@modules/middleware/multi'
 import { persistStore } from 'redux-persist'
+import OneSignal from 'react-native-onesignal'
 import Pages from '@pages/index'
+import Config from 'react-native-config'
 
 export const history = createHistory()
 
@@ -41,11 +43,32 @@ if (__DEV__) {
 class InitStore extends React.Component<any, any> {
   constructor(props) {
     super(props)
+    OneSignal.init(Config.ONE_SIGNAL_APP_ID, {
+      kOSSettingsKeyAutoPrompt: false,
+      kOSSettingsKeyInAppLaunchURL: false,
+      kOSSettingsKeyInFocusDisplayOption: 2,
+    })
+    OneSignal.promptForPushNotificationsWithUserResponse(
+      this.myiOSPromptCallback,
+    )
+    OneSignal.addEventListener('ids', this.onIds)
+
     this.state = {
       isLoading: true,
       store: null,
       persistor: null,
     }
+  }
+  componentWillUnmount() {
+    OneSignal.removeEventListener('ids', this.onIds)
+  }
+
+  myiOSPromptCallback(permission) {
+    // do something with permission value
+  }
+
+  onIds(device) {
+    console.log('Device info: ', device)
   }
 
   async componentDidMount() {
