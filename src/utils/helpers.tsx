@@ -3,6 +3,7 @@ import { ToastAndroid, Alert, Platform, Linking } from 'react-native'
 import { uriSchreenMap, colors } from './constants'
 import { PERMISSIONS, check, request } from 'react-native-permissions'
 import { store } from '@src/init-store'
+import dayjs from 'dayjs'
 
 const currencyNum = inp => {
   const a = inp
@@ -192,4 +193,10 @@ export const getDetailContent = (type: string, content: any) => {
   } else {
     return `<p>${content}</p>`
   }
+}
+
+export const calculateYear = year => {
+  const now = dayjs()
+  const min_dob = now.subtract(year, 'year')
+  return min_dob.toISOString()
 }

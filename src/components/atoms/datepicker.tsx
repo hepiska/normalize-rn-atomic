@@ -13,6 +13,8 @@ interface Props {
   datePickerRef: any
   value: any
   onChange: any
+  maximumDate?: any
+  minimumDate?: any
 }
 
 const withModal = Component => (conditionalRendering, show, onClose) => {
@@ -31,7 +33,13 @@ const withModal = Component => (conditionalRendering, show, onClose) => {
   )
 }
 
-const DatePicker: React.FC<Props> = ({ onChange, value, datePickerRef }) => {
+const DatePicker: React.FC<Props> = ({
+  onChange,
+  value,
+  datePickerRef,
+  maximumDate,
+  minimumDate,
+}) => {
   const [show, setShow] = useState(false)
 
   const open = () => setShow(true)
@@ -59,6 +67,8 @@ const DatePicker: React.FC<Props> = ({ onChange, value, datePickerRef }) => {
             mode="date"
             display="default"
             onChange={onChangeHandler}
+            maximumDate={maximumDate}
+            minimumDate={minimumDate}
           />
         ))(Platform.OS === 'ios', show, close)}
     </Div>

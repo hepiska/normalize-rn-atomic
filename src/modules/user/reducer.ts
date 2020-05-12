@@ -28,6 +28,8 @@ const userReducer: Reducer<UserState> = (
     case userActionType.SET_USER_ORDER:
       newState.order = Immutable(action.payload)
       return newState
+    case userActionType.SET_USER_LOADING:
+      newState.loading = action.payload
     default:
       return newState
   }

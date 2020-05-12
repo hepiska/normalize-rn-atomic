@@ -150,6 +150,7 @@ android {
         versionCode 1
         resValue "string", "build_config_package", "com.shonet"
         versionName "1.0"
+        missingDimensionStrategy 'react-native-camera', 'general'
     }
     splits {
         abi {

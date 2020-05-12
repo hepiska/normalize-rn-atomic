@@ -1,6 +1,7 @@
 import { QueryParams } from '@utils/globalInterface'
 import { API } from '../action-types'
 import * as schema from '@modules/normalize-schema'
+import { getMe } from '@src/utils/helpers'
 
 export const userActionType = {
   FETCH: 'post/FETCH',
@@ -29,20 +30,21 @@ export const setUserOrder = (data: any) => ({
   type: userActionType.SET_USER_ORDER,
   payload: data,
 })
+
 export const setUserLoading = (data: Boolean) => ({
   type: userActionType.SET_USER_LOADING,
   payload: data,
 })
 
-export const getUserByUsername = username => {
+export const getUser = (data, id_type) => {
   return {
     type: API,
     payload: {
-      url: `/users/${username}`,
+      url: `/users/${data}`,
       schema: schema.user,
       requestParams: {
         params: {
-          id_type: 'username',
+          id_type,
         },
       },
       startNetwork: () => {
@@ -65,33 +67,24 @@ export const getUserByUsername = username => {
   }
 }
 
-export const getUserById = userId => {
-  return {
-    type: API,
-    payload: {
-      url: `/users/${userId}`,
-      schema: schema.user,
-      requestParams: {
-        params: {
-          id_type: 'id',
-        },
-      },
-      startNetwork: () => {
-        return setUserLoading(true)
-      },
-      endNetwork: () => {
-        return setUserLoading(false)
-      },
-      success: data => {
-        return [
-          setUserData(data.entities.user),
-          setUserOrder(data.result),
-          setUserLoading(false),
-        ]
-      },
-      error: err => {
-        return setUserLoading(false)
-      },
+export const editUserProfile = (data: any) => ({
+  type: API,
+  payload: {
+    url: `/users/` + getMe().id,
+    requestParams: {
+      method: 'PUT',
+      data,
     },
-  }
-}
+    startNetwork: () => setUserLoading(true),
+    success: data => {
+      return [
+        setUserData(data),
+        getUser(getMe().id, 'id'),
+        setUserLoading(false),
+      ]
+    },
+    error: err => {
+      return [setUserLoading(false)]
+    },
+  },
+})

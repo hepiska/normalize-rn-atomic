@@ -6,9 +6,12 @@ import {
   View,
   Image,
   ViewStyle,
+  TouchableWithoutFeedback,
+  Dimensions,
 } from 'react-native'
 import { withNavigation } from 'react-navigation'
 import { Div, Font, PressAbbleDiv } from '@components/atoms/basic'
+import Modal from 'react-native-modal'
 import ImageAutoSchale from '@components/atoms/image-autoschale'
 import NavbarTop from '@components/molecules/navbar-top'
 import { bindActionCreators } from 'redux'
@@ -17,16 +20,19 @@ import { setImage as changeImageUri } from '@utils/helpers'
 import { images as defaultImages, colors } from '@utils/constants'
 import { OutlineButton } from '@components/atoms/button'
 import Icon from 'react-native-vector-icons/FontAwesome5'
-import IconMi from 'react-native-vector-icons/MaterialIcons'
-import { getUserByUsername, getUserById } from '@modules/user/action'
+import IconEi from 'react-native-vector-icons/EvilIcons'
+import { getUser } from '@modules/user/action'
 import { fontStyle, borderStyle } from '@src/components/commont-styles'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { navigate } from '@src/root-navigation'
 import { setLogout } from '@modules/auth/action'
 import ProfileEmptyState from '@components/molecules/profile-empty-state'
 import ActionListCard from '@components/molecules/action-list-card'
+import ImageViewer from 'react-native-image-zoom-viewer'
+import styled from 'styled-components/native'
 
 const headerHeight = 54
+const { width } = Dimensions.get('screen')
 
 const navigateTo = (screen, screenName, params = {}) => {
   return navigate(screen, {
@@ -128,9 +134,17 @@ const myOrder = [
   },
 ]
 
+const AbsDiv = styled(Div)`
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  left: 0;
+`
+
 class ProfilPage extends React.PureComponent<any, any> {
   state = {
     defaultImage: null,
+    isVisible: false,
   }
 
   myOrderList = [
@@ -202,36 +216,17 @@ class ProfilPage extends React.PureComponent<any, any> {
   ]
 
   componentDidMount() {
-    const {
-      isAuth,
-      username,
-      getUserByUsername,
-      user,
-      getUserById,
-    } = this.props
+    const { isAuth, username, getUser } = this.props
     if (isAuth && username) {
-      getUserByUsername(username)
-    }
-
-    if (isAuth && user.id) {
-      getUserById(user.id)
+      getUser(username, 'username')
     }
   }
 
   componentDidUpdate(prevProps) {
-    const {
-      isAuth,
-      username,
-      getUserByUsername,
-      user,
-      getUserById,
-    } = this.props
+    const { isAuth, username, getUser } = this.props
     if (prevProps.isAuth !== isAuth) {
       if (isAuth && username) {
-        getUserByUsername(username)
-      }
-      if (isAuth && user.id) {
-        getUserById(user.id)
+        getUser(username, 'username')
       }
     }
   }
@@ -246,9 +241,31 @@ class ProfilPage extends React.PureComponent<any, any> {
   onPressDetailOrder = () => {
     navigateTo('Screens', 'OrderList', {})
   }
+
+  gotoEditProfile = () => {
+    navigateTo('Screens', 'EditProfile', {})
+  }
+
+  _openModal = () => this.setState({ isVisible: true })
+  _closeModal = () => this.setState({ isVisible: false })
+
+  _headerComp = () => (
+    <AbsDiv>
+      <TouchableWithoutFeedback onPress={this._closeModal}>
+        <Div _width="100%" align="flex-start" _margin="28px" _padding="20px">
+          <IconEi name="close" size={24} color={colors.black100} />
+        </Div>
+      </TouchableWithoutFeedback>
+    </AbsDiv>
+  )
+
   render() {
     const { isAuth, navigation, user } = this.props
-    const { defaultImage } = this.state
+    const { defaultImage, isVisible } = this.state
+
+    const imgSize = isVisible
+      ? { width: width, height: width }
+      : { width: 64, height: 64 }
 
     if (!isAuth) {
       return (
@@ -265,7 +282,7 @@ class ProfilPage extends React.PureComponent<any, any> {
       const image =
         defaultImage ||
         (!!user.photo_url
-          ? changeImageUri(user.photo_url, { width: 64, height: 64 })
+          ? changeImageUri(user.photo_url, imgSize)
           : defaultImages.product)
       return (
         <>
@@ -274,13 +291,25 @@ class ProfilPage extends React.PureComponent<any, any> {
             <View style={{ paddingHorizontal: 16, paddingVertical: 26 }}>
               {/* photo, name, fols */}
               <View style={{ flexDirection: 'row' }}>
-                <ImageAutoSchale
-                  source={typeof image === 'string' ? { uri: image } : image}
-                  onError={() => {
-                    this.setState({ defaultImage: defaultImages.product })
-                  }}
-                  style={styles.image}
-                />
+                <TouchableOpacity onPress={this._openModal}>
+                  <ImageAutoSchale
+                    source={typeof image === 'string' ? { uri: image } : image}
+                    onError={() => {
+                      this.setState({ defaultImage: defaultImages.product })
+                    }}
+                    style={styles.image}
+                  />
+                </TouchableOpacity>
+                <Modal isVisible={isVisible} style={{ margin: 0 }}>
+                  <ImageViewer
+                    backgroundColor="white"
+                    enableSwipeDown
+                    renderHeader={this._headerComp}
+                    imageUrls={[{ url: image }]}
+                    onSwipeDown={this._closeModal}
+                    index={0}
+                  />
+                </Modal>
                 <View style={{ marginLeft: 26 }}>
                   <View>
                     <Text style={{ ...styles.futuraBold20 }}>{user.name}</Text>
@@ -317,7 +346,7 @@ class ProfilPage extends React.PureComponent<any, any> {
               <View style={{ marginTop: 8 }}>
                 <OutlineButton
                   title="View My Profile"
-                  onPress={() => {}}
+                  onPress={this.gotoEditProfile}
                   style={styles.button}
                   fontStyle={styles.buttonText}
                 />
@@ -516,7 +545,7 @@ class ProfilPage extends React.PureComponent<any, any> {
 }
 
 const mapDispatchToProps = dispatch =>
-  bindActionCreators({ getUserByUsername, setLogout, getUserById }, dispatch)
+  bindActionCreators({ getUser, setLogout }, dispatch)
 
 const mapStateToProps = state => {
   const isAuth = state.auth.isAuth

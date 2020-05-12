@@ -91,7 +91,7 @@
 		</dict>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>The Shonet need access for the camera so that yout can capture your receipt directly from your camera</string>
+	<string>The Shonet need access for the camera so that you can upload image directly from your camera</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>The Shonet need access for the location.
   </string>
@@ -99,6 +99,8 @@
 	<string></string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>$(PRODUCT_NAME) wants to save photos</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>$(PRODUCT_NAME) need access for the photo library so that you can upload their photo directly from their photo library.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>AntDesign.ttf</string>
