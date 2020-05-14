@@ -32,7 +32,9 @@ const categoryReducer: Reducer<PostState> = (
   switch (action.type) {
     case categoryActionType.SET_CATEGORY_DATA:
       if (action.payload)
-        newState.data = Immutable.merge(newState.data, action.payload)
+        newState.data = Immutable.merge(newState.data, action.payload, {
+          deep: true,
+        })
       return newState
     case categoryActionType.SET_CATEGORY_ORDER:
       if (

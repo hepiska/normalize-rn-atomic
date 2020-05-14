@@ -19,7 +19,6 @@ const setAuthFetching = (isFetching: boolean) => ({
 
 const setLoginSuccess = (data: any) => {
   AsyncStorage.setItem('token', data.id_token)
-  console.log('=====', data)
   return {
     type: authActionType.SET_LOGIN_SUCCESS,
     payload: {
@@ -36,7 +35,6 @@ const setRegisterSuccess = (data: any) => ({
 
 export const setLogout = () => {
   AsyncStorage.removeItem('token')
-  console.log('masuk setlogout')
   return {
     type: authActionType.SET_LOGOUT_SUCCESS,
     payload: {

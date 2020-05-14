@@ -259,24 +259,27 @@ class Productlist extends Component<any, any> {
     const items = []
 
     for (let i = index; i < index + numColumns; i++) {
-      items.push(
-        <ProductWithCardHoc
-          productId={section.data[i]}
-          // product={item}
-          key={'' + section.data[i] + index}
-          style={{
-            flex: 1,
-            wrappermargin: 16,
-            width: width / 2,
-          }}
-        />,
-      )
+      if (section.data[i]) {
+        items.push(
+          <ProductWithCardHoc
+            productId={section.data[i]}
+            // product={item}
+            key={'' + section.data[i] + index}
+            style={{
+              // flex: 1,
+              // wrappermargin: 8,
+              width: width / 2,
+            }}
+          />,
+        )
+      }
     }
 
     return (
       <View
         key={'' + index}
         style={{
+          paddingHorizontal: 8,
           flexDirection: 'row',
           justifyContent: 'space-between',
         }}>
@@ -361,7 +364,6 @@ class Productlist extends Component<any, any> {
       collection,
       category,
     } = this.props
-
     const headerData: any = {
       // image:
       // 'https://shonet.imgix.net/commerce/Loueve/#LJRING14-MAIN.jpg?q=75&auto=compress,format&w=350',
@@ -384,6 +386,7 @@ class Productlist extends Component<any, any> {
           },
         ]
       : []
+
     return (
       <>
         <NavbarTop

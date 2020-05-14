@@ -456,7 +456,6 @@ const mapStateToProps = (state, ownProps) => {
 
   const choosedCourier = state.checkout.data.warehouse[ownProps.item.id] || null
 
-  console.log('state ---', state)
   console.log('choosedCourier ---', choosedCourier)
 
   let qtys = []

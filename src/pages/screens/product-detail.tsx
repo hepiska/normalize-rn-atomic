@@ -188,7 +188,6 @@ class ProductListPage extends React.Component<any, any> {
     const { selectedVariant, isUserSelectVariant, filteredAttributes } = this
       .state as any
     let returnExchange = ''
-    console.log('=====')
     if (
       product.flags?.includes('returnable') &&
       product.flags?.includes('exchangeable')

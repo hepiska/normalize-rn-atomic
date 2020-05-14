@@ -92,6 +92,8 @@ class HorizontalList extends React.Component<HorizontalListType, any> {
           )
         }
       case 'product':
+        // return null
+
         return (
           <ProductHoc
             productId={item}
@@ -158,7 +160,6 @@ class HorizontalList extends React.Component<HorizontalListType, any> {
 
   render() {
     const { data, style } = this.props
-
     return (
       <Div _width="100%" align="flex-start" style={style}>
         <Font style={fontStyle.futuraDemi} size="24px" mar="0 0 24px 16px">

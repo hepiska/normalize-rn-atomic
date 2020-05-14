@@ -43,7 +43,7 @@ class ChooseAddressPage extends Component<any, any> {
   }
 
   componentWillUnmount() {
-    const data = this.props.route.params.checkoutList
+    const data = this.props.route.params.checkoutList || []
     const addressId = this.state.tempSelectedAddress
 
     if (data && addressId) {

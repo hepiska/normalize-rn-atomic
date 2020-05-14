@@ -65,6 +65,10 @@ class ImagesWithPreviews extends React.Component<ImagesWithPreviewsType, any> {
       id={index}
       onPress={this._onOpenImage}
       source={item}
+      errorStyle={{
+        width: this.props.size.width,
+        height: this.props.size.height,
+      }}
       width={this.props.size.width}
       height={this.props.size.height}
     />
@@ -136,11 +140,14 @@ class ImagesWithPreviews extends React.Component<ImagesWithPreviewsType, any> {
           style={{
             position: 'absolute',
             zIndex: 10,
-            top: 600 - 16,
+            top: size.height - 32,
             left: 16,
           }}
         />
-        <Modal isVisible={isVisible} style={{ margin: 0 }}>
+        <Modal
+          isVisible={isVisible}
+          style={{ margin: 0 }}
+          onBackButtonPress={this._closeModal}>
           <ImageViewer
             backgroundColor="white"
             enableSwipeDown
