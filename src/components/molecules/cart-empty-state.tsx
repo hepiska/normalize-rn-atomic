@@ -9,6 +9,7 @@ import {
 } from '@components/commont-styles'
 import { colors } from '@src/utils/constants'
 import { Button } from '@src/components/atoms/button'
+import { navigate } from '@src/root-navigation'
 
 const styles = StyleSheet.create({
   image: {
@@ -31,7 +32,9 @@ const styles = StyleSheet.create({
 })
 
 const CartEmptyState: React.FC = () => {
-  const navigation = useNavigation()
+  const gotoShop = () => {
+    navigate('Main', { screen: 'Shop' })
+  }
   return (
     <Div _width="100%" _justify="center" align="center">
       <Image
@@ -63,7 +66,7 @@ const CartEmptyState: React.FC = () => {
       </View>
       <Button
         title="Shop Now"
-        onPress={() => navigation.navigate('ProductList')}
+        onPress={gotoShop}
         style={styles.button}
         fontStyle={styles.buttonText}
       />

@@ -1,10 +1,10 @@
 import React from 'react'
-import { StyleSheet } from 'react-native'
-import { useNavigation } from '@react-navigation/native'
+import { StyleSheet, View, Dimensions } from 'react-native'
 import { Div, Font, Image } from '@components/atoms/basic'
 import { fontStyle } from '@components/commont-styles'
 import { colors } from '@src/utils/constants'
-import { Button } from '@src/components/atoms/button'
+
+const { height } = Dimensions.get('window')
 
 const styles = StyleSheet.create({
   image: {
@@ -26,28 +26,50 @@ const styles = StyleSheet.create({
   },
 })
 
-const OrderEmptyState: React.FC = () => {
+const OrderEmptyState: React.FC<{
+  title: string
+  description: string
+  button?: any
+}> = ({ title, description, button }) => {
   return (
-    <Div _width="100%" _justify="center" align="center">
-      <Image
-        source={require('../../assets/placeholder/greeting-card-before-login.png')}
-        style={styles.image}
-      />
-      <Font
-        style={{ ...fontStyle.futuraDemi }}
-        colors={colors.black100}
-        size={24}
-        _margin="0px 0px 16px">
-        No Order yet...
-      </Font>
-      <Font
-        size={14}
-        textAlign="center"
-        color={colors.black80}
-        style={{ lineHeight: 17, marginTop: 16, ...fontStyle.helvetica }}
-        _margin="0px 32px">
-        Let’s find out product you love at shop page
-      </Font>
+    <Div
+      _width="100%"
+      _height={height - 140}
+      _flex={1}
+      alignItems="center"
+      justifyContent="flex-start">
+      <Div alignItems="center">
+        <Image
+          source={require('../../assets/placeholder/greeting-card-before-login.png')}
+          style={styles.image}
+        />
+        <Font
+          style={{ ...fontStyle.futuraDemi }}
+          colors={colors.black100}
+          size={24}
+          _margin="0px 0px 16px">
+          {title}
+        </Font>
+        <Font
+          size={14}
+          textAlign="center"
+          color={colors.black80}
+          style={{ lineHeight: 17, marginTop: 16, ...fontStyle.helvetica }}
+          _margin="0px 32px">
+          {description}
+        </Font>
+      </Div>
+      {button && (
+        <View
+          style={{
+            width: '100%',
+            alignSelf: 'flex-end',
+            position: 'absolute',
+            bottom: 0,
+          }}>
+          {button}
+        </View>
+      )}
     </Div>
   )
 }

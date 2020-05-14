@@ -10,8 +10,7 @@ import {
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { Div } from '@components/atoms/basic'
-import { productApi } from '@modules/product/action'
-import { getSearchResult } from '@modules/search/action'
+import { productSearchApi, clearProductSearch } from '@modules/product/action'
 import Field from '@components/atoms/field'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { globalDimention, colors } from '@utils/constants'
@@ -35,8 +34,10 @@ class SearchList extends Component<any, any> {
   startSearch = false
   timer = null
 
-  componentDidMount() {
-    this._freshFetch()
+  componentWillUnmount() {
+    if (this.props.dataSearch) {
+      this.props.clearProductSearch()
+    }
   }
 
   _freshFetch = async () => {
@@ -56,7 +57,7 @@ class SearchList extends Component<any, any> {
       is_commerce: true,
       name: this.state.searchKey,
     }
-    this.props.productApi(params)
+    this.props.productSearchApi(params)
   }
 
   onSearchChange = text => {
@@ -68,6 +69,7 @@ class SearchList extends Component<any, any> {
 
     this.timer = setTimeout(() => {
       if (this.state.searchKey.length > 2) {
+        this.skip = 0
         this._fetchData(this.skip)
 
         this.startSearch = true
@@ -95,19 +97,21 @@ class SearchList extends Component<any, any> {
   _renderSearch = () => {
     const { searchKey } = this.state
     return (
-      <Field
-        style={{ marginHorizontal: 12 }}
-        value={searchKey}
-        placeholder="Search in Shonet"
-        onChangeText={this.onSearchChange}
-        leftIcon={
-          <Icon
-            style={{ marginRight: 8 }}
-            name="search"
-            color={colors.black90}
-          />
-        }
-      />
+      <View style={{ backgroundColor: colors.white }}>
+        <Field
+          style={{ margin: 12 }}
+          value={searchKey}
+          placeholder="Search in Shonet"
+          onChangeText={this.onSearchChange}
+          leftIcon={
+            <Icon
+              style={{ marginRight: 8 }}
+              name="search"
+              color={colors.black90}
+            />
+          }
+        />
+      </View>
     )
   }
 
@@ -117,7 +121,7 @@ class SearchList extends Component<any, any> {
         productId={item}
         key={'' + item}
         style={{
-          flex: 1,
+          flex: 1 / 2,
           wrappermargin: 4,
           width: width / 2,
         }}
@@ -158,7 +162,6 @@ class SearchList extends Component<any, any> {
         <NavbarTop leftContent={['back']} title="Search" />
         <View style={{ flex: 1 }}>
           <FlatList
-            style={{ paddingTop: 12 }}
             numColumns={2}
             keyExtractor={this._keyExtractor}
             ListHeaderComponent={this._renderSearch()}
@@ -168,6 +171,7 @@ class SearchList extends Component<any, any> {
             onEndReachedThreshold={0.99}
             ListEmptyComponent={this._emptyComponent}
             scrollIndicatorInsets={{ right: 1 }}
+            stickyHeaderIndices={[0]}
           />
           {loading && (
             <Div
@@ -188,13 +192,14 @@ class SearchList extends Component<any, any> {
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
-      productApi,
+      productSearchApi,
+      clearProductSearch,
     },
     dispatch,
   )
 const mapStateToProps = state => {
   return {
-    dataSearch: state.products.order,
+    dataSearch: state.products.search,
     loading: state.products.productsLoading,
     pagination: { total: state.products.pagination.total || 0 },
   }

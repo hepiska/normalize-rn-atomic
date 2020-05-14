@@ -19,7 +19,7 @@ export const productSavedSetLoading = data => ({
   payload: data,
 })
 
-export const productSavedDeleteSaved = productId => ({
+export const productSavedRemoveOrder = productId => ({
   type: productSavedActionType.DELETE_SAVED_PRODUCT,
   payload: productId,
 })
@@ -93,7 +93,7 @@ export const deleteProductSaved = productId => ({
     },
     startNetwork: () => productSavedSetLoading(true),
     success: () => [
-      productSavedDeleteSaved(productId),
+      productSavedRemoveOrder(productId),
       productSavedSetLoading(false),
     ],
     error: () => {

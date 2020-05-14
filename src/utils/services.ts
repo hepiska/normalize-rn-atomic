@@ -22,6 +22,6 @@ request.interceptors.request.use(
 
 export const googePlaceReq = axios.create({ baseURL: GOOGLE_PLACE_URI })
 export const googeMapsReq = axios.create({ baseURL: GOOGLE_MAPS })
-export const shonetLocation = axios.create({ baseURL: BASE_URL + '/locations' })
+export const shonetLocation = axios.create({ baseURL: BASE_URL + 'locations' })
 
 export const midtransService = axios.create({ baseURL: Config.MIDTRANS_URI })

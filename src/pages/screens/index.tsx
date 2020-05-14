@@ -23,6 +23,7 @@ import PaymentWebView from './payment-webview'
 import Search from './search-list'
 import SizeGuideWebView from './size-guide-webview'
 import EditProfile from './edit-profile'
+import Wishlist from './wishlist'
 
 const Stack = createStackNavigator()
 
@@ -57,6 +58,7 @@ function InsiderStack() {
       <Stack.Screen name="OrderList" component={OrderList} />
       <Stack.Screen name="EditProfile" component={EditProfile} />
       <Stack.Screen name="SearchList" component={Search} />
+      <Stack.Screen name="Wishlist" component={Wishlist} />
       <Stack.Screen
         name="AddNewAddressManual"
         component={AddNewAddressManual}

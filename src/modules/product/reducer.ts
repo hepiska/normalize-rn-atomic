@@ -9,6 +9,7 @@ import AsyncStorage from '@react-native-community/async-storage'
 interface ProductState {
   readonly data: Object
   readonly order: Array<number>
+  readonly search: Array<number>
   pagination: Object
   productsLoading: boolean
   productLoading: Boolean
@@ -18,6 +19,7 @@ interface ProductState {
 const initialState: any = {
   data: Immutable({}),
   order: Immutable([]),
+  search: Immutable([]),
   pagination: {},
   productsLoading: false,
   productLoading: false,
@@ -52,11 +54,28 @@ const productReducer: Reducer<ProductState> = (
       }
       newState.pagination = action.payload.pagination
       return newState
+    case productActionType.SET_PRODUCT_SEARCH_ORDER:
+      if (
+        action.payload.pagination.offset &&
+        action.payload.pagination.total &&
+        newState.search.length <= action.payload.pagination.total
+      ) {
+        newState.search = newState.search.concat(
+          Immutable(action.payload.search),
+        )
+      } else {
+        newState.search = Immutable(action.payload.search)
+      }
+      newState.pagination = action.payload.pagination
+      return newState
     case productActionType.SET_PRODUCTS_LOADING:
       newState.productsLoading = action.payload
       return newState
     case productActionType.ClEAR_PRODUCT:
       return initialState
+    case productActionType.CLEAR_PRODUCT_SEARCH:
+      newState.search = Immutable([])
+      return newState
     case productActionType.SET_DEFAULT:
       return newState
     default:

@@ -6,6 +6,7 @@ import {
   deleteProductSaved,
 } from '@modules/product-saved/action'
 import { removeCart, changeCartQty } from '@modules/cart/action'
+import { navigate } from '@src/root-navigation'
 
 const cartListMap = (state, ownProps) => {
   const { cartId, productId } = ownProps
@@ -43,6 +44,14 @@ const cartListMap = (state, ownProps) => {
         return v
       })
     }
+  }
+
+  ownProps.gotoProductDetail = () => {
+    const _productId = product.id
+    navigate('Screens', {
+      screen: 'ProductDetail',
+      params: { productId: _productId },
+    })
   }
 
   return {

@@ -164,6 +164,7 @@ class BrandList extends Component<any, any> {
             data={flatlistData}
             keyExtractor={this._keyExtractor}
             renderItem={this._renderItem}
+            scrollIndicatorInsets={{ right: 1 }}
           />
           {loading && (
             <Div

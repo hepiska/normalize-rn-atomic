@@ -46,25 +46,27 @@ class ChooseAddressPage extends Component<any, any> {
     const data = this.props.route.params.checkoutList
     const addressId = this.state.tempSelectedAddress
 
-    data.map(v => {
-      const warehouseId = v.id
-      const cartsId = v.data
-      const qty = cartsId.reduce((result, item) => {
-        const quantity = this.props.cartState[item].qty
-        result.push(quantity)
-        return result
-      }, [])
-      const variantsId = cartsId.map(item => {
-        const data = this.props.cartState[item].variant.id
-        return data
+    if (data && addressId) {
+      data.map(v => {
+        const warehouseId = v.id
+        const cartsId = v.data
+        const qty = cartsId.reduce((result, item) => {
+          const quantity = this.props.cartState[item].qty
+          result.push(quantity)
+          return result
+        }, [])
+        const variantsId = cartsId.map(item => {
+          const data = this.props.cartState[item].variant.id
+          return data
+        })
+        this.props.getOptionShipment(variantsId, qty, addressId, warehouseId)
+        const shipping = this.props.shipmentState[warehouseId]
+        updateCourier({
+          warehouseId,
+          shipping,
+        })
       })
-      this.props.getOptionShipment(variantsId, qty, addressId, warehouseId)
-      const shipping = this.props.shipmentState[warehouseId]
-      updateCourier({
-        warehouseId,
-        shipping,
-      })
-    })
+    }
   }
   onBackCheckoutPage = () => {
     this.props.navigation.goBack()
@@ -89,6 +91,9 @@ class ChooseAddressPage extends Component<any, any> {
   render() {
     const { addresses } = this.props
     const { tempSelectedAddress } = this.state
+    if (!addresses) {
+      return null
+    }
     return (
       <>
         <NavbarTop
@@ -112,43 +117,46 @@ class ChooseAddressPage extends Component<any, any> {
               borderStyle: 'solid',
             }}
           />
-          {addresses?.map((value, key) => {
-            return (
-              <View
-                key={`choose-address-${key}`}
-                style={{
-                  paddingLeft: 16,
-                  paddingRight: 16,
-                }}>
-                <AddressHoc
-                  key={`address-${key}`}
-                  index={key}
-                  addressId={value}
+          {addresses.length > 0 &&
+            addresses?.map((value, key) => {
+              return (
+                <View
+                  key={`choose-address-${key}`}
                   style={{
-                    borderTopWidth: key > 0 ? 1 : 0,
-                    paddingTop: 16,
-                    paddingBottom: 16,
-                    borderTopColor: key > 0 && colors.black50,
-                  }}
-                  onChangeAddress={this.changeAddress}
-                  tempSelectedAddress={tempSelectedAddress}
-                />
-              </View>
-            )
-          })}
+                    paddingLeft: 16,
+                    paddingRight: 16,
+                  }}>
+                  <AddressHoc
+                    key={`address-${key}`}
+                    index={key}
+                    addressId={value}
+                    style={{
+                      borderTopWidth: key > 0 ? 1 : 0,
+                      paddingTop: 16,
+                      paddingBottom: 16,
+                      borderTopColor: key > 0 && colors.black50,
+                    }}
+                    onChangeAddress={this.changeAddress}
+                    tempSelectedAddress={tempSelectedAddress}
+                  />
+                </View>
+              )
+            })}
         </ScrollDiv>
 
-        <View style={{ padding: 16 }}>
-          <GradientButton
-            onPress={this.setAddress}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 0 }}
-            colors={['#3067E4', '#8131E2']}
-            title="Use Address"
-            fontStyle={styles.buttonText}
-            style={styles.button}
-          />
-        </View>
+        {addresses.length > 0 && (
+          <View style={{ padding: 16 }}>
+            <GradientButton
+              onPress={this.setAddress}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 0 }}
+              colors={['#3067E4', '#8131E2']}
+              title="Use Address"
+              fontStyle={styles.buttonText}
+              style={styles.button}
+            />
+          </View>
+        )}
       </>
     )
   }

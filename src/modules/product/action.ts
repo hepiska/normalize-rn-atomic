@@ -10,8 +10,10 @@ export const productActionType = {
   FETCH: 'product/FETCH',
   SET_PRODUCT_DATA: 'product/SET_PRODUCT_DATA',
   SET_PRODUCT_ORDER: 'product/SET_PRODUCT_ORDER',
+  SET_PRODUCT_SEARCH_ORDER: 'product/SET_PRODUCT_SEARCH_ORDER',
   FETCH_START: 'product/FETCH_START',
   ClEAR_PRODUCT: 'product/ClEAR_PRODUCT',
+  CLEAR_PRODUCT_SEARCH: 'product/CLEAR_PRODUCT_SEARCH',
   SET_PRODUCTS_LOADING: 'product/SET_PRODUCTS_LOADING',
   CHANGE_VALUE: 'product/CHANGE_VALUE',
   SET_DEFAULT: 'product/SET_DEFAULT',
@@ -32,6 +34,11 @@ export const setProductData = (data: any) => {
 
 export const setProductOrder = (data: any) => ({
   type: productActionType.SET_PRODUCT_ORDER,
+  payload: data,
+})
+
+export const setProductSearchOrder = (data: any) => ({
+  type: productActionType.SET_PRODUCT_SEARCH_ORDER,
   payload: data,
 })
 
@@ -91,4 +98,36 @@ export const productApi = (params, url) => ({
           ]
     },
   },
+})
+
+export const productSearchApi = (params, url) => ({
+  type: API,
+  payload: {
+    url: url || '/products',
+    requestParams: { params },
+    schema: [schema.product],
+    startNetwork: () => {
+      return setProductsLoading(true)
+    },
+
+    success: (data, { pagination }) => {
+      return data
+        ? [
+            setBrandData(data.entities.brand),
+            setCategoryData(data.entities.category),
+            setProductData(data.entities.product),
+            setProductAttributeData(data.entities.attribute),
+            setProductSearchOrder({ search: data.result, pagination }),
+            setProductsLoading(false),
+          ]
+        : [
+            setProductSearchOrder({ search: [], pagination }),
+            setProductsLoading(false),
+          ]
+    },
+  },
+})
+
+export const clearProductSearch = () => ({
+  type: productActionType.CLEAR_PRODUCT_SEARCH,
 })

@@ -20,6 +20,7 @@ import { useFormValidator } from '@src/hooks/use-form-validator'
 import { useDebounce } from '@src/hooks/use-debounce'
 import PickerPopup from '@components/molecules/picker'
 import DatePicker from '@components/atoms/datepicker'
+import { calculateYear } from '@utils/helpers'
 
 const styles = StyleSheet.create({
   width100: {
@@ -374,6 +375,7 @@ const FormRegisterBasicInformation: React.FC<FormRegisterBasicInformation> = ({
                 onChange={date =>
                   handleOnChange('dateOfBirth')(date.toLocaleDateString())
                 }
+                maximumDate={new Date(calculateYear(10))}
               />
               <PressAbbleDiv
                 onPress={() => datePickerRef.open()}

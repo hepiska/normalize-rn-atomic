@@ -15,6 +15,7 @@ import IconFa from 'react-native-vector-icons/FontAwesome5'
 import IconMa from 'react-native-vector-icons/MaterialIcons'
 import { navigate } from '@src/root-navigation'
 import { setImage as chageImageUri, formatRupiah } from '@utils/helpers'
+import { TouchableOpacity } from 'react-native-gesture-handler'
 
 interface CartCardType {
   brand: any
@@ -31,6 +32,7 @@ interface CartCardType {
   removeCart: (data: any) => void
   changeCartQty: (data: any) => void
   removeSelectedVariant: (data: any) => void
+  gotoProductDetail?: () => void
 }
 
 const styles = StyleSheet.create({
@@ -175,6 +177,7 @@ class CartCard extends React.Component<CartCardType, any> {
       isChecked,
       chooseCart,
       isSaved,
+      gotoProductDetail,
     } = this.props
 
     const images = variant.image_urls
@@ -214,15 +217,17 @@ class CartCard extends React.Component<CartCardType, any> {
             <View style={{ width: '100%', flex: 1 }}>
               {/* image, desc */}
               <View style={{ flexDirection: 'row' }}>
-                <ImageAutoSchale
-                  source={{
-                    uri: image,
-                  }}
-                  onError={() => {
-                    this.setState({ defaultImage: defaultImages.product })
-                  }}
-                  style={styles.image}
-                />
+                <TouchableOpacity onPress={gotoProductDetail}>
+                  <ImageAutoSchale
+                    source={{
+                      uri: image,
+                    }}
+                    onError={() => {
+                      this.setState({ defaultImage: defaultImages.product })
+                    }}
+                    style={styles.image}
+                  />
+                </TouchableOpacity>
                 {/* overlay */}
                 {!cart.is_available && <Overlay />}
                 <Div
@@ -230,31 +235,33 @@ class CartCard extends React.Component<CartCardType, any> {
                   flexDirection="column"
                   align="flex-start"
                   _padding="0 0 0 16px">
-                  <Text
-                    ellipsizeMode="tail"
-                    numberOfLines={1}
-                    style={{
-                      ...styles.helveticaBold12,
-                      color: colors.black100,
-                    }}>
-                    {brand.name ? brand.name.toUpperCase() : 'UNKNOWN'}
-                  </Text>
-                  <View style={{ marginTop: 8 }}>
+                  <TouchableOpacity onPress={gotoProductDetail}>
                     <Text
                       ellipsizeMode="tail"
                       numberOfLines={1}
                       style={{
-                        ...styles.helvetica12,
-                        color: colors.black70,
+                        ...styles.helveticaBold12,
+                        color: colors.black100,
                       }}>
-                      {variant.product
-                        ? variant.product.product_name.replace(
-                            /(\r\n|\n|\r)/gm,
-                            '',
-                          )
-                        : 'UNKNOWN'}
+                      {brand.name ? brand.name.toUpperCase() : 'UNKNOWN'}
                     </Text>
-                  </View>
+                    <View style={{ marginTop: 8 }}>
+                      <Text
+                        ellipsizeMode="tail"
+                        numberOfLines={1}
+                        style={{
+                          ...styles.helvetica12,
+                          color: colors.black70,
+                        }}>
+                        {variant.product
+                          ? variant.product.product_name.replace(
+                              /(\r\n|\n|\r)/gm,
+                              '',
+                            )
+                          : 'UNKNOWN'}
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
                   <View style={{ marginTop: 16 }}>
                     <Text
                       style={{

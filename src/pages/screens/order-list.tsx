@@ -138,9 +138,10 @@ class OrderList extends Component<any, any> {
 
   _emptyComponent = () => {
     return (
-      <View>
-        <OrderEmptyState />
-      </View>
+      <OrderEmptyState
+        title="No Order yet..."
+        description="Let’s find out product you love at shop page"
+      />
     )
   }
 
@@ -163,6 +164,7 @@ class OrderList extends Component<any, any> {
             onEndReached={this._fetchMore}
             onEndReachedThreshold={0.99}
             ListEmptyComponent={this._emptyComponent}
+            scrollIndicatorInsets={{ right: 1 }}
           />
           {/* {this.props.loading && (
             <View

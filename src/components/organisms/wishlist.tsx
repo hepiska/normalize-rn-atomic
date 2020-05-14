@@ -11,6 +11,7 @@ import { productListData } from '@hocs/data/product'
 import { productApi } from '@modules/product/action'
 import { fontStyle } from '../commont-styles'
 import WishlistLoader from '@components/atoms/loaders/wishlist'
+import { navigate } from '@src/root-navigation'
 // import { addCart } from '@modules/cart/action'
 
 const { width } = Dimensions.get('window')
@@ -55,8 +56,16 @@ class Wishlist extends Component<any, any> {
     }
   }
 
+  seeAllWishlist = () => {
+    navigate('Screens', { screen: 'Wishlist' })
+  }
+
   render() {
     const { products, loading } = this.props
+
+    if (!products || products.length === 0) {
+      return null
+    }
     return (
       <Div _flex={1} _margin="64px 0px 0px" _width="100%" align="flex-start">
         <View style={{ marginLeft: 8, marginRight: 8 }}>
@@ -96,7 +105,7 @@ class Wishlist extends Component<any, any> {
         <Div _padding="0px 8px" _width="100%">
           <OutlineButton
             title="See All"
-            onPress={null}
+            onPress={this.seeAllWishlist}
             style={{
               width: '100%',
               height: 46,

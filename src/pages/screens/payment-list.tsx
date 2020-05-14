@@ -10,6 +10,10 @@ import { capilEachWord } from '@utils/helpers'
 import { colors } from '@utils/constants'
 import { transactionListData } from '@hocs/data/payment'
 import SearchFilter from '@components/organisms/search-filter'
+import OrderEmptyState from '@src/components/molecules/order-empty-state'
+import { OutlineButton } from '@src/components/atoms/button'
+import { fontStyle } from '@src/components/commont-styles'
+import { navigate } from '@src/root-navigation'
 
 const PayMentCardWithData = transactionListData(PaymentCard)
 
@@ -124,6 +128,39 @@ class OrderList extends Component<any, any> {
     // }
   }
 
+  _gotoOrderList = () => {
+    navigate('Screens', {
+      screen: 'OrderList',
+      params: {
+        selectedFilter: 'all',
+      },
+    })
+  }
+
+  _emptyComponent = () => {
+    return (
+      <OrderEmptyState
+        title="No Payment Yet"
+        description="Or maybe your payment is already complete, and we move it to your order list"
+        button={
+          <View>
+            <OutlineButton
+              style={{ borderColor: colors.blue50, height: 40 }}
+              title="Check Your Order Status"
+              fontStyle={{
+                ...fontStyle.helveticaBold,
+                fontSize: 12,
+                color: colors.blue50,
+                marginLeft: 0,
+              }}
+              onPress={this._gotoOrderList}
+            />
+          </View>
+        }
+      />
+    )
+  }
+
   _keyExtractor = (item, id) => `trans-${item} -${id}`
   render() {
     const { transactions, transactionLoading } = this.props
@@ -136,11 +173,13 @@ class OrderList extends Component<any, any> {
             onRefresh={this._freshfetch}
             refreshing={transactionLoading}
             ListHeaderComponent={this._renderFilter}
+            ListEmptyComponent={this._emptyComponent}
             data={transactions}
             onEndReached={this._fetchMore}
             onEndReachedThreshold={0.99}
             keyExtractor={this._keyExtractor}
             renderItem={this._renderItem}
+            scrollIndicatorInsets={{ right: 1 }}
           />
         </View>
       </>

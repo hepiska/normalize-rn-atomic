@@ -43,7 +43,9 @@ const productSavedReducer: Reducer<ProductSavedState> = (
       newState.data = Immutable.merge(newState.data, savedProductObj)
       return newState
     case productSavedActionType.DELETE_SAVED_PRODUCT:
-      newState.data = Immutable.without(newState.data, [action.payload])
+      newState.order = Immutable(
+        newState.order.filter(_order => _order !== action.payload),
+      )
       return newState
 
     case productSavedActionType.SET_LOADING:
