@@ -422,7 +422,8 @@ class PaymentWaiting extends Component<any, any> {
       <View key={`${channel}-${paymentVia}-${key}`}>
         <ContentExpandable
           key={`${channel}-${paymentVia}`}
-          paddingTitle="24px 0"
+          paddingTitleHorizontal={0}
+          paddingTitleVertical={24}
           title={paymentVia}
           content={
             <View style={{ marginTop: 16 }}>
@@ -629,7 +630,8 @@ class PaymentWaiting extends Component<any, any> {
           {transaction.provider_payment_method?.group_payment ===
             'Virtual Account' && this.renderVirtualAccountInfo()}
           <ContentExpandable
-            paddingTitle="24px 0"
+            paddingTitleVertical={24}
+            paddingTitleHorizontal={0}
             title={this.renderTitleExpandable()}
             rightTitle={this.renderRightTitleExpandable()}
             content={this.renderContentExpandable()}

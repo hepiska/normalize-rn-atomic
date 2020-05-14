@@ -350,7 +350,8 @@ class PaymentDetail extends React.PureComponent<any, any> {
             ]}>
             <View {...styles.border}>
               <ContentExpandable
-                paddingTitle="24px 16px"
+                paddingTitleVertical={24}
+                paddingTitleHorizontal={16}
                 title={this.renderTitleExpandable()}
                 rightTitle={this.renderRightTitleExpandable()}
                 content={this.renderContentExpandable()}

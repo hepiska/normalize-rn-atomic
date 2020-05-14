@@ -18,7 +18,8 @@ interface ContentExpandableType {
   isFirst?: boolean
   style?: ViewStyle
   divider?: any
-  paddingTitle?: string
+  paddingTitleVertical?: number
+  paddingTitleHorizontal?: number
 }
 
 const getborderStyle = isFirst => {
@@ -66,7 +67,8 @@ class ContentExpandable extends React.Component<ContentExpandableType, any> {
       isFirst,
       style,
       divider,
-      paddingTitle,
+      paddingTitleVertical,
+      paddingTitleHorizontal,
     } = this.props
     const rotation = interpolate(this.iconAnimatedValue, {
       inputRange: [0, 1],
@@ -89,7 +91,8 @@ class ContentExpandable extends React.Component<ContentExpandableType, any> {
             style={{
               width: '100%',
               flexDirection: 'row',
-              paddingVertical: paddingTitle || 32,
+              paddingVertical: paddingTitleVertical || 32,
+              paddingHorizontal: paddingTitleHorizontal || 0,
               justifyContent: 'space-between',
             }}>
             {/* left */}
