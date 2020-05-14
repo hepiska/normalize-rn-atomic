@@ -60,6 +60,15 @@ class CartModal extends React.Component<any, any> {
     this.props.getProductById(this.props.route.params?.product)
   }
 
+  componentDidUpdate(prevProps) {
+    const { product } = this.props
+    if (prevProps.product !== product) {
+      if (!product.attributes) {
+        this.setState({ selectedVariant: product.variants?.[0].id })
+      }
+    }
+  }
+
   _selectVariant = attributes => {
     const { product } = this.props
     const variant = product.variants.find(_variant => {
@@ -160,7 +169,6 @@ class CartModal extends React.Component<any, any> {
       type === 'change_variant' && changeAttribute
         ? `Update ${changeAttribute.label}`
         : 'Add To Cart'
-
     return (
       <>
         <NavbarTop title={headerTitle} leftContent={['close']} />
@@ -184,7 +192,7 @@ class CartModal extends React.Component<any, any> {
             onAttributesChanged={this._filterVariants}
             fixAttributesIds={fixAttributesIds}
             selectedAttributes={selectedAttributes}
-            attributes={product.attributes}
+            attributes={product.attributes || []}
             onAllAttributesSelected={this._selectVariant}
           />
           <AbsDiv

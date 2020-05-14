@@ -184,7 +184,7 @@ export const formStyles = StyleSheet.create({
     fontSize: 24,
   },
   field: {
-    height: 46,
+    height: 48,
     marginVertical: 12,
   },
   text: {

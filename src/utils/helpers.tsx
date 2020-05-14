@@ -184,7 +184,7 @@ export const getDetailContent = (type: string, content: any) => {
     }
     /* ini yang csv (comma separated value) */
     let result = content || []
-    if (result) {
+    if (result && result.length) {
       result = result.split(';')
       result = result.map(item => `<li>${item.trim()}</li>`)
     }

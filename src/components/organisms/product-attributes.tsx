@@ -48,7 +48,6 @@ class ProductAttributes extends Component<ProductAttributesPropsType, any> {
       fixAttributesIds = [],
       filteredAttributes = {},
     } = this.props
-
     const data = moveToFront(attributes, (e: any) => e.label === 'Color')
     return (
       <>

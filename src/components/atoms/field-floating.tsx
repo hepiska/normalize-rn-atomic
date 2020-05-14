@@ -242,8 +242,8 @@ const adjustPaddingOut = ({
 
   if (height) {
     return {
-      paddingTop: Math.max(0, (height - fontSize) / 2),
-      paddingBottom: Math.max(0, (height - fontSize) / 2),
+      paddingTop: Math.max(0, (height - (fontSize + 6)) / 2),
+      paddingBottom: Math.max(0, (height - (fontSize + 6)) / 2),
     }
   }
   if (!isAndroid && multiline) {

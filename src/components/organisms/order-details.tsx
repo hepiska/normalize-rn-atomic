@@ -656,8 +656,8 @@ const mapDispatchToProps = dispatch =>
 const mapStateToProps = (state, ownProps) => {
   const orderId = ownProps.orderId
   const order = state.orders.data[orderId]
-  const products = order.product
-  const user = state.user.data[order.user]
+  const products = order?.product
+  const user = order && state.user.data[order.user]
   const dataProducts = state.products
   return {
     order,

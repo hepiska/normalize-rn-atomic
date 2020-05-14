@@ -185,8 +185,8 @@ class CartCard extends React.Component<CartCardType, any> {
 
     const image =
       this.state.defaultImage ||
-      (!!variant.image_urls[random]
-        ? chageImageUri(images[random], { ...styles.image })
+      (!!variant.image_urls[0]
+        ? chageImageUri(images[0], { ...styles.image })
         : defaultImages.product)
 
     return (

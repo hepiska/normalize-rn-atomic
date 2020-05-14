@@ -259,6 +259,7 @@ const ProductCardHorizontal = ({
         align="flex-start">
         <Div _width="40%">
           <ImageAutoSchale
+            errorStyle={{ width: width, height: 1.5 * width }}
             thumbnailSource={
               typeof thumbnailImage === 'string'
                 ? { uri: thumbnailImage }

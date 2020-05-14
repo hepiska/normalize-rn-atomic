@@ -42,6 +42,10 @@ const ListItemJumbotron = ({ item, navigation }: ItemJumbotronType) => {
   return (
     <TouchableWithoutFeedback onPress={_onPress}>
       <ImageAutoSchale
+        errorStyle={{
+          width: globalDimention.jumbotronSize.width,
+          height: 0.66 * globalDimention.jumbotronSize.width,
+        }}
         source={{
           uri: setImage(item.image_url, {
             width: globalDimention.jumbotronSize.width,

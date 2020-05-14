@@ -27,7 +27,7 @@ const initialState: any = {
 }
 
 const productReducer: Reducer<ProductState> = (
-  state: ProductState = deepClone(initialState),
+  state: ProductState = { ...initialState },
   action: AnyAction,
 ) => {
   const newState = { ...state }
