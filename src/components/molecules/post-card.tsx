@@ -134,9 +134,8 @@ class PostListItem extends React.PureComponent<PostListItemType, any> {
 
     const image =
       this.state.defaultImage ||
-      (!!post.image_url
-        ? setImage(post.image_url, horizontal ? { width } : { width })
-        : defaultImages.product)
+      (!!post.image_url &&
+        setImage(post.image_url, horizontal ? { width } : { width }))
 
     if (post && user) {
       return (
@@ -177,9 +176,7 @@ class PostListItem extends React.PureComponent<PostListItemType, any> {
 
             <ImageAutoSchale
               source={typeof image === 'string' ? { uri: image } : image}
-              onError={() => {
-                this.setState({ defaultImage: defaultImages.product })
-              }}
+              errorStyle={{ width, height: 0.66 * width }}
               width={width}
               style={styles.image}
             />
@@ -209,9 +206,9 @@ class PostListItem extends React.PureComponent<PostListItemType, any> {
                         ? { uri: user.photo_url }
                         : user.photo_url
                     }
-                    onError={() => {
-                      this.setState({ defaultImage: defaultImages.product })
-                    }}
+                    // onError={() => {
+                    //   this.setState({ defaultImage: defaultImages.product })
+                    // }}
                     style={userImageStyle[type] || userImageStyle['default']}
                   />
                   <Font

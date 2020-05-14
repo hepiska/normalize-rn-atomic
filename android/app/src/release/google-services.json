@@ -1,0 +1,91 @@
+{
+  "project_info": {
+    "project_number": "1005565794086",
+    "firebase_url": "https://the-shonet-app.firebaseio.com",
+    "project_id": "the-shonet-app",
+    "storage_bucket": "the-shonet-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1005565794086:android:7ae58655f89fc09aba53e7",
+        "android_client_info": {
+          "package_name": "com.shonet"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1005565794086-s563vtpmqpv82lbaa5vc59k16at9eqld.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.shonet",
+            "certificate_hash": "d193a0e71756b049330d161119455bcf8d2cb35c"
+          }
+        },
+        {
+          "client_id": "1005565794086-ccg4ub2jtd91dlfc9lajjdgep9kmbfn8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBmTsU4z6R_V-Wr-vb6C0DJv6nhYjNTPX0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1005565794086-664os8f93inrhkkbek83d8veuhng5gfr.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1005565794086-coo52579c0qep36cnkgt7tbbqvje03d3.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.theshonet.mobile"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1005565794086:android:751a7856411045ab",
+        "android_client_info": {
+          "package_name": "com.shonetmobile"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1005565794086-ccg4ub2jtd91dlfc9lajjdgep9kmbfn8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBmTsU4z6R_V-Wr-vb6C0DJv6nhYjNTPX0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1005565794086-664os8f93inrhkkbek83d8veuhng5gfr.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1005565794086-coo52579c0qep36cnkgt7tbbqvje03d3.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.theshonet.mobile"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

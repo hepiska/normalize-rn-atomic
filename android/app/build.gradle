@@ -1,3 +1,5 @@
+
+
 buildscript {
     repositories {
         maven { url 'https://plugins.gradle.org/m2/' } // Gradle Plugin Portal 
@@ -10,6 +12,15 @@ buildscript {
 apply plugin: 'com.onesignal.androidsdk.onesignal-gradle-plugin'
 
 apply plugin: "com.android.application"
+
+project.ext.envConfigFiles = [
+    debug: ".env.dev",
+    beta: ".env.dev",
+    release: ".env",
+    anothercustombuild: ".env",
+]
+apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.gradle"
+
 
 import com.android.build.OutputFile
 
@@ -88,11 +99,9 @@ import com.android.build.OutputFile
 
 project.ext.react = [
     entryFile: "index.js",
-    enableHermes: false,  // clean and rebuild if changing
     bundleInBeta: true,
-    jsBundleDirBeta: "$buildDir/intermediates/assets/beta",
     devDisabledInBeta: true,
-    resourcesDirDebug: "$buildDir/intermediates/res/merged/beta",
+
 ]
 
 apply from: "../../node_modules/react-native/react.gradle"
@@ -185,7 +194,7 @@ android {
           initWith debug
           applicationIdSuffix = ".debug"
           signingConfig signingConfigs.debug
-          matchingFallbacks = ['debug']
+          matchingFallbacks = ['release']
         }
         release {
             // Caution! In production, you need to generate your own keystore file.
@@ -226,6 +235,8 @@ dependencies {
     }
 }
 
+
+
 // Run this once to be able to run the application with BUCK
 // puts all compile dependencies into folder libs for BUCK to use
 task copyDownloadableDepsToLibs(type: Copy) {
@@ -233,5 +244,4 @@ task copyDownloadableDepsToLibs(type: Copy) {
     into 'libs'
 }
 apply from: "../../node_modules/react-native-vector-icons/fonts.gradle"
-apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.gradle"
 apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)

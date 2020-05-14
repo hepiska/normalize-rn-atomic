@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Image, ViewStyle, View, StyleSheet, Animated } from 'react-native'
+import Icon from 'react-native-vector-icons/FontAwesome'
+import { colors } from '@src/utils/constants'
 
 const styles = StyleSheet.create({
   imageOverlay: {
@@ -10,6 +12,8 @@ const styles = StyleSheet.create({
     top: 0,
   },
   container: {
+    justifyContent: 'center',
+    alignItems: 'center',
     backgroundColor: '#e1e4e8',
   },
 })
@@ -22,6 +26,7 @@ interface ImageAutoSchaleType {
   source: any
   onError?: any
   thumbnailSource?: any
+  errorStyle?: ViewStyle
   containerStyle?: ViewStyle
   width?: number | string
   height?: number
@@ -31,7 +36,10 @@ interface ImageAutoSchaleType {
 let imageSize: any = null
 
 class ImageAutoSchale extends React.Component<ImageAutoSchaleType, any> {
-  state: any = {}
+  state: any = {
+    isError: false,
+    isLoading: false,
+  }
   mounted = true
   componentDidMount() {
     const { source, onError } = this.props
@@ -45,16 +53,16 @@ class ImageAutoSchale extends React.Component<ImageAutoSchaleType, any> {
           this.calculateSize(newWidth, newHeight)
         },
         err => {
-          if (onError) {
-            onError(err)
-          }
+          this.handleError()
         },
       )
-    } else {
+    } else if (source) {
       const { width: newWidth, height: newHeight } = Image.resolveAssetSource(
         source,
       )
       this.calculateSize(newWidth, newHeight)
+    } else {
+      this.handleError()
     }
     return () => {
       imageSize = null
@@ -100,20 +108,31 @@ class ImageAutoSchale extends React.Component<ImageAutoSchaleType, any> {
     }).start()
   }
   onImageLoad = () => {
-    this.setState({ imageLoaded: true })
+    this.setState({ imageLoaded: true, isLoading: false })
     Animated.timing(this.imageAnimated, {
       toValue: 1,
     }).start()
+  }
+  handleError = () => {
+    if (this.props.onError) {
+      this.props.onError
+    }
+    this.setState({ isError: true })
+  }
+  _loadStart = () => {
+    // this.setState({ isLoading: true })
   }
 
   render() {
     const {
       source,
+      errorStyle,
       style,
       width,
       thumbnailSource,
       containerStyle,
       height,
+      onError,
       ...props
     } = this.props
     const { size, imageLoaded } = this.state
@@ -121,24 +140,33 @@ class ImageAutoSchale extends React.Component<ImageAutoSchaleType, any> {
       ? [styles.imageOverlay, style as any, { opacity: this.imageAnimated }]
       : { ...size, ...style }
 
-    const aplliedContainerStyle = imageLoaded
+    let aplliedContainerStyle = imageLoaded
       ? { ...style, ...containerStyle }
       : { ...styles.container, ...style, ...containerStyle }
+
+    if (this.state.isError || !imageLoaded) {
+      aplliedContainerStyle = { ...style, ...styles.container, ...errorStyle }
+    }
     return (
       <View style={aplliedContainerStyle}>
         {thumbnailSource && (
           <Animated.Image
-            onLoad={this.handleThumbnailLoad}
+            onLoadEnd={this.handleThumbnailLoad}
+            onError={this.handleError}
             source={thumbnailSource}
             blurRadius={2}
             style={[{ ...size, ...style }, { opacity: this.thumbnailAnimated }]}
             {...props}
           />
         )}
+        {this.state.isError && (
+          <Icon name="image" size={48} color={colors.black60} />
+        )}
         <Animated.Image
           source={source}
           style={imageStyles}
-          onLoad={this.onImageLoad}
+          onError={this.handleError}
+          onLoadEnd={this.onImageLoad}
           {...props}
         />
       </View>

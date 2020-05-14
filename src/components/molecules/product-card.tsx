@@ -159,15 +159,13 @@ const ProductCard = ({
     price: selectedVariant.price,
     discount_price: selectedVariant.price_after_disc,
   }
-  const image =
-    defaultImage ||
-    (!!images[0] ? chageImageUri(images[0], { width }) : defaultImages.product)
 
-  const thumbnailImage =
-    defaultImage ||
-    (!!images[0]
-      ? chageImageUri(images[0], { width: width / 20 })
-      : defaultImages.product)
+  const image =
+    defaultImage || (!!images[0] && chageImageUri(images[0], { width }))
+
+  const thumbnailImage = defaultImage
+    ? null
+    : !!images[0] && chageImageUri(images[0], { width: width / 20 })
 
   return horizontal ? (
     <ProductCardHorizontal
@@ -184,7 +182,7 @@ const ProductCard = ({
       brand={brand}
       onSave={_onSave}
       isAuth={isAuth}
-      trigerLogin={triggerLogin}
+      triggerLogin={triggerLogin}
       onAddtoCart={onAddtoCart}
       product={product}
       colorAttributes={colorAttributes}
@@ -205,7 +203,7 @@ const ProductCard = ({
       variantPrice={variantPrice}
       onSave={_onSave}
       isAuth={isAuth}
-      trigerLogin={triggerLogin}
+      triggerLogin={triggerLogin}
       onAddtoCart={onAddtoCart}
       type={type}
       colorAttributes={colorAttributes}
@@ -267,9 +265,6 @@ const ProductCardHorizontal = ({
                 : thumbnailImage
             }
             source={typeof image === 'string' ? { uri: image } : image}
-            onError={() => {
-              setImage(defaultImages.product)
-            }}
             width={width}
             style={styles.image}
           />
@@ -384,15 +379,13 @@ const ProductCardVertical = ({
             />
           </AbsDiv>
           <ImageAutoSchale
+            errorStyle={{ width: width, height: 1.5 * width }}
             thumbnailSource={
               typeof thumbnailImage === 'string'
                 ? { uri: thumbnailImage }
                 : thumbnailImage
             }
             source={typeof image === 'string' ? { uri: image } : image}
-            onError={() => {
-              setImage(defaultImages.product)
-            }}
             width={width}
             style={{ ...styles.image }}
           />
