@@ -109,7 +109,12 @@ class PaymentWebView extends Component<any, any> {
   }
 
   componentDidUpdate() {
-    if (this.props.transaction.status.toLowerCase() === 'waiting') {
+    const totalCount =
+      this.state.countdownTimer.minutes + this.state.countdownTimer.seconds
+    if (
+      this.props.transaction.status.toLowerCase() === 'waiting' &&
+      totalCount === 0
+    ) {
       this._toTransactionDetail()
     }
   }
@@ -119,7 +124,13 @@ class PaymentWebView extends Component<any, any> {
     const status = transaction.status.toLowerCase()
     const routes = [
       { name: 'Main', params: { screen: 'Profile' } },
-      { name: 'Screens', params: { screen: 'PaymentList' } },
+      {
+        name: 'Screens',
+        params: {
+          screen: 'PaymentList',
+          params: { hideHeader: true, selectedFilter: ['unpaid', 'waiting'] },
+        },
+      },
     ]
     if (status === 'waiting') {
       routes.push({
@@ -338,6 +349,7 @@ class PaymentWebView extends Component<any, any> {
   }
   render() {
     const { route, transaction } = this.props
+    const { status } = route.params
     return (
       <>
         <NavbarTop

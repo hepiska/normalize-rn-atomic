@@ -1,5 +1,6 @@
 import { normalize } from 'normalizr'
 import { request } from '@utils/services'
+import { Alert } from 'react-native'
 import { setGlobalError } from '../global/action'
 
 import * as actions from '../action-types'
@@ -42,10 +43,15 @@ const api = ({ dispatch, getState }) => next => action => {
       }
     })
     .catch(err => {
+      console.log('error', error)
       if (error) {
         dispatch(error(err))
       } else {
-        dispatch(setGlobalError(err))
+        if (requestParams.method && requestParams.method !== 'GET') {
+          Alert.alert('Error', err.message)
+        } else {
+          dispatch(setGlobalError(err))
+        }
       }
       if (endNetwork) {
         dispatch(endNetwork('error', err))

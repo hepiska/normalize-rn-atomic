@@ -161,7 +161,7 @@ class ProductListPage extends React.Component<any, any> {
             params: {
               title: 'The shonet product' + product.name,
               uri: Config.SHONET_URI + '/products/' + product.id,
-              message: product.description,
+              message: 'Shop ' + product.name + ' at The Shonet',
             },
           })
         },

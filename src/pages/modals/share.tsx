@@ -147,6 +147,7 @@ class ShareModal extends React.Component<any, any> {
 
     const options = Platform.select({
       ios: {
+        failOnCancel: false,
         activityItemSources: [
           {
             placeholderItem: { type: 'url', content: uri },
@@ -169,6 +170,7 @@ class ShareModal extends React.Component<any, any> {
       },
       default: {
         title,
+        failOnCancel: false,
         subject: title,
         message: `${message} ${uri}`,
       },

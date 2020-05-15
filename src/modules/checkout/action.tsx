@@ -87,6 +87,14 @@ export const payNow = (cart_ids, user_address_id) => {
         setCheckoutLoading(true),
         setActiveTransaction(null),
       ],
+      endNetwork: (type, err) => {
+        const res = [setCheckoutLoading(false)]
+        if (type === 'error') {
+          res.push(setErrorCheckout(err))
+        }
+
+        return res
+      },
       success: data => {
         navigate('Screens', {
           screen: 'PaymentMethod',
@@ -100,9 +108,6 @@ export const payNow = (cart_ids, user_address_id) => {
           removeShipmentOrder(),
           setCheckoutLoading(false),
         ]
-      },
-      error: err => {
-        return [setErrorCheckout(err), setCheckoutLoading(false)]
       },
     },
   }

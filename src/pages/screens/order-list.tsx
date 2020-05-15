@@ -21,11 +21,19 @@ import OrderEmptyState from '@src/components/molecules/order-empty-state'
 const OrderHoc = orderListData(OrderCard)
 
 class OrderList extends Component<any, any> {
-  state = {
-    searchKey: '',
-    selectedFilter:
-      [this.props.route.params.selectedFilter] || this.props.filterOptions,
+  constructor(props) {
+    super(props)
+
+    const selectedFilter =
+      this.props.route.params && this.props.route.params.selectedFilter
+        ? [this.props.route.params.selectedFilter]
+        : this.props.filterOptions
+    this.state = {
+      searchKey: '',
+      selectedFilter,
+    }
   }
+
   timeout = null
   limit = 5
   skip = 0

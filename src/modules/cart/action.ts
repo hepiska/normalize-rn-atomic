@@ -1,5 +1,6 @@
 import { API } from '../action-types'
 import * as schema from '@modules/normalize-schema'
+import { Alert } from 'react-native'
 
 export const actionType = {
   SET_CART_DATA: 'cart/SET_CART_DATA',
@@ -82,6 +83,7 @@ export const addCart = (data: {
     url: '/carts',
     startNetwork: () => setLoading(true),
     success: data => {
+      Alert.alert('Success', 'Success Add Product To Cart')
       return [setCartData(data.entities.cart), getAllCart()]
     },
   },

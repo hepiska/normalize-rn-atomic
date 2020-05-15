@@ -136,9 +136,7 @@ class CourierCart extends React.PureComponent<CourierCartType, any> {
               <View style={{ flexDirection: 'row' }}>
                 <ImageAutoSchale
                   source={typeof image === 'string' ? { uri: image } : image}
-                  onError={() => {
-                    this.setState({ defaultImage: defaultImages.product })
-                  }}
+                  errorStyle={styles.image}
                   style={styles.image}
                 />
                 <View {...styles.information}>
@@ -204,9 +202,7 @@ class CourierCart extends React.PureComponent<CourierCartType, any> {
           <View style={{ flexDirection: 'row' }}>
             <ImageAutoSchale
               source={{ uri: image }}
-              onError={() => {
-                this.setState({ defaultImage: defaultImages.product })
-              }}
+              errorStyle={styles.image}
               style={styles.image}
             />
             <View {...styles.information}>

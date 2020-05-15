@@ -23,9 +23,13 @@
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>facebook</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>fb2034068290174004</string>
+				<string>fb2911287765562853</string>
 			</array>
 		</dict>
 		<dict>
@@ -49,9 +53,9 @@
 	<key>CFBundleVersion</key>
 	<string>1</string>
 	<key>FacebookAppID</key>
-	<string>2034068290174004</string>
+	<string>2911287765562853</string>
 	<key>FacebookDisplayName</key>
-	<string>The Shonet</string>
+	<string>Shonet Dev</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>fbapi</string>
@@ -96,7 +100,7 @@
 	<string>The Shonet need access for the location.
   </string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string/>
+	<string></string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>$(PRODUCT_NAME) wants to save photos</string>
 	<key>NSPhotoLibraryUsageDescription</key>

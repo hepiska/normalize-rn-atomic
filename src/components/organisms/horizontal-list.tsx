@@ -128,7 +128,6 @@ class HorizontalList extends React.Component<HorizontalListType, any> {
       ] = screenParams
 
       const screen = nestedScreenMap(screenKey, params)
-      console.log(screen.screen, screen.params)
       navigate(screen.screen, screen.params)
     } else {
       const screen = nestedScreenMap(screenParams)

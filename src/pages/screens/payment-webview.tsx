@@ -89,7 +89,7 @@ class PaymentWebView extends Component<any, any> {
     const { route, transaction } = this.props
 
     const { type } = route.params
-    if (type.toLowerCase() === 'credit card') {
+    if (type && type.toLowerCase() === 'credit card') {
       if (transaction.redirect_url) {
         const authScript = midTransAuthenticate(transaction.redirect_url)
 
@@ -181,7 +181,7 @@ class PaymentWebView extends Component<any, any> {
     const { midtransUri } = this.state
     const { uri, type } = route.params
     const source: any = { uri }
-    if (type.toLowerCase() === 'credit card') {
+    if (type && type.toLowerCase() === 'credit card') {
       if (midtransUri) {
         source.uri = midtransUri
       } else {

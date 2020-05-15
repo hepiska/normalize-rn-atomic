@@ -15,6 +15,7 @@ import { colors, images as defaultImages } from '@src/utils/constants'
 import { getTransactionById } from '@modules/transaction/action'
 import { fontStyle } from '@components/commont-styles'
 import StatusAlert from '@components/atoms/status-alert'
+import { CommonActions } from '@react-navigation/native'
 import ImageAutoSchale from '@src/components/atoms/image-autoschale'
 import { OutlineButton, GradientButton } from '@components/atoms/button'
 import { showAlert, formatRupiah, countdown } from '@utils/helpers'
@@ -184,15 +185,28 @@ class PaymentWaiting extends Component<any, any> {
     const { holdOpenWeb } = route.params || {}
 
     if (transactionId) {
-      this.callApi
+      await this.callApi
       this.interval = setInterval(this.callApi, 10000)
     }
-
     if (transaction) {
-      const expired = transaction.expiring_at
       if (!holdOpenWeb) {
         this.handleTransaction()
       }
+      const expired = transaction.expiring_at
+
+      this.count = countdown(new Date(expired), data => {
+        this.setState({
+          countdownTimer: data,
+        })
+      })
+    }
+  }
+
+  componentDidUpdate(prevProps) {
+    const { transaction } = this.props
+    if (prevProps.transaction.expiring_at !== transaction.expiring_at) {
+      const expired = transaction.expiring_at
+
       this.count = countdown(new Date(expired), data => {
         this.setState({
           countdownTimer: data,
@@ -207,8 +221,7 @@ class PaymentWaiting extends Component<any, any> {
 
   handleTransaction = () => {
     const { transaction } = this.props
-
-    const method = transaction.provider_payment_method.channel.toLowerCase()
+    const method = transaction.provider_payment_method?.channel.toLowerCase()
     let redirectUri
     switch (method) {
       case 'gopay':
@@ -226,6 +239,17 @@ class PaymentWaiting extends Component<any, any> {
     }
   }
 
+  _redirectToStatus = transaction => {
+    if (
+      transaction.status?.toLowerCase() === 'paid' &&
+      transaction.status?.toLowerCase() === 'cancelled'
+    ) {
+      this.props.navigation.replace('PaymentResponse', {
+        status: transaction.status,
+        transactionId: transaction.id,
+      })
+    }
+  }
   componentWillUnmount() {
     clearInterval(this.interval)
     clearInterval(this.count)
@@ -264,7 +288,7 @@ class PaymentWaiting extends Component<any, any> {
         <View style={styles.totalBillDetail}>
           <Text style={styles.helveticaBold14Color70}>Payment Fee</Text>
           <Text style={styles.helveticaBold14Color70}>
-            {formatRupiah(transaction.provider_payment_method.total_fee || 0)}
+            {formatRupiah(transaction.provider_payment_method?.total_fee || 0)}
           </Text>
         </View>
       </View>
@@ -470,7 +494,7 @@ class PaymentWaiting extends Component<any, any> {
           }}>
           <OutlineButton
             title="Check Your Payment"
-            onPress={this.goToTransactionList}
+            onPress={this._handleBack}
             style={styles.buttonBlue}
             fontStyle={styles.buttonTextBlue}
           />
@@ -515,14 +539,14 @@ class PaymentWaiting extends Component<any, any> {
     )
   }
 
-  goToTransactionList = () => {
-    goBack('PaymentList', {})
-  }
-
   goToShop = () => {
-    navigate('Main', {
-      screen: 'Shop',
-    })
+    const routes = [{ name: 'Main', params: { screen: 'Shop' } }]
+    this.props.navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes,
+      }),
+    )
   }
 
   moreAction = [
@@ -593,6 +617,24 @@ class PaymentWaiting extends Component<any, any> {
   _toggleBottomSheet = () => {
     this.setState({ isBottomSheetOpen: !this.state.isBottomSheetOpen })
   }
+  _handleBack = () => {
+    const routes = [
+      { name: 'Main', params: { screen: 'Shop' } },
+      {
+        name: 'Screens',
+        params: {
+          screen: 'PaymentList',
+          params: { hideHeader: true, selectedFilter: ['unpaid', 'waiting'] },
+        },
+      },
+    ]
+    this.props.navigation.dispatch(
+      CommonActions.reset({
+        index: 1,
+        routes,
+      }),
+    )
+  }
 
   render() {
     const { transaction } = this.props
@@ -603,7 +645,14 @@ class PaymentWaiting extends Component<any, any> {
       <>
         <NavbarTop
           title="Transaction Detail"
-          leftContent={['back']}
+          leftAction={
+            <Icon
+              name="chevron-left"
+              onPress={this._handleBack}
+              size={22}
+              color={colors.black100}
+            />
+          }
           rightAction={
             <PressAbbleDiv onPress={this._toggleBottomSheet}>
               <IconMi name="more-vert" size={22} color={colors.black100} />
