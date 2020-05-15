@@ -45,7 +45,7 @@ export const setAddressLoading = (data: any) => ({
   payload: data,
 })
 
-export const getUserAddressById = () => ({
+export const getUserAddressById = (dataActionType?: any) => ({
   type: API,
   payload: {
     url: '/users/' + getMe().id + '/addresses',
@@ -55,7 +55,7 @@ export const getUserAddressById = () => ({
     },
     success: data => {
       return [
-        setAddressData(data.entities.address),
+        setAddressData({ data: data.entities.address, dataActionType }),
         setAddressOrder(data.result),
         setAddressLoading(false),
       ]
@@ -104,7 +104,7 @@ export const editAddress = (addressID, data) => ({
       data,
     },
     startNetwork: () => setAddressLoading(true),
-    success: () => [setAddressLoading(false), getUserAddressById()],
+    success: () => [getUserAddressById(), setAddressLoading(false)],
     error: error => [setAddressError(error)],
   },
 })
@@ -118,7 +118,7 @@ export const removeAddress = (addressID, data) => ({
       data,
     },
     startNetwork: () => setAddressLoading(true),
-    success: () => [setAddressLoading(false), getUserAddressById()],
+    success: () => [getUserAddressById('replace'), setAddressLoading(false)],
     error: error => [setAddressError(error)],
   },
 })

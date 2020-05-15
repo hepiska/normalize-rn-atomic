@@ -178,7 +178,7 @@ const mapStateToProps = (state, ownProps) => {
 
   /* revisi: pindah ke dalam render sebelum return */
   const primaryAddress = addresses.reduce((res, value) => {
-    res = state.addresses.data[value].is_primary ? value : res
+    res = state.addresses.data[value]?.is_primary ? value : res
     return res
   }, null)
 

@@ -216,17 +216,21 @@ class ProfilPage extends React.PureComponent<any, any> {
   ]
 
   componentDidMount() {
-    const { isAuth, username, getUser } = this.props
+    const { isAuth, username, getUser, user } = this.props
     if (isAuth && username) {
       getUser(username, 'username')
+    } else if (isAuth && user.id) {
+      getUser(user.id, 'id')
     }
   }
 
   componentDidUpdate(prevProps) {
-    const { isAuth, username, getUser } = this.props
+    const { isAuth, username, getUser, user } = this.props
     if (prevProps.isAuth !== isAuth) {
       if (isAuth && username) {
         getUser(username, 'username')
+      } else if (isAuth && user.id) {
+        getUser(user.id, 'id')
       }
     }
   }

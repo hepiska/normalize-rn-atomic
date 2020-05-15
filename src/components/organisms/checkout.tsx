@@ -66,7 +66,7 @@ class Checkout extends Component<any, any> {
       userCheckoutAddress,
     } = this.props
     getUserAddressById()
-    setCheckoutAddressData(userCheckoutAddress.id)
+    if (userCheckoutAddress) setCheckoutAddressData(userCheckoutAddress.id)
   }
 
   onChooseAddress = () => {
@@ -94,62 +94,57 @@ class Checkout extends Component<any, any> {
     const { deliveryProtection } = this.state
 
     return (
-      userCheckoutAddress && (
-        <>
-          <ScrollDiv>
-            <View {...styles.container}>
-              {/* shipment */}
-              <View>
-                <Text style={{ ...styles.futura24, color: colors.black100 }}>
-                  Shipment Address
+      <>
+        <ScrollDiv>
+          <View {...styles.container}>
+            {/* shipment */}
+            <View>
+              <Text style={{ ...styles.futura24, color: colors.black100 }}>
+                Shipment Address
+              </Text>
+              <AddressHoc
+                style={{ ...styles.checkoutAddress }}
+                type="checkout"
+                addressId={userCheckoutAddress ? userCheckoutAddress.id : null}
+                onPress={this.onChooseAddress}
+              />
+            </View>
+
+            {/* item summary */}
+            <View style={{ marginTop: 40 }}>
+              <Text style={{ ...styles.futura24 }}>Item Summary</Text>
+              {data.map((item, index) => {
+                return (
+                  <ItemSummaryCart
+                    item={item}
+                    key={`item-summary-${index}`}
+                    index={index}
+                    address={userCheckoutAddress}
+                  />
+                )
+              })}
+            </View>
+
+            {/* order summary */}
+            <View style={{ marginTop: 40 }}>
+              <Text style={{ ...styles.futura24 }}>Order Summary</Text>
+              <View {...styles.orderSummaryDetail}>
+                <Text style={{ ...styles.helvetica14, color: colors.black100 }}>
+                  {`Product Total • ${carts.length} Items`}
                 </Text>
-                <AddressHoc
-                  style={{ ...styles.checkoutAddress }}
-                  type="checkout"
-                  addressId={userCheckoutAddress.id}
-                  onPress={this.onChooseAddress}
-                />
+                <Text style={{ ...styles.helvetica14, color: colors.black100 }}>
+                  {formatRupiah(totalPrice)}
+                </Text>
               </View>
-
-              {/* item summary */}
-              <View style={{ marginTop: 40 }}>
-                <Text style={{ ...styles.futura24 }}>Item Summary</Text>
-                {data.map((item, index) => {
-                  return (
-                    <ItemSummaryCart
-                      item={item}
-                      key={`item-summary-${index}`}
-                      index={index}
-                      address={userCheckoutAddress}
-                    />
-                  )
-                })}
+              <View {...styles.orderSummaryDetail}>
+                <Text style={{ ...styles.helvetica14, color: colors.black100 }}>
+                  {`Shipping Cost`}
+                </Text>
+                <Text style={{ ...styles.helvetica14, color: colors.black100 }}>
+                  {formatRupiah(shippingCost)}
+                </Text>
               </View>
-
-              {/* order summary */}
-              <View style={{ marginTop: 40 }}>
-                <Text style={{ ...styles.futura24 }}>Order Summary</Text>
-                <View {...styles.orderSummaryDetail}>
-                  <Text
-                    style={{ ...styles.helvetica14, color: colors.black100 }}>
-                    {`Product Total • ${carts.length} Items`}
-                  </Text>
-                  <Text
-                    style={{ ...styles.helvetica14, color: colors.black100 }}>
-                    {formatRupiah(totalPrice)}
-                  </Text>
-                </View>
-                <View {...styles.orderSummaryDetail}>
-                  <Text
-                    style={{ ...styles.helvetica14, color: colors.black100 }}>
-                    {`Shipping Cost`}
-                  </Text>
-                  <Text
-                    style={{ ...styles.helvetica14, color: colors.black100 }}>
-                    {formatRupiah(shippingCost)}
-                  </Text>
-                </View>
-                {/* <View {...styles.orderSummaryDetail}>
+              {/* <View {...styles.orderSummaryDetail}>
                   <Text
                     style={{ ...styles.helvetica14, color: colors.black100 }}>
                     Delivery Protection
@@ -159,20 +154,19 @@ class Checkout extends Component<any, any> {
                     {formatRupiah(deliveryProtection)}
                   </Text>
                 </View> */}
-              </View>
             </View>
-          </ScrollDiv>
-          <TotalPayCart
-            items={carts}
-            buttonText="Pay Now"
-            onCheckout={this.onPayNow}
-            shippingCost={shippingCost}
-            deliveryProtection={deliveryProtection}
-            enableButton={availablePayNow}
-            loading={loadingCheckout}
-          />
-        </>
-      )
+          </View>
+        </ScrollDiv>
+        <TotalPayCart
+          items={carts}
+          buttonText="Pay Now"
+          onCheckout={this.onPayNow}
+          shippingCost={shippingCost}
+          deliveryProtection={deliveryProtection}
+          enableButton={availablePayNow}
+          loading={loadingCheckout}
+        />
+      </>
     )
   }
 }
@@ -206,16 +200,20 @@ const mapStateToProps = (state, ownProps) => {
 
   const primaryAddress = Object.keys(state.addresses.data).reduce(
     (res, val) => {
-      let dat = state.addresses.data[val].is_primary
+      let dat = state.addresses.data[val]?.is_primary
         ? state.addresses.data[val]
         : res
       return dat
     },
     {},
   )
-  const userCheckoutAddress = state.checkout.data.address_id
-    ? { id: state.checkout.data.address_id }
-    : primaryAddress
+
+  let userCheckoutAddress = null
+  if (state.checkout.data.address_id) {
+    userCheckoutAddress = { id: state.checkout.data.address_id }
+  } else if (Object.keys(primaryAddress).length > 0) {
+    userCheckoutAddress = primaryAddress
+  }
 
   const shippingCost =
     Object.keys(state.checkout.data.warehouse).length > 0

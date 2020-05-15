@@ -27,7 +27,11 @@ const addressReducer: Reducer<AddressState> = (
   const newState = { ...state }
   switch (action.type) {
     case addressActionType.SET_ADDRESS_DATA:
-      newState.data = Immutable.merge(newState.data, action.payload)
+      if (action.payload.dataActionType !== 'replace') {
+        newState.data = Immutable.merge(newState.data, action.payload.data)
+      } else {
+        newState.data = Immutable.replace(newState.data, action.payload.data)
+      }
       return newState
     case addressActionType.SET_ADDRESS_ORDER:
       newState.order = Immutable(action.payload)

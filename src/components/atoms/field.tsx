@@ -47,7 +47,11 @@ const Field = ({
       {leftIcon && leftIcon}
       <TextInput
         value={value}
-        style={{ flex: 1 }}
+        style={{
+          flex: 1,
+          paddingVertical: 0,
+          marginVertical: Platform.OS === 'android' ? 8 : 0,
+        }}
         onChangeText={onChangeText}
         placeholder={placeholder}
         {...inputProps}

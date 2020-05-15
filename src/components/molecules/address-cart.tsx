@@ -23,6 +23,8 @@ interface AddressCartType {
   style?: ViewStyle
   address: any
   removeAddress: (address: any) => void
+  removeCheckoutAddressData: () => void
+  getUserAddressById: (dataActionType?: string) => void
   editAddress: (addressId, address: any) => void
   onPress?: () => void
   onChangeAddress?: (id: any) => void
@@ -118,8 +120,12 @@ class AddressCart extends React.PureComponent<AddressCartType, any> {
   _deleteAddress = () => {
     const {
       address: { id: address_id },
+      tempSelectedAddress,
     } = this.props
     this.props.removeAddress(address_id)
+    if (tempSelectedAddress === address_id) {
+      this.props.removeCheckoutAddressData()
+    }
     if (this.tooltip) {
       this.tooltip.toggleTooltip()
     }
@@ -145,7 +151,22 @@ class AddressCart extends React.PureComponent<AddressCartType, any> {
     } = this.props
 
     if (!address) {
-      return null
+      return (
+        <TouchableWithoutFeedback onPress={onPress}>
+          <View {...style} {...styles.divider}>
+            <View
+              style={{ flex: 0.9, width: '100%', alignItems: 'flex-start' }}>
+              <Text
+                style={{ ...styles.helveticaBold12, color: colors.black80 }}>
+                Tidak ada alamat yang terpilih
+              </Text>
+            </View>
+            <View style={{ flex: 0.1, alignItems: 'flex-end' }}>
+              <Icon name="chevron-right" size={12} color={colors.black100} />
+            </View>
+          </View>
+        </TouchableWithoutFeedback>
+      )
     }
 
     if (type === 'checkout') {
@@ -160,7 +181,10 @@ class AddressCart extends React.PureComponent<AddressCartType, any> {
               </Text>
               <View style={{ width: '100%', marginTop: 16 }}>
                 <Text
-                  style={{ ...styles.helveticaBold12, color: colors.black80 }}>
+                  style={{
+                    ...styles.helveticaBold12,
+                    color: colors.black80,
+                  }}>
                   {address.recipient_name}
                 </Text>
               </View>
@@ -300,7 +324,10 @@ class AddressCart extends React.PureComponent<AddressCartType, any> {
             <View style={{ flex: 0.9, alignItems: 'flex-start' }}>
               <View style={{ marginTop: 16 }}>
                 <Text
-                  style={{ ...styles.helveticaBold14, color: colors.black100 }}>
+                  style={{
+                    ...styles.helveticaBold14,
+                    color: colors.black100,
+                  }}>
                   {address.recipient_name}
                 </Text>
               </View>

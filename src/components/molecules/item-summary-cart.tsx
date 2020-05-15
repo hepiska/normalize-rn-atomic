@@ -122,7 +122,7 @@ class ItemSummaryCart extends React.PureComponent<ItemSummaryCartType, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.address.id !== prevProps.address.id) {
+    if (this.props.address?.id !== prevProps.address?.id) {
       const params = {
         variant_ids: this.props.variantIds.toString(),
         qtys: this.props.qtys.toString(),
@@ -191,14 +191,16 @@ class ItemSummaryCart extends React.PureComponent<ItemSummaryCartType, any> {
   }
 
   onChooseCourier = () => {
-    navigate('Screens', {
-      screen: 'ChooseCourier',
-      params: {
-        cartId: this.props.item.data,
-        addressId: this.props.address.id,
-        warehouseId: this.props.item.id,
-      },
-    })
+    if (this.props.address) {
+      navigate('Screens', {
+        screen: 'ChooseCourier',
+        params: {
+          cartId: this.props.item.data,
+          addressId: this.props.address.id,
+          warehouseId: this.props.item.id,
+        },
+      })
+    }
   }
 
   render() {

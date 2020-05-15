@@ -74,9 +74,11 @@ const EditProfile = props => {
   const mapDataUser = data => {
     let newValue = { ...data }
 
-    newValue.first_name = newValue.name.substr(0, newValue.name.indexOf(' '))
-    newValue.last_name = newValue.name.substr(newValue.name.indexOf(' ') + 1)
-    delete newValue.name
+    if (newValue.name) {
+      newValue.first_name = newValue.name.substr(0, newValue.name.indexOf(' '))
+      newValue.last_name = newValue.name.substr(newValue.name.indexOf(' ') + 1)
+      delete newValue.name
+    }
 
     return newValue
   }
@@ -276,7 +278,10 @@ const EditProfile = props => {
             <TextInputOutline
               label="Bio"
               style={formStyles.field}
-              value={state.biography.value.replace(/(<([^>]+)>)/gi, '')}
+              value={
+                state.biography.value &&
+                state.biography.value.replace(/(<([^>]+)>)/gi, '')
+              }
               onChangeText={handleOnChange('biography')}
               error={state.biography.error}
               autoCapitalize="none"
