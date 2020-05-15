@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { Div } from '@components/atoms/basic'
 import { Button, GradientButton } from '@components/atoms/button'
+import { useNavigation } from '@react-navigation/native'
 import { colors } from '@utils/constants'
 import { clearFilter, applyFilter } from '@modules/product-filter/action'
 import { formatCur } from '@utils/helpers'
@@ -41,6 +42,12 @@ const ProductFilterAction = ({
   clearFilter,
   applyFilter,
 }: any) => {
+  const navigation = useNavigation()
+
+  const _applyFilter = () => {
+    applyFilter()
+    navigation.goBack()
+  }
   return (
     <Div
       _height="72px"
@@ -70,7 +77,7 @@ const ProductFilterAction = ({
         style={{ ...styles.largeButton, ...styles.buttonStyle }}
         colors={['#3067E4', '#8131E2']}
         fontStyle={styles.whiteFont}
-        onPress={applyFilter}
+        onPress={_applyFilter}
       />
     </Div>
   )

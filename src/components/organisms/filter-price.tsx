@@ -60,36 +60,49 @@ const FilterPriceOrg = ({
   colectionPrices,
   fetchCountProduct,
 }: any) => {
-  const [multiSlider, changeMultiSlider] = useState([0, maxSlider])
+  const delta = colectionPrices.maximum_price - colectionPrices.minimum_price
+  const initialCursorMin = Math.round(
+    ((minimum_price - colectionPrices.minimum_price) / delta) * maxSlider,
+  )
+  const initialCursorMax = Math.round(
+    ((colectionPrices.maximum_price - minimum_price) / delta) * maxSlider,
+  )
+  const [multiSlider, changeMultiSlider] = useState([
+    initialCursorMin,
+    initialCursorMax,
+  ])
+  let timeout = null
 
   useEffect(() => {
     fetchCountProduct({ maximum_price, minimum_price })
   }, [maximum_price, minimum_price])
-  const delta = colectionPrices.maximum_price - colectionPrices.minimum_price
   const parentScrollDisabled = value => {
     changeValueUiIneraction({ key: 'isScrollEnabled', value: value })
   }
 
   useEffect(() => {
-    const initialCursorMin = Math.round(
-      ((minimum_price - colectionPrices.minimum_price) / delta) * maxSlider,
-    )
-    const initialCursorMax = Math.round(
-      ((colectionPrices.maximum_price - minimum_price) / delta) * 10,
-    )
-    changeMultiSlider([initialCursorMin, initialCursorMax])
+    return () => {
+      clearTimeout(timeout)
+    }
   }, [])
+
   useEffect(() => {
-    setSelectedPrice({
-      type: 'minimum_price',
-      value:
-        colectionPrices.minimum_price + (multiSlider[0] / maxSlider) * delta,
-    })
-    setSelectedPrice({
-      type: 'maximum_price',
-      value:
-        colectionPrices.minimum_price + (multiSlider[1] / maxSlider) * delta,
-    })
+    if (timeout) {
+      timeout = null
+    }
+
+    timeout = setTimeout(() => {
+      setSelectedPrice({
+        type: 'minimum_price',
+        value:
+          colectionPrices.minimum_price + (multiSlider[0] / maxSlider) * delta,
+      })
+      setSelectedPrice({
+        type: 'maximum_price',
+        value:
+          colectionPrices.minimum_price + (multiSlider[1] / maxSlider) * delta,
+      })
+    }, 500)
   }, [multiSlider])
   const _chageSlider = pos => {
     changeMultiSlider(pos)

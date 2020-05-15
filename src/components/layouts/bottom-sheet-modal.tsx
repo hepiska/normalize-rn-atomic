@@ -82,6 +82,7 @@ const BottomSheetModal = ({
     <Modal isVisible={isOpen} style={{ margin: 0, paddingBottom: 100 }}>
       <BottomSheet
         {...bottomSheetProps}
+        enabledContentGestureInteraction={false}
         onCloseEnd={onClose}
         initialSnap={initialSnap}
         renderHeader={() => <Header leftAction={leftAction} title={title} />}

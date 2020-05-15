@@ -1,6 +1,54 @@
 import { colors } from '@utils/constants'
 import { StyleSheet, Platform } from 'react-native'
 
+export const fontStyle =
+  Platform.OS === 'ios'
+    ? StyleSheet.create({
+        helvetica: {
+          fontFamily: 'Helvetica Neue',
+          fontWeight: 'normal',
+        },
+        helveticaThin: {
+          fontFamily: 'Helvetica Neue',
+          fontWeight: '200',
+        },
+        helveticaBold: {
+          fontFamily: 'Helvetica Neue',
+          fontWeight: 'bold',
+        },
+        futura: {
+          fontFamily: 'Futura',
+        },
+        futuraBold: {
+          fontFamily: 'Futura',
+          fontWeight: 'bold',
+        },
+        futuraDemi: {
+          fontFamily: 'FuturaDemi',
+        },
+      })
+    : StyleSheet.create({
+        helvetica: {
+          fontFamily: 'HelveticaNeue',
+          // fontWeight: 'normal',
+        },
+        helveticaThin: {
+          fontFamily: 'HelveticaNeue-Thin',
+        },
+        helveticaBold: {
+          fontFamily: 'HelveticaNeue-Bold',
+        },
+        futuraBold: {
+          fontFamily: 'Futura-Bold',
+        },
+        futura: {
+          fontFamily: 'Futura',
+        },
+        futuraDemi: {
+          fontFamily: 'FuturaDemi',
+        },
+      })
+
 export const futuraBlackFont24 = {
   size: 24,
   type: 'Futura',
@@ -16,8 +64,6 @@ export const futuraTitleFont = {
 
 export const futuraBoldFont16 = {
   size: 16,
-  type: 'Futura',
-  weight: 'bold',
   color: colors.black100,
 }
 
@@ -97,54 +143,6 @@ export const helveticaBlackBoldFont10 = {
   weight: 'bold',
   color: colors.black100,
 }
-
-export const fontStyle =
-  Platform.OS === 'ios'
-    ? StyleSheet.create({
-        helvetica: {
-          fontFamily: 'Helvetica Neue',
-          fontWeight: 'normal',
-        },
-        helveticaThin: {
-          fontFamily: 'Helvetica Neue',
-          fontWeight: '200',
-        },
-        helveticaBold: {
-          fontFamily: 'Helvetica Neue',
-          fontWeight: 'bold',
-        },
-        futura: {
-          fontFamily: 'Futura',
-        },
-        futuraBold: {
-          fontFamily: 'Futura',
-          fontWeight: 'bold',
-        },
-        futuraDemi: {
-          fontFamily: 'FuturaDemi',
-        },
-      })
-    : StyleSheet.create({
-        helvetica: {
-          fontFamily: 'HelveticaNeue',
-          // fontWeight: 'normal',
-        },
-        helveticaThin: {
-          fontFamily: 'HelveticaNeue-Thin',
-        },
-        helveticaBold: {
-          fontFamily: 'HelveticaNeue-Bold',
-        },
-        futuraBold: {
-          fontFamily: 'Futura-Bold',
-        },
-        futura: {
-          fontFamily: 'Futura',
-        },
-        futuraDemi: {
-          fontFamily: 'FuturaDemi',
-        },
-      })
 
 export const borderStyle = StyleSheet.create({
   all: {

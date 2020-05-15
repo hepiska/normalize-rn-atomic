@@ -3,6 +3,8 @@ import { Dimensions, StyleSheet, SectionList } from 'react-native'
 import { Div, Font } from '@components/atoms/basic'
 import { brandListData } from '@hocs/data/brand'
 import Field from '@components/atoms/field'
+import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler'
+
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { colors } from '@utils/constants'
@@ -14,6 +16,7 @@ import { deepClone } from '@utils/helpers'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import AlvabetSelectorMol from '@components/molecules/alvabet-selector'
 import FilterBrandItem from '@components/molecules/filter-brand-item'
+import { fontStyle } from '../commont-styles'
 
 const { width } = Dimensions.get('screen')
 
@@ -76,6 +79,7 @@ const FilterBrandOrg = (props: any) => {
 
   const _renderItem = ({ item }) => (
     <FilterBrandItem
+      fontStyle={fontStyle.helvetica}
       onPress={brand => props.changeSelectedBrand(brand.id)}
       key={item.id}
       isSelected={props.selectedBrand.includes(item.id)}
@@ -115,7 +119,9 @@ const FilterBrandOrg = (props: any) => {
         style={styles.sectionContainer}
         renderSectionHeader={({ section: { title } }) => (
           <Div _width="100%" bg="white" padd="8px 0px" align="flex-start">
-            <Font _padding="16px 0px 0px">{title}</Font>
+            <Font _padding="16px 0px 0px" style={fontStyle.helvetica}>
+              {title}
+            </Font>
           </Div>
         )}
         sections={brands}

@@ -1,5 +1,11 @@
 import React from 'react'
-import { StyleSheet, View, ViewStyle, Text } from 'react-native'
+import {
+  StyleSheet,
+  View,
+  ViewStyle,
+  Text,
+  TouchableOpacity,
+} from 'react-native'
 import { Div, Font, PressAbbleDiv } from '@components/atoms/basic'
 import {
   helveticaNormalFont12,
@@ -15,7 +21,7 @@ import IconFa from 'react-native-vector-icons/FontAwesome5'
 import IconMa from 'react-native-vector-icons/MaterialIcons'
 import { navigate } from '@src/root-navigation'
 import { setImage as chageImageUri, formatRupiah } from '@utils/helpers'
-import { TouchableOpacity } from 'react-native-gesture-handler'
+// import { TouchableOpacity } from 'react-native-gesture-handler'
 
 interface CartCardType {
   brand: any

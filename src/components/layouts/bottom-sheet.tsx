@@ -78,6 +78,7 @@ const BottomSheetLay = ({
       <BottomSheet
         {...bottomSheetProps}
         onCloseEnd={onClose}
+        enabledContentGestureInteraction={false}
         initialSnap={initialSnap}
         renderHeader={() => <Header leftAction={leftAction} title={title} />}
         snapPoints={snapPoints}

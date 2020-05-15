@@ -1,9 +1,17 @@
-import React, { ReactElement, useRef, useEffect } from 'react'
-import { StyleSheet, Dimensions, ViewStyle } from 'react-native'
-import { Div, Font, ScrollDiv, PressAbbleDiv } from '@components/atoms/basic'
+import React, { ReactElement, useRef, useEffect, useMemo } from 'react'
+import {
+  StyleSheet,
+  Dimensions,
+  ViewStyle,
+  TouchableOpacity,
+  ScrollView,
+} from 'react-native'
+import { Div, Font } from '@components/atoms/basic'
 import { colors } from '@utils/constants'
 import { connect } from 'react-redux'
-import { futuraBoldFont16 } from '@components/commont-styles'
+import { bindActionCreators } from 'redux'
+import { futuraBoldFont16, fontStyle } from '@components/commont-styles'
+import { changeValue as changeValueUiIneraction } from '@modules/ui-interaction/action'
 
 const styles = StyleSheet.create({
   active: {
@@ -59,44 +67,49 @@ const TabMenu = ({
     const idx = Math.ceil(nativeEvent.contentOffset.x / width)
     onChangeTab(items[idx])
   }
-  return (
-    <Div _width={width} style={style}>
-      <Div _width={width}>
-        <ScrollDiv
-          horizontal
-          _margin="8px 0px"
-          _width="100%"
-          showsHorizontalScrollIndicator={false}>
-          {items.map(item => (
-            <PressAbbleDiv
-              _margin="0px 8px"
-              key={item.name + 'button'}
-              _padding="4px"
-              onPress={_onChangeTab(item)}
-              style={{ ...getActiveStyle(item, selectedItem) }}>
-              <Font {...futuraBoldFont16}>{item.title}</Font>
-            </PressAbbleDiv>
-          ))}
-        </ScrollDiv>
+  return useMemo(
+    () => (
+      <Div _width={width} style={style}>
+        <Div _width={width}>
+          <ScrollView
+            horizontal
+            style={{ marginVertical: 8, width: '100%' }}
+            showsHorizontalScrollIndicator={false}>
+            {items.map(item => (
+              <TouchableOpacity
+                key={item.name + 'button'}
+                onPress={_onChangeTab(item)}
+                style={{
+                  marginHorizontal: 8,
+                  padding: 4,
+                  ...getActiveStyle(item, selectedItem),
+                }}>
+                <Font style={{ ...fontStyle.futuraDemi, fontSize: 16 }}>
+                  {item.title}
+                </Font>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+        </Div>
+        <ScrollView
+          style={{ marginVertical: 8, height: '100%' }}
+          scrollEnabled={isScrollEnabled}
+          ref={scrolContent}
+          onMomentumScrollEnd={_onChangePage}
+          centerContent
+          pagingEnabled
+          showsHorizontalScrollIndicator={false}
+          horizontal>
+          {items.map(item => item.Component)}
+        </ScrollView>
       </Div>
-      <ScrollDiv
-        _height="100%"
-        _margin="8px 0px"
-        scrollEnabled={isScrollEnabled}
-        ref={scrolContent}
-        onMomentumScrollEnd={_onChangePage}
-        _width="100%"
-        centerContent
-        pagingEnabled
-        showsHorizontalScrollIndicator={false}
-        horizontal>
-        {items.map(item => item.Component)}
-      </ScrollDiv>
-    </Div>
+    ),
+    [selectedItem, isScrollEnabled],
   )
 }
 
 const mapStateToProps = state => ({
   isScrollEnabled: state.uiInteraction.isScrollEnabled,
 })
+
 export default connect(mapStateToProps, null)(TabMenu)

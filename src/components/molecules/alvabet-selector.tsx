@@ -1,5 +1,6 @@
 import React from 'react'
 import { Div, Font, ScrollDiv, PressAbbleDiv } from '@components/atoms/basic'
+import { fontStyle } from '@components/commont-styles'
 
 const alvabet = '#abcdefghijklmnopqrstuvwxyz'
 
@@ -16,7 +17,7 @@ const AlvabetSelectorMol = ({ style, onSelect, available }: any) => {
             key={`alphabeth-${k}`}
             _padding="8px"
             onPress={_onPress(al)}>
-            <Font>{al.toUpperCase()}</Font>
+            <Font style={fontStyle.helvetica}>{al.toUpperCase()}</Font>
           </PressAbbleDiv>
         ))}
       </ScrollDiv>

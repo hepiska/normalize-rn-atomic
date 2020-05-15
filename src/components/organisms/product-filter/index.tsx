@@ -1,8 +1,16 @@
-import React, { Component, useState, memo } from 'react'
-import { Dimensions, FlatList, Modal, StyleSheet, View } from 'react-native'
+import React, { Component, useState, memo, useRef, useEffect } from 'react'
+import {
+  Dimensions,
+  FlatList,
+  Modal,
+  StyleSheet,
+  View,
+  TouchableWithoutFeedback,
+  TouchableOpacity,
+} from 'react-native'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { Div, Font, TouchableWithoutFeedback } from '@components/atoms/basic'
+import { Div, Font } from '@components/atoms/basic'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import styled from 'styled-components/native'
 import { Button, OutlineButton, GradientButton } from '@components/atoms/button'
@@ -99,12 +107,9 @@ const Header = props => {
         _padding="16px 0px"
         justify="space-between">
         {props.section !== 'sort' && (
-          <Icon
-            name="chevron-left"
-            onPress={props.onBack}
-            size={16}
-            color={colors.black100}
-          />
+          <TouchableOpacity onPress={props.onBack}>
+            <Icon name="chevron-left" size={16} color={colors.black100} />
+          </TouchableOpacity>
         )}
 
         <Div _flex="1">
@@ -125,6 +130,7 @@ const Header = props => {
 
 const FilterBottomSheet = props => {
   const { isOpen, section } = props
+
   const _snapPoint =
     section !== 'sort'
       ? [height * 0.8, height * 0.5, 0]
@@ -134,6 +140,7 @@ const FilterBottomSheet = props => {
       <BottomSheet
         onCloseEnd={() => props.navigation.goBack()}
         initialSnap={0}
+        enabledContentGestureInteraction={false}
         renderHeader={() => (
           <Header onBack={() => props.navigation.goBack()} section={section} />
         )}
@@ -142,6 +149,10 @@ const FilterBottomSheet = props => {
           section === 'sort' ? <SortOrg /> : <FilterContent />
         }
       />
+      {/* <RBSheet ref={refRBSheet}>
+        <FilterContent />
+      </RBSheet> */}
+
       <TouchableWithoutFeedback onPress={() => props.navigation.goBack()}>
         <Div bg="rgba(0,0,0,0.7)" _height={height} _width="100%" />
       </TouchableWithoutFeedback>

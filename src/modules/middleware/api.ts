@@ -43,11 +43,14 @@ const api = ({ dispatch, getState }) => next => action => {
       }
     })
     .catch(err => {
-      console.log('error', error)
       if (error) {
         dispatch(error(err))
       } else {
-        if (requestParams.method && requestParams.method !== 'GET') {
+        if (
+          requestParams &&
+          requestParams.method &&
+          requestParams.method !== 'GET'
+        ) {
           Alert.alert('Error', err.message)
         } else {
           dispatch(setGlobalError(err))

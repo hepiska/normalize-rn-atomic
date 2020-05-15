@@ -28,9 +28,10 @@ interface PickerProps {
 
 class PickerAndroid extends React.Component<PickerProps> {
   state = {
+    selectedValue: null,
     isVisible: false,
   }
-
+  scrollRef = null
   onClose = () => {
     const { onCancel } = this.props
     this.setState({ isVisible: false })
@@ -39,15 +40,38 @@ class PickerAndroid extends React.Component<PickerProps> {
     }
   }
 
+  timeOut = null
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.isVisible !== this.state.isVisible) {
+      this.setSelectedValue(this.props.value)
+    }
+    if (this.props.value !== prevProps.value) {
+      this.setSelectedValue(this.props.value)
+    }
+  }
+
+  setSelectedValue = props => {
+    this.setState({ selectedValue: props }, () => {
+      if (this.scrollRef && this.itemsHeight) {
+        this.timeOut = setTimeout(() => {
+          this.scrollRef.scrollTo({
+            y: this.itemsHeight * this.state.selectedValue - 30,
+          })
+        }, 100)
+      }
+    })
+  }
+
   onChangeHandler = (value, index) => () => {
     const { onValueChange, onDismiss, items } = this.props
-    onValueChange(value, index, items[index])
+    onValueChange(index, index, items[index])
     onDismiss !== undefined && onDismiss()
     this.setState({
       isVisible: false,
     })
   }
-
+  itemsHeight = 48
   render() {
     const { isVisible } = this.state
     const { value, items, title, pickerRef } = this.props
@@ -75,6 +99,9 @@ class PickerAndroid extends React.Component<PickerProps> {
           {title && (
             <Div
               _width="100%"
+              onLayout={e => {
+                this.itemsHeight = e.nativeEvent.layout.height
+              }}
               align="flex-start"
               _padding="16px 0px 12px 0px"
               style={{
@@ -86,9 +113,16 @@ class PickerAndroid extends React.Component<PickerProps> {
               </Font>
             </Div>
           )}
-          <ScrollDiv style={{ width: '100%' }}>
+          <ScrollDiv
+            style={{ width: '100%' }}
+            ref={ref => (this.scrollRef = ref)}>
             {items.map((item, index) => (
-              <Div key={`item-${index}`} width="100%">
+              <Div
+                key={`item-${index}`}
+                width="100%"
+                _background={
+                  index === this.state.selectedValue ? colors.black50 : 'white'
+                }>
                 <PressAbbleDiv
                   onPress={this.onChangeHandler(item.value, index)}
                   _width="100%"
@@ -145,6 +179,9 @@ class PickerIOS extends React.Component<PickerProps> {
 
   componentDidUpdate(prevProps, prevState) {
     if (prevState.isVisible !== this.state.isVisible) {
+      this.setSelectedValue(this.props.value)
+    }
+    if (this.props.value !== prevProps.value) {
       this.setSelectedValue(this.props.value)
     }
   }

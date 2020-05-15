@@ -66,6 +66,13 @@ const regionMap = {
   },
 }
 
+const dataQueryMap = {
+  city: 'cities',
+  // village: 'villages',
+  district: 'districts',
+  region: 'regions',
+}
+
 const mapaddressValue = addressRes => {
   const selectedLocation = {}
   if (addressRes) {
@@ -119,7 +126,7 @@ const AddAddressManual = props => {
 
   const getData = (activeLocation, id) => {
     getLocation(activeLocation, id).then(data => {
-      const newLocationOptions = deepClone(locationOptions)
+      const newLocationOptions = { ...locationOptions }
       newLocationOptions[regionMap[activeRegionLevel].child] = data.map(
         _data => ({
           label: '' + _data.name,
@@ -128,6 +135,29 @@ const AddAddressManual = props => {
       )
       setLocationOptions(newLocationOptions)
     })
+  }
+  const _getInitialData = section => {
+    console.log('selectedLocation', selectedLocation)
+    if (selectedLocation[regionMap[section].parent]) {
+      getLocation(
+        regionMap[section].parent,
+        selectedLocation[regionMap[section].parent],
+      ).then(data => {
+        const newLocationOptions = { ...locationOptions }
+        const newDataPos = { ...selectedDataPos }
+        newLocationOptions[section] = data.map((_data, idx) => {
+          if (_data.id === selectedLocation[section]) {
+            newDataPos[section] = idx
+          }
+          return {
+            label: '' + _data.name,
+            name: _data.id,
+          }
+        })
+        setSelectedDataPos(newDataPos)
+        setLocationOptions(newLocationOptions)
+      })
+    }
   }
 
   const _changeSelectedDataPos = (name, pos) => {
@@ -149,7 +179,14 @@ const AddAddressManual = props => {
     if (activeRegionLevel !== 'villages')
       getData(activeRegionLevel, selectedLocation[activeRegionLevel])
   }, [])
-
+  const _getInitialSelected = address => {
+    const newSelectedLocation = { ...selectedLocation }
+    newSelectedLocation.cities = address.city.id
+    newSelectedLocation.regions = address.region.id
+    newSelectedLocation.districts = address.district.id
+    newSelectedLocation.villages = address.village.id
+    setSelectedLocation(newSelectedLocation)
+  }
   useEffect(() => {
     if (props.address) {
       const newInitialData = {}
@@ -161,6 +198,7 @@ const AddAddressManual = props => {
         }
       })
       setInitialAddress(newInitialData)
+      _getInitialSelected(props.address)
     }
   }, [props.address])
 
@@ -258,9 +296,10 @@ const AddAddressManual = props => {
     const newSelectedLocation = { ...selectedLocation }
     setInitialAddress({})
     newSelectedLocation[activeRegionLevel] = id
+    console.log('===', newSelectedLocation, activeRegionLevel)
     setSelectedLocation(newSelectedLocation)
-    if (activeRegionLevel !== 'villages') getData(activeRegionLevel, id)
-    else
+    // if (activeRegionLevel !== 'villages') getData(activeRegionLevel, id)
+    if (activeRegionLevel == 'villages') {
       getZipCode({
         city_id: selectedLocation.cities,
         district_id: selectedLocation.districts,
@@ -275,6 +314,7 @@ const AddAddressManual = props => {
         setSelectedLocation(newSelectedLocation)
         handleOnChange('zip_code_id')(zipCode?.id)
       })
+    }
   }
 
   const _locationApplied = location => {
@@ -287,10 +327,10 @@ const AddAddressManual = props => {
     setModalVisible(false)
   }
   const pickerOptions = locationOptions[activeRegionLevel] || []
+
   const pickerTitle = `Choose ${regionMap[activeRegionLevel].name}`
   const title =
     props.route.params?.type === 'edit' ? 'Edit Address' : 'Add New Address'
-
   return useMemo(
     () => (
       <>
@@ -302,6 +342,7 @@ const AddAddressManual = props => {
           items={pickerOptions}
           onValueChange={(value, index, data) => {
             if (data) {
+              console.log('data', data)
               _changeSelectedDataPos(activeRegionLevel, value)
               onSelect(data.name)
               handleOnChange(regionMap[activeRegionLevel].key)(data.name)
@@ -374,6 +415,7 @@ const AddAddressManual = props => {
             style={{ width: '100%' }}
             onPress={() => {
               SetActiveRegionLevel('cities')
+              _getInitialData('cities')
               pickerRef.show()
             }}>
             <TextInputOutline
@@ -398,6 +440,8 @@ const AddAddressManual = props => {
             style={{ width: '100%' }}
             onPress={() => {
               SetActiveRegionLevel('districts')
+              _getInitialData('districts')
+
               pickerRef.show()
             }}>
             <TextInputOutline
@@ -422,6 +466,8 @@ const AddAddressManual = props => {
             style={{ width: '100%' }}
             onPress={() => {
               SetActiveRegionLevel('villages')
+              _getInitialData('villages')
+
               pickerRef.show()
             }}>
             <TextInputOutline
@@ -518,6 +564,7 @@ const AddAddressManual = props => {
     [
       state,
       selectedDataPos,
+      locationOptions,
       props,
       activeRegionLevel,
       selectedLocation,

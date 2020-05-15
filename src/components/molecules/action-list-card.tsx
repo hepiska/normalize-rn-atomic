@@ -1,10 +1,15 @@
 import React, { useState } from 'react'
-import { Text, StyleSheet, View, ViewStyle } from 'react-native'
+import {
+  Text,
+  StyleSheet,
+  View,
+  ViewStyle,
+  TouchableOpacity,
+} from 'react-native'
 import { colors } from '@utils/constants'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import IconMi from 'react-native-vector-icons/MaterialIcons'
 import { fontStyle, borderStyle } from '@src/components/commont-styles'
-import { TouchableOpacity } from 'react-native-gesture-handler'
 
 interface ActionListCartType {
   source?: string
