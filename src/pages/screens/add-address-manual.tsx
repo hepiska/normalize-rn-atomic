@@ -8,7 +8,7 @@ import {
 } from 'react-native'
 import NavbarTop from '@components/molecules/navbar-top'
 import Icon from 'react-native-vector-icons/FontAwesome'
-import { formStyles } from '@components/commont-styles'
+import { formStyles, fontStyle } from '@components/commont-styles'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import TextInputOutline from '@src/components/atoms/field-floating'
@@ -99,8 +99,8 @@ const getZipCode = params =>
 const styles = StyleSheet.create({
   header: { height: headerHeight },
   smallFont: {
+    ...fontStyle.helveticaBold,
     marginVertical: 12,
-    fontFamily: 'Helvetica Neue',
     lineHeight: 14,
     fontSize: 12,
     color: colors.black80,
@@ -296,7 +296,6 @@ const AddAddressManual = props => {
     const newSelectedLocation = { ...selectedLocation }
     setInitialAddress({})
     newSelectedLocation[activeRegionLevel] = id
-    console.log('===', newSelectedLocation, activeRegionLevel)
     setSelectedLocation(newSelectedLocation)
     // if (activeRegionLevel !== 'villages') getData(activeRegionLevel, id)
     if (activeRegionLevel == 'villages') {
@@ -391,6 +390,7 @@ const AddAddressManual = props => {
             style={{ width: '100%' }}
             onPress={() => {
               SetActiveRegionLevel('regions')
+              _getInitialData('regions')
               pickerRef.show()
             }}>
             <TextInputOutline

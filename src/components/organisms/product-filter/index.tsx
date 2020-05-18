@@ -12,11 +12,8 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { Div, Font } from '@components/atoms/basic'
 import Icon from 'react-native-vector-icons/FontAwesome'
-import styled from 'styled-components/native'
-import { Button, OutlineButton, GradientButton } from '@components/atoms/button'
 import BottomSheet from 'reanimated-bottom-sheet'
 import { colors } from '@utils/constants'
-import { useNavigation } from '@react-navigation/native'
 import { changeValue } from '@modules/product-filter/action'
 import FilterPriceOrg from '@src/components/organisms/filter-price'
 import FilterCategoryOrg from '@src/components/organisms/filter-category'
@@ -26,7 +23,7 @@ import SortOrg from '@components/organisms/sort-organism'
 
 import TabMenu from '@src/components/layouts/tab-menu'
 
-const { height } = Dimensions.get('screen')
+const { height, width } = Dimensions.get('screen')
 
 const styles = StyleSheet.create({
   bottomSheetHeader: {
@@ -72,6 +69,7 @@ const FilterContent = connect(
   mapStateToProps,
   mapDispatchToProps,
 )(props => {
+  console.log('====masuk sini', props.section)
   return (
     <Div
       _width="100%"
@@ -80,6 +78,7 @@ const FilterContent = connect(
       _padding="0px 16px 80px"
       justify="flex-start">
       <TabMenu
+        style={{ width }}
         items={TabMenuData}
         selectedItem={props.section}
         onChangeTab={selectedItem => {

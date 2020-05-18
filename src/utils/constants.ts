@@ -42,6 +42,7 @@ export const colors = {
   blue50: '#455BE3',
   blue60: '#114CD4',
   background: '#FFF',
+  grayBg: '#E5E5E5',
   purple1: '#9B51E0',
   purple2: '#BB6BD9',
   white: '#FFFFFF',

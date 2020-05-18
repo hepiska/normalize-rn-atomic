@@ -21,8 +21,12 @@ import PaymentWaiting from './payment-waiting'
 import PaymentResponse from './payment-status-response'
 import PaymentWebView from './payment-webview'
 import Search from './search-list'
+import MyProfile from './my-other-profille'
 import SizeGuideWebView from './size-guide-webview'
+import TestLayout from './test-layout'
 import EditProfile from './edit-profile'
+import Follow from './follow'
+import AccountSetting from './account-setting'
 import Wishlist from './wishlist'
 
 const Stack = createStackNavigator()
@@ -56,7 +60,11 @@ function InsiderStack() {
       <Stack.Screen name="SizeGuideWebView" component={SizeGuideWebView} />
       <Stack.Screen name="PaymentResponse" component={PaymentResponse} />
       <Stack.Screen name="OrderList" component={OrderList} />
+      <Stack.Screen name="MyProfile" component={MyProfile} />
+      <Stack.Screen name="TestLayout" component={TestLayout} />
       <Stack.Screen name="EditProfile" component={EditProfile} />
+      <Stack.Screen name="Follow" component={Follow} />
+      <Stack.Screen name="AccountSetting" component={AccountSetting} />
       <Stack.Screen name="SearchList" component={Search} />
       <Stack.Screen name="Wishlist" component={Wishlist} />
       <Stack.Screen

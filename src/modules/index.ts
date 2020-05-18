@@ -26,6 +26,7 @@ import commentReducer from './comment/reducer'
 import productAttributeReducer from './product-attribute/reducer'
 import checkoutReducer from './checkout/reducer'
 import transactionReducer from './transaction/reducer'
+import userPostReducer from './user-post/reducer'
 
 const combinedReducer: Reducer<any> = combineReducers({
   addresses: addressReducer,
@@ -65,6 +66,7 @@ const combinedReducer: Reducer<any> = combineReducers({
   uiInteraction: uiInteracrionReducer,
 
   user: userReducer,
+  userPosts: userPostReducer,
 })
 
 export default combinedReducer

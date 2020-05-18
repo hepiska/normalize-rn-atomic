@@ -52,7 +52,7 @@ interface NavbarBottomProps {
   showCart?: boolean
   showBack?: boolean
   showBars?: boolean
-  Title?: string | React.ReactType<any>
+  title?: string | React.ReactType<any>
 }
 
 const headerHeight = 55
@@ -62,7 +62,7 @@ const AnimatedSaveArea: any = Animated.createAnimatedComponent(SafeAreaView)
 const NavbarTopAnimated: React.SFC<NavbarBottomProps> = ({
   style,
   showBack,
-  Title,
+  title,
   showSearch,
   showCart,
   showBars,
@@ -159,7 +159,7 @@ const NavbarTopAnimated: React.SFC<NavbarBottomProps> = ({
               },
               { opacity: textOpacity },
             ]}>
-            {Title}
+            {title}
           </Animated.Text>
         </Div>
 

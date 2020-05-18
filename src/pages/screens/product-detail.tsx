@@ -264,7 +264,7 @@ class ProductListPage extends React.Component<any, any> {
           showSearch
           showCart
           y={y}
-          Title={product.name}
+          title={product.name}
         />
         <Div _width="100%" justify="flex-start">
           <CoverImageAnimated

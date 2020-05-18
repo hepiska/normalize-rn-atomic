@@ -20,9 +20,9 @@ interface FilterItemType {
 }
 
 interface SearchIconType {
-  searchKey: string
+  searchKey?: string
   placeholder?: string
-  onSearchChange: (key: string) => void
+  onSearchChange?: (key: string) => void
   filterItems?: Array<FilterItemType>
   selectedFilter: Array<string>
   onfilterSelected?: (FilterItemType) => void
@@ -56,26 +56,28 @@ const SearchFilter = ({
   }
   return (
     <View style={{ ...styles.container, ...style }}>
-      <Field
-        value={searchKey}
-        placeholder={placeholder || 'Search...'}
-        onChangeText={onSearchChange}
-        leftIcon={
-          <Icon
-            style={{ marginRight: 8 }}
-            name="search"
-            color={colors.black90}
-          />
-        }
-        inputProps={{ ...inputProps }}
-      />
+      {onSearchChange && (
+        <Field
+          value={searchKey}
+          placeholder={placeholder || 'Search...'}
+          onChangeText={onSearchChange}
+          leftIcon={
+            <Icon
+              style={{ marginRight: 8 }}
+              name="search"
+              color={colors.black90}
+            />
+          }
+          inputProps={{ ...inputProps }}
+        />
+      )}
       <View style={{ flexDirection: 'row' }}>
         {filterItems && (
           <ScrollView
             showsHorizontalScrollIndicator={false}
             scrollEnabled
             horizontal
-            style={{ marginVertical: 12 }}>
+            style={onSearchChange ? { marginVertical: 12 } : {}}>
             {filterItems.map((data, index) => {
               const isSelected = selectedFilter?.includes(data.value)
               const border = isSelected ? { borderColor: colors.black100 } : {}

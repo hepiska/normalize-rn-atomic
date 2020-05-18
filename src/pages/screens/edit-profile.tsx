@@ -250,7 +250,7 @@ const EditProfile = props => {
           />
 
           {/* user info */}
-          <View style={{ marginTop: 52, paddingHorizontal: 16 }}>
+          <View style={{ paddingHorizontal: 16 }}>
             <TextInputOutline
               label="Username"
               style={formStyles.field}

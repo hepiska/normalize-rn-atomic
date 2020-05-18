@@ -91,22 +91,8 @@ const ProfilePicture = (props: ProfilePictureType) => {
 
   return (
     <View>
-      {/* background Profile */}
-      <View style={{ ...styles.backgroundProfile }}>
-        <Image
-          source={require('../../assets/placeholder/background-profile.png')}
-          style={styles.backgroundImage}
-        />
-        {type === 'edit' && (
-          <View style={{ position: 'absolute', bottom: 16, right: 16 }}>
-            {/* <InsiderOnlyChips /> */}
-            {/* notes: `background-picture` diganti dengan field sesuai balikan dari BE */}
-            <ChangePictureIcon onPress={openCamera('background-picture')} />
-          </View>
-        )}
-      </View>
       {/* profile picture */}
-      <View style={{ position: 'absolute', bottom: -45.5, left: 16 }}>
+      <View style={{ marginVertical: 24, marginHorizontal: 16 }}>
         <TouchableOpacity onPress={openCamera('photo_url')}>
           <ImageAutoSchale
             source={typeof image === 'string' ? { uri: image } : image}
@@ -120,22 +106,6 @@ const ProfilePicture = (props: ProfilePictureType) => {
           </View>
         )}
       </View>
-      {type !== 'edit' && (
-        <View
-          style={{
-            width: '100%',
-            paddingRight: 16,
-            marginTop: 12,
-            alignItems: 'flex-end',
-          }}>
-          <OutlineButton
-            title="Edit Profile"
-            onPress={() => {}}
-            style={styles.button}
-            fontStyle={styles.buttonText}
-          />
-        </View>
-      )}
     </View>
   )
 }

@@ -30,9 +30,11 @@ import ProfileEmptyState from '@components/molecules/profile-empty-state'
 import ActionListCard from '@components/molecules/action-list-card'
 import ImageViewer from 'react-native-image-zoom-viewer'
 import styled from 'styled-components/native'
+import TabMenu from '@src/components/layouts/tab-menu'
+import MyPost from '@components/organisms/my-post'
 
 const headerHeight = 54
-const { width } = Dimensions.get('screen')
+const { width, height } = Dimensions.get('screen')
 
 const navigateTo = (screen, screenName, params = {}) => {
   return navigate(screen, {
@@ -40,6 +42,26 @@ const navigateTo = (screen, screenName, params = {}) => {
     params,
   })
 }
+
+const TabMenuData = [
+  {
+    name: 'userpost',
+    title: 'Posts',
+    Component: <MyPost />,
+  },
+  {
+    name: 'saved',
+    title: 'Saved List',
+    Component: <View style={{ width, backgroundColor: 'blue' }} />,
+  },
+  {
+    name: 'insight',
+    title: 'Insight',
+    Component: <View style={{ width, backgroundColor: 'red' }} />,
+  },
+]
+
+const initialActiveTab = 'userpost'
 
 const styles = StyleSheet.create({
   header: { height: headerHeight },
@@ -79,7 +101,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   button: {
-    width: '100%',
+    // width: '100%',
     height: 32,
     borderColor: colors.black60,
   },
@@ -107,33 +129,6 @@ const styles = StyleSheet.create({
   },
 })
 
-const myOrder = [
-  {
-    label: 'Waiting for Payment',
-    image: require('@src/assets/icons/waiting-for-payment.png'),
-    filterTransaction: ['unpaid', 'waiting'],
-    screenName: 'PaymentList',
-  },
-  {
-    label: 'In Process',
-    image: require('@src/assets/icons/in-process.png'),
-    filterTransaction: 'confirmed',
-    screenName: 'OrderList',
-  },
-  {
-    label: 'Sent',
-    image: require('@src/assets/icons/sent.png'),
-    filterTransaction: 'shipping',
-    screenName: 'OrderList',
-  },
-  {
-    label: 'Done',
-    image: require('@src/assets/icons/done.png'),
-    filterTransaction: 'completed',
-    screenName: 'OrderList',
-  },
-]
-
 const AbsDiv = styled(Div)`
   position: absolute;
   z-index: 2;
@@ -144,76 +139,9 @@ const AbsDiv = styled(Div)`
 class ProfilPage extends React.PureComponent<any, any> {
   state = {
     defaultImage: null,
+    activeTab: initialActiveTab,
     isVisible: false,
   }
-
-  myOrderList = [
-    {
-      source: 'material-icon',
-      icon: 'location-on',
-      title: 'My Delivery Address',
-      desc: 'Add or edit your delivery address',
-      onPress: () => navigateTo('Screens', 'ChooseAddress', {}),
-    },
-    {
-      source: 'material-icon',
-      icon: 'save',
-      title: 'My Return or Exchange',
-      desc: 'Track your past and current return or exchange',
-      onPress: () => {},
-    },
-  ]
-
-  mySocialList = [
-    {
-      source: 'material-icon',
-      icon: 'save',
-      title: 'Beauty Profile',
-      desc: 'View and edit your beauty profile',
-    },
-    {
-      source: 'material-icon',
-      icon: 'save',
-      title: 'Topic and Interest',
-      desc: 'Manage your topic and interest',
-    },
-    {
-      source: 'material-icon',
-      icon: 'save',
-      title: 'Become an Insider',
-      desc: 'Be the part of the Insiders Community',
-    },
-    {
-      source: 'material-icon',
-      icon: 'save',
-      title: 'My Revenue',
-      desc: 'Manage your revenue with ease',
-    },
-  ]
-
-  othersList = [
-    {
-      source: 'material-icon',
-      icon: 'save',
-      title: 'Settings',
-      desc: 'View and set your account preferences',
-    },
-    {
-      source: 'material-icon',
-      icon: 'save',
-      title: 'Help',
-      desc: 'Find the best answer to your question',
-    },
-    {
-      source: 'material-icon',
-      icon: 'save',
-      title: 'Log Out',
-      desc: 'It’s okay to leave sometimes',
-      onPress: async () => {
-        await this.props.setLogout()
-      },
-    },
-  ]
 
   componentDidMount() {
     const { isAuth, username, getUser, user } = this.props
@@ -222,6 +150,9 @@ class ProfilPage extends React.PureComponent<any, any> {
     } else if (isAuth && user.id) {
       getUser(user.id, 'id')
     }
+    // if (isAuth && user.id) {
+    //   getUser(user.id, 'id')
+    // }
   }
 
   componentDidUpdate(prevProps) {
@@ -232,6 +163,9 @@ class ProfilPage extends React.PureComponent<any, any> {
       } else if (isAuth && user.id) {
         getUser(user.id, 'id')
       }
+      // if (isAuth && user.id) {
+      //   getUser(user.id, 'id')
+      // }
     }
   }
 
@@ -250,6 +184,17 @@ class ProfilPage extends React.PureComponent<any, any> {
     navigateTo('Screens', 'EditProfile', {})
   }
 
+  gotoAccountSetting = () => {
+    navigateTo('Screens', 'AccountSetting', {})
+  }
+
+  gotoFollowPage = followType => () => {
+    navigateTo('Screens', 'Follow', {
+      followType,
+      name: this.props.user.name,
+    })
+  }
+
   _openModal = () => this.setState({ isVisible: true })
   _closeModal = () => this.setState({ isVisible: false })
 
@@ -263,9 +208,12 @@ class ProfilPage extends React.PureComponent<any, any> {
     </AbsDiv>
   )
 
+  _changeSelected = selectedItem => {
+    this.setState({ activeTab: selectedItem.name })
+  }
   render() {
     const { isAuth, navigation, user } = this.props
-    const { defaultImage, isVisible } = this.state
+    const { defaultImage, isVisible, activeTab } = this.state
 
     const imgSize = isVisible
       ? { width: width, height: width }
@@ -291,80 +239,145 @@ class ProfilPage extends React.PureComponent<any, any> {
       return (
         <>
           <NavbarTop title="Profile" />
-          <ScrollView style={{ backgroundColor: colors.white }}>
-            <View style={{ paddingHorizontal: 16, paddingVertical: 26 }}>
-              {/* photo, name, fols */}
-              <View style={{ flexDirection: 'row' }}>
-                <TouchableOpacity onPress={this._openModal}>
-                  <ImageAutoSchale
-                    source={typeof image === 'string' ? { uri: image } : image}
-                    onError={() => {
-                      this.setState({ defaultImage: defaultImages.product })
-                    }}
-                    style={styles.image}
-                  />
-                </TouchableOpacity>
-                <Modal isVisible={isVisible} style={{ margin: 0 }}>
-                  <ImageViewer
-                    backgroundColor="white"
-                    enableSwipeDown
-                    renderHeader={this._headerComp}
-                    imageUrls={[{ url: image }]}
-                    onSwipeDown={this._closeModal}
-                    index={0}
-                  />
-                </Modal>
-                <View style={{ marginLeft: 26 }}>
-                  <View>
-                    <Text style={{ ...styles.futuraBold20 }}>{user.name}</Text>
-                  </View>
-                  <View style={{ marginTop: 4 }}>
-                    <Text
-                      style={{
-                        ...styles.helveticaBold12,
-                        color: user.username ? colors.black80 : colors.red1,
-                      }}>
-                      {user.username
-                        ? `@${user.username}`
-                        : 'Please input Username'}
-                    </Text>
-                  </View>
-                  <View style={{ marginTop: 8, flexDirection: 'row' }}>
-                    <Text
-                      style={{
-                        ...styles.helvetica12,
-                        color: colors.black80,
-                      }}>{`Followers ${user.follower_count || 0}`}</Text>
-                    <View style={{ marginLeft: 24 }}>
+          <View style={{ height: height }}>
+            <ScrollView
+              bounces={false}
+              style={{ backgroundColor: colors.background, flex: 1 }}>
+              <View style={{ paddingHorizontal: 16, paddingVertical: 26 }}>
+                {/* photo, name, fols */}
+                <View style={{ flexDirection: 'row' }}>
+                  <TouchableOpacity onPress={this._openModal}>
+                    <ImageAutoSchale
+                      source={
+                        typeof image === 'string' ? { uri: image } : image
+                      }
+                      onError={() => {
+                        this.setState({ defaultImage: defaultImages.product })
+                      }}
+                      style={styles.image}
+                    />
+                  </TouchableOpacity>
+                  <Modal isVisible={isVisible} style={{ margin: 0 }}>
+                    <ImageViewer
+                      backgroundColor="white"
+                      enableSwipeDown
+                      renderHeader={this._headerComp}
+                      imageUrls={[{ url: image }]}
+                      onSwipeDown={this._closeModal}
+                      index={0}
+                    />
+                  </Modal>
+                  <View style={{ marginLeft: 26 }}>
+                    <View>
+                      <Text style={{ ...styles.futuraBold20 }}>
+                        {user.name}
+                      </Text>
+                    </View>
+                    <View style={{ marginTop: 4 }}>
                       <Text
                         style={{
-                          ...styles.helvetica12,
-                          color: colors.black80,
-                        }}>{`Following ${user.following_count || 0}`}</Text>
+                          ...styles.helveticaBold12,
+                          color: user.username ? colors.black80 : colors.red1,
+                        }}>
+                        {user.username
+                          ? `@${user.username}`
+                          : 'Please input Username'}
+                      </Text>
+                    </View>
+                    <View style={{ marginTop: 8, flexDirection: 'row' }}>
+                      <TouchableOpacity
+                        onPress={this.gotoFollowPage('Follower')}>
+                        <Text
+                          style={{
+                            ...styles.helvetica12,
+                            color: colors.black80,
+                          }}>{`Followers ${user.follower_count || 0}`}</Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        onPress={this.gotoFollowPage('Following')}>
+                        <View style={{ marginLeft: 24 }}>
+                          <Text
+                            style={{
+                              ...styles.helvetica12,
+                              color: colors.black80,
+                            }}>{`Following ${user.following_count || 0}`}</Text>
+                        </View>
+                      </TouchableOpacity>
+                    </View>
+                    <View style={{ marginTop: 12, flexDirection: 'row' }}>
+                      <OutlineButton
+                        title="Edit"
+                        onPress={this.gotoEditProfile}
+                        style={{ ...styles.button }}
+                        fontStyle={{
+                          ...fontStyle.helveticaBold,
+                          color: colors.black70,
+                          fontSize: 14,
+                          marginLeft: 8,
+                          lineHeight: 14,
+                        }}
+                        leftIcon="edit"
+                      />
+                      <OutlineButton
+                        title="Account"
+                        onPress={this.gotoAccountSetting}
+                        style={{ ...styles.button, marginLeft: 12 }}
+                        fontStyle={{
+                          ...fontStyle.helveticaBold,
+                          color: colors.black70,
+                          fontSize: 14,
+                          marginLeft: 8,
+                          lineHeight: 14,
+                        }}
+                        leftIcon="cog"
+                      />
                     </View>
                   </View>
                 </View>
-              </View>
 
-              {/* view my profile */}
-              <View style={{ marginTop: 8 }}>
-                <OutlineButton
-                  title="View My Profile"
-                  onPress={this.gotoEditProfile}
-                  style={styles.button}
-                  fontStyle={styles.buttonText}
-                />
-              </View>
+                {/* location and description */}
+                <View style={{ marginTop: 12 }}>
+                  <View style={{ flexDirection: 'row' }}>
+                    <Icon
+                      name="map-marker-alt"
+                      size={16}
+                      color={colors.black60}
+                    />
+                    <View style={{ marginLeft: 10 }}>
+                      <Text
+                        style={{
+                          ...fontStyle.helvetica,
+                          fontSize: 12,
+                          color: colors.black70,
+                        }}>
+                        Shonetopia
+                      </Text>
+                    </View>
+                  </View>
+                  {/* description */}
+                  <View style={{ marginTop: 8 }}>
+                    <Text
+                      style={{
+                        ...fontStyle.helvetica,
+                        fontSize: 12,
+                        color: colors.black80,
+                      }}>
+                      {user.biography || user.biography !== ''
+                        ? user.biography
+                        : 'Welcome to my page'}
+                    </Text>
+                  </View>
+                </View>
 
-              {/* score */}
-              <View style={{ ...styles.score, marginTop: 8, padding: 16 }}>
-                <Text style={{ ...styles.helveticaBold24, color: '#3067E4' }}>
-                  0
-                </Text>
-              </View>
+                {/* score */}
+                <View style={{ ...styles.score, marginTop: 8, padding: 16 }}>
+                  <Text style={{ ...styles.helveticaBold24, color: '#3067E4' }}>
+                    0
+                  </Text>
+                </View>
 
-              {/* my payment */}
-              <ActionListCard
+                {/* my payment */}
+                {/* <ActionListCard
                 source="material-icon"
                 icon="account-balance-wallet"
                 title="My Payment"
@@ -377,169 +390,21 @@ class ProfilPage extends React.PureComponent<any, any> {
                   marginTop: 24,
                 }}
                 onPress={() => {}}
-              />
-
-              {/* my shopping */}
+              /> */}
+              </View>
               <View
                 style={{
-                  marginTop: 40,
+                  width,
+                  height,
                 }}>
-                <Text
-                  style={{
-                    ...styles.futuraBold24,
-                    color: colors.black100,
-                  }}>
-                  My Shopping
-                </Text>
-
-                <View
-                  style={{
-                    marginTop: 24,
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                  }}>
-                  <Text
-                    style={{
-                      ...styles.helveticaBold14,
-                      color: colors.black100,
-                    }}>
-                    My Order
-                  </Text>
-                  <TouchableOpacity onPress={this.onPressDetailOrder}>
-                    <Text
-                      style={{
-                        ...styles.helveticaBold12,
-                        color: colors.blue60,
-                      }}>
-                      Details
-                    </Text>
-                  </TouchableOpacity>
-                </View>
-                <View style={{ marginTop: 17 }}>
-                  <View
-                    style={{
-                      marginTop: 17,
-                      justifyContent: 'space-around',
-                      flexDirection: 'row',
-                      width: '100%',
-                    }}>
-                    {myOrder.map((value, key) => {
-                      return (
-                        <TouchableOpacity
-                          key={`myorder-${key}`}
-                          onPress={this.onPressStatusOrder(
-                            value.filterTransaction,
-                            value.screenName,
-                          )}>
-                          <View
-                            style={{
-                              justifyContent: 'center',
-                              alignItems: 'center',
-                              maxWidth: 82,
-                            }}>
-                            <View
-                              style={{
-                                marginBottom: 8,
-                              }}>
-                              <Image
-                                style={{ width: 40, height: 40 }}
-                                source={value.image}
-                              />
-                            </View>
-                            <Text
-                              style={{
-                                ...styles.helvetica10,
-                                color: colors.black100,
-                                textAlign: 'center',
-                              }}>
-                              {value.label}
-                            </Text>
-                          </View>
-                        </TouchableOpacity>
-                      )
-                    })}
-                  </View>
-                </View>
-                <View style={{ marginTop: 16 }}>
-                  {this.myOrderList.map((value, key) => {
-                    return (
-                      <ActionListCard
-                        isFirst
-                        key={`orderlist-card-${key}`}
-                        source={value.source}
-                        icon={value.icon}
-                        title={value.title}
-                        desc={value.desc}
-                        index={key}
-                        onPress={value.onPress}
-                      />
-                    )
-                  })}
-                </View>
+                <TabMenu
+                  items={TabMenuData}
+                  selectedItem={activeTab}
+                  onChangeTab={this._changeSelected}
+                />
               </View>
-
-              {/* my social  */}
-              <View
-                style={{
-                  marginTop: 54,
-                }}>
-                <Text
-                  style={{
-                    ...styles.futuraBold24,
-                    color: colors.black100,
-                  }}>
-                  My Social
-                </Text>
-
-                <View>
-                  {this.mySocialList.map((value, key) => {
-                    return (
-                      <ActionListCard
-                        key={`sociallist-card-${key}`}
-                        source={value.source}
-                        icon={value.icon}
-                        title={value.title}
-                        desc={value.desc}
-                        index={key}
-                        onPress={() => {}}
-                      />
-                    )
-                  })}
-                </View>
-              </View>
-
-              {/* others  */}
-              <View
-                style={{
-                  marginTop: 54,
-                  marginBottom: 67,
-                }}>
-                <Text
-                  style={{
-                    ...styles.futuraBold24,
-                    color: colors.black100,
-                  }}>
-                  Others
-                </Text>
-
-                <View>
-                  {this.othersList.map((value, key) => {
-                    return (
-                      <ActionListCard
-                        key={`otherlist-card-${key}`}
-                        source={value.source}
-                        icon={value.icon}
-                        title={value.title}
-                        desc={value.desc}
-                        index={key}
-                        onPress={value.onPress}
-                      />
-                    )
-                  })}
-                </View>
-              </View>
-            </View>
-          </ScrollView>
+            </ScrollView>
+          </View>
         </>
       )
     }

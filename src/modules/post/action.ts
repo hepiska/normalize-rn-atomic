@@ -1,6 +1,7 @@
 import { QueryParams } from '@utils/globalInterface'
 import { setUserData } from '../user/action'
 import { setTopPostData } from '../post-top/action'
+import { API } from '../action-types'
 
 export const postActionType = {
   FETCH: 'post/FETCH',

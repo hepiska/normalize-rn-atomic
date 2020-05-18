@@ -3,10 +3,11 @@ import {
   StyleSheet,
   Dimensions,
   ViewStyle,
-  TouchableOpacity,
   ScrollView,
+  View,
+  TouchableOpacity,
 } from 'react-native'
-import { Div, Font } from '@components/atoms/basic'
+import { Div, Font, ScrollDiv, PressAbbleDiv } from '@components/atoms/basic'
 import { colors } from '@utils/constants'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
@@ -34,6 +35,7 @@ interface TabmenuType {
   selectedItem: string
   onChangeTab(item: TabMenuItems): void
   isScrollEnabled?: boolean
+  isLazyload?: boolean
 }
 
 const getActiveStyle = (item, selectedItem) =>
@@ -45,6 +47,7 @@ const TabMenu = ({
   onChangeTab,
   style,
   isScrollEnabled,
+  isLazyload = false,
 }: TabmenuType) => {
   const scrolContent: any = useRef(null)
   const _onChangeTab = item => () => {
@@ -67,32 +70,44 @@ const TabMenu = ({
     const idx = Math.ceil(nativeEvent.contentOffset.x / width)
     onChangeTab(items[idx])
   }
+  console.log('====tabmenu')
   return useMemo(
     () => (
-      <Div _width={width} style={style}>
-        <Div _width={width}>
-          <ScrollView
+      <View style={{ ...style, flex: 1 }}>
+        <View>
+          <ScrollDiv
+            bounces={false}
             horizontal
-            style={{ marginVertical: 8, width: '100%' }}
+            _margin="8px 0px"
+            _width="100%"
             showsHorizontalScrollIndicator={false}>
             {items.map(item => (
               <TouchableOpacity
                 key={item.name + 'button'}
                 onPress={_onChangeTab(item)}
                 style={{
+                  ...getActiveStyle(item, selectedItem),
                   marginHorizontal: 8,
                   padding: 4,
-                  ...getActiveStyle(item, selectedItem),
                 }}>
-                <Font style={{ ...fontStyle.futuraDemi, fontSize: 16 }}>
+                <Font
+                  style={{
+                    ...fontStyle.helvetica,
+                    fontSize: 14,
+                    color: colors.black100,
+                  }}>
                   {item.title}
                 </Font>
               </TouchableOpacity>
             ))}
-          </ScrollView>
-        </Div>
+          </ScrollDiv>
+        </View>
         <ScrollView
-          style={{ marginVertical: 8, height: '100%' }}
+          style={{
+            marginVertical: 8,
+            width: '100%',
+            flex: 1,
+          }}
           scrollEnabled={isScrollEnabled}
           ref={scrolContent}
           onMomentumScrollEnd={_onChangePage}
@@ -100,9 +115,17 @@ const TabMenu = ({
           pagingEnabled
           showsHorizontalScrollIndicator={false}
           horizontal>
-          {items.map(item => item.Component)}
+          {isLazyload
+            ? items.map((item, key) =>
+                key === idx ? (
+                  item.Component
+                ) : (
+                  <Div _width={width} key={`tabmenu-${key}`} />
+                ),
+              )
+            : items.map(item => item.Component)}
         </ScrollView>
-      </Div>
+      </View>
     ),
     [selectedItem, isScrollEnabled],
   )

@@ -54,9 +54,16 @@ export const getUserAddressById = (dataActionType?: any) => ({
       return setAddressLoading(true)
     },
     success: data => {
+      if (data.result.length > 0) {
+        return [
+          setAddressData({ data: data.entities.address, dataActionType }),
+          setAddressOrder(data.result),
+          setAddressLoading(false),
+        ]
+      }
       return [
-        setAddressData({ data: data.entities.address, dataActionType }),
-        setAddressOrder(data.result),
+        setAddressData({ data: {}, dataActionType }),
+        setAddressOrder([]),
         setAddressLoading(false),
       ]
     },

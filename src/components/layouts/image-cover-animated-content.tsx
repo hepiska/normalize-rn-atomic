@@ -1,11 +1,19 @@
 import React from 'react'
 import Animated from 'react-native-reanimated'
-import { View, StyleSheet, RefreshControl } from 'react-native'
+import { View, StyleSheet, RefreshControl, ScrollViewProps } from 'react-native'
 import { onScroll } from 'react-native-redash'
 import { colors, globalDimention } from '@utils/constants'
 import { Div, ScrollDiv } from '@components/atoms/basic'
 
 const { interpolate, Extrapolate } = Animated
+
+interface ImageCoverContentLayout extends ScrollViewProps {
+  y: any
+  dimentionConstant: any
+  children: React.ReactElement
+  refreshing?: boolean
+  onRefresh?: () => {}
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -46,13 +54,8 @@ const ImageCoverContentLayout = ({
   dimentionConstant,
   refreshing,
   onRefresh,
-}: {
-  y: any
-  dimentionConstant: any
-  children: React.ReactElement
-  refreshing?: boolean
-  onRefresh?: () => {}
-}) => {
+  ...props
+}: ImageCoverContentLayout) => {
   const height = interpolate(y, {
     inputRange: [-dimentionConstant.imageHeight, -10 / 2],
     outputRange: [0, dimentionConstant.imageHeight + 10],
@@ -73,6 +76,7 @@ const ImageCoverContentLayout = ({
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }
+      {...props}
       as={Animated.ScrollView}
       _width="100%"
       scrollEventThrottle={2}

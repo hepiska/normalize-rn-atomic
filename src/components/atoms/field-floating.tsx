@@ -829,17 +829,16 @@ class TextInputOutlined extends React.Component<ChildTextInputProps, {}> {
             size={10}
             color={colors.redBookmark}
             _margin="8px 4px 0px"
-            weight="bold"
-            type="HelveticaNeue">
+            style={fontStyle.helveticaBold}>
             {error}
           </Font>
         )}
         {desc && !error && (
           <Font
             size={10}
-            color={colors.black70}
+            color={colors.black60}
             _margin="8px 4px 0px"
-            type="HelveticaNeue">
+            style={fontStyle.helvetica}>
             {desc}
           </Font>
         )}

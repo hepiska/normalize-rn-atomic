@@ -4,6 +4,7 @@ import {
   StyleSheet,
   View,
   ViewStyle,
+  Image,
   TouchableOpacity,
 } from 'react-native'
 import { colors } from '@utils/constants'
@@ -13,7 +14,7 @@ import { fontStyle, borderStyle } from '@src/components/commont-styles'
 
 interface ActionListCartType {
   source?: string
-  icon: string
+  icon?: any
   title: string
   desc?: string
   index: number
@@ -75,7 +76,11 @@ const ActionListCard = ({
             flexDirection: 'row',
             alignItems: 'center',
           }}>
-          <IconComponent name={icon} size={18} color={colors.black100} />
+          {typeof icon === 'string' ? (
+            <IconComponent name={icon} size={18} color={colors.black100} />
+          ) : (
+            <Image source={icon} style={{ width: 18, height: 18 }} />
+          )}
           <View style={{ marginLeft: 22 }}>
             <Text style={{ ...styles.helveticaBold14, color: colors.black100 }}>
               {title}

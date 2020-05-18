@@ -61,16 +61,8 @@ const FilterPriceOrg = ({
   fetchCountProduct,
 }: any) => {
   const delta = colectionPrices.maximum_price - colectionPrices.minimum_price
-  const initialCursorMin = Math.round(
-    ((minimum_price - colectionPrices.minimum_price) / delta) * maxSlider,
-  )
-  const initialCursorMax = Math.round(
-    ((colectionPrices.maximum_price - minimum_price) / delta) * maxSlider,
-  )
-  const [multiSlider, changeMultiSlider] = useState([
-    initialCursorMin,
-    initialCursorMax,
-  ])
+
+  const [multiSlider, changeMultiSlider] = useState([0, maxSlider])
   let timeout = null
 
   useEffect(() => {
@@ -81,12 +73,20 @@ const FilterPriceOrg = ({
   }
 
   useEffect(() => {
+    const initialCursorMin = Math.round(
+      ((minimum_price - colectionPrices.minimum_price) / delta) * maxSlider,
+    )
+    const initialCursorMax = Math.round(
+      ((colectionPrices.maximum_price - minimum_price) / delta) * maxSlider,
+    )
+    changeMultiSlider([initialCursorMin, initialCursorMax])
     return () => {
       clearTimeout(timeout)
     }
   }, [])
 
-  useEffect(() => {
+  const _chageSlider = pos => {
+    changeMultiSlider(pos)
     if (timeout) {
       timeout = null
     }
@@ -94,18 +94,17 @@ const FilterPriceOrg = ({
     timeout = setTimeout(() => {
       setSelectedPrice({
         type: 'minimum_price',
-        value:
-          colectionPrices.minimum_price + (multiSlider[0] / maxSlider) * delta,
+        value: Math.floor(
+          colectionPrices.minimum_price + (pos[0] / maxSlider) * delta,
+        ),
       })
       setSelectedPrice({
         type: 'maximum_price',
-        value:
-          colectionPrices.minimum_price + (multiSlider[1] / maxSlider) * delta,
+        value: Math.floor(
+          colectionPrices.minimum_price + (pos[1] / maxSlider) * delta,
+        ),
       })
     }, 500)
-  }, [multiSlider])
-  const _chageSlider = pos => {
-    changeMultiSlider(pos)
   }
   return (
     <Div
