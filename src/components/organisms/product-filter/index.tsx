@@ -69,7 +69,6 @@ const FilterContent = connect(
   mapStateToProps,
   mapDispatchToProps,
 )(props => {
-  console.log('====masuk sini', props.section)
   return (
     <Div
       _width="100%"

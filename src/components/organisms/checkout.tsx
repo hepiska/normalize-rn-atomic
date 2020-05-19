@@ -215,8 +215,6 @@ const mapStateToProps = (state, ownProps) => {
     userCheckoutAddress = primaryAddress
   }
 
-  console.log('store hahaha ---', state)
-
   const shippingCost =
     Object.keys(state.checkout.data.warehouse).length > 0
       ? Object.keys(state.checkout.data.warehouse).reduce(

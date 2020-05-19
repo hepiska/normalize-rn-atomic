@@ -45,7 +45,6 @@ const userReducer: Reducer<UserState> = (
       newState.order = Immutable(action.payload)
       return newState
     case userActionType.SET_USER_ORDER_PAGINATION:
-      // newState.order = Immutable(action.payload)
       newState.order = newState.order.concat(Immutable(action.payload.order))
       newState.pagination = action.payload.pagination
       return newState

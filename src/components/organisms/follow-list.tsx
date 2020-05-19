@@ -16,7 +16,7 @@ import FollowCard from '@components/molecules/follow-card'
 const FollowCardHoc = userListData(FollowCard)
 const { height, width } = Dimensions.get('screen')
 
-class OrderList extends Component<any, any> {
+class FollowList extends Component<any, any> {
   state = {
     searchKey: '',
     selectedFilter: this.props.filterOptions,
@@ -182,4 +182,4 @@ const mapStateToProps = (state: any) => {
 const mapDispatchToProps = dispatch =>
   bindActionCreators({ getFollowerFollowing }, dispatch)
 
-export default connect(mapStateToProps, mapDispatchToProps)(OrderList)
+export default connect(mapStateToProps, mapDispatchToProps)(FollowList)

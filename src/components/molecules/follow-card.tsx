@@ -21,12 +21,12 @@ const { width } = Dimensions.get('screen')
 const Divider = ({ marginTop, paddingHorizontal }) => (
   <View
     style={{
-      borderColor: colors.black50,
-      borderStyle: 'dashed',
-      borderWidth: 1,
+      borderBottomColor: colors.black50,
+      borderBottomWidth: 1,
       width: '100%',
       marginTop: marginTop || 0,
       paddingHorizontal: paddingHorizontal || 0,
+      height: 1,
     }}
   />
 )
@@ -41,10 +41,13 @@ interface FollowCardType {
 const styles = StyleSheet.create({
   container: {
     width: width,
+    padding: 16,
+  },
+  content: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    padding: 16,
+    paddingVertical: 16,
   },
   image: {
     width: 40,
@@ -98,56 +101,57 @@ class FollowCard extends React.PureComponent<FollowCardType, any> {
       <>
         <TouchableWithoutFeedback onPress={() => {}}>
           <View style={{ ...style, ...styles.container }}>
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <ImageAutoSchale
-                errorStyle={{ width: 40, height: 40 }}
-                thumbnailSource={
-                  typeof thumbnailImage === 'string'
-                    ? { uri: thumbnailImage }
-                    : thumbnailImage
-                }
-                source={typeof image === 'string' ? { uri: image } : image}
-                width={40}
-                style={styles.image}
-              />
-              <View style={{ ...styles.information }}>
-                <View style={{}}>
-                  <Text
-                    style={{
-                      ...fontStyle.helveticaBold,
-                      color: colors.black100,
-                      fontSize: 14,
-                    }}>
-                    {user.username || user.name}
-                  </Text>
-                </View>
-                {/* if username available, show name. if username not avail, set name as username */}
-                {user.username && (
+            <View style={{ ...styles.content }}>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <ImageAutoSchale
+                  errorStyle={{ width: 40, height: 40 }}
+                  thumbnailSource={
+                    typeof thumbnailImage === 'string'
+                      ? { uri: thumbnailImage }
+                      : thumbnailImage
+                  }
+                  source={typeof image === 'string' ? { uri: image } : image}
+                  width={40}
+                  style={styles.image}
+                />
+                <View style={{ ...styles.information }}>
                   <View style={{}}>
                     <Text
                       style={{
-                        ...fontStyle.helvetica,
-                        color: colors.black70,
+                        ...fontStyle.helveticaBold,
+                        color: colors.black100,
                         fontSize: 14,
                       }}>
-                      {user.name}
+                      {user.username || user.name}
                     </Text>
                   </View>
-                )}
+                  {/* if username available, show name. if username not avail, set name as username */}
+                  {user.username && (
+                    <View style={{}}>
+                      <Text
+                        style={{
+                          ...fontStyle.helvetica,
+                          color: colors.black70,
+                          fontSize: 14,
+                        }}>
+                        {user.name}
+                      </Text>
+                    </View>
+                  )}
+                </View>
+              </View>
+              <View>
+                <Button
+                  onPress={this.handleFollow}
+                  title={isFollowed ? 'Unfollow' : 'Follow'}
+                  fontStyle={styles.buttonText}
+                  style={styles.button}
+                />
               </View>
             </View>
-            <View>
-              <Button
-                onPress={this.handleFollow}
-                title={isFollowed ? 'Unfollow' : 'Follow'}
-                fontStyle={styles.buttonText}
-                style={styles.button}
-              />
-            </View>
+            <Divider marginTop={0} paddingHorizontal={16} />
           </View>
         </TouchableWithoutFeedback>
-
-        <Divider marginTop={0} paddingHorizontal={16} />
       </>
     )
   }

@@ -124,8 +124,6 @@ class AddressCart extends React.PureComponent<AddressCartType, any> {
     } = this.props
     this.props.removeAddress(address_id)
     if (tempSelectedAddress === address_id || is_primary) {
-      // if (tempSelectedAddress === address_id) {
-      console.log('sampe disini')
       this.props.removeCheckoutAddressData()
     }
     if (this.tooltip) {
@@ -150,8 +148,6 @@ class AddressCart extends React.PureComponent<AddressCartType, any> {
       onChangeAddress,
       tempSelectedAddress,
     } = this.props
-
-    console.log('address cart ---', address)
 
     if (!address) {
       return (

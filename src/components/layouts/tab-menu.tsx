@@ -27,7 +27,7 @@ const { width } = Dimensions.get('screen')
 interface TabMenuItems {
   name: string
   Component: () => ReactElement | ReactElement
-  title: string
+  title: any
 }
 interface TabmenuType {
   style?: ViewStyle
@@ -72,7 +72,7 @@ const TabMenu = ({
     const idx = Math.ceil(nativeEvent.contentOffset.x / width)
     onChangeTab(items[idx])
   }
-  console.log('====tabmenu')
+
   return useMemo(
     () => (
       <View style={{ ...style, flex: 1 }}>
@@ -92,14 +92,18 @@ const TabMenu = ({
                   marginHorizontal: 8,
                   padding: 4,
                 }}>
-                <Font
-                  style={{
-                    ...fontStyle.helvetica,
-                    fontSize: 14,
-                    color: colors.black100,
-                  }}>
-                  {item.title}
-                </Font>
+                {typeof item.title === 'string' ? (
+                  <Font
+                    style={{
+                      ...fontStyle.helvetica,
+                      fontSize: 14,
+                      color: colors.black100,
+                    }}>
+                    {item.title}
+                  </Font>
+                ) : (
+                  item.title
+                )}
               </TouchableOpacity>
             ))}
           </ScrollDiv>

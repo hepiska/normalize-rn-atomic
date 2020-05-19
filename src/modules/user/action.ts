@@ -121,8 +121,6 @@ export const getFollowerFollowing = (params: any, type: string) => {
       },
       startNetwork: () => setUserLoading(true),
       success: (data, { pagination }) => {
-        console.log('data ---', data)
-        console.log('params ---', params)
         if (params.offset === 0) {
           return [
             setUserData(data.entities.user),
@@ -139,11 +137,6 @@ export const getFollowerFollowing = (params: any, type: string) => {
           ]
         }
 
-        // return [
-        //   setUserData(data.entities.user),
-        //   setUserOrder({ order: data.result, pagination }),
-        //   setUserLoading(false),
-        // ]
         return [setUserLoading(false)]
       },
       error: err => {

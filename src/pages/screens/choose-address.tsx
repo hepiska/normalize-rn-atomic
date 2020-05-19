@@ -91,7 +91,6 @@ class ChooseAddressPage extends Component<any, any> {
   render() {
     const { addresses } = this.props
     const { tempSelectedAddress } = this.state
-    console.log('addresses sini ---', addresses)
     if (!addresses) {
       return null
     }
@@ -176,7 +175,6 @@ const mapDispatchToProps = dispatch =>
 
 const mapStateToProps = (state, ownProps) => {
   let addresses = state.addresses.order
-  console.log('state addresses order ---', addresses)
 
   /* revisi: pindah ke dalam render sebelum return */
   const primaryAddress = addresses.reduce((res, value) => {
