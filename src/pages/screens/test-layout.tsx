@@ -177,7 +177,7 @@ class MyProfile extends React.Component<any, any> {
             paddingHorizontal: 16,
           }}
           y={this.y}
-          layoutType={LayoutType.normal}
+          layoutType={LayoutType.mansory}
           data={productsSaved}
           renderItem={this._renderItem}
           numColumns={2}

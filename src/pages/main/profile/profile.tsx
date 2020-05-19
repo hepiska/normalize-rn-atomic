@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import {
   Text,
   StyleSheet,
-  ScrollView,
+  // ScrollView,
   View,
   Image,
   ViewStyle,
@@ -31,6 +31,7 @@ import ActionListCard from '@components/molecules/action-list-card'
 import ImageViewer from 'react-native-image-zoom-viewer'
 import styled from 'styled-components/native'
 import TabMenu from '@src/components/layouts/tab-menu'
+import { ScrollView } from 'react-native-gesture-handler'
 import MyPost from '@components/organisms/my-post'
 
 const headerHeight = 54
@@ -42,24 +43,6 @@ const navigateTo = (screen, screenName, params = {}) => {
     params,
   })
 }
-
-const TabMenuData = [
-  {
-    name: 'userpost',
-    title: 'Posts',
-    Component: <MyPost />,
-  },
-  {
-    name: 'saved',
-    title: 'Saved List',
-    Component: <View style={{ width, backgroundColor: 'blue' }} />,
-  },
-  {
-    name: 'insight',
-    title: 'Insight',
-    Component: <View style={{ width, backgroundColor: 'red' }} />,
-  },
-]
 
 const initialActiveTab = 'userpost'
 
@@ -141,6 +124,7 @@ class ProfilPage extends React.PureComponent<any, any> {
     defaultImage: null,
     activeTab: initialActiveTab,
     isVisible: false,
+    enableScrollContent: false,
   }
 
   componentDidMount() {
@@ -211,9 +195,51 @@ class ProfilPage extends React.PureComponent<any, any> {
   _changeSelected = selectedItem => {
     this.setState({ activeTab: selectedItem.name })
   }
+  _onScroll = e => {
+    if (
+      (this as any).profileLayout.height - e.nativeEvent.contentOffset.y <
+      2
+    ) {
+      this.setState({ enableScrollContent: true })
+    }
+  }
+  _disableContentScroll = () => {
+    this.setState({ enableScrollContent: false })
+  }
+  _onLayout = e => {
+    ;(this as any).profileLayout = e.nativeEvent.layout
+  }
   render() {
     const { isAuth, navigation, user } = this.props
-    const { defaultImage, isVisible, activeTab } = this.state
+    const {
+      defaultImage,
+      isVisible,
+      activeTab,
+      enableScrollContent,
+    } = this.state
+
+    const TabMenuData = [
+      {
+        name: 'userpost',
+        title: 'Posts',
+        Component: (
+          <MyPost
+            scrollEnabled={this.state.enableScrollContent}
+            disableScroll={this._disableContentScroll}
+          />
+        ),
+      },
+      {
+        name: 'saved',
+        title: 'Saved List',
+        Component: <View style={{ width, backgroundColor: 'blue' }} />,
+      },
+      {
+        name: 'insight',
+        title: 'Insight',
+        Component: <View style={{ width, backgroundColor: 'red' }} />,
+      },
+    ]
 
     const imgSize = isVisible
       ? { width: width, height: width }
@@ -241,9 +267,15 @@ class ProfilPage extends React.PureComponent<any, any> {
           <NavbarTop title="Profile" />
           <View style={{ height: height }}>
             <ScrollView
+              showsVerticalScrollIndicator={false}
+              onScroll={this._onScroll}
               bounces={false}
+              nestedScrollEnabled={true}
+              scrollEventThrottle={20}
               style={{ backgroundColor: colors.background, flex: 1 }}>
-              <View style={{ paddingHorizontal: 16, paddingVertical: 26 }}>
+              <View
+                style={{ paddingHorizontal: 16, paddingVertical: 26 }}
+                onLayout={this._onLayout}>
                 {/* photo, name, fols */}
                 <View style={{ flexDirection: 'row' }}>
                   <TouchableOpacity onPress={this._openModal}>
@@ -375,22 +407,6 @@ class ProfilPage extends React.PureComponent<any, any> {
                     0
                   </Text>
                 </View>
-
-                {/* my payment */}
-                {/* <ActionListCard
-                source="material-icon"
-                icon="account-balance-wallet"
-                title="My Payment"
-                desc="Manage and track your payment activities"
-                index={0}
-                backgroundColor={colors.black10}
-                borderRadius={8}
-                style={{
-                  paddingHorizontal: 16,
-                  marginTop: 24,
-                }}
-                onPress={() => {}}
-              /> */}
               </View>
               <View
                 style={{
@@ -399,6 +415,7 @@ class ProfilPage extends React.PureComponent<any, any> {
                 }}>
                 <TabMenu
                   items={TabMenuData}
+                  forceRender={enableScrollContent}
                   selectedItem={activeTab}
                   onChangeTab={this._changeSelected}
                 />

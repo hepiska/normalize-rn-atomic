@@ -1,5 +1,6 @@
 import React from 'react'
-import { View, SectionList, ViewStyle, FlatList } from 'react-native'
+import { View, SectionList, ViewStyle } from 'react-native'
+import { FlatList } from 'react-native-gesture-handler'
 import Column from '@components/organisms/mansory-column'
 import Animated from 'react-native-reanimated'
 
@@ -37,6 +38,7 @@ class ListMansoryStickyHeader extends React.Component<
 > {
   _groupData = data => {
     const { numColumns, layoutType } = this.props
+    if (!data.length) return data
     switch (layoutType) {
       case LayoutType.mansory:
         const mansoryData = []
@@ -56,7 +58,6 @@ class ListMansoryStickyHeader extends React.Component<
   }
   _renderSection = ({ item, index }) => {
     const { layoutType, renderItem, columnStyle, rowStyle } = this.props
-    console.log('=====', layoutType)
     switch (layoutType) {
       case LayoutType.mansory:
         return (

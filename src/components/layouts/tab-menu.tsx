@@ -26,13 +26,14 @@ const { width } = Dimensions.get('screen')
 
 interface TabMenuItems {
   name: string
-  Component: ReactElement
+  Component: () => ReactElement | ReactElement
   title: string
 }
 interface TabmenuType {
   style?: ViewStyle
   items: Array<TabMenuItems>
   selectedItem: string
+  forceRender: boolean
   onChangeTab(item: TabMenuItems): void
   isScrollEnabled?: boolean
   isLazyload?: boolean
@@ -45,6 +46,7 @@ const TabMenu = ({
   items = [],
   selectedItem,
   onChangeTab,
+  forceRender,
   style,
   isScrollEnabled,
   isLazyload = false,
@@ -118,16 +120,26 @@ const TabMenu = ({
           {isLazyload
             ? items.map((item, key) =>
                 key === idx ? (
-                  item.Component
+                  typeof item.Component === 'function' ? (
+                    <item.Component />
+                  ) : (
+                    item.Component
+                  )
                 ) : (
                   <Div _width={width} key={`tabmenu-${key}`} />
                 ),
               )
-            : items.map(item => item.Component)}
+            : items.map(item =>
+                typeof item.Component === 'function' ? (
+                  <item.Component />
+                ) : (
+                  item.Component
+                ),
+              )}
         </ScrollView>
       </View>
     ),
-    [selectedItem, isScrollEnabled],
+    [selectedItem, isScrollEnabled, forceRender],
   )
 }
 

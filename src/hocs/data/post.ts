@@ -8,9 +8,15 @@ const postListMap = (state, ownProps) => {
   const post = state.post.data[postId] || {}
   const user = state.user.data[post.user]
   const isLiked = !!state.postsLiked.data[postId]
-  ownProps.onPress = () => {
-    navigate('PostDetail', { postId }) // revisi: navigasi ke post id
+  if (!ownProps.onPress) {
+    ownProps.onPress = () => {
+      navigate('Screens', {
+        screen: 'PostDetail',
+        params: { postId },
+      }) // revisi: navigasi ke post id
+    }
   }
+
   return {
     post,
     user,

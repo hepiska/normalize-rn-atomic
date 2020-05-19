@@ -33,6 +33,12 @@ const userPostReducer: Reducer<TransactionState> = (
     case actionType.SET_LOADING:
       newState.loading = payload
       return newState
+    case actionType.SET_ORDER:
+      newState.order = Immutable(action.payload)
+      return newState
+    case actionType.ADD_ORDER:
+      newState.order = newState.order.concat(Immutable(action.payload))
+      return newState
     case actionType.SET_ERROR:
       newState.error = payload
       return newState
