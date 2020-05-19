@@ -8,29 +8,30 @@ import Img from '@components/atoms/image'
 import { formatRupiah } from '@utils/helpers'
 
 interface Price {
-  price: number
-  discount_price?: number
+  current: number
+  prev?: number
   style?: TextStyle
 }
 
-const Price = ({ price, discount_price, style }: Price) => {
+const Price = ({ prev, current, style }: Price) => {
   // const price = `${formatRupiah(from)} - ${formatRupiah(to)}`.split(' ')
-  const mainPrice = `${formatRupiah(discount_price || price)}`.split(' ')
+  const mainPrice = `${formatRupiah(current)}`.split(' ')
+  const disc = Math.ceil(((prev - current) / prev) * 100)
 
   return (
     <Div _direction="row" justify="flex-start" style={{ flexWrap: 'wrap' }}>
-      {discount_price && (
+      {Boolean(prev) && (
         <Font
           type="HelveticaNeue"
           size={11}
           _margin="4px"
           color={colors.black60}
           style={{ textDecorationLine: 'line-through' }}>
-          {formatRupiah(price)}
+          {formatRupiah(prev)}
         </Font>
       )}
       {mainPrice.map((x, i) => {
-        if (i !== mainPrice.length - 1 || !discount_price) {
+        if (i !== mainPrice.length - 1 || !prev) {
           return (
             <Font
               key={`price-${i}`}
@@ -41,25 +42,36 @@ const Price = ({ price, discount_price, style }: Price) => {
               {x}
             </Font>
           )
-        } else if (discount_price && i === mainPrice.length - 1) {
+        }
+        if (Boolean(prev) && i === mainPrice.length - 1) {
           return (
-            <Div key={i} _margin="4px 4px 4px 12px" overflow="visible">
-              <Img
-                source={require('../../assets/icons/badge-discount.png')}
-                style={{
-                  position: 'absolute',
-                  width: 31,
-                  height: 15,
-                }}
-              />
+            <>
               <Font
-                size={8}
-                _margin="0px 0px 0px 8px"
-                color={colors.white}
-                style={{ fontWeight: '500' }}>
+                key={`price-${i}`}
+                size={14}
+                type="title"
+                _margin="4px 0px 0px 4px"
+                style={{ ...fontStyle.helveticaBold, ...style }}>
                 {x}
               </Font>
-            </Div>
+              <Div key={i} _margin="4px 4px 4px 12px" overflow="visible">
+                <Img
+                  source={require('../../assets/icons/badge-discount.png')}
+                  style={{
+                    position: 'absolute',
+                    width: 31,
+                    height: 15,
+                  }}
+                />
+                <Font
+                  size={8}
+                  _margin="0px 0px 0px 8px"
+                  color={colors.white}
+                  style={{ fontWeight: '500' }}>
+                  {disc} %
+                </Font>
+              </Div>
+            </>
           )
         }
       })}

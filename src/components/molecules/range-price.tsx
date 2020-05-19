@@ -26,7 +26,7 @@ const RangePrice = ({
   upTo,
 }: RangePrice) => {
   const price = `${formatRupiah(from)} - ${formatRupiah(to)}`.split(' ')
-  const discount = Math.round(
+  const discount = Math.ceil(
     Math.max((exFrom - from) / exFrom, (exTo - to) / exTo) * 100,
   )
   if (withDiscount) {
@@ -67,11 +67,12 @@ const RangePrice = ({
                 _margin="4px 4px 4px 12px"
                 overflow="visible">
                 <Img
-                  source={
-                    upTo
-                      ? require('../../assets/icons/long-badge-discount.png')
-                      : require('../../assets/icons/badge-discount.png')
-                  }
+                  // source={
+                  //   upTo
+                  //     ? require('../../assets/icons/long-badge-discount.png')
+                  //     : require('../../assets/icons/badge-discount.png')
+                  // }
+                  source={require('../../assets/icons/badge-discount.png')}
                   style={{
                     position: 'absolute',
                     width: upTo ? 65 : 31,

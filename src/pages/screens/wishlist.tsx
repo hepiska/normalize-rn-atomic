@@ -52,7 +52,6 @@ class Wishlist extends Component<any, any> {
         return
       }
       if (30 > this.props.products.length) {
-        console.log('muasuks')
         this._fetchData(this.skip)
       }
     }

@@ -64,7 +64,7 @@ export const category = new schema.Entity(
 export const product = new schema.Entity('product', {
   brand: brand,
   categories: [category],
-  attributes: [attribute],
+  // attributes: [attribute],
 })
 
 export const collection = new schema.Entity('collection', {

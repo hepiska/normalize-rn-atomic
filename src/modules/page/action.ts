@@ -36,12 +36,13 @@ export const getPage = pagename => ({
       return setPageLoading({ key: pagename, value: true })
     },
     success: data => {
+      console.log('daaraa', data.entities.attribute)
       return [
         setUserData(data.entities.user),
         setBrandData(data.entities.brand),
         setPostData(data.entities.post),
+        // setProductAttributeData(data.entities.attribute),
         setProductData(data.entities.product),
-        setProductAttributeData(data.entities.attribute),
         setSection(data.entities.section),
         setPage(data.entities.page),
         setPageLoading({ key: pagename, value: false }),

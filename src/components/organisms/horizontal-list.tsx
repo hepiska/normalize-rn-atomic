@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
     marginTop: 16,
   },
   productCard: {
-    flex: 1,
+    // flex: 1,
 
     width: width / 2 - 8,
     marginTop: 0,
@@ -98,7 +98,7 @@ class HorizontalList extends React.Component<HorizontalListType, any> {
           <ProductHoc
             productId={item}
             key={`horizontal-list-product-${index}`}
-            isAtributesShow={false}
+            isAtributesShow={true}
             style={{ ...styles.productCard, wrappermargin: 4 }}
           />
         )

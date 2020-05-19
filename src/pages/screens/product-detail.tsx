@@ -473,11 +473,6 @@ const mapStateToProps = (state, ownProps) => {
   const productId = ownProps.route.params?.productId
   const _product = deepClone(state.products.data[productId])
   _product.brand = state.brands.data[_product.brand]
-  if (_product.attributes) {
-    _product.attributes = _product.attributes.map(v => {
-      return state.productAttribute.data[v]
-    })
-  }
 
   return {
     product: _product,

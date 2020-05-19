@@ -158,7 +158,6 @@ class MyProfile extends React.Component<any, any> {
   }
   stickyHeader = () => {
     const { selectedFilter } = this.state
-    console.log(selectedFilter)
 
     const marginTop = interpolate(this.y, {
       inputRange: [

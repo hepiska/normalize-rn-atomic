@@ -124,11 +124,8 @@ const ProductCard = ({
   const [defaultImage, setImage] = useState(null)
   const [attributeSelected, setAttributeSelected] = useState(null)
   const [selectedVariantId, setSelectedVariantId] = useState(null)
-
   const colorAttributes =
-    product.attributes &&
-    product.attributes.label &&
-    product.attributes.find(x => x.label === 'Color')
+    product.attributes && product.attributes.find(x => x && x.label === 'Color')
 
   const onColorChange = (attribute, index) => () => {
     const _filteredVariants = product.variants.filter(_variant => {
@@ -156,10 +153,9 @@ const ProductCard = ({
   const images = selectedVariant.image_urls || product.image_urls || []
   // const random = Math.floor(Math.random() * images.length)
   const variantPrice = selectedVariantId && {
-    price: selectedVariant.price,
-    discount_price: selectedVariant.price_after_disc,
+    current: selectedVariant.price_disc || selectedVariant.price,
+    prev: selectedVariant.price_disc ? selectedVariant.price : undefined,
   }
-
   const image =
     defaultImage || (!!images[0] && chageImageUri(images[0], { width }))
 
@@ -362,6 +358,7 @@ const ProductCardVertical = ({
   }
 
   isShowRangePrice = product.min_price !== product.max_price
+
   return (
     <TouchableWithoutFeedback onPress={onPress}>
       <Div style={{ ...composeStyle, width }}>
@@ -428,7 +425,12 @@ const ProductCardVertical = ({
           ) : isShowRangePrice ? (
             <RangePrice {...price} upTo />
           ) : (
-            <Price price={product.price} />
+            <Price
+              {...{
+                prev: price.exTo,
+                current: price.to,
+              }}
+            />
           )}
 
           {onAddtoCart && (

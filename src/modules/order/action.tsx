@@ -130,7 +130,7 @@ export const getOrderById = order_id => ({
     },
     success: data => {
       return [
-        setProductAttributeData(data.entities.attribute),
+        // setProductAttributeData(data.entities.attribute),
         setProductData(data.entities.product),
         setBrandData(data.entities.brand),
         setCategoryData(data.entities.category),

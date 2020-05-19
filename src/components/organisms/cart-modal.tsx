@@ -255,9 +255,7 @@ const mapStateToProps = (state, ownProps) => {
   const productId = ownProps.route.params?.product
   const product = state.products.data[productId]
   const _product = deepClone(product)
-  _product.attributes = _product.attributes?.map(v => {
-    return state.productAttribute.data[v]
-  })
+
   return {
     product: _product,
     loading: state.products.productLoading,

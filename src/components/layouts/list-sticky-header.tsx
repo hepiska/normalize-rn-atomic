@@ -132,7 +132,6 @@ class ListMansoryStickyHeader extends React.Component<
           },
         ]
       : []
-    console.log(sectionData)
     return (
       <View style={{ flex: 1 }}>
         <AnimatedSectionList

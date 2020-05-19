@@ -341,7 +341,6 @@ const AddAddressManual = props => {
           items={pickerOptions}
           onValueChange={(value, index, data) => {
             if (data) {
-              console.log('data', data)
               _changeSelectedDataPos(activeRegionLevel, value)
               onSelect(data.name)
               handleOnChange(regionMap[activeRegionLevel].key)(data.name)

@@ -14,12 +14,6 @@ const productListMap = (state, ownProps) => {
 
   const _product = deepClone(product)
 
-  if (_product.attributes) {
-    _product.attributes = _product.attributes.map(v => {
-      return state.productAttribute.data[v]
-    })
-  }
-
   const isSaved = !!state.productsSaved.data[productId]
   if (!_product) return {}
   // const product = ownProps.product

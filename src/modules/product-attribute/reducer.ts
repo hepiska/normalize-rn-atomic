@@ -26,7 +26,9 @@ const productAttributeReducer: Reducer<PostState> = (
   switch (action.type) {
     case attributeActionType.SET_ATTRIBUTE_DATA:
       if (action.payload)
-        newState.data = Immutable.merge(newState.data, action.payload)
+        newState.data = Immutable.merge(newState.data, action.payload, {
+          deep: true,
+        })
       return newState
     case attributeActionType.SET_ATTRIBUTE_ORDER:
       if (

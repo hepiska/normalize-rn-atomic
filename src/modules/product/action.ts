@@ -66,7 +66,7 @@ export const getProductById = id => ({
       setBrandData(data.entities.brand),
       setCategoryData(data.entities.category),
       setProductData(data.entities.product),
-      setProductAttributeData(data.entities.attribute),
+      // setProductAttributeData(data.entities.attribute),
       changeValue({ key: 'productLoading', value: false }),
     ],
   },
@@ -88,7 +88,7 @@ export const productApi = (params, url) => ({
             setBrandData(data.entities.brand),
             setCategoryData(data.entities.category),
             setProductData(data.entities.product),
-            setProductAttributeData(data.entities.attribute),
+            // setProductAttributeData(data.entities.attribute),
             setProductOrder({ order: data.result, pagination }),
             setProductsLoading(false),
           ]
@@ -116,7 +116,7 @@ export const productSearchApi = (params, url) => ({
             setBrandData(data.entities.brand),
             setCategoryData(data.entities.category),
             setProductData(data.entities.product),
-            setProductAttributeData(data.entities.attribute),
+            // setProductAttributeData(data.entities.attribute),
             setProductSearchOrder({ search: data.result, pagination }),
             setProductsLoading(false),
           ]
