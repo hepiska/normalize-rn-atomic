@@ -72,7 +72,6 @@ const TabMenu = ({
     const idx = Math.ceil(nativeEvent.contentOffset.x / width)
     onChangeTab(items[idx])
   }
-
   return useMemo(
     () => (
       <View style={{ ...style, flex: 1 }}>

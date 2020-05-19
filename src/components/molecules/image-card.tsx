@@ -9,6 +9,7 @@ import ImageAutoSchale from '@components/atoms/image-autoschale'
 interface ItemType {
   id: number
   image_url: string
+  mobile_image_url?: string
   target_url: string
 }
 
@@ -53,7 +54,7 @@ const ImageCard = ({ item, navigation, style }: ItemJumbotronType) => {
       <View style={composeStyle}>
         <ImageAutoSchale
           source={{
-            uri: setImage(item.image_url, {
+            uri: setImage(item.mobile_image_url || item.image_url, {
               width: imageWidth,
             }),
           }}

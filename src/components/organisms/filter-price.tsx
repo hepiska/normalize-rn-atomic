@@ -65,9 +65,10 @@ const FilterPriceOrg = ({
   const [multiSlider, changeMultiSlider] = useState([0, maxSlider])
   let timeout = null
 
-  useEffect(() => {
-    fetchCountProduct({ maximum_price, minimum_price })
-  }, [maximum_price, minimum_price])
+  // useEffect(() => {
+  //   fetchCountProduct({ maximum_price, minimum_price })
+  // }, [maximum_price, minimum_price])
+
   const parentScrollDisabled = value => {
     changeValueUiIneraction({ key: 'isScrollEnabled', value: value })
   }
@@ -92,18 +93,21 @@ const FilterPriceOrg = ({
     }
 
     timeout = setTimeout(() => {
+      const minPrice = Math.floor(
+        colectionPrices.minimum_price + (pos[0] / maxSlider) * delta,
+      )
+      const maxPrice = Math.floor(
+        colectionPrices.minimum_price + (pos[1] / maxSlider) * delta,
+      )
       setSelectedPrice({
         type: 'minimum_price',
-        value: Math.floor(
-          colectionPrices.minimum_price + (pos[0] / maxSlider) * delta,
-        ),
+        value: minPrice,
       })
       setSelectedPrice({
         type: 'maximum_price',
-        value: Math.floor(
-          colectionPrices.minimum_price + (pos[1] / maxSlider) * delta,
-        ),
+        value: maxPrice,
       })
+      fetchCountProduct({ maximum_price: minPrice, minimum_price: maxPrice })
     }, 500)
   }
   return (
