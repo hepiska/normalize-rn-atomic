@@ -77,7 +77,7 @@ export const getUser = (data, id_type) => {
       success: data => {
         return [
           setUserData(data.entities.user),
-          setUserOrder(data.result),
+          // setUserOrder(data.result),
           setUserLoading(false),
         ]
       },
@@ -155,6 +155,7 @@ export const unfollowUser = (id: any) => ({
     },
     startNetwork: () => setUserLoading(true),
     success: () => [
+      getUser(getMe().id, 'id'),
       changeFollowData({ is_followed: false, user_id: id }),
       setUserLoading(false),
     ],
@@ -172,6 +173,7 @@ export const followUser = (id: any) => ({
     startNetwork: () => setUserLoading(true),
     success: () => {
       return [
+        getUser(getMe().id, 'id'),
         changeFollowData({ is_followed: true, user_id: id }),
         setUserLoading(false),
       ]

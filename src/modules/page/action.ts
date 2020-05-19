@@ -36,7 +36,6 @@ export const getPage = pagename => ({
       return setPageLoading({ key: pagename, value: true })
     },
     success: data => {
-      console.log('daaraa', data.entities.attribute)
       return [
         setUserData(data.entities.user),
         setBrandData(data.entities.brand),

@@ -1,5 +1,5 @@
 import React from 'react'
-import { TextStyle } from 'react-native'
+import { TextStyle, View } from 'react-native'
 import { Font, Div } from '@components/atoms/basic'
 import { colors } from '@utils/constants'
 import { fontStyle } from '@components/commont-styles'
@@ -45,7 +45,7 @@ const Price = ({ prev, current, style }: Price) => {
         }
         if (Boolean(prev) && i === mainPrice.length - 1) {
           return (
-            <>
+            <View style={{ flexDirection: 'row' }}>
               <Font
                 key={`price-${i}`}
                 size={14}
@@ -71,7 +71,7 @@ const Price = ({ prev, current, style }: Price) => {
                   {disc} %
                 </Font>
               </Div>
-            </>
+            </View>
           )
         }
       })}

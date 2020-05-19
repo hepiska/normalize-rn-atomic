@@ -74,7 +74,7 @@ class Follow extends Component<any, any> {
     })
   }
   render() {
-    const { route, user } = this.props
+    const { route, user, follower_count, following_count } = this.props
     const { activeTab } = this.state
 
     if (!activeTab) {
@@ -91,6 +91,7 @@ class Follow extends Component<any, any> {
           items={this.items()}
           selectedItem={activeTab}
           onChangeTab={this.onChangeTab}
+          forceRender={follower_count + following_count}
           isScrollEnabled
           isLazyload
         />
