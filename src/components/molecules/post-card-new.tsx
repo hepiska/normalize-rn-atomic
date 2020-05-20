@@ -9,7 +9,11 @@ import {
 } from '@components/atoms/basic'
 import ImageAutoSchale from '@components/atoms/image-autoschale'
 import { setImage } from '@utils/helpers'
-import { helveticaNormalFont, fontStyle } from '@components/commont-styles'
+import {
+  helveticaNormalFont,
+  fontStyle,
+  shadows,
+} from '@components/commont-styles'
 import { colors, images as defaultImages } from '@utils/constants'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import IconFa from 'react-native-vector-icons/FontAwesome'
@@ -104,84 +108,116 @@ const VerticalCart = ({
       ? post.title.substring(0, maxTitile) + '...'
       : post.title
   return (
-    <TouchableWithoutFeedback onPress={onPress}>
-      <View
-        style={{
-          paddingVertical: 4,
-          borderWidth: 1,
-          borderRadius: 8,
-          overflow: 'hidden',
-          borderColor: colors.black10,
-          ...style,
-        }}
-        onLayout={onLayout}>
-        {user && (
-          <View style={{ flexDirection: 'row', marginVertical: 4 }}>
-            <TouchableOpacity>
-              <Image
-                source={{
-                  uri: setImage(user.photo_url, { width: 24 }),
-                }}
-                style={{
-                  width: 16,
-                  height: 16,
-                  borderRadius: 8,
-                  marginRight: 8,
-                }}
-              />
-            </TouchableOpacity>
-
-            <Text style={{ ...fontStyle.helveticaBold, fontSize: 10 }}>
-              {user.username}
-            </Text>
-          </View>
-        )}
-        {layout && (
-          <View style={{ marginVertical: 4 }}>
-            <ImageAutoSchale
-              source={{
-                uri: setImage(post.image_url, { width: layout.width }),
-              }}
-              thumbnailSource={{ uri: setImage(post.image_url, { width: 24 }) }}
-              width={layout.width}
-            />
-          </View>
-        )}
-        <View style={{ marginVertical: 4, marginHorizontal: 8 }}>
-          <Text style={{ ...fontStyle.helveticaBold, fontSize: 10 }}>
-            {title}
-          </Text>
-        </View>
+    <View
+      style={{
+        paddingVertical: 4,
+        paddingHorizontal: 1,
+        // borderWidth: 1,
+        borderRadius: 8,
+        // overflow: 'hidden',
+        shadowColor: colors.black100,
+        shadowOffset: {
+          width: 0,
+          height: 1,
+        },
+        backgroundColor: 'white',
+        shadowRadius: 1,
+        shadowOpacity: 0.18,
+        elevation: 1,
+        // borderColor: colors.black10,
+        ...style,
+      }}
+      onLayout={onLayout}>
+      {user && (
         <View
           style={{
             flexDirection: 'row',
             marginVertical: 4,
             marginHorizontal: 8,
-            justifyContent: 'space-between',
           }}>
-          <View style={{ flexDirection: 'row' }}>
-            <IconFa
-              name="heart"
-              onPress={onLike}
-              size={16}
-              color={isLiked ? colors.red2 : colors.black50}
+          <TouchableOpacity>
+            <Image
+              source={{
+                uri: setImage(user.photo_url, { width: 24 }),
+              }}
+              style={{
+                width: 16,
+                height: 16,
+                borderRadius: 8,
+                marginRight: 8,
+              }}
             />
-            <Font size="10.5px" color={colors.black70} padd="0 0 0 4px">
-              {post.like_count}
-            </Font>
-          </View>
+          </TouchableOpacity>
 
-          <IconFa
-            name="share"
-            size={16}
-            onPress={onShare}
-            color={colors.black70}
-          />
+          <Text style={{ ...fontStyle.helveticaBold, fontSize: 10 }}>
+            {user.username}
+          </Text>
         </View>
+      )}
+      {layout && (
+        <View style={{ marginVertical: 4 }}>
+          <TouchableWithoutFeedback onPress={onPress}>
+            <ImageAutoSchale
+              source={{
+                uri: setImage(post.image_url, { width: layout.width }),
+              }}
+              errorStyle={{ width: layout.width, height: layout.width * 0.66 }}
+              thumbnailSource={{ uri: setImage(post.image_url, { width: 24 }) }}
+              width={layout.width}
+            />
+          </TouchableWithoutFeedback>
+        </View>
+      )}
+      <View style={{ marginVertical: 4, marginHorizontal: 8 }}>
+        <Text style={{ ...fontStyle.helveticaBold, fontSize: 10 }}>
+          {title}
+        </Text>
       </View>
-    </TouchableWithoutFeedback>
+      <View
+        style={{
+          flexDirection: 'row',
+          marginVertical: 4,
+          marginHorizontal: 8,
+          justifyContent: 'space-between',
+        }}>
+        <View style={{ flexDirection: 'row' }}>
+          <IconFa
+            name="heart"
+            onPress={onLike}
+            size={16}
+            color={isLiked ? colors.red2 : colors.black50}
+          />
+          <Font size="10.5px" color={colors.black70} padd="0 0 0 4px">
+            {post.like_count}
+          </Font>
+        </View>
+
+        <IconFa
+          name="share"
+          size={16}
+          onPress={onShare}
+          color={colors.black70}
+        />
+      </View>
+    </View>
   )
 }
+
+// const HorizontalPost = ({  user,
+//   layout,
+//   post,
+//   isLiked,
+//   onLayout,
+//   style,
+//   onPress,
+//   onShare,
+//   onLike,}: any) => {return (
+//     <TouchableWithoutFeedback onPress={onPress}>
+//           <View>
+
+//           </View>
+//     </TouchableWithoutFeedback>
+//   )}
 
 class PostListItem extends React.PureComponent<PostListItemType, any> {
   state: any = {
@@ -232,6 +268,7 @@ class PostListItem extends React.PureComponent<PostListItemType, any> {
     const { layout } = this.state
     if (post) {
       if (horizontal) {
+        return null
       } else {
         return (
           <VerticalCart

@@ -34,7 +34,12 @@ const postLikedReducer: Reducer<PostLikedState> = (
         return [_data, _data]
       })
       newState.data = Immutable.merge(newState.data, objData)
-      newState.order = OrderData
+      return newState
+    case postLikedActionType.SET_ORDER:
+      newState.order = Immutable(action.payload)
+      return newState
+    case postLikedActionType.ADD_ORDER:
+      newState.order = newState.order.concat(Immutable(action.payload))
       return newState
     case postLikedActionType.ADD_LIKED_POST:
       const likedPostObj = {}

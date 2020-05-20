@@ -57,7 +57,13 @@ class ListMansoryStickyHeader extends React.Component<
     }
   }
   _renderSection = ({ item, index }) => {
-    const { layoutType, renderItem, columnStyle, rowStyle } = this.props
+    const {
+      layoutType,
+      renderItem,
+      columnStyle,
+      rowStyle,
+      bounces,
+    } = this.props
     switch (layoutType) {
       case LayoutType.mansory:
         return (
@@ -66,6 +72,7 @@ class ListMansoryStickyHeader extends React.Component<
               return (
                 <Column
                   style={columnStyle}
+                  bounces={bounces}
                   initialNumInColsToRender={2}
                   colIndex={_index}
                   data={_data}
@@ -91,25 +98,28 @@ class ListMansoryStickyHeader extends React.Component<
       y,
       renderItem,
       numColumns,
+      columnWrapperStyle,
       ...props
     } = this.props
     const groupData = this._groupData(data)
     const composeprops = { ...props }
     if (layoutType === LayoutType.normal) {
       composeprops.numColumns = numColumns
+      composeprops.columnWrapperStyle = columnWrapperStyle
+    }
+    if (header) {
+      composeprops.stickyHeaderIndices = [0]
+      composeprops.ListHeaderComponent = header
     }
     return (
       <View style={{ flex: 1 }}>
         <AnimatedFlatlist
           data={groupData}
-          ListHeaderComponent={header}
           onScroll={onScroll({ y })}
-          stickyHeaderIndices={[0]}
           key="flat-list"
           keyExtractor={this._keyExtractor}
           renderItem={this._renderSection}
           {...composeprops}
-          // {...props}
         />
         {/* <AnimatedFlatlist
           removeClippedSubviews={true}

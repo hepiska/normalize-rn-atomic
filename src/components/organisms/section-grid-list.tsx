@@ -10,6 +10,8 @@ import { OutlineButton } from '@components/atoms/button'
 import { colors } from '@utils/constants'
 import ProductCard from '@components/molecules/product-card'
 import PostCard from '@components/molecules/post-card'
+import PostCardNew from '@src/components/molecules/post-card-new'
+import MansoryLayout from '@components/layouts/mansory-layout'
 import { productListData } from '@hocs/data/product'
 import { postListData } from '@src/hocs/data/post'
 import ImageCard from '@components/molecules/image-card'
@@ -23,7 +25,7 @@ interface SectionGridListType {
 }
 
 const ProductHoc = productListData(ProductCard)
-const PostHoc = postListData(PostCard)
+const PostHoc = postListData(PostCardNew)
 
 const styles = StyleSheet.create({
   button: {
@@ -41,6 +43,21 @@ const styles = StyleSheet.create({
 })
 
 class SectionGridList extends React.Component<SectionGridListType, any> {
+  _renderPost = item => {
+    return (
+      <PostHoc
+        postId={item}
+        type="large"
+        style={{
+          // flex: 1,
+          // wrappermargin: 4,
+          marginVertical: 8,
+          marginHorizontal: 8,
+        }}
+      />
+    )
+  }
+
   _renderItem = () => {
     const { data, navigation } = this.props
     const _data = data[`${data.type}s`]
@@ -72,34 +89,42 @@ class SectionGridList extends React.Component<SectionGridListType, any> {
         )
       case 'post':
         return (
-          <Div
-            _direction="row"
-            align="flex-start"
-            justify="center"
-            style={{ flexWrap: 'wrap' }}>
-            {_data.map((item, key) => (
-              // <Div
-              //   justifyContent="flex-start"
-              //   align="center"
-              //   key={item}
-              //   _width="50%">
-              <PostHoc
-                postId={item}
-                key={'' + item + key}
-                idx={key}
-                type="large"
-                style={{
-                  // flex: 1,
-                  // wrappermargin: 4,
-                  width: width - 16,
-                  marginVertical: 24,
-                  paddingHorizontal: 8,
-                }}
-              />
-              // </Div>
-            ))}
-          </Div>
+          <MansoryLayout
+            data={_data}
+            numColumns={2}
+            renderItem={this._renderPost}
+          />
         )
+      // return (
+      //   <Div
+      //     _direction="row"
+      //     align="flex-start"
+      //     justify="center"
+      //     style={{ flexWrap: 'wrap' }}>
+      //     {_data.map((item, key) => (
+      //       // <Div
+      //       //   justifyContent="flex-start"
+      //       //   align="center"
+      //       //   key={item}
+      //       //   _width="50%">
+      //       <PostHoc
+      //         postId={item}
+      //         key={'' + item + key}
+      //         idx={key}
+      //         horizontal
+      //         type="large"
+      //         style={{
+      //           // flex: 1,
+      //           // wrappermargin: 4,
+      //           width: width - 16,
+      //           marginVertical: 24,
+      //           paddingHorizontal: 8,
+      //         }}
+      //       />
+      //       // </Div>
+      //     ))}
+      //   </Div>
+      // )
       case 'image':
         return (
           <Div align="flex-start" justify="center">

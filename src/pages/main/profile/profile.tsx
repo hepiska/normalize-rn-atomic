@@ -33,6 +33,8 @@ import styled from 'styled-components/native'
 import TabMenu from '@src/components/layouts/tab-menu'
 import { ScrollView } from 'react-native-gesture-handler'
 import MyPost from '@components/organisms/my-post'
+import MySaved from '@components/organisms/my-saved'
+import MyInsight from '@components/organisms/my-insight'
 
 const headerHeight = 54
 const { width, height } = Dimensions.get('screen')
@@ -124,6 +126,7 @@ class ProfilPage extends React.PureComponent<any, any> {
     defaultImage: null,
     activeTab: initialActiveTab,
     isVisible: false,
+    showName: false,
     enableScrollContent: false,
   }
 
@@ -147,9 +150,6 @@ class ProfilPage extends React.PureComponent<any, any> {
       } else if (isAuth && user.id) {
         getUser(user.id, 'id')
       }
-      // if (isAuth && user.id) {
-      //   getUser(user.id, 'id')
-      // }
     }
   }
 
@@ -197,10 +197,21 @@ class ProfilPage extends React.PureComponent<any, any> {
   }
   _onScroll = e => {
     if (
+      (this as any).profileLayout.height / 2 - e.nativeEvent.contentOffset.y <
+      2
+    ) {
+      this.setState({ showName: true })
+    } else {
+      this.setState({ showName: false })
+    }
+
+    if (
       (this as any).profileLayout.height - e.nativeEvent.contentOffset.y <
       2
     ) {
       this.setState({ enableScrollContent: true })
+    } else {
+      this.setState({ enableScrollContent: false })
     }
   }
   _disableContentScroll = () => {
@@ -216,6 +227,7 @@ class ProfilPage extends React.PureComponent<any, any> {
       isVisible,
       activeTab,
       enableScrollContent,
+      showName,
     } = this.state
 
     const TabMenuData = [
@@ -224,6 +236,7 @@ class ProfilPage extends React.PureComponent<any, any> {
         title: 'Posts',
         Component: (
           <MyPost
+            navigation={this.props.navigation}
             scrollEnabled={this.state.enableScrollContent}
             disableScroll={this._disableContentScroll}
           />
@@ -232,12 +245,24 @@ class ProfilPage extends React.PureComponent<any, any> {
       {
         name: 'saved',
         title: 'Saved List',
-        Component: <View style={{ width, backgroundColor: 'blue' }} />,
+        Component: (
+          <MySaved
+            navigation={this.props.navigation}
+            scrollEnabled={this.state.enableScrollContent}
+            disableScroll={this._disableContentScroll}
+          />
+        ),
       },
       {
         name: 'insight',
         title: 'Insight',
-        Component: <View style={{ width, backgroundColor: 'red' }} />,
+        Component: (
+          <MyInsight
+            navigation={this.props.navigation}
+            scrollEnabled={this.state.enableScrollContent}
+            disableScroll={this._disableContentScroll}
+          />
+        ),
       },
     ]
 
@@ -264,7 +289,7 @@ class ProfilPage extends React.PureComponent<any, any> {
           : defaultImages.product)
       return (
         <>
-          <NavbarTop title="Profile" />
+          <NavbarTop title={showName ? user.name : 'My profile'} />
           <View style={{ height: height }}>
             <ScrollView
               showsVerticalScrollIndicator={false}

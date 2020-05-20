@@ -294,7 +294,7 @@ const ProductCardHorizontal = ({
           ) : (
             <RangePrice {...price} upTo />
           )}
-          {onAddtoCart && (
+          {onAddtoCart && product.is_commerce && (
             <Div _flex={1} justify="flex-end" _margin="16px 0px 0px">
               <OutlineButton
                 title="Add to Cart"
@@ -461,7 +461,7 @@ const ProductCardVertical = ({
             />
           )}
 
-          {onAddtoCart && (
+          {onAddtoCart && product.is_commerce && (
             <Div _width="100%" justify="flex-end" _margin="16px 0px 0px">
               <OutlineButton
                 title="Add to Cart"

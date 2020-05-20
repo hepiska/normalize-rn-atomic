@@ -11,6 +11,8 @@ export const postLikedActionType = {
   SET_ORDER_DATA: 'postLiked/SET_ORDER_DATA',
   SET_LOADING: 'postLiked/SET_LOADING',
   ADD_LIKED_POST: 'postLiked/ADD_LIKED_POST',
+  SET_ORDER: 'postLiked/SET_ORDER',
+  ADD_ORDER: 'postLiked/ADD_ORDER',
   REMOVE_LIKED_POST: 'postLiked/REMOVE_LIKED_POST',
 }
 
@@ -37,24 +39,44 @@ export const postLikedSetOrderData = data => {
   }
 }
 
+export const addLikedPostOrder = data => {
+  return {
+    type: postLikedActionType.ADD_ORDER,
+    payload: data,
+  }
+}
+export const setLikedPostOrder = data => {
+  return {
+    type: postLikedActionType.SET_ORDER,
+    payload: data,
+  }
+}
+
 export const postLikedClear = () => ({
   type: postLikedActionType.CLEAR,
 })
 
-export const getPostLiked = () => ({
+export const getPostLiked = params => ({
   type: API,
   payload: {
     url: '/users/' + getMe().id + '/likes',
+    requestParams: { params },
     schema: [schema.post],
     startNetwork: () => postLikedLoading(true),
     success: data => {
-      return [
+      const result = [
         setCommentData(data.entities.comment),
         setUserData(data.entities.user),
         setPostData(data.entities.post),
         postLikedSetOrderData(data.result),
-        postLikedLoading(false),
       ]
+
+      if (params && params.offset > 0) {
+        result.push(addLikedPostOrder(data.result))
+      } else {
+        result.push(setLikedPostOrder(data.result))
+      }
+      return [...result, postLikedLoading(false)]
     },
     error: () => {
       return [postLikedLoading(false)]

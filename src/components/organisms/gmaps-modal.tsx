@@ -162,7 +162,6 @@ class MapModal extends React.PureComponent<any, any> {
         />
         <View style={{ flex: 1, backgroundColor: 'white' }}>
           <MapView
-            liteMode
             style={StyleSheet.absoluteFill}
             region={mapsOrigin}
             provider={PROVIDER_GOOGLE}>

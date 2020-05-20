@@ -6,7 +6,7 @@ import List from '@components/layouts/list-header'
 import { capitalEachWord } from '@utils/helpers'
 import SearchFilter from '@components/organisms/search-filter'
 import { getUserPosts } from '@modules/user-post/action'
-import PostListItem from '@components/molecules/post-cart-new'
+import PostListItem from '@src/components/molecules/post-card-new'
 import { postListData } from '@hocs/data/post'
 import EmtyState from '@components/molecules/order-empty-state'
 
@@ -29,15 +29,32 @@ class MyPost extends React.Component<any, any> {
 
   _fetchData = skip => {
     const { selectedFilter } = this.state
-    let selectedStatus = selectedFilter.join(',')
-
-    this.props.getUserPosts({
+    let selectedStatus = selectedFilter[0]
+    const params: any = {
       limit: this.limit,
       offset: this.limit * skip,
       sort_by: 'date',
       sort_direction: 'desc',
-      status: selectedStatus,
-    })
+    }
+
+    if (
+      selectedStatus === 'published' ||
+      selectedStatus === 'draft' ||
+      selectedStatus === 'archived'
+    ) {
+      params.status = selectedStatus
+    }
+
+    if (
+      selectedStatus === 'instagram' ||
+      selectedStatus === 'article' ||
+      selectedStatus === 'collection' ||
+      selectedStatus === 'youtube'
+    ) {
+      params.type = selectedStatus
+    }
+
+    this.props.getUserPosts(params)
   }
 
   _fetchMore = () => {
@@ -84,6 +101,10 @@ class MyPost extends React.Component<any, any> {
       value: _data,
       name: capitalEachWord(_data),
     })),
+    { name: 'Photos', value: 'photo' },
+    { name: 'Jurnals', value: 'jurnal' },
+    { name: 'Articles', value: 'article' },
+    { name: 'Collections', value: 'collection' },
   ]
   _header = () => {
     const { selectedFilter } = this.state
@@ -135,6 +156,7 @@ class MyPost extends React.Component<any, any> {
           columnStyle={{ flex: 1, marginHorizontal: 8 }}
           numColumns={2}
           header={this._header}
+          ListFooterComponent={<View style={{ height: 200 }} />}
           renderItem={this._renderItem}
         />
       </View>

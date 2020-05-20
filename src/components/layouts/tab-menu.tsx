@@ -124,7 +124,7 @@ const TabMenu = ({
             ? items.map((item, key) =>
                 key === idx ? (
                   typeof item.Component === 'function' ? (
-                    <item.Component />
+                    <item.Component key={key} />
                   ) : (
                     item.Component
                   )
@@ -132,9 +132,9 @@ const TabMenu = ({
                   <Div _width={width} key={`tabmenu-${key}`} />
                 ),
               )
-            : items.map(item =>
+            : items.map((item, key) =>
                 typeof item.Component === 'function' ? (
-                  <item.Component />
+                  <item.Component key={key} />
                 ) : (
                   item.Component
                 ),

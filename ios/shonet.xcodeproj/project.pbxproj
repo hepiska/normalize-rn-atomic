@@ -12,6 +12,7 @@
 		13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB11A68108700A75B9A /* LaunchScreen.xib */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		286F886F79CD4FFCB3B44768 /* PlayfairDisplay-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2E2CED70ABAA44A091117C7F /* PlayfairDisplay-Bold.ttf */; };
 		2A64B71E32BF4275862850DF /* HelveticaNeue-Ultralight.otf in Resources */ = {isa = PBXBuildFile; fileRef = 40DB673880554FC79AD955AD /* HelveticaNeue-Ultralight.otf */; };
 		2D02E4BC1E0B4A80006451C7 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		2D02E4BD1E0B4A84006451C7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
@@ -21,7 +22,6 @@
 		4277434D2CCD420FA380CD76 /* HelveticaNeue.otf in Resources */ = {isa = PBXBuildFile; fileRef = 5A468D6718C94DE3BF67F431 /* HelveticaNeue.otf */; };
 		4DCC273F1D99463C8523AE3D /* FuturaDemi.ttf in Resources */ = {isa = PBXBuildFile; fileRef = ADE6DFC0D479448884A33B73 /* FuturaDemi.ttf */; };
 		67F8D3BF7C414A2CA03CF2C5 /* HelveticaNeue-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 4D6917D670964F3D989B2958 /* HelveticaNeue-Medium.otf */; };
-		8CF9B7582472CA1C001237CA /* PlayfairDisplay-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8CF9B7572472C9E2001237CA /* PlayfairDisplay-Bold.ttf */; };
 		9601CD2FC54B4A0985A9D5B9 /* HelveticaNeue-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 0C3381BD9F9C4E50882597AC /* HelveticaNeue-Bold.otf */; };
 		989E93929A0743C1A6945606 /* HelveticaNeue-RegularItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = B236E9090C4B4874988F4798 /* HelveticaNeue-RegularItalic.otf */; };
 		9F40592CAAE4ABA7E3451B0A /* libPods-shonet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3030A36CB33049D354C48181 /* libPods-shonet.a */; };
@@ -35,7 +35,6 @@
 		D8CDB827245C342900DC131B /* AppCenter-Config.plist in Resources */ = {isa = PBXBuildFile; fileRef = D8CDB826245C342900DC131B /* AppCenter-Config.plist */; };
 		F309BA0A81724752ABFFFBB0 /* HelveticaNeue-Thin.otf in Resources */ = {isa = PBXBuildFile; fileRef = 7BA3025266E7459B8400918D /* HelveticaNeue-Thin.otf */; };
 		F95C89844F7B634CA17FAA53 /* libPods-shonet-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 47146A0A7C0603E935EC9F57 /* libPods-shonet-tvOSTests.a */; };
-		286F886F79CD4FFCB3B44768 /* PlayfairDisplay-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2E2CED70ABAA44A091117C7F /* PlayfairDisplay-Bold.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -79,6 +78,7 @@
 		26E3CF15E470F3DA10532EEC /* Pods-shonet-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-shonet-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-shonet-tvOS/Pods-shonet-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
 		2D02E47B1E0B4A5D006451C7 /* shonet-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "shonet-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2D02E4901E0B4A5D006451C7 /* shonet-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "shonet-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2E2CED70ABAA44A091117C7F /* PlayfairDisplay-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "PlayfairDisplay-Bold.ttf"; path = "../src/assets/fonts/PlayfairDisplay-Bold.ttf"; sourceTree = "<group>"; };
 		3030A36CB33049D354C48181 /* libPods-shonet.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-shonet.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3AD85BA4D649BA55BA7F72B3 /* Pods-shonetTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-shonetTests.debug.xcconfig"; path = "Target Support Files/Pods-shonetTests/Pods-shonetTests.debug.xcconfig"; sourceTree = "<group>"; };
 		40DB673880554FC79AD955AD /* HelveticaNeue-Ultralight.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "HelveticaNeue-Ultralight.otf"; path = "../src/assets/fonts/HelveticaNeue-Ultralight.otf"; sourceTree = "<group>"; };
@@ -115,7 +115,6 @@
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
 		FB7653FB23C749AD828FB4E0 /* Ionicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
-		2E2CED70ABAA44A091117C7F /* PlayfairDisplay-Bold.ttf */ = {isa = PBXFileReference; name = "PlayfairDisplay-Bold.ttf"; path = "../src/assets/fonts/PlayfairDisplay-Bold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -444,7 +443,6 @@
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
 				4DCC273F1D99463C8523AE3D /* FuturaDemi.ttf in Resources */,
-				8CF9B7582472CA1C001237CA /* PlayfairDisplay-Bold.ttf in Resources */,
 				A7400DC40B9A4CE7A00A9CED /* FuturaDemi.woff2 in Resources */,
 				D8CDB827245C342900DC131B /* AppCenter-Config.plist in Resources */,
 				BBB9203657AE41C7A9CB5C17 /* FuturaRegular.ttf in Resources */,

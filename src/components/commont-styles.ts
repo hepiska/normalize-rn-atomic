@@ -151,6 +151,19 @@ export const helveticaBlackBoldFont10 = {
   color: colors.black100,
 }
 
+export const shadows = StyleSheet.create({
+  normal: {
+    shadowColor: colors.black100,
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowRadius: 1,
+    shadowOpacity: 0.18,
+    elevation: 1,
+  },
+})
+
 export const borderStyle = StyleSheet.create({
   all: {
     borderStyle: 'solid',
