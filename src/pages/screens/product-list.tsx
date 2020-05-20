@@ -408,6 +408,7 @@ class Productlist extends Component<any, any> {
             sections={sectionData}
             stickySectionHeadersEnabled
             renderItem={this._renderItem}
+            scrollIndicatorInsets={{ right: 1 }}
           />
           {loading && (
             <Div

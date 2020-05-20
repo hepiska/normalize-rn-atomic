@@ -7,7 +7,7 @@ import StatusAlert from '@components/atoms/status-alert'
 import {
   setImage as changeImageUri,
   formatRupiah,
-  capilEachWord,
+  capitalEachWord,
 } from '@utils/helpers'
 import { navigate } from '@src/root-navigation'
 import dayjs from 'dayjs'

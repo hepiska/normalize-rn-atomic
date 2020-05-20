@@ -9,7 +9,7 @@ import {
   changeSearchKey,
   getAllOrder,
 } from '@modules/order/action'
-import { capilEachWord } from '@utils/helpers'
+import { capitalEachWord } from '@utils/helpers'
 import { colors } from '@utils/constants'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import SearchFilter from '@components/organisms/search-filter'
@@ -110,7 +110,7 @@ class OrderList extends Component<any, any> {
     const options = [
       { name: 'All', value: 'all' },
       ...filterOptions.map(_filter => ({
-        name: capilEachWord(_filter),
+        name: capitalEachWord(_filter),
         value: _filter,
       })),
     ]

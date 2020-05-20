@@ -11,9 +11,10 @@ interface Price {
   current: number
   prev?: number
   style?: TextStyle
+  stylePrev?: TextStyle
 }
 
-const Price = ({ prev, current, style }: Price) => {
+const Price = ({ prev, current, style, stylePrev }: Price) => {
   // const price = `${formatRupiah(from)} - ${formatRupiah(to)}`.split(' ')
   const mainPrice = `${formatRupiah(current)}`.split(' ')
   const disc = Math.ceil(((prev - current) / prev) * 100)
@@ -22,11 +23,14 @@ const Price = ({ prev, current, style }: Price) => {
     <Div _direction="row" justify="flex-start" style={{ flexWrap: 'wrap' }}>
       {Boolean(prev) && (
         <Font
-          type="HelveticaNeue"
           size={11}
           _margin="4px"
           color={colors.black60}
-          style={{ textDecorationLine: 'line-through' }}>
+          style={{
+            textDecorationLine: 'line-through',
+            ...fontStyle.helvetica,
+            ...stylePrev,
+          }}>
           {formatRupiah(prev)}
         </Font>
       )}
@@ -59,15 +63,15 @@ const Price = ({ prev, current, style }: Price) => {
                   source={require('../../assets/icons/badge-discount.png')}
                   style={{
                     position: 'absolute',
-                    width: 31,
+                    width: 34,
                     height: 15,
                   }}
                 />
                 <Font
-                  size={8}
+                  size={10}
                   _margin="0px 0px 0px 8px"
                   color={colors.white}
-                  style={{ fontWeight: '500' }}>
+                  style={{ fontWeight: '700' }}>
                   {disc} %
                 </Font>
               </Div>

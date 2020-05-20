@@ -17,7 +17,6 @@ const run = `(function() {
 
 class SizeGuideWebView extends Component<any, any> {
   webref = null
-  isLoading = false
 
   render() {
     return (

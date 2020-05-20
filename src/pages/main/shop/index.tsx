@@ -2,7 +2,6 @@ import React from 'react'
 import { createStackNavigator } from '@react-navigation/stack'
 import initialPageConfig from '@pages/page-initial.config'
 import ShopPage from './shop'
-import PostDetailPage from './post-detail'
 import BrandList from './brand-list'
 // import CartPage from './cart'
 
@@ -19,7 +18,6 @@ function ShopStack() {
         },
       }}>
       <Stack.Screen name="MainShop" component={ShopPage} />
-      <Stack.Screen name="PostDetail" component={PostDetailPage} />
       <Stack.Screen name="BrandList" component={BrandList} />
     </Stack.Navigator>
   )

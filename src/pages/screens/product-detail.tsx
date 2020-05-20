@@ -36,6 +36,7 @@ import {
   deleteProductSaved,
 } from '@modules/product-saved/action'
 import CircleLoader from '@components/atoms/loaders/cirle'
+import { capitalEachWord } from '@utils/helpers'
 
 const { Value } = Animated
 const { width, height } = Dimensions.get('screen')
@@ -287,22 +288,51 @@ class ProductListPage extends React.Component<any, any> {
             <Div bg="white" _width="100%" padd="0px 16px 96px">
               <Div width="100%" align="flex-start" padd="16px 0px">
                 <Font
-                  style={fontStyle.futuraDemi}
-                  size={18}
+                  style={fontStyle.playfairBold}
+                  size={26}
                   _margin="4px"
                   color={colors.black100}>
                   {product.brand.name}
                 </Font>
-                <Font size={18} _margin="4px" color={colors.gray3}>
+                <Font
+                  style={{ ...fontStyle.helveticaThin, fontWeight: '300' }}
+                  size={18}
+                  _margin="4px"
+                  color={colors.gray3}>
                   {product.name}
                 </Font>
                 {isUserSelectVariant ? (
                   <Price
-                    price={varianData.price}
-                    discount_price={varianData.price_after_disc}
+                    {...varianData.price}
+                    stylePrev={{
+                      fontSize: 14,
+                      color: colors.black90,
+                      ...fontStyle.helveticaThin,
+                      fontWeight: '300',
+                    }}
+                    style={{
+                      fontSize: 18,
+                      color: colors.gray1,
+                      ...fontStyle.helveticaBold,
+                    }}
+                    // price={varianData.price}
+                    // discount_price={varianData.price_after_disc}
                   />
                 ) : (
-                  <RangePrice {...price} />
+                  <RangePrice
+                    {...price}
+                    stylePrev={{
+                      fontSize: 14,
+                      color: colors.black90,
+                      ...fontStyle.helveticaThin,
+                      fontWeight: '300',
+                    }}
+                    style={{
+                      fontSize: 18,
+                      color: colors.gray1,
+                      ...fontStyle.helveticaBold,
+                    }}
+                  />
                 )}
               </Div>
               {product.attributes && (
@@ -403,7 +433,16 @@ class ProductListPage extends React.Component<any, any> {
                 )
                 return (
                   <ContentExpandable
-                    title={detail.type}
+                    title={
+                      <Text
+                        style={{
+                          ...fontStyle.playfairBold,
+                          fontSize: 24,
+                          color: colors.black100,
+                        }}>
+                        {capitalEachWord(detail.type.replace('-', ' '))}
+                      </Text>
+                    }
                     content={
                       <HTML
                         html={contentItem

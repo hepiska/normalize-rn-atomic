@@ -13,6 +13,7 @@ interface RangePrice {
   exTo?: number
   withDiscount?: boolean
   style?: TextStyle
+  stylePrev?: TextStyle
   upTo?: boolean
 }
 
@@ -23,6 +24,7 @@ const RangePrice = ({
   exTo,
   withDiscount,
   style,
+  stylePrev,
   upTo,
 }: RangePrice) => {
   const price = `${formatRupiah(from)} - ${formatRupiah(to)}`.split(' ')
@@ -42,6 +44,7 @@ const RangePrice = ({
           style={{
             ...fontStyle.helvetica,
             textDecorationLine: 'line-through',
+            ...stylePrev,
           }}>
           {`${formatRupiah(exFrom)} - ${formatRupiah(exTo)}`}
         </Font>
@@ -64,7 +67,7 @@ const RangePrice = ({
             return (
               <Div
                 key={`range-price-${i}`}
-                _margin="4px 4px 4px 12px"
+                _margin="4px 4px 4px 16px"
                 overflow="visible">
                 <Img
                   // source={
@@ -75,15 +78,15 @@ const RangePrice = ({
                   source={require('../../assets/icons/badge-discount.png')}
                   style={{
                     position: 'absolute',
-                    width: upTo ? 65 : 31,
+                    width: upTo ? 69 : 34,
                     height: 15,
                   }}
                 />
                 <Font
-                  size={8}
+                  size={10}
                   _margin="0px 0px 0px 8px"
                   color={colors.white}
-                  style={{ fontWeight: '500' }}>
+                  style={{ fontWeight: '700' }}>
                   {upTo ? `UP TO ${x}` : x}
                 </Font>
               </Div>

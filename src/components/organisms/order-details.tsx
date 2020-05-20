@@ -7,7 +7,7 @@ import { bindActionCreators } from 'redux'
 import { colors } from '@src/utils/constants'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import IconMi from 'react-native-vector-icons/MaterialIcons'
-import { formatRupiah, capilEachWord, sendEmail } from '@src/utils/helpers'
+import { formatRupiah, capitalEachWord, sendEmail } from '@src/utils/helpers'
 import { OutlineButton } from '../atoms/button'
 import dayjs from 'dayjs'
 import { cartListData } from '@hocs/data/cart'
@@ -257,7 +257,7 @@ class OrderDetails extends Component<any, any> {
                 ...styles.helveticaBold14,
                 color: getColor.textColor,
               }}>
-              {capilEachWord(order.status.toLowerCase())}
+              {capitalEachWord(order.status.toLowerCase())}
             </Text>
           </View>
 

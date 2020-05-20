@@ -6,7 +6,7 @@ import { bindActionCreators } from 'redux'
 import Field from '@components/atoms/field'
 import { getAllTransaction } from '@modules/transaction/action'
 import PaymentCard from '@components/molecules/payment-card'
-import { capilEachWord } from '@utils/helpers'
+import { capitalEachWord } from '@utils/helpers'
 import { colors } from '@utils/constants'
 import { transactionListData } from '@hocs/data/payment'
 import SearchFilter from '@components/organisms/search-filter'
@@ -82,7 +82,7 @@ class OrderList extends Component<any, any> {
     const options = [
       { name: 'All', value: 'all' },
       ...filterOptions.map(_filter => ({
-        name: capilEachWord(_filter),
+        name: capitalEachWord(_filter),
         value: _filter,
       })),
     ]

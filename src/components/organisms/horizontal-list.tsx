@@ -161,7 +161,11 @@ class HorizontalList extends React.Component<HorizontalListType, any> {
     const { data, style } = this.props
     return (
       <Div _width="100%" align="flex-start" style={style}>
-        <Font style={fontStyle.futuraDemi} size="24px" mar="0 0 24px 16px">
+        <Font
+          style={fontStyle.playfairBold}
+          size="23px"
+          mar="0 0 24px 16px"
+          color={colors.black100}>
           {data.title}
         </Font>
         <FlatList

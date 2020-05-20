@@ -49,6 +49,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     backgroundColor: 'white',
     justifyContent: 'center',
+    alignItems: 'center',
   },
 })
 
@@ -141,8 +142,11 @@ const NavbarTop: React.SFC<NavbarTopProps> = ({
             </Text>
           </Div>
         ) : (
-          <Div justify="center" _width="100%">
-            <Text style={{ ...fontStyle.helveticaBold, fontSize: 18 }}>
+          <Div justify="center" _width="100%" style={{ maxWidth: 200 }}>
+            <Text
+              numberOfLines={1}
+              ellipsizeMode="tail"
+              style={{ ...fontStyle.helveticaBold, fontSize: 18 }}>
               {title}
             </Text>
           </Div>

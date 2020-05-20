@@ -28,6 +28,7 @@ import EditProfile from './edit-profile'
 import Follow from './follow'
 import AccountSetting from './account-setting'
 import Wishlist from './wishlist'
+import PostDetail from './post-detail'
 
 const Stack = createStackNavigator()
 
@@ -67,6 +68,7 @@ function InsiderStack() {
       <Stack.Screen name="AccountSetting" component={AccountSetting} />
       <Stack.Screen name="SearchList" component={Search} />
       <Stack.Screen name="Wishlist" component={Wishlist} />
+      <Stack.Screen name="PostDetail" component={PostDetail} />
       <Stack.Screen
         name="AddNewAddressManual"
         component={AddNewAddressManual}

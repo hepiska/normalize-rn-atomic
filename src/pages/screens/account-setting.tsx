@@ -194,7 +194,8 @@ class AccountSetting extends Component<any, any> {
             <View>
               <Text
                 style={{
-                  ...styles.futuraBold24,
+                  ...fontStyle.playfairBold,
+                  fontSize: 24,
                   color: colors.black100,
                 }}>
                 My Shopping
@@ -291,7 +292,8 @@ class AccountSetting extends Component<any, any> {
               }}>
               <Text
                 style={{
-                  ...styles.futuraBold24,
+                  ...fontStyle.playfairBold,
+                  fontSize: 24,
                   color: colors.black100,
                 }}>
                 My Social
@@ -320,7 +322,8 @@ class AccountSetting extends Component<any, any> {
               }}>
               <Text
                 style={{
-                  ...styles.futuraBold24,
+                  ...fontStyle.playfairBold,
+                  fontSize: 24,
                   color: colors.black100,
                 }}>
                 Others

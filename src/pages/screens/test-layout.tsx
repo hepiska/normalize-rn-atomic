@@ -9,7 +9,7 @@ import { getProductSaved } from '@modules/product-saved/action'
 import ProductCard from '@components/molecules/product-card'
 import { productListData } from '@hocs/data/product'
 import ActionTabMenu from '@components/molecules/action-tab-menu'
-import { capilEachWord } from '@utils/helpers'
+import { capitalEachWord } from '@utils/helpers'
 import NavbarTop from '@components/molecules/navbar-top'
 
 import MansoryStickyHeader, {
@@ -99,7 +99,7 @@ class MyProfile extends React.Component<any, any> {
         { value: 'all', name: 'All Posts' },
         ...userPostStatus.map(_data => ({
           value: _data,
-          name: capilEachWord(_data),
+          name: capitalEachWord(_data),
         })),
       ],
     }

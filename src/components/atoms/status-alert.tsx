@@ -1,6 +1,6 @@
 import React from 'react'
 import { View, StyleSheet, Text, ViewStyle } from 'react-native'
-import { capilEachWord } from '@utils/helpers'
+import { capitalEachWord } from '@utils/helpers'
 import { colors } from '@utils/constants'
 import { fontStyle } from '@components/commont-styles'
 import Icon from 'react-native-vector-icons/FontAwesome5'
@@ -80,7 +80,7 @@ const StatusAlert = (props: StatusAlrtPropsType) => {
           fontSize: 12,
           marginLeft: 8,
         }}>
-        {capilEachWord(props.text)}
+        {capitalEachWord(props.text)}
       </Text>
     </View>
   )

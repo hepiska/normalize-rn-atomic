@@ -185,8 +185,8 @@ class PostListItem extends React.PureComponent<PostListItemType, any> {
                 <View style={{ marginTop: 8 }}>
                   <Text
                     style={{
-                      ...fontStyle.helvetica,
-                      fontSize: type === 'large' ? 13 : 12,
+                      ...fontStyle.playfairBold,
+                      fontSize: type === 'large' ? 20 : 12,
                       color: colors.black100,
                     }}>
                     {post.title}
@@ -212,8 +212,8 @@ class PostListItem extends React.PureComponent<PostListItemType, any> {
                     style={userImageStyle[type] || userImageStyle['default']}
                   />
                   <Font
-                    size={type === 'large' ? '12px' : '10.5px'}
-                    style={{ fontWeight: 'bold' }}
+                    style={{ ...fontStyle.futuraDemi, fontWeight: '500' }}
+                    size={type === 'large' ? '16px' : '10.5px'}
                     weight={type === 'large' ? 'bold' : 'normal'}
                     color={type === 'large' ? colors.black100 : colors.black70}
                     padd="0 0 0 3px">
@@ -226,7 +226,11 @@ class PostListItem extends React.PureComponent<PostListItemType, any> {
                     size={16}
                     color={isLiked ? colors.black100 : colors.black50}
                   />
-                  <Font size="10.5px" color={colors.black70} padd="0 0 0 4px">
+                  <Font
+                    style={{ ...fontStyle.helvetica }}
+                    size="14px"
+                    color={colors.black100}
+                    padd="0 0 0 4px">
                     {post.like_count}
                   </Font>
                 </PressAbbleDiv>

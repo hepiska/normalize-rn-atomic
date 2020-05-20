@@ -9,7 +9,7 @@ import { getProductSaved } from '@modules/product-saved/action'
 import ProductCard from '@components/molecules/product-card'
 import { productListData } from '@hocs/data/product'
 import ActionTabMenu from '@components/molecules/action-tab-menu'
-import { capilEachWord } from '@utils/helpers'
+import { capitalEachWord } from '@utils/helpers'
 import CoverImageAnimated from '@src/components/organisms/cover-image-animated'
 import ImageCoverContentLayout from '@src/components/layouts/image-cover-animated-content'
 import TabMenu from '@src/components/layouts/tab-menu'
@@ -120,7 +120,7 @@ class MyProfile extends React.Component<any, any> {
         { value: 'all', name: 'All Posts' },
         ...userPostStatus.map(_data => ({
           value: _data,
-          name: capilEachWord(_data),
+          name: capitalEachWord(_data),
         })),
       ],
     }

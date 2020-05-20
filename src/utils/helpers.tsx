@@ -42,7 +42,7 @@ export const moveToFront = (a: any, fn: Function) => {
   return matches.concat(non_matches)
 }
 
-export const capilEachWord = str =>
+export const capitalEachWord = str =>
   str
     .split(' ')
     .map(word => {

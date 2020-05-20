@@ -1,4 +1,5 @@
 import { connect } from 'react-redux'
+import { Linking } from 'react-native'
 import { navigate } from '@src/root-navigation'
 import { bindActionCreators } from 'redux'
 import { addLikedPost, removeLikedPost } from '@modules/post-liked/action'
@@ -10,10 +11,15 @@ const postListMap = (state, ownProps) => {
   const isLiked = !!state.postsLiked.data[postId]
   if (!ownProps.onPress) {
     ownProps.onPress = () => {
-      navigate('Screens', {
-        screen: 'PostDetail',
-        params: { postId },
-      }) // revisi: navigasi ke post id
+      if (post.post_type === 'article') {
+        navigate('Screens', {
+          screen: 'PostDetail',
+          params: { postId },
+        }) // revisi: navigasi ke post id
+      }
+      if (post.post_type === 'youtube') {
+        Linking.openURL(post.permalink)
+      }
     }
   }
 

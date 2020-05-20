@@ -5,7 +5,7 @@ import Animated, { Easing } from 'react-native-reanimated'
 import HTML from 'react-native-render-html'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import { colors } from '@utils/constants'
-import { capilEachWord } from '@utils/helpers'
+import { capitalEachWord } from '@utils/helpers'
 import { ViewStyle } from 'react-native'
 
 const { Value, timing, interpolate, concat } = Animated
@@ -98,7 +98,7 @@ class ContentExpandable extends React.Component<ContentExpandableType, any> {
             {/* left */}
             {typeof title === 'string' ? (
               <Font type="heading" size="18px">
-                {capilEachWord(title.replace('-', ' '))}
+                {capitalEachWord(title.replace('-', ' '))}
               </Font>
             ) : (
               title

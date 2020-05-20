@@ -3,7 +3,7 @@ import { View, Text, Dimensions } from 'react-native'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import List from '@components/layouts/list-header'
-import { capilEachWord } from '@utils/helpers'
+import { capitalEachWord } from '@utils/helpers'
 import SearchFilter from '@components/organisms/search-filter'
 import { getUserPosts } from '@modules/user-post/action'
 import PostListItem from '@components/molecules/post-cart-new'
@@ -82,7 +82,7 @@ class MyPost extends React.Component<any, any> {
     { value: 'all', name: 'All Posts' },
     ...this.props.userPostStatus.map(_data => ({
       value: _data,
-      name: capilEachWord(_data),
+      name: capitalEachWord(_data),
     })),
   ]
   _header = () => {

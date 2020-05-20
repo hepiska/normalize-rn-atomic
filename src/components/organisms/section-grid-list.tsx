@@ -143,7 +143,7 @@ class SectionGridList extends React.Component<SectionGridListType, any> {
         align="flex-start"
         mar="12px 0"
         style={style}>
-        <Font style={fontStyle.futuraDemi} size="24px" mar="0 0 24px 16px">
+        <Font style={fontStyle.playfairBold} size="23px" mar="0 0 24px 16px">
           {data.title}
         </Font>
         {this._renderItem()}

@@ -273,14 +273,14 @@ const ProductCardHorizontal = ({
             paddingHorizontal: composeStyle.paddingHorizontal,
           }}>
           <Font
-            style={fontStyle.helveticaBold}
+            style={{ ...fontStyle.helveticaBold, textTransform: 'uppercase' }}
             size={typeDict[type].main}
             _margin="0px 4px 4px"
             color={colors.black100}>
             {brand.name}
           </Font>
           <Font
-            style={fontStyle.helvetica}
+            style={{ ...fontStyle.helvetica }}
             size={typeDict[type].sub}
             _margin="4px"
             color={colors.black80}
@@ -397,15 +397,14 @@ const ProductCardVertical = ({
             paddingHorizontal: composeStyle.paddingHorizontal,
           }}>
           <Font
-            // type="HelveticaNeue"
-            style={fontStyle.helveticaBold}
+            style={{ ...fontStyle.helveticaBold, textTransform: 'uppercase' }}
             size={typeDict[type].main}
-            // weight="bold"
             _margin="4px"
             color={colors.black100}>
             {brand.name}
           </Font>
           <Font
+            style={{ ...fontStyle.helveticaThin, fontWeight: '300' }}
             size={typeDict[type].sub}
             _margin="4px"
             color={colors.black80}
@@ -421,14 +420,43 @@ const ProductCardVertical = ({
             />
           )}
           {variantPrice ? (
-            <Price {...variantPrice} />
+            <Price
+              {...variantPrice}
+              stylePrev={{
+                fontSize: 10,
+                color: colors.black90,
+              }}
+              style={{
+                fontSize: 14,
+                color: colors.gray1,
+                ...fontStyle.helveticaBold,
+              }}
+            />
           ) : isShowRangePrice ? (
-            <RangePrice {...price} upTo />
+            <RangePrice
+              {...price}
+              upTo
+              stylePrev={{
+                fontSize: 10,
+                color: colors.black90,
+              }}
+              style={{
+                fontSize: 14,
+                color: colors.gray1,
+                ...fontStyle.helveticaBold,
+              }}
+            />
           ) : (
             <Price
               {...{
                 prev: price.exTo,
                 current: price.to,
+              }}
+              stylePrev={{ fontSize: 10, color: colors.black90 }}
+              style={{
+                fontSize: 14,
+                color: colors.gray1,
+                ...fontStyle.helveticaBold,
               }}
             />
           )}
