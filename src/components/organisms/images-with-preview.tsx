@@ -132,6 +132,9 @@ class ImagesWithPreviews extends React.Component<ImagesWithPreviewsType, any> {
           data={images}
           renderItem={this._renderItem}
           onViewableItemsChanged={this._onViewAbleChange}
+          viewabilityConfig={{
+            viewAreaCoveragePercentThreshold: 100,
+          }}
           showsHorizontalScrollIndicator={false}
         />
         <ImagePager

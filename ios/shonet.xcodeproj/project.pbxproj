@@ -21,6 +21,7 @@
 		4277434D2CCD420FA380CD76 /* HelveticaNeue.otf in Resources */ = {isa = PBXBuildFile; fileRef = 5A468D6718C94DE3BF67F431 /* HelveticaNeue.otf */; };
 		4DCC273F1D99463C8523AE3D /* FuturaDemi.ttf in Resources */ = {isa = PBXBuildFile; fileRef = ADE6DFC0D479448884A33B73 /* FuturaDemi.ttf */; };
 		67F8D3BF7C414A2CA03CF2C5 /* HelveticaNeue-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 4D6917D670964F3D989B2958 /* HelveticaNeue-Medium.otf */; };
+		8CF9B7582472CA1C001237CA /* PlayfairDisplay-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8CF9B7572472C9E2001237CA /* PlayfairDisplay-Bold.ttf */; };
 		9601CD2FC54B4A0985A9D5B9 /* HelveticaNeue-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 0C3381BD9F9C4E50882597AC /* HelveticaNeue-Bold.otf */; };
 		989E93929A0743C1A6945606 /* HelveticaNeue-RegularItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = B236E9090C4B4874988F4798 /* HelveticaNeue-RegularItalic.otf */; };
 		9F40592CAAE4ABA7E3451B0A /* libPods-shonet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3030A36CB33049D354C48181 /* libPods-shonet.a */; };
@@ -34,6 +35,7 @@
 		D8CDB827245C342900DC131B /* AppCenter-Config.plist in Resources */ = {isa = PBXBuildFile; fileRef = D8CDB826245C342900DC131B /* AppCenter-Config.plist */; };
 		F309BA0A81724752ABFFFBB0 /* HelveticaNeue-Thin.otf in Resources */ = {isa = PBXBuildFile; fileRef = 7BA3025266E7459B8400918D /* HelveticaNeue-Thin.otf */; };
 		F95C89844F7B634CA17FAA53 /* libPods-shonet-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 47146A0A7C0603E935EC9F57 /* libPods-shonet-tvOSTests.a */; };
+		286F886F79CD4FFCB3B44768 /* PlayfairDisplay-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2E2CED70ABAA44A091117C7F /* PlayfairDisplay-Bold.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -92,6 +94,7 @@
 		6CB0CEE550134DD1859767E3 /* FontAwesome.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome.ttf; path = "../node_modules/react-native-vector-icons/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
 		7BA3025266E7459B8400918D /* HelveticaNeue-Thin.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "HelveticaNeue-Thin.otf"; path = "../src/assets/fonts/HelveticaNeue-Thin.otf"; sourceTree = "<group>"; };
 		7DEDD6B8583BB036FD93BDD4 /* Pods-shonet.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-shonet.debug.xcconfig"; path = "Target Support Files/Pods-shonet/Pods-shonet.debug.xcconfig"; sourceTree = "<group>"; };
+		8CF9B7572472C9E2001237CA /* PlayfairDisplay-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "PlayfairDisplay-Bold.ttf"; sourceTree = "<group>"; };
 		912ACFC1E257422BB59C2963 /* Entypo.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Entypo.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Entypo.ttf"; sourceTree = "<group>"; };
 		ADE6DFC0D479448884A33B73 /* FuturaDemi.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FuturaDemi.ttf; path = ../src/assets/fonts/FuturaDemi.ttf; sourceTree = "<group>"; };
 		B236E9090C4B4874988F4798 /* HelveticaNeue-RegularItalic.otf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "HelveticaNeue-RegularItalic.otf"; path = "../src/assets/fonts/HelveticaNeue-RegularItalic.otf"; sourceTree = "<group>"; };
@@ -112,6 +115,7 @@
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
 		FB7653FB23C749AD828FB4E0 /* Ionicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
+		2E2CED70ABAA44A091117C7F /* PlayfairDisplay-Bold.ttf */ = {isa = PBXFileReference; name = "PlayfairDisplay-Bold.ttf"; path = "../src/assets/fonts/PlayfairDisplay-Bold.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -170,6 +174,7 @@
 		0BE8EFCD63224D99B07B96F2 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				8CF9B7572472C9E2001237CA /* PlayfairDisplay-Bold.ttf */,
 				1CF8EC3A7DEC4904A3592301 /* AntDesign.ttf */,
 				912ACFC1E257422BB59C2963 /* Entypo.ttf */,
 				42B4FD870FA649AFAE9204C1 /* EvilIcons.ttf */,
@@ -196,6 +201,7 @@
 				7BA3025266E7459B8400918D /* HelveticaNeue-Thin.otf */,
 				40DB673880554FC79AD955AD /* HelveticaNeue-Ultralight.otf */,
 				5A468D6718C94DE3BF67F431 /* HelveticaNeue.otf */,
+				2E2CED70ABAA44A091117C7F /* PlayfairDisplay-Bold.ttf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -438,6 +444,7 @@
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
 				4DCC273F1D99463C8523AE3D /* FuturaDemi.ttf in Resources */,
+				8CF9B7582472CA1C001237CA /* PlayfairDisplay-Bold.ttf in Resources */,
 				A7400DC40B9A4CE7A00A9CED /* FuturaDemi.woff2 in Resources */,
 				D8CDB827245C342900DC131B /* AppCenter-Config.plist in Resources */,
 				BBB9203657AE41C7A9CB5C17 /* FuturaRegular.ttf in Resources */,
@@ -449,6 +456,7 @@
 				2A64B71E32BF4275862850DF /* HelveticaNeue-Ultralight.otf in Resources */,
 				4277434D2CCD420FA380CD76 /* HelveticaNeue.otf in Resources */,
 				D88CDD1D24652BEA006EF692 /* GoogleService-Info.plist in Resources */,
+				286F886F79CD4FFCB3B44768 /* PlayfairDisplay-Bold.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -26,6 +26,10 @@ export const fontStyle =
         futuraDemi: {
           fontFamily: 'FuturaDemi',
         },
+        playfairBold: {
+          fontFamily: 'Playfair Display',
+          fontWeight: 'bold',
+        },
       })
     : StyleSheet.create({
         helvetica: {
@@ -46,6 +50,9 @@ export const fontStyle =
         },
         futuraDemi: {
           fontFamily: 'FuturaDemi',
+        },
+        playfairBold: {
+          fontFamily: 'PlayfairDisplay-Bold',
         },
       })
 

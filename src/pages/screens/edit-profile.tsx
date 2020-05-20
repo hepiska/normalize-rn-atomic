@@ -196,7 +196,6 @@ const EditProfile = props => {
       console.log('err getImages ---', err)
     }
   }
-
   const pickerTitle = `Choose ${activeLevel}`
   const pickerOptions = options[activeLevel] || []
 
@@ -227,7 +226,6 @@ const EditProfile = props => {
           onValueChange={(value, index, data) => {
             if (data) {
               _changeSelectedDataPos(activeLevel, value)
-              // onSelect(data.name)
               handleOnChange(activeLevel)(data.name)
             }
           }}
@@ -290,6 +288,10 @@ const EditProfile = props => {
               style={{ width: '100%' }}
               onPress={() => {
                 setActiveLevel('gender')
+                const newValue = options.gender.findIndex(
+                  dat => dat.name === state.gender.value,
+                )
+                _changeSelectedDataPos('gender', newValue)
                 pickerRef.show()
               }}>
               <TextInputOutline
@@ -334,7 +336,7 @@ const EditProfile = props => {
         </View>
       </>
     ),
-    [state, props, isCameraOpen],
+    [state, props, isCameraOpen, selectedDataPos],
   )
 }
 

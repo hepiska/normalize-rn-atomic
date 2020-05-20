@@ -8,6 +8,7 @@ import {
   Text,
   Alert,
   ToastAndroid,
+  Linking,
 } from 'react-native'
 import { Div, Font, PressAbbleDiv } from '@components/atoms/basic'
 import Icon from 'react-native-vector-icons/FontAwesome'
@@ -139,7 +140,11 @@ class ShareModal extends React.Component<any, any> {
     }
     shareOptions.social = dat.share_type
 
-    Share.shareSingle(shareOptions)
+    if (dat.id === 'whatsapp') {
+      Linking.openURL(`whatsapp://send?text=${message} ${uri}`)
+    } else {
+      Share.shareSingle(shareOptions)
+    }
   }
 
   _defaultShare = () => {
