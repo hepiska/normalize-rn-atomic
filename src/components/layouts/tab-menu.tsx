@@ -129,7 +129,7 @@ const TabMenu = ({
                     item.Component
                   )
                 ) : (
-                  <Div _width={width} key={`tabmenu-${key}`} />
+                  <Div _width={width} key={key} />
                 ),
               )
             : items.map((item, key) =>

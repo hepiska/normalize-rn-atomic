@@ -153,6 +153,9 @@ class AccountSetting extends Component<any, any> {
       icon: require('@src/assets/icons/setting.png'),
       title: 'Settings',
       desc: 'View and set your account preferences',
+      onPress: () => {
+        navigate('Screens', { screen: 'Setting' })
+      },
     },
     {
       icon: require('@src/assets/icons/question-circle.png'),

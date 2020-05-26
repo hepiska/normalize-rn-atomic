@@ -7,6 +7,7 @@ import { deepClone } from '@src/utils/helpers'
 interface UserState {
   readonly data: Object
   readonly order: Array<number>
+  readonly notification: Object
   pagination: Object
   readonly loading: Boolean
   readonly error?: ErrorType
@@ -14,6 +15,7 @@ interface UserState {
 const initialState: UserState = {
   data: Immutable({}),
   order: Immutable([]),
+  notification: Immutable({}),
   pagination: {},
   loading: false,
   error: null,
@@ -58,6 +60,13 @@ const userReducer: Reducer<UserState> = (
       return newState
     case userActionType.SET_USER_LOADING:
       newState.loading = action.payload
+      return newState
+    case userActionType.SET_USER_NOTIFICATION:
+      newState.notification = Immutable.merge(
+        newState.notification,
+        action.payload,
+      )
+      return newState
     default:
       return newState
   }

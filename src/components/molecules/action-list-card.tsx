@@ -76,12 +76,14 @@ const ActionListCard = ({
             flexDirection: 'row',
             alignItems: 'center',
           }}>
-          {typeof icon === 'string' ? (
-            <IconComponent name={icon} size={18} color={colors.black100} />
-          ) : (
-            <Image source={icon} style={{ width: 18, height: 18 }} />
-          )}
-          <View style={{ marginLeft: 22 }}>
+          {icon &&
+            (typeof icon === 'string' ? (
+              <IconComponent name={icon} size={18} color={colors.black100} />
+            ) : (
+              <Image source={icon} style={{ width: 18, height: 18 }} />
+            ))}
+
+          <View style={{ marginLeft: icon ? 22 : 0 }}>
             <Text style={{ ...styles.helveticaBold14, color: colors.black100 }}>
               {title}
             </Text>

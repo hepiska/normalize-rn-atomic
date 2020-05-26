@@ -239,6 +239,7 @@ class ProfilPage extends React.PureComponent<any, any> {
             navigation={this.props.navigation}
             scrollEnabled={this.state.enableScrollContent}
             disableScroll={this._disableContentScroll}
+            key="tabmenu-userpost"
           />
         ),
       },
@@ -250,6 +251,7 @@ class ProfilPage extends React.PureComponent<any, any> {
             navigation={this.props.navigation}
             scrollEnabled={this.state.enableScrollContent}
             disableScroll={this._disableContentScroll}
+            key="tabmenu-saved"
           />
         ),
       },
@@ -261,6 +263,7 @@ class ProfilPage extends React.PureComponent<any, any> {
             navigation={this.props.navigation}
             scrollEnabled={this.state.enableScrollContent}
             disableScroll={this._disableContentScroll}
+            key="tabmenu-insight"
           />
         ),
       },

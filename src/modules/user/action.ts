@@ -2,12 +2,15 @@ import { QueryParams } from '@utils/globalInterface'
 import { API } from '../action-types'
 import * as schema from '@modules/normalize-schema'
 import { getMe } from '@src/utils/helpers'
+import { navigate } from '@src/root-navigation'
+import { Alert } from 'react-native'
 
 export const userActionType = {
   FETCH: 'post/FETCH',
   SET_USER_DATA: 'user/SET_USER_DATA',
   SET_USER_ORDER: 'user/SET_USER_ORDER',
   SET_USER_ORDER_PAGINATION: 'user/SET_USER_ORDER_PAGINATION',
+  SET_USER_NOTIFICATION: 'user/SET_USER_NOTIFICATION',
   ADD_USER_ORDER: 'user/ADD_USER_ORDER',
   REMOVE_USER_ORDER: 'user/REMOVE_USER_ORDER',
   CHANGE_FOLLOW_DATA: 'user/CHANGE_FOLLOW_DATA',
@@ -37,6 +40,11 @@ export const setUserOrder = (data: any) => ({
 
 export const setUserOrderPagination = (data: any) => ({
   type: userActionType.SET_USER_ORDER_PAGINATION,
+  payload: data,
+})
+
+export const setUserNotification = (data: any) => ({
+  type: userActionType.SET_USER_NOTIFICATION,
   payload: data,
 })
 
@@ -188,3 +196,61 @@ export const changeFollowData = data => ({
   type: userActionType.CHANGE_FOLLOW_DATA,
   payload: data,
 })
+
+export const changePassword = (data: any) => ({
+  type: API,
+  payload: {
+    url: '/account/password',
+    requestParams: {
+      method: 'PUT',
+      data,
+    },
+    startNetwork: () => setUserLoading(true),
+    success: () => {
+      navigate('Screens', {
+        screen: 'PasswordSecurity',
+      })
+      return [setUserLoading(false)]
+    },
+    error: data => {
+      Alert.alert(data.response.data.meta.message)
+      return [setUserLoading(false)]
+    },
+  },
+})
+
+export const getNotificationPreferences = () => {
+  return {
+    type: API,
+    payload: {
+      url: '/account/settings',
+      startNetwork: () => setUserLoading(true),
+      success: data => {
+        return [setUserNotification(data), setUserLoading(false)]
+      },
+      error: error => {
+        return [setUserLoading(false)]
+      },
+    },
+  }
+}
+
+export const setNotificationSetting = (data: any) => {
+  return {
+    type: API,
+    payload: {
+      url: '/account/settings',
+      requestParams: {
+        method: 'PUT',
+        data,
+      },
+      startNetwork: () => setUserLoading(true),
+      success: data => {
+        return [setUserNotification(data), setUserLoading(false)]
+      },
+      error: data => {
+        return [setUserLoading(false)]
+      },
+    },
+  }
+}

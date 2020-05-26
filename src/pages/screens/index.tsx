@@ -29,6 +29,12 @@ import Follow from './follow'
 import AccountSetting from './account-setting'
 import Wishlist from './wishlist'
 import PostDetail from './post-detail'
+import Setting from './setting'
+import PasswordSecurity from './password-security'
+import NotificationPreference from './notification-preference'
+import FormChangePassword from './form-change-password'
+import TermsCondition from './term-and-condition'
+import PrivacyPolicy from './privacy-policy'
 
 const Stack = createStackNavigator()
 
@@ -69,6 +75,15 @@ function InsiderStack() {
       <Stack.Screen name="SearchList" component={Search} />
       <Stack.Screen name="Wishlist" component={Wishlist} />
       <Stack.Screen name="PostDetail" component={PostDetail} />
+      <Stack.Screen name="Setting" component={Setting} />
+      <Stack.Screen name="PasswordSecurity" component={PasswordSecurity} />
+      <Stack.Screen name="FormChangePassword" component={FormChangePassword} />
+      <Stack.Screen name="TermsCondition" component={TermsCondition} />
+      <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicy} />
+      <Stack.Screen
+        name="NotificationPreference"
+        component={NotificationPreference}
+      />
       <Stack.Screen
         name="AddNewAddressManual"
         component={AddNewAddressManual}
