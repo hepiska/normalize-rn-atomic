@@ -36,6 +36,8 @@ import NotificationPreference from './notification-preference'
 import FormChangePassword from './form-change-password'
 import TermsCondition from './term-and-condition'
 import PrivacyPolicy from './privacy-policy'
+import BeautyProfile from './beauty-profile'
+import TopicInterest from './topic-interest'
 
 const Stack = createStackNavigator()
 
@@ -82,6 +84,8 @@ function InsiderStack() {
       <Stack.Screen name="TermsCondition" component={TermsCondition} />
       <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicy} />
       <Stack.Screen name="Lookbook" component={LookbookDetail} />
+      <Stack.Screen name="BeautyProfile" component={BeautyProfile} />
+      <Stack.Screen name="TopicInterest" component={TopicInterest} />
       <Stack.Screen
         name="NotificationPreference"
         component={NotificationPreference}

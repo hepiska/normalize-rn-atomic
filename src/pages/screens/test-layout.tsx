@@ -11,6 +11,15 @@ import { productListData } from '@hocs/data/product'
 import ActionTabMenu from '@components/molecules/action-tab-menu'
 import { capitalEachWord } from '@utils/helpers'
 import NavbarTop from '@components/molecules/navbar-top'
+import ListInterest from '@src/components/layouts/list-interest'
+import {
+  oily,
+  normal,
+  dry,
+  combination,
+  sensitive,
+  allType,
+} from '@src/utils/image-skin'
 
 import MansoryStickyHeader, {
   LayoutType,
@@ -22,6 +31,44 @@ const ProductWithCardHoc = productListData(ProductCard)
 const { Value, interpolate, Extrapolate } = Animated
 const { width } = Dimensions.get('window')
 
+const dummy = [
+  {
+    id: 1,
+    title: 'oily',
+    image: oily,
+  },
+  {
+    id: 2,
+    title: 'bam',
+    image: normal,
+  },
+  {
+    id: 3,
+    title: 'dum',
+    image: dry,
+  },
+  {
+    id: 4,
+    title: 'nih',
+    image: combination,
+  },
+  {
+    id: 5,
+    title: 'bam',
+    image: sensitive,
+  },
+  {
+    id: 6,
+    title: 'dum',
+    image: allType,
+  },
+  {
+    id: 7,
+    title: 'nah',
+    image: oily,
+  },
+]
+
 class MyProfile extends React.Component<any, any> {
   constructor(props) {
     super(props)
@@ -30,6 +77,7 @@ class MyProfile extends React.Component<any, any> {
     this.state = {
       activeTab: initialActiveTab,
       selectedFilter: this._filterOptions(initialActiveTab),
+      selectedInterest: [{ id: 7 }, { id: 5 }],
     }
   }
   y = new Value(0)
@@ -165,12 +213,35 @@ class MyProfile extends React.Component<any, any> {
     )
   }
 
+  handleSelectedInterest = id => {
+    const isSelected = this.state.selectedInterest.find(
+      value => value.id === id,
+    )
+    let newSelected
+    if (isSelected) {
+      newSelected = this.state.selectedInterest.filter(value => value.id !== id)
+    } else {
+      newSelected = [...this.state.selectedInterest, { id: id }]
+    }
+    this.setState({
+      selectedInterest: newSelected,
+    })
+  }
+
   render() {
     const { userPostStatus, productsSaved } = this.props
+
+    console.log('selectedInterest ---', this.state.selectedInterest)
+
     return (
       <>
         <NavbarTop title={'name'} />
-        <MansoryStickyHeader
+        <ListInterest
+          data={dummy}
+          handleSelected={this.handleSelectedInterest}
+          selected={this.state.selectedInterest}
+        />
+        {/* <MansoryStickyHeader
           header={this.header}
           rowStyle={{
             justifyContent: 'space-between',
@@ -181,7 +252,7 @@ class MyProfile extends React.Component<any, any> {
           data={productsSaved}
           renderItem={this._renderItem}
           numColumns={2}
-        />
+        /> */}
       </>
     )
   }

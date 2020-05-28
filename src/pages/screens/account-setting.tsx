@@ -130,11 +130,13 @@ class AccountSetting extends Component<any, any> {
       icon: require('@src/assets/icons/beauty-profile.png'),
       title: 'Beauty Profile',
       desc: 'View and edit your beauty profile',
+      onPress: () => navigateTo('Screens', 'BeautyProfile', {}),
     },
     {
       icon: require('@src/assets/icons/topic-and-interest.png'),
       title: 'Topic and Interest',
       desc: 'Manage your topic and interest',
+      onPress: () => navigateTo('Screens', 'TopicInterest', {}),
     },
     {
       icon: require('@src/assets/icons/become-insider.png'),
@@ -311,7 +313,7 @@ class AccountSetting extends Component<any, any> {
                       title={value.title}
                       desc={value.desc}
                       index={key}
-                      onPress={() => {}}
+                      onPress={value.onPress}
                     />
                   )
                 })}
