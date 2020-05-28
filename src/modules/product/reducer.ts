@@ -11,6 +11,7 @@ interface ProductState {
   readonly order: Array<number>
   readonly search: Array<number>
   pagination: Object
+  readonly trendingOrder: Array<number>
   productsLoading: boolean
   productLoading: Boolean
   readonly error?: ErrorType
@@ -68,13 +69,24 @@ const productReducer: Reducer<ProductState> = (
       }
       newState.pagination = action.payload.pagination
       return newState
+
     case productActionType.SET_PRODUCTS_LOADING:
       newState.productsLoading = action.payload
       return newState
     case productActionType.ClEAR_PRODUCT:
       return initialState
+
     case productActionType.CLEAR_PRODUCT_SEARCH:
       newState.search = Immutable([])
+      return newState
+
+    case productActionType.SET_TRENDING_ORDER:
+      const { type, order } = action.payload
+      if (type === 'add') {
+        newState.trendingOrder = newState.order.concat(Immutable(order))
+      } else {
+        newState.trendingOrder = Immutable(order)
+      }
       return newState
     case productActionType.SET_DEFAULT:
       return newState

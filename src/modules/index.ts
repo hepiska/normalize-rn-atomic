@@ -27,6 +27,8 @@ import productAttributeReducer from './product-attribute/reducer'
 import checkoutReducer from './checkout/reducer'
 import transactionReducer from './transaction/reducer'
 import userPostReducer from './user-post/reducer'
+import feedReducer from './post-feed/reducer'
+import discoverReducer from './post-discover/reducer'
 
 const combinedReducer: Reducer<any> = combineReducers({
   addresses: addressReducer,
@@ -39,6 +41,10 @@ const combinedReducer: Reducer<any> = combineReducers({
   checkout: checkoutReducer,
   collection: collectionReducer,
   comments: commentReducer,
+
+  discover: discoverReducer,
+
+  feed: feedReducer,
 
   global: globalReducer,
 

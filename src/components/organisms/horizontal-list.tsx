@@ -24,8 +24,8 @@ const { width } = Dimensions.get('window')
 
 interface HorizontalListType {
   data: any
-  navigation: any
-  style: ViewStyle
+  navigation?: any
+  style?: ViewStyle
 }
 
 const PostHoc = postListData(PostCard)

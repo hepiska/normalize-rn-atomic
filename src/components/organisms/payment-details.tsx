@@ -337,7 +337,6 @@ class PaymentDetail extends React.PureComponent<any, any> {
         disableButton = false
       }
     }
-    console.log('bener masuk sini')
     return (
       <>
         <ScrollDiv>

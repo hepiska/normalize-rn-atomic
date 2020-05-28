@@ -16,6 +16,8 @@ export const userActionType = {
   CHANGE_FOLLOW_DATA: 'user/CHANGE_FOLLOW_DATA',
   FETCH_START: 'user/FETCH_START',
   SET_USER_LOADING: 'user/SET_USER_LOADING',
+  SET_USER_LOADINGS: 'user/SET_USER_LOADINGS',
+  SET_TRENDING_INSIDER_ORDER: 'user/SET_TRENDING_INSIDER_ORDER',
   ERROR: 'user/ERROR',
   DEFAULT: 'user/DEFAULT',
 }
@@ -33,6 +35,13 @@ export const setUserData = (data: any) => {
   }
 }
 
+const setUserLoadings = (data: { name: string; value: boolean }) => {
+  return {
+    type: userActionType.SET_USER_LOADINGS,
+    payload: data,
+  }
+}
+
 export const setUserOrder = (data: any) => ({
   type: userActionType.SET_USER_ORDER,
   payload: data,
@@ -43,6 +52,10 @@ export const setUserOrderPagination = (data: any) => ({
   payload: data,
 })
 
+export const setuserTrendingOrder = data => ({
+  type: userActionType.SET_TRENDING_INSIDER_ORDER,
+  payload: data,
+})
 export const setUserNotification = (data: any) => ({
   type: userActionType.SET_USER_NOTIFICATION,
   payload: data,
@@ -170,6 +183,31 @@ export const unfollowUser = (id: any) => ({
     error: error => [setUserLoading(false)],
   },
 })
+
+export const getTrendingInsider = params => {
+  const composeParams = { ...params, group: 'insider' }
+  return {
+    type: API,
+    payload: {
+      url: '/users/trending',
+      requestParams: { params: composeParams },
+      schema: [schema.user],
+      startNetwork: () => {
+        return setUserLoadings({ name: 'trendingInsider', value: true })
+      },
+      endNetwork: () => {
+        return setUserLoadings({ name: 'trendingInsider', value: false })
+      },
+      success: data => {
+        console.log('data', data.result)
+        return [
+          setUserData(data.entities.user),
+          setuserTrendingOrder(data.result),
+        ]
+      },
+    },
+  }
+}
 
 export const followUser = (id: any) => ({
   type: API,

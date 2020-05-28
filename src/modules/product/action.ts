@@ -2,6 +2,7 @@ import { setBrandData } from '@modules/brand/action'
 import { setCategoryData } from '@modules/category/action'
 import { setProductAttributeData } from '@modules/product-attribute/action'
 // import persistor from './reducer'
+import { dispatchProductEntities } from '@modules/entities-action-dispacer'
 import { API } from '../action-types'
 
 import * as schema from '@modules/normalize-schema'
@@ -17,6 +18,7 @@ export const productActionType = {
   SET_PRODUCTS_LOADING: 'product/SET_PRODUCTS_LOADING',
   CHANGE_VALUE: 'product/CHANGE_VALUE',
   SET_DEFAULT: 'product/SET_DEFAULT',
+  SET_TRENDING_ORDER: 'product/SET_TRENDING_ORDER',
   ERROR: 'product/ERROR',
 }
 
@@ -29,6 +31,13 @@ export const setProductData = (data: any) => {
   }
   return {
     type: productActionType.SET_DEFAULT,
+  }
+}
+
+const setTrendingOrder = data => {
+  return {
+    type: productActionType.SET_TRENDING_ORDER,
+    payload: data,
   }
 }
 
@@ -125,6 +134,30 @@ export const productSearchApi = (params, url) => ({
     },
   },
 })
+
+export const getTrendingProduct = params => {
+  return {
+    type: API,
+    payload: {
+      url: '/products/trending',
+      requestParams: { params },
+      schema: [schema.product],
+      startNetwork: () => {
+        return setProductsLoading(true)
+      },
+
+      success: (data, { pagination }) => {
+        return data
+          ? [
+              ...dispatchProductEntities(data.entities),
+              setTrendingOrder({ type: 'replace', order: data.result }),
+              setProductsLoading(false),
+            ]
+          : [setProductsLoading(false)]
+      },
+    },
+  }
+}
 
 export const clearProductSearch = () => ({
   type: productActionType.CLEAR_PRODUCT_SEARCH,

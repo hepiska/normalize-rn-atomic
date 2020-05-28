@@ -6,17 +6,21 @@ import { deepClone } from '@src/utils/helpers'
 
 interface UserState {
   readonly data: Object
+  readonly trendingOrder: Object
   readonly order: Array<number>
   readonly notification: Object
   pagination: Object
+  loadings: Object
   readonly loading: Boolean
   readonly error?: ErrorType
 }
 const initialState: UserState = {
   data: Immutable({}),
   order: Immutable([]),
+  trendingOrder: Immutable([]),
   notification: Immutable({}),
   pagination: {},
+  loadings: {},
   loading: false,
   error: null,
 }
@@ -32,6 +36,7 @@ const userReducer: Reducer<UserState> = (
         deep: true,
       })
       return newState
+
     case userActionType.CHANGE_FOLLOW_DATA:
       const newData = {}
       newData[action.payload.user_id] = {
@@ -43,21 +48,36 @@ const userReducer: Reducer<UserState> = (
         Immutable.replace(newState.data, newData),
       )
       return newState
+
+    case userActionType.SET_TRENDING_INSIDER_ORDER:
+      newState.trendingOrder = Immutable(action.payload)
+      return newState
+
+    case userActionType.SET_USER_LOADINGS:
+      const newLoadings = { ...newState.loadings }
+      newLoadings[action.payload.name] = action.payload.value
+      newState.loadings = newLoadings
+      return newState
+
     case userActionType.SET_USER_ORDER:
       newState.order = Immutable(action.payload)
       return newState
+
     case userActionType.SET_USER_ORDER_PAGINATION:
       newState.order = newState.order.concat(Immutable(action.payload.order))
       newState.pagination = action.payload.pagination
       return newState
+
     case userActionType.REMOVE_USER_ORDER:
       newState.order = Immutable(
         newState.order.filter(_order => _order !== action.payload),
       )
       return newState
+
     case userActionType.ADD_USER_ORDER:
       newState.order = newState.order.concat(Immutable(action.payload))
       return newState
+
     case userActionType.SET_USER_LOADING:
       newState.loading = action.payload
       return newState

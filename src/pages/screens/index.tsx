@@ -7,6 +7,7 @@ import Checkout from './checkout'
 import ChooseCourier from './choose-courier'
 import ChooseAddress from './choose-address'
 import InitialPage from '../page-initial.config'
+import LookbookDetail from './look-book'
 import Test from './test'
 import ProductDetail from './product-detail'
 import ProductList from './product-list'
@@ -80,6 +81,7 @@ function InsiderStack() {
       <Stack.Screen name="FormChangePassword" component={FormChangePassword} />
       <Stack.Screen name="TermsCondition" component={TermsCondition} />
       <Stack.Screen name="PrivacyPolicy" component={PrivacyPolicy} />
+      <Stack.Screen name="Lookbook" component={LookbookDetail} />
       <Stack.Screen
         name="NotificationPreference"
         component={NotificationPreference}

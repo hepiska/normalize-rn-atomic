@@ -5,7 +5,23 @@ import { setGlobalError } from '../global/action'
 
 import * as actions from '../action-types'
 
-const api = ({ dispatch, getState }) => next => action => {
+interface PayloadInterface {
+  url: string
+  startNetwork?: (label?: any) => void
+  label?: string
+  error?: (error: Error) => void
+  endNetwork?: (status?: string, err?: Error) => void
+  schema: any
+  requestParams: any
+  success: (normalizeData?: any, res?: any) => void
+}
+
+interface ActionType {
+  type: string
+  payload: PayloadInterface
+}
+
+const api = ({ dispatch, getState }) => next => (action: ActionType) => {
   if (action.type !== actions.API) {
     return next(action)
   }

@@ -67,9 +67,7 @@ class InitStore extends React.Component<any, any> {
     // do something with permission value
   }
 
-  onIds(device) {
-    console.log('Device info: ', device)
-  }
+  onIds(device) {}
 
   async componentDidMount() {
     const _store = createStore(rootReducer, initialState, composedEnhancers)

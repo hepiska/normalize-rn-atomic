@@ -1,9 +1,9 @@
 import React from 'react'
-import { View, SectionList, ViewStyle } from 'react-native'
+import { View, SectionList, ViewStyle, StyleSheet } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
 import Column from '@components/organisms/mansory-column'
 import Animated from 'react-native-reanimated'
-
+import CircleLoader from '@components/atoms/loaders/cirle'
 import { onScroll } from 'react-native-redash'
 
 export enum LayoutType {
@@ -11,6 +11,23 @@ export enum LayoutType {
   list = 'list',
   normal = 'normal',
 }
+
+const styles = StyleSheet.create({
+  loaderContainerL: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    width: '100%',
+    height: 64,
+    justifyContent: 'center',
+    backgroundColor: 'rgba(16,16,16,0.3)',
+    alignItems: 'center',
+  },
+  loader: {
+    height: 52,
+    width: 52,
+  },
+})
 
 const AnimatedFlatlist = Animated.createAnimatedComponent(FlatList)
 
@@ -96,6 +113,7 @@ class ListMansoryStickyHeader extends React.Component<
       header,
       layoutType,
       y,
+      loading,
       renderItem,
       numColumns,
       columnWrapperStyle,
@@ -138,6 +156,11 @@ class ListMansoryStickyHeader extends React.Component<
           keyExtractor={this._keyExtractor}
           renderItem={this._renderSection}
         /> */}
+        {loading && (
+          <View style={styles.loaderContainerL}>
+            <CircleLoader style={styles.loader} />
+          </View>
+        )}
       </View>
     )
   }

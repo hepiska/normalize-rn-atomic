@@ -6,7 +6,7 @@ import { API } from '../action-types'
 export const postActionType = {
   FETCH: 'post/FETCH',
   SET_POST_DATA: 'post/SET_POST_DATA',
-  SET_POST_ORDER: 'post/SET_USER_ORDER',
+  SET_POST_ORDER: 'post/SET_POST_ORDER',
   FETCH_START: 'post/FETCH_START',
   SET_POST_LOADING: 'post/SET_USER_LOADING',
   CLEAR_POST: 'post/CLEAR_POST',
