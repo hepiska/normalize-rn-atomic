@@ -1,5 +1,5 @@
 import React from 'react'
-import { Dimensions, View, Text } from 'react-native'
+import { Dimensions, View, Text, StyleSheet } from 'react-native'
 import {
   Div,
   Font,
@@ -37,20 +37,95 @@ import {
 } from '@modules/product-saved/action'
 import CircleLoader from '@components/atoms/loaders/cirle'
 import { capitalEachWord } from '@utils/helpers'
+import ProductSimilarList from '@src/components/organisms/product-similar-list'
+import { navigate } from '@src/root-navigation'
+import {
+  acne,
+  allType,
+  antiAging,
+  blackhead,
+  brightening,
+  combination,
+  darkSpot,
+  dryControl,
+  dry,
+  normal,
+  oilControl,
+  oily,
+  pore,
+  redness,
+  sensitive,
+} from '@src/utils/image-skin'
 
 const { Value } = Animated
 const { width, height } = Dimensions.get('screen')
 
+const styles = StyleSheet.create({
+  breadcrumb: {
+    ...fontStyle.helveticaThin,
+    fontWeight: '300',
+    fontSize: 14,
+    color: colors.black70,
+  },
+  skin: {
+    width: 20,
+    height: 20,
+    borderRadius: 100,
+  },
+})
+
 const y = new Value(0)
+
+const renderImage = type => {
+  switch (type) {
+    case 'oily':
+      return oily
+    case 'brightening':
+      return brightening
+    case 'acne':
+      return acne
+    case 'alltype':
+      return allType
+    case 'antiaging':
+      return antiAging
+    case 'blackhead':
+      return blackhead
+    case 'combination':
+      return combination
+    case 'darkspot':
+      return darkSpot
+    case 'drycontrol':
+      return dryControl
+    case 'dry':
+      return dry
+    case 'normal':
+      return normal
+    case 'oilcontrol':
+      return oilControl
+    case 'pore':
+      return pore
+    case 'redness':
+      return redness
+    case 'sensitive':
+      return sensitive
+    default:
+      return null
+  }
+}
 
 class ProductListPage extends React.Component<any, any> {
   state = {
     selectedVariant: 1,
     isUserSelectVariant: false,
   }
+  _breadcrumb = []
 
   componentDidMount() {
     this._fetchData()
+
+    if (this.props.product && this.props.categories) {
+      this.renderBreadcrumb(this.props.product.category.id)
+    }
   }
 
   _fetchData = () => {
@@ -184,6 +259,39 @@ class ProductListPage extends React.Component<any, any> {
 
   _addToCollection = () => {}
 
+  renderBreadcrumb = id => {
+    const { categories } = this.props
+
+    let parentID = null
+
+    if (categories[id]?.parent) {
+      if (typeof categories[id].parent === 'number') {
+        parentID = categories[id].parent
+      } else {
+        parentID = categories[id].parent.id
+      }
+    } else if (categories[id]?.parent_id) {
+      parentID = categories[id].parent_id
+    }
+
+    if (parentID) {
+      this.renderBreadcrumb(parentID)
+    }
+
+    if (categories[id]) {
+      this._breadcrumb.push({
+        name: categories[id].name,
+        slug: categories[id].slug,
+        id,
+      })
+    }
+    return
+  }
+
+  handleOnpressBreadcrumb = slug => () => {
+    navigate('ProductList', { categoriesSlug: slug, from: 'categories' })
+  }
+
   render() {
     const { product, loading, isSaved } = this.props
     const { selectedVariant, isUserSelectVariant, filteredAttributes } = this
@@ -257,6 +365,35 @@ class ProductListPage extends React.Component<any, any> {
       }
       userSaveProduct.push(<Font key="product-save-end">{` saved this`}</Font>)
     }
+    let description = []
+    let contentItem = []
+    product?.details?.map(value => {
+      if (
+        value.type === 'description' ||
+        value.type === 'care-label' ||
+        value.type === 'size-and-fit'
+      ) {
+        description.push(value)
+      } else {
+        contentItem.push(value)
+      }
+    })
+    if (description.length > 0) {
+      const newData = []
+      description.map((value, key) => (newData[key] = value))
+      const newContent = {
+        type: 'details',
+        content: newData,
+      }
+      contentItem.push(newContent)
+    }
+    if (returnExchange !== '') {
+      const newContent = {
+        type: 'shipping & returns',
+        content: `Available for ${returnExchange}`,
+      }
+      contentItem.push(newContent)
+    }
     return (
       <>
         <NavbarTopAnimated
@@ -287,6 +424,18 @@ class ProductListPage extends React.Component<any, any> {
             dimentionConstant={this.dimentionConstant}>
             <Div bg="white" _width="100%" padd="0px 16px 96px">
               <Div width="100%" align="flex-start" padd="16px 0px">
+                <View style={{ flexDirection: 'row', margin: 4 }}>
+                  {this._breadcrumb.map((val, key) => (
+                    <Font
+                      style={{ ...styles.breadcrumb }}
+                      key={`breadcrumb-${key}`}>
+                      {key > 0 && <Font>{` / `}</Font>}
+                      <Font onPress={this.handleOnpressBreadcrumb(val.slug)}>
+                        {val.name}
+                      </Font>
+                    </Font>
+                  ))}
+                </View>
                 <Font
                   style={fontStyle.playfairBold}
                   size={26}
@@ -426,11 +575,49 @@ class ProductListPage extends React.Component<any, any> {
                   {product.saved && userSaveProduct}
                 </View>
               </View>
-              {product?.details?.map((detail, idx) => {
-                const contentItem = getDetailContent(
-                  detail.type,
-                  detail.content,
-                )
+              {contentItem?.map((item, idx) => {
+                let newItem = null
+                if (typeof item.content !== 'string') {
+                  newItem = item.content
+                    .map(value => {
+                      return (
+                        `<title>${capitalEachWord(value.type)
+                          .replace(/\\\\r\\\\n/g, '')
+                          .replace(/\\r\\n/g, '')}:</title>` +
+                        getDetailContent(value.type, value.content)
+                      )
+                    })
+                    .join('')
+                  if (product.skin_type || product.skin_concern) {
+                    newItem += `<title>Suitable For:</title>`
+
+                    newItem += `${
+                      product.skin_type
+                        ? `<subtitle>Skin type:</subtitle>` +
+                          `<mytag>` +
+                          `<imageskin skintype=${product.skin_type.label
+                            .toLowerCase()
+                            .replace(' ', '')}></imageskin>` +
+                          `<p>${product.skin_type.label}</p>` +
+                          `</mytag>`
+                        : ''
+                    }`
+
+                    newItem += `${
+                      product.skin_concern
+                        ? `<subtitle>Skin concern:</subtitle>` +
+                          `<mytag>` +
+                          `<imageskin skintype=${product.skin_concern.label
+                            .toLowerCase()
+                            .replace(' ', '')}></imageskin>` +
+                          `<p>${product.skin_concern.label}</p>` +
+                          `</mytag>`
+                        : ''
+                    }`
+                  }
+                } else {
+                  newItem = `<p>${item.content}</p>`
+                }
                 return (
                   <ContentExpandable
                     title={
@@ -440,14 +627,34 @@ class ProductListPage extends React.Component<any, any> {
                           fontSize: 24,
                           color: colors.black100,
                         }}>
-                        {capitalEachWord(detail.type.replace('-', ' '))}
+                        {capitalEachWord(item.type.replace(/-/g, ' '))}
                       </Text>
                     }
                     content={
                       <HTML
-                        html={contentItem
-                          .replace(/\\\\r\\\\n/g, '')
-                          .replace(/\\r\\n/g, '')}
+                        html={newItem}
+                        renderers={{
+                          imageskin: ({ skintype }) => {
+                            const img = renderImage(skintype)
+                            return (
+                              <Image
+                                source={img}
+                                style={{ ...styles.skin, marginRight: 4 }}
+                              />
+                            )
+                          },
+                          mytag: (convertedCSSStyles, children) => {
+                            return (
+                              <View
+                                style={{
+                                  flexDirection: 'row',
+                                  alignItems: 'center',
+                                }}>
+                                {children}
+                              </View>
+                            )
+                          },
+                        }}
                         tagsStyles={{
                           li: {
                             ...fontStyle.helvetica,
@@ -458,6 +665,18 @@ class ProductListPage extends React.Component<any, any> {
                             ...fontStyle.helvetica,
                             color: colors.black70,
                             fontSize: 14,
+                          },
+                          title: {
+                            ...fontStyle.helveticaBold,
+                            color: colors.black100,
+                            fontSize: 14,
+                            marginVertical: 8,
+                          },
+                          subtitle: {
+                            ...fontStyle.helvetica,
+                            color: colors.black100,
+                            fontSize: 14,
+                            marginVertical: 8,
                           },
                         }}
                         listsPrefixesRenderers={{
@@ -489,6 +708,8 @@ class ProductListPage extends React.Component<any, any> {
                   />
                 )
               })}
+
+              <ProductSimilarList />
             </Div>
           </ImageCoverContentLayout>
 
@@ -518,6 +739,7 @@ const mapStateToProps = (state, ownProps) => {
     isAuth: state.auth.isAuth,
     isSaved: !!state.productsSaved.data[productId],
     loading: state.products.productLoading,
+    categories: state.categories.data,
   }
 }
 

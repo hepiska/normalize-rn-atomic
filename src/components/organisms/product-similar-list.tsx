@@ -56,10 +56,11 @@ class ProductSimilar extends Component<any, any> {
         key={item}
         productId={item}
         style={{
-          wrappermargin: 16,
+          wrappermargin: 0,
+          paddingHorizontal: 0,
           minHeight: null,
+          width: width / 2 - 24,
         }}
-        horizontal
       />
     )
   }
@@ -68,10 +69,11 @@ class ProductSimilar extends Component<any, any> {
     const { products, loading } = this.props
     return (
       <Div _flex={1} _margin="64px 0px" _width="100%" align="flex-start">
-        <View style={{ marginLeft: 8, marginRight: 8 }}>
+        <View style={{ marginLeft: 0, marginRight: 0 }}>
           <Text
             style={{
-              ...styles.futuraBold24,
+              ...fontStyle.playfairBold,
+              fontSize: 24,
               color: colors.black100,
             }}>
             You Might Also Like
@@ -81,15 +83,13 @@ class ProductSimilar extends Component<any, any> {
           <YouMightAlsoLikeLoader />
         ) : (
           <Div
+            _width="100%"
             _direction="row"
             _flex={1}
             align="flex-start"
+            justify="space-between"
             style={{ flexWrap: 'wrap' }}>
-            {products.map(item => (
-              <Div key={item} _width="100%">
-                {this._renderItem({ item })}
-              </Div>
-            ))}
+            {products.map(item => this._renderItem({ item }))}
           </Div>
         )}
       </Div>

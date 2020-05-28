@@ -32,7 +32,7 @@ class CartPage extends Component<any, any> {
           _padding="0px 16px">
           <CartEmptyState />
           <Wishlist />
-          <ProductSimilarList />
+          {/* <ProductSimilarList /> */}
         </Div>
       </ScrollDiv>
     )
