@@ -199,7 +199,6 @@ export const getTrendingInsider = params => {
         return setUserLoadings({ name: 'trendingInsider', value: false })
       },
       success: data => {
-        console.log('data', data.result)
         return [
           setUserData(data.entities.user),
           setuserTrendingOrder(data.result),

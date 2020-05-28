@@ -4,14 +4,7 @@ import Config from 'react-native-config'
 import { connect } from 'react-redux'
 import NavbarTop from '@src/components/molecules/navbar-top'
 import { colors } from '@utils/constants'
-
-const run = `(function() {
-  var header = document.getElementsByClassName("header-container");
-  header[0].remove();
-  var mainWrapper = document.getElementsByClassName("main-wrapper");
-  mainWrapper[0].style.paddingTop = "15px";
-  true
-})()`
+import { removeHeaderWebviewScript } from '@utils/helpers'
 
 class PostDetailPage extends Component<any, any> {
   webref = null
@@ -36,7 +29,7 @@ class PostDetailPage extends Component<any, any> {
           onLoadEnd={syntheticEvent => {
             const { nativeEvent } = syntheticEvent
             if (!nativeEvent.loading) {
-              this.webref.injectJavaScript(run)
+              this.webref.injectJavaScript(removeHeaderWebviewScript)
             }
           }}
           originWhitelist={['https://*']}

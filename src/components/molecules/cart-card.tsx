@@ -30,6 +30,7 @@ interface CartCardType {
   product: any
   idx: any
   style: ViewStyle
+  getProductById: (productId: any) => void
   index: string | number
   isChecked: boolean
   chooseCart: Function
@@ -105,6 +106,11 @@ class CartCard extends React.Component<CartCardType, any> {
     defaultImage: null,
   }
 
+  componentDidMount() {
+    const { cart, getProductById } = this.props
+    getProductById(cart.variant.product_id)
+  }
+
   _deleteCart = () => {
     this.props.removeCart(this.props.cart.id)
     this.props.removeSelectedVariant(this.props.cart.id)
@@ -120,13 +126,20 @@ class CartCard extends React.Component<CartCardType, any> {
     const fixAttributes = attributes.find(_att => {
       return _att.attribute_id !== attribute.attribute_id
     })
+    console.log('====asas', attributes)
+    const changeAttribute = {
+      ...attributes.find(_att => {
+        return _att.attribute_id === attribute.attribute_id
+      }),
+      ...attribute,
+    }
     navigate('modals', {
       screen: 'CartModal',
       params: {
         product: this.props.variant.product_id,
         fixAttributes,
         cart: this.props.cart,
-        changeAttribute: attribute,
+        changeAttribute,
         type: 'change_variant',
       },
     })

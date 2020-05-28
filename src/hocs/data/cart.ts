@@ -7,6 +7,7 @@ import {
 } from '@modules/product-saved/action'
 import { removeCart, changeCartQty } from '@modules/cart/action'
 import { navigate } from '@src/root-navigation'
+import { getProductById } from '@modules/product/action'
 
 const cartListMap = (state, ownProps) => {
   const { cartId, productId } = ownProps
@@ -21,10 +22,12 @@ const cartListMap = (state, ownProps) => {
     variant = deepClone(cart.variant)
     isSaved = !!state.productsSaved.data[cart.variant.product_id]
     product = state.products.data[cart.variant.product_id]
-
     if (variant.attribute_values) {
       variant.attribute_values?.map(v => {
-        v.label = state.productAttribute.data[v.attribute_id]?.label
+        const attribute = product.attributes.find(
+          attribute => attribute.attribute_id === v.attribute_id,
+        )
+        v.label = attribute.label
         return v
       })
     }
@@ -37,10 +40,12 @@ const cartListMap = (state, ownProps) => {
     cart = {}
     cart['qty'] = qty
     variant = deepClone(product.variant)
-
     if (variant.attribute_values) {
       variant.attribute_values?.map(v => {
-        v.label = state.productAttribute.data[v.attribute_id]?.label
+        const attribute = product.attributes.find(
+          attribute => attribute.attribute_id === v.attribute_id,
+        )
+        v.label = attribute.label
         return v
       })
     }
@@ -65,7 +70,13 @@ const cartListMap = (state, ownProps) => {
 
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
-    { removeCart, changeCartQty, addProductSaved, deleteProductSaved },
+    {
+      removeCart,
+      changeCartQty,
+      addProductSaved,
+      deleteProductSaved,
+      getProductById,
+    },
     dispatch,
   )
 

@@ -200,3 +200,20 @@ export const calculateYear = year => {
   const min_dob = now.subtract(year, 'year')
   return min_dob.toISOString()
 }
+
+export const removeHeaderWebviewScript = `(function() {
+  var header = document.getElementsByClassName("header-container");
+  header[0].remove();
+  var mainWrapper = document.getElementsByClassName("main-wrapper");
+  if(mainWrapper[0]){
+    mainWrapper[0].style.paddingTop = "15px";
+  }
+  var footer = document.getElementsByClassName("footer-nav"); 
+  if( footer[0]){
+    footer[0].remove();
+
+  }
+  
+})()
+true;
+`

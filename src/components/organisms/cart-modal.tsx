@@ -160,7 +160,7 @@ class CartModal extends React.Component<any, any> {
 
     const selectedAttributes =
       type === 'change_variant' && fixAttributes ? [fixAttributes] : []
-
+    console.log('==change att', changeAttribute)
     const headerTitle =
       type === 'change_variant' && changeAttribute
         ? `Choose New ${changeAttribute.label}`

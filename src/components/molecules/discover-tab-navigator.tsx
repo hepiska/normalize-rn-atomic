@@ -32,12 +32,16 @@ const getActiveFont = (item, selectedItem) =>
   item.name === selectedItem ? styles.fontActive : {}
 
 const TabMenuNavigator = ({
+  onChangeTab,
   items,
   x,
   selectedItem,
   selectedIndex,
   rightAction,
 }: any) => {
+  const _onChangeTab = item => () => {
+    if (onChangeTab) onChangeTab(item)
+  }
   return (
     <View
       style={{
@@ -52,6 +56,7 @@ const TabMenuNavigator = ({
         {items.map(item => (
           <TouchableOpacity
             key={item.name}
+            onPress={_onChangeTab(item)}
             style={{
               ...getActiveStyle(item, selectedItem),
               paddingHorizontal: 16,

@@ -44,6 +44,9 @@ const DiscoverPage = ({ navigation }) => {
         }}
         TabMenuNavigator={props => (
           <DiscoverTab
+            onChangeTab={item => {
+              setSelected(item.name)
+            }}
             {...props}
             rightAction={<DiscoverSearchComponent onPress={onSearchPress} />}
           />
