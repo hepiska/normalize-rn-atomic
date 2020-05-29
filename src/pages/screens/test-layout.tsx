@@ -20,11 +20,15 @@ import {
   sensitive,
   allType,
 } from '@src/utils/image-skin'
+import TotalCommisionCard from '@components/molecules/total-commision-card'
+import TransactionHistoryCard from '@components/molecules/transaction-history-card'
 
 import MansoryStickyHeader, {
   LayoutType,
 } from '@src/components/layouts/list-header'
 import SearchFilter from '@components/organisms/search-filter'
+import TitleDescriptionCard from '@src/components/molecules/title-description-card'
+import { fontStyle } from '@src/components/commont-styles'
 
 const ProductWithCardHoc = productListData(ProductCard)
 
@@ -236,11 +240,21 @@ class MyProfile extends React.Component<any, any> {
     return (
       <>
         <NavbarTop title={'name'} />
-        <ListInterest
+        {/* <ListInterest
           data={dummy}
           handleSelected={this.handleSelectedInterest}
           selected={this.state.selectedInterest}
+        /> */}
+        <TitleDescriptionCard
+          title="What is score?"
+          description="Score is loyalty program.. Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa."
         />
+        <TotalCommisionCard />
+        <TransactionHistoryCard index={0} />
+        <TransactionHistoryCard index={1} />
+        <TransactionHistoryCard index={2} />
+        <TransactionHistoryCard type="more" data={dummy} />
+
         {/* <MansoryStickyHeader
           header={this.header}
           rowStyle={{
