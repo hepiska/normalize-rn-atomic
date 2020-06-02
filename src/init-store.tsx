@@ -14,7 +14,7 @@ import { persistStore } from 'redux-persist'
 import OneSignal from 'react-native-onesignal'
 import Pages from '@pages/index'
 import Config from 'react-native-config'
-
+import SplashScreen from 'react-native-splash-screen'
 export const history = createHistory()
 
 // initial store
@@ -75,6 +75,7 @@ class InitStore extends React.Component<any, any> {
     const persistor = persistStore(store)
     presist = persistor
     this.setState({ store: _store, persistor, isLoading: false })
+    SplashScreen.hide()
     isMountedRef.current = true
   }
 

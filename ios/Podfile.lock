@@ -308,6 +308,8 @@ PODS:
     - React (< 1.0.0, >= 0.13.0)
   - react-native-safe-area-context (0.6.4):
     - React
+  - react-native-splash-screen (3.2.0):
+    - React
   - react-native-webview (9.1.1):
     - React
   - React-RCTActionSheet (0.61.5):
@@ -415,6 +417,7 @@ DEPENDENCIES:
   - react-native-maps (from `../node_modules/react-native-maps`)
   - react-native-onesignal (from `../node_modules/react-native-onesignal`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
+  - react-native-splash-screen (from `../node_modules/react-native-splash-screen`)
   - react-native-webview (from `../node_modules/react-native-webview`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
   - React-RCTAnimation (from `../node_modules/react-native/Libraries/NativeAnimation`)
@@ -527,6 +530,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-onesignal"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
+  react-native-splash-screen:
+    :path: "../node_modules/react-native-splash-screen"
   react-native-webview:
     :path: "../node_modules/react-native-webview"
   React-RCTActionSheet:
@@ -628,6 +633,7 @@ SPEC CHECKSUMS:
   react-native-maps: f4b89da81626ad7f151a8bfcb79733295d31ce5c
   react-native-onesignal: ece470306f7486853454793e954ac00eaa28f2dd
   react-native-safe-area-context: 042dfc9d4db17196841df962ba9497f6e7a5bd02
+  react-native-splash-screen: 200d11d188e2e78cea3ad319964f6142b6384865
   react-native-webview: 059636017bec36753d09cb4dfd0bc6f90bcbb9e0
   React-RCTActionSheet: 600b4d10e3aea0913b5a92256d2719c0cdd26d76
   React-RCTAnimation: 791a87558389c80908ed06cc5dfc5e7920dfa360
@@ -657,4 +663,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 6817bab74d50fadd8b55c9d40d0f469fd26f737d
 
-COCOAPODS: 1.8.4
+COCOAPODS: 1.9.1
