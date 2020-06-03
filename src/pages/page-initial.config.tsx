@@ -1,5 +1,5 @@
 export default {
-  index: 'Screens',
+  index: 'Main',
   main: 'Shop',
   screens: 'Test',
   shop: 'Shop',
