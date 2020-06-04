@@ -35,6 +35,7 @@ import { ScrollView } from 'react-native-gesture-handler'
 import MyPost from '@components/organisms/my-post'
 import MySaved from '@components/organisms/my-saved'
 import MyInsight from '@components/organisms/my-insight'
+import FocusContainer from '@src/components/molecules/focus-container'
 
 const headerHeight = 54
 const { width, height } = Dimensions.get('screen')
@@ -430,11 +431,11 @@ class ProfilPage extends React.PureComponent<any, any> {
                 </View>
 
                 {/* score */}
-                <View style={{ ...styles.score, marginTop: 8, padding: 16 }}>
+                <FocusContainer style={{ padding: 16, marginTop: 8 }}>
                   <Text style={{ ...styles.helveticaBold24, color: '#3067E4' }}>
                     0
                   </Text>
-                </View>
+                </FocusContainer>
               </View>
               <View
                 style={{

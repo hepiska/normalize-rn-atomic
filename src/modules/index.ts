@@ -29,6 +29,7 @@ import transactionReducer from './transaction/reducer'
 import userPostReducer from './user-post/reducer'
 import feedReducer from './post-feed/reducer'
 import discoverReducer from './post-discover/reducer'
+import insightReducer from './insights/reducer'
 
 const combinedReducer: Reducer<any> = combineReducers({
   addresses: addressReducer,
@@ -47,6 +48,8 @@ const combinedReducer: Reducer<any> = combineReducers({
   feed: feedReducer,
 
   global: globalReducer,
+
+  insights: insightReducer,
 
   lookbooks: lookbookReducer,
 

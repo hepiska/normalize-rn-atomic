@@ -2,6 +2,7 @@ import { QueryParams } from '@utils/globalInterface'
 import { setUserData } from '../user/action'
 import { setTopPostData } from '../post-top/action'
 import { API } from '../action-types'
+import * as schema from '@modules/normalize-schema'
 
 export const postActionType = {
   FETCH: 'post/FETCH',
@@ -40,4 +41,31 @@ export const setPostOrder = (data: any) => ({
 export const setPostLoading = (data: any) => ({
   type: postActionType.SET_POST_LOADING,
   payload: data,
+})
+
+export const getPostById = (data: any) => ({
+  type: API,
+  payload: {
+    url: '/posts/' + data,
+    schema: schema.post,
+    requestParams: {
+      method: 'GET',
+    },
+    startNetwork: () => {
+      return setPostLoading(true)
+    },
+    endNetwork: () => {
+      return setPostLoading(false)
+    },
+    success: data => {
+      return [
+        setPostData(data.entities.post),
+        setUserData(data.entities.user),
+        setPostLoading(false),
+      ]
+    },
+    error: err => {
+      return [setPostLoading(false)]
+    },
+  },
 })

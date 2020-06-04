@@ -10,7 +10,7 @@ interface PostType {}
 
 interface PostState {
   readonly data: Object
-  readonly order: Object
+  readonly order: Array<number>
   readonly loading: Boolean
   readonly error?: ErrorType
 }
@@ -38,6 +38,8 @@ const postLikedReducer: Reducer<PostState> = (
           newState.order < action.payload.pagination.total)
       ) {
         newState.order = newState.order.concat(Immutable(action.payload.order))
+      } else {
+        newState.order = Immutable(action.payload.order)
       }
       return newState
     case postActionType.SET_POST_LOADING:
