@@ -7,6 +7,7 @@ import {
   Image,
   ViewStyle,
   TouchableWithoutFeedback,
+  InteractionManager,
   Dimensions,
 } from 'react-native'
 import { withNavigation } from 'react-navigation'
@@ -28,6 +29,7 @@ import { navigate } from '@src/root-navigation'
 import { setLogout } from '@modules/auth/action'
 import ProfileEmptyState from '@components/molecules/profile-empty-state'
 import ActionListCard from '@components/molecules/action-list-card'
+import ProfileLoader from '@components/atoms/loaders/profile'
 import ImageViewer from 'react-native-image-zoom-viewer'
 import styled from 'styled-components/native'
 import TabMenu from '@src/components/layouts/tab-menu'
@@ -129,15 +131,20 @@ class ProfilPage extends React.PureComponent<any, any> {
     isVisible: false,
     showName: false,
     enableScrollContent: false,
+    finishAnimation: false,
   }
 
   componentDidMount() {
     const { isAuth, username, getUser, user } = this.props
-    if (isAuth && username) {
-      getUser(username, 'username')
-    } else if (isAuth && user.id) {
-      getUser(user.id, 'id')
-    }
+
+    InteractionManager.runAfterInteractions(() => {
+      if (isAuth && username) {
+        getUser(username, 'username')
+      } else if (isAuth && user.id) {
+        getUser(user.id, 'id')
+      }
+      this.setState({ finishAnimation: true })
+    })
     // if (isAuth && user.id) {
     //   getUser(user.id, 'id')
     // }
@@ -229,6 +236,7 @@ class ProfilPage extends React.PureComponent<any, any> {
       activeTab,
       enableScrollContent,
       showName,
+      finishAnimation,
     } = this.state
 
     const TabMenuData = [
@@ -294,163 +302,171 @@ class ProfilPage extends React.PureComponent<any, any> {
       return (
         <>
           <NavbarTop title={showName ? user.name : 'My profile'} />
-          <View style={{ height: height }}>
-            <ScrollView
-              showsVerticalScrollIndicator={false}
-              onScroll={this._onScroll}
-              bounces={false}
-              nestedScrollEnabled={true}
-              scrollEventThrottle={20}
-              style={{ backgroundColor: colors.background, flex: 1 }}>
-              <View
-                style={{ paddingHorizontal: 16, paddingVertical: 26 }}
-                onLayout={this._onLayout}>
-                {/* photo, name, fols */}
-                <View style={{ flexDirection: 'row' }}>
-                  <TouchableOpacity onPress={this._openModal}>
-                    <ImageAutoSchale
-                      source={
-                        typeof image === 'string' ? { uri: image } : image
-                      }
-                      onError={() => {
-                        this.setState({ defaultImage: defaultImages.product })
-                      }}
-                      style={styles.image}
-                    />
-                  </TouchableOpacity>
-                  <Modal isVisible={isVisible} style={{ margin: 0 }}>
-                    <ImageViewer
-                      backgroundColor="white"
-                      enableSwipeDown
-                      renderHeader={this._headerComp}
-                      imageUrls={[{ url: image }]}
-                      onSwipeDown={this._closeModal}
-                      index={0}
-                    />
-                  </Modal>
-                  <View style={{ marginLeft: 26 }}>
-                    <View>
-                      <Text style={{ ...styles.futuraBold20 }}>
-                        {user.name}
-                      </Text>
-                    </View>
-                    <View style={{ marginTop: 4 }}>
-                      <Text
-                        style={{
-                          ...styles.helveticaBold12,
-                          color: user.username ? colors.black80 : colors.red1,
-                        }}>
-                        {user.username
-                          ? `@${user.username}`
-                          : 'Please input Username'}
-                      </Text>
-                    </View>
-                    <View style={{ marginTop: 8, flexDirection: 'row' }}>
-                      <TouchableOpacity
-                        onPress={this.gotoFollowPage('Follower')}>
+          {finishAnimation ? (
+            <View style={{ height: height }}>
+              <ScrollView
+                showsVerticalScrollIndicator={false}
+                onScroll={this._onScroll}
+                bounces={false}
+                nestedScrollEnabled={true}
+                scrollEventThrottle={20}
+                style={{ backgroundColor: colors.background, flex: 1 }}>
+                <View
+                  style={{ paddingHorizontal: 16, paddingVertical: 26 }}
+                  onLayout={this._onLayout}>
+                  {/* photo, name, fols */}
+                  <View style={{ flexDirection: 'row' }}>
+                    <TouchableOpacity onPress={this._openModal}>
+                      <ImageAutoSchale
+                        source={
+                          typeof image === 'string' ? { uri: image } : image
+                        }
+                        onError={() => {
+                          this.setState({ defaultImage: defaultImages.product })
+                        }}
+                        style={styles.image}
+                      />
+                    </TouchableOpacity>
+                    <Modal isVisible={isVisible} style={{ margin: 0 }}>
+                      <ImageViewer
+                        backgroundColor="white"
+                        enableSwipeDown
+                        renderHeader={this._headerComp}
+                        imageUrls={[{ url: image }]}
+                        onSwipeDown={this._closeModal}
+                        index={0}
+                      />
+                    </Modal>
+                    <View style={{ marginLeft: 26 }}>
+                      <View>
+                        <Text style={{ ...styles.futuraBold20 }}>
+                          {user.name}
+                        </Text>
+                      </View>
+                      <View style={{ marginTop: 4 }}>
                         <Text
                           style={{
-                            ...styles.helvetica12,
-                            color: colors.black80,
-                          }}>{`Followers ${user.follower_count || 0}`}</Text>
-                      </TouchableOpacity>
-                      <TouchableOpacity
-                        onPress={this.gotoFollowPage('Following')}>
-                        <View style={{ marginLeft: 24 }}>
+                            ...styles.helveticaBold12,
+                            color: user.username ? colors.black80 : colors.red1,
+                          }}>
+                          {user.username
+                            ? `@${user.username}`
+                            : 'Please input Username'}
+                        </Text>
+                      </View>
+                      <View style={{ marginTop: 8, flexDirection: 'row' }}>
+                        <TouchableOpacity
+                          onPress={this.gotoFollowPage('Follower')}>
                           <Text
                             style={{
                               ...styles.helvetica12,
                               color: colors.black80,
-                            }}>{`Following ${user.following_count || 0}`}</Text>
-                        </View>
-                      </TouchableOpacity>
-                    </View>
-                    <View style={{ marginTop: 12, flexDirection: 'row' }}>
-                      <OutlineButton
-                        title="Edit"
-                        onPress={this.gotoEditProfile}
-                        style={{ ...styles.button }}
-                        fontStyle={{
-                          ...fontStyle.helveticaBold,
-                          color: colors.black70,
-                          fontSize: 14,
-                          marginLeft: 8,
-                          lineHeight: 14,
-                        }}
-                        leftIcon="edit"
-                      />
-                      <OutlineButton
-                        title="Account"
-                        onPress={this.gotoAccountSetting}
-                        style={{ ...styles.button, marginLeft: 12 }}
-                        fontStyle={{
-                          ...fontStyle.helveticaBold,
-                          color: colors.black70,
-                          fontSize: 14,
-                          marginLeft: 8,
-                          lineHeight: 14,
-                        }}
-                        leftIcon="cog"
-                      />
+                            }}>{`Followers ${user.follower_count || 0}`}</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                          onPress={this.gotoFollowPage('Following')}>
+                          <View style={{ marginLeft: 24 }}>
+                            <Text
+                              style={{
+                                ...styles.helvetica12,
+                                color: colors.black80,
+                              }}>{`Following ${user.following_count ||
+                              0}`}</Text>
+                          </View>
+                        </TouchableOpacity>
+                      </View>
+                      <View style={{ marginTop: 12, flexDirection: 'row' }}>
+                        <OutlineButton
+                          title="Edit"
+                          onPress={this.gotoEditProfile}
+                          style={{ ...styles.button }}
+                          fontStyle={{
+                            ...fontStyle.helveticaBold,
+                            color: colors.black70,
+                            fontSize: 14,
+                            marginLeft: 8,
+                            lineHeight: 14,
+                          }}
+                          leftIcon="edit"
+                        />
+                        <OutlineButton
+                          title="Account"
+                          onPress={this.gotoAccountSetting}
+                          style={{ ...styles.button, marginLeft: 12 }}
+                          fontStyle={{
+                            ...fontStyle.helveticaBold,
+                            color: colors.black70,
+                            fontSize: 14,
+                            marginLeft: 8,
+                            lineHeight: 14,
+                          }}
+                          leftIcon="cog"
+                        />
+                      </View>
                     </View>
                   </View>
-                </View>
 
-                {/* location and description */}
-                <View style={{ marginTop: 12 }}>
-                  <View style={{ flexDirection: 'row' }}>
-                    <Icon
-                      name="map-marker-alt"
-                      size={16}
-                      color={colors.black60}
-                    />
-                    <View style={{ marginLeft: 10 }}>
+                  {/* location and description */}
+                  <View style={{ marginTop: 12 }}>
+                    <View style={{ flexDirection: 'row' }}>
+                      <Icon
+                        name="map-marker-alt"
+                        size={16}
+                        color={colors.black60}
+                      />
+                      <View style={{ marginLeft: 10 }}>
+                        <Text
+                          style={{
+                            ...fontStyle.helvetica,
+                            fontSize: 12,
+                            color: colors.black70,
+                          }}>
+                          Shonetopia
+                        </Text>
+                      </View>
+                    </View>
+                    {/* description */}
+                    <View style={{ marginTop: 8 }}>
                       <Text
                         style={{
                           ...fontStyle.helvetica,
                           fontSize: 12,
-                          color: colors.black70,
+                          color: colors.black80,
                         }}>
-                        Shonetopia
+                        {user.biography || user.biography !== ''
+                          ? user.biography
+                          : 'Welcome to my page'}
                       </Text>
                     </View>
                   </View>
-                  {/* description */}
-                  <View style={{ marginTop: 8 }}>
-                    <Text
-                      style={{
-                        ...fontStyle.helvetica,
-                        fontSize: 12,
-                        color: colors.black80,
-                      }}>
-                      {user.biography || user.biography !== ''
-                        ? user.biography
-                        : 'Welcome to my page'}
-                    </Text>
-                  </View>
-                </View>
 
-                {/* score */}
-                <FocusContainer style={{ padding: 16, marginTop: 8 }}>
-                  <Text style={{ ...styles.helveticaBold24, color: '#3067E4' }}>
-                    0
-                  </Text>
-                </FocusContainer>
-              </View>
-              <View
-                style={{
-                  width,
-                  height,
-                }}>
-                <TabMenu
-                  items={TabMenuData}
-                  forceRender={enableScrollContent}
-                  selectedItem={activeTab}
-                  onChangeTab={this._changeSelected}
-                />
-              </View>
-            </ScrollView>
-          </View>
+                  {/* score */}
+                  <FocusContainer style={{ padding: 16, marginTop: 8 }}>
+                    <Text
+                      style={{ ...styles.helveticaBold24, color: '#3067E4' }}>
+                      0
+                    </Text>
+                  </FocusContainer>
+                </View>
+                <View
+                  style={{
+                    width,
+                    height,
+                  }}>
+                  <TabMenu
+                    items={TabMenuData}
+                    forceRender={enableScrollContent}
+                    selectedItem={activeTab}
+                    onChangeTab={this._changeSelected}
+                  />
+                </View>
+              </ScrollView>
+            </View>
+          ) : (
+            <ProfileLoader
+              style={{ marginVertical: 8, marginHorizontal: 16 }}
+            />
+          )}
         </>
       )
     }

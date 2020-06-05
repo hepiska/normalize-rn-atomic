@@ -8,6 +8,7 @@ import {
   Text,
   Alert,
   ToastAndroid,
+  InteractionManager,
   Linking,
 } from 'react-native'
 import { Div, Font, PressAbbleDiv } from '@components/atoms/basic'
@@ -101,8 +102,15 @@ class ShareModal extends React.Component<any, any> {
     currentPos: 1,
     title: 'sa',
     message: 'asa',
+    finishAnimation: false,
   }
   _ref: any = React.createRef()
+
+  componentDidMount() {
+    InteractionManager.runAfterInteractions(() => {
+      this.setState({ finishAnimation: true })
+    })
+  }
 
   _closeModal = () => this.props.navigation.goBack()
   _changeHeight = () => {
@@ -128,7 +136,7 @@ class ShareModal extends React.Component<any, any> {
   _share = dat => () => {
     const { uri, title, message } = this.props.route.params
     const shareOptions: any = {
-      title: title || 'Share via',
+      title: title || 'The Shonet',
       message: message || 'some message',
       url: uri,
       filename: 'shonet-share', //
@@ -205,29 +213,31 @@ class ShareModal extends React.Component<any, any> {
   }
   render() {
     return (
-      <BottomSheet
-        snapPoints={[0, 250, 500]}
-        initialSnap={this.state.currentPos}
-        onClose={this._closeModal}
-        bottomSheetProps={{
-          enabledGestureInteraction: false,
-          ref: ref => (this._ref = ref),
-        }}
-        title="Share">
-        <View
-          style={{
-            display: 'flex',
-            width,
-            paddingVertical: 16,
-            justifyContent:
-              this.state.currentPos === 2 ? 'flex-start' : 'space-between',
-            backgroundColor: 'white',
-            flexDirection: this.state.currentPos === 1 ? 'row' : 'column',
-            height: '100%',
-          }}>
-          {this._renderItem()}
-        </View>
-      </BottomSheet>
+      <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.7)' }}>
+        <BottomSheet
+          snapPoints={[0, 250, 500]}
+          initialSnap={this.state.currentPos}
+          onClose={this._closeModal}
+          bottomSheetProps={{
+            enabledGestureInteraction: false,
+            ref: ref => (this._ref = ref),
+          }}
+          title="Share">
+          <View
+            style={{
+              display: 'flex',
+              width,
+              paddingVertical: 16,
+              justifyContent:
+                this.state.currentPos === 2 ? 'flex-start' : 'space-between',
+              backgroundColor: 'white',
+              flexDirection: this.state.currentPos === 1 ? 'row' : 'column',
+              height: '100%',
+            }}>
+            {this._renderItem()}
+          </View>
+        </BottomSheet>
+      </View>
     )
   }
 }

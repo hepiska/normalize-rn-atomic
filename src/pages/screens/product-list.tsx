@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import {
   Dimensions,
   ImageBackground,
+  InteractionManager,
   StyleSheet,
   SectionList,
   View,
@@ -27,6 +28,7 @@ import ErrorOrg from '@src/components/organisms/four-o-four'
 import ProductEmpty from '@components/organisms/product-empty'
 import ProductListLoader from '@components/atoms/loaders/two-column-card'
 import ProductHeader from '@components/atoms/loaders/product-list-header'
+import ProductListPageLoader from '@components/atoms/loaders/product-list'
 import {
   addFilterData,
   clearFilter,
@@ -70,6 +72,7 @@ class Productlist extends Component<any, any> {
   state = {
     skip: 0,
     headerName: 'Product',
+    finishAnimation: false,
   }
   limit = 20
 
@@ -80,17 +83,22 @@ class Productlist extends Component<any, any> {
 
   componentDidMount() {
     const { route, brand, category, getCategory } = this.props
-    if (route.params.from === 'collections' && route.params.collectionsSlug)
-      return this.props.getCollectionBySlug(route.params.collectionsSlug)
-    if (route.params.from === 'brands' && (brand || route.params.brandSlug)) {
-      return this.props.getBrand(route.params.brandsSlug || brand.id)
-    }
-    if (
-      route.params.from === 'categories' &&
-      (category || route.params.categoriesSlug)
-    ) {
-      return getCategory(route.params.categoriesSlug || category.id)
-    }
+
+    InteractionManager.runAfterInteractions(() => {
+      this.setState({ finishAnimation: true })
+
+      if (route.params.from === 'collections' && route.params.collectionsSlug)
+        return this.props.getCollectionBySlug(route.params.collectionsSlug)
+      if (route.params.from === 'brands' && (brand || route.params.brandSlug)) {
+        return this.props.getBrand(route.params.brandsSlug || brand.id)
+      }
+      if (
+        route.params.from === 'categories' &&
+        (category || route.params.categoriesSlug)
+      ) {
+        return getCategory(route.params.categoriesSlug || category.id)
+      }
+    })
   }
 
   componentDidUpdate(prevProps) {
@@ -283,7 +291,7 @@ class Productlist extends Component<any, any> {
       isCategoryLoading || isBrandLoading || isCollectionLoading
 
     if ((this.props.loading && this.skip === 0) || headerLoading) {
-      return <ProductListLoader />
+      return <ProductListLoader style={{ marginLeft: 16 }} />
     }
 
     const numColumns = 2
@@ -390,11 +398,7 @@ class Productlist extends Component<any, any> {
   emptyComponent = () => {
     const { headerError, loading } = this.props
     if (loading && this.skip === 0) {
-      return (
-        <View style={{ alignItems: 'center', justifyContent: 'center', width }}>
-          <ProductListLoader />
-        </View>
-      )
+      return <ProductListLoader style={{ margin: 16 }} />
     }
     return (
       <>
@@ -458,33 +462,27 @@ class Productlist extends Component<any, any> {
           }
         />
 
-        <Div _width="100%" _flex="1" justify="flex-start">
-          <SectionList
-            onRefresh={this._freshfetch}
-            refreshing={loading}
-            ListHeaderComponent={this._header}
-            style={styles.sectionContainer}
-            onEndReachedThreshold={0.97}
-            onEndReached={this._fetchMore}
-            ListEmptyComponent={this.emptyComponent}
-            keyExtractor={this._keyExtractor}
-            renderSectionHeader={this._renderHeader}
-            sections={sectionData}
-            stickySectionHeadersEnabled
-            renderItem={this._renderItem}
-            scrollIndicatorInsets={{ right: 1 }}
-          />
-          {loading && (
-            <Div
-              style={{ position: 'absolute', bottom: 0, left: 0 }}
-              justify="center"
-              _width="100%"
-              _background="rgba(0,0,0,0.3)"
-              _height="64px">
-              <InviniteLoader />
-            </Div>
-          )}
-        </Div>
+        {this.state.finishAnimation ? (
+          <Div _width="100%" _flex="1" justify="flex-start">
+            <SectionList
+              onRefresh={this._freshfetch}
+              refreshing={loading}
+              ListHeaderComponent={this._header}
+              style={styles.sectionContainer}
+              onEndReachedThreshold={0.97}
+              onEndReached={this._fetchMore}
+              ListEmptyComponent={this.emptyComponent}
+              keyExtractor={this._keyExtractor}
+              renderSectionHeader={this._renderHeader}
+              sections={sectionData}
+              stickySectionHeadersEnabled
+              renderItem={this._renderItem}
+              scrollIndicatorInsets={{ right: 1 }}
+            />
+          </Div>
+        ) : (
+          <ProductListPageLoader style={{ margin: 16 }} />
+        )}
       </>
     )
   }

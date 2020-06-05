@@ -63,6 +63,7 @@ class Pages extends React.Component<any, any> {
             name="modals"
             component={ModalPages}
             options={{
+              animationEnabled: false,
               headerShown: false,
               cardStyle: { backgroundColor: 'transparent' },
             }}

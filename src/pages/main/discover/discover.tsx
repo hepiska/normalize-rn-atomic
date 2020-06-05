@@ -1,9 +1,15 @@
-import React from 'react'
-import { View, Dimensions, ScrollView, SafeAreaView } from 'react-native'
+import React, { useEffect } from 'react'
+import {
+  View,
+  Dimensions,
+  ScrollView,
+  SafeAreaView,
+  InteractionManager,
+} from 'react-native'
 import HorizontalListLookBook from '@components/organisms/horzontal-list-lookbook'
 import Feed from '@components/organisms/discover-feed'
 import Discover from '@components/organisms/discover-discover'
-
+import { Instagram } from 'react-content-loader/native'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { colors } from '@utils/constants'
 import TabMenuAnimations from '@components/layouts/tab-menu-animated'
@@ -21,6 +27,7 @@ const DiscoverSearchComponent = ({ onPress }) => {
 
 const DiscoverPage = ({ navigation }) => {
   const [selected, setSelected] = React.useState('feed')
+  const [finishAnimation, setFinishAnimation] = React.useState(false)
   const TabMenuData = [
     {
       name: 'feed',
@@ -36,6 +43,17 @@ const DiscoverPage = ({ navigation }) => {
   const onSearchPress = () => {
     console.log('on discover search')
   }
+
+  useEffect(() => {
+    InteractionManager.runAfterInteractions(() => {
+      setFinishAnimation(true)
+    })
+  }, [])
+
+  if (!finishAnimation) {
+    return <Instagram />
+  }
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
       <TabMenuAnimations

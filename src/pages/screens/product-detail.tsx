@@ -1,5 +1,11 @@
 import React from 'react'
-import { Dimensions, View, Text, StyleSheet } from 'react-native'
+import {
+  Dimensions,
+  View,
+  Text,
+  StyleSheet,
+  InteractionManager,
+} from 'react-native'
 import {
   Div,
   Font,
@@ -30,6 +36,7 @@ import { fontStyle } from '@components/commont-styles'
 import { GradientButton } from '@components/atoms/button'
 import { getProductById } from '@modules/product/action'
 import { setImage, deepClone, getDetailContent } from '@utils/helpers'
+import ProductListLoader from '@components/atoms/loaders/product-detail'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import {
   addProductSaved,
@@ -117,15 +124,19 @@ class ProductListPage extends React.Component<any, any> {
   state = {
     selectedVariant: 1,
     isUserSelectVariant: false,
+    finishAnimation: false,
   }
   _breadcrumb = []
 
   componentDidMount() {
-    this._fetchData()
+    InteractionManager.runAfterInteractions(() => {
+      this._fetchData()
 
-    if (this.props.product && this.props.categories) {
-      this.renderBreadcrumb(this.props.product.category.id)
-    }
+      if (this.props.product && this.props.categories) {
+        this.renderBreadcrumb(this.props.product.category.id)
+      }
+      this.setState({ finishAnimation: true })
+    })
   }
 
   _fetchData = () => {
@@ -394,6 +405,11 @@ class ProductListPage extends React.Component<any, any> {
       }
       contentItem.push(newContent)
     }
+
+    if (!this.state.finishAnimation || loading) {
+      return <ProductListLoader style={{ marginHorizontal: 16 }} />
+    }
+
     return (
       <>
         <NavbarTopAnimated

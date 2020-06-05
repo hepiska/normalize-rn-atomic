@@ -24,12 +24,19 @@ function ModalStack() {
       <Stack.Screen name="CartModal" component={CartModal} />
       <Stack.Screen
         name="ProductFilter"
-        options={{ cardStyle: { backgroundColor: 'transparent' } }}
+        options={{
+          animationEnabled: false,
+          cardStyle: { backgroundColor: 'transparent' },
+        }}
         component={ProductFilter}
       />
       <Stack.Screen
         name="Share"
-        options={{ cardStyle: { backgroundColor: 'transparent' } }}
+        options={{
+          animationEnabled: false,
+
+          cardStyle: { backgroundColor: 'transparent' },
+        }}
         component={ShareModal}
       />
       <Stack.Screen

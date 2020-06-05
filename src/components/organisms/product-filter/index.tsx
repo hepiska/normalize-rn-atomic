@@ -7,6 +7,7 @@ import {
   View,
   TouchableWithoutFeedback,
   TouchableOpacity,
+  InteractionManager,
 } from 'react-native'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
@@ -127,26 +128,41 @@ const Header = props => {
 }
 
 const FilterBottomSheet = props => {
+  const [finishAnimation, setFinishAnimation] = useState(false)
+
+  useEffect(() => {
+    InteractionManager.runAfterInteractions(() => {
+      setFinishAnimation(true)
+    })
+  }, [])
+
   const { isOpen, section } = props
 
   const _snapPoint =
     section !== 'sort'
       ? [height * 0.8, height * 0.5, 0]
       : [Math.max(360, height * 0.5), 0]
+
   return (
     <>
-      <BottomSheet
-        onCloseEnd={() => props.navigation.goBack()}
-        initialSnap={0}
-        enabledContentGestureInteraction={false}
-        renderHeader={() => (
-          <Header onBack={() => props.navigation.goBack()} section={section} />
-        )}
-        snapPoints={_snapPoint}
-        renderContent={() =>
-          section === 'sort' ? <SortOrg /> : <FilterContent />
-        }
-      />
+      {finishAnimation && (
+        <BottomSheet
+          onCloseEnd={() => props.navigation.goBack()}
+          initialSnap={0}
+          enabledContentGestureInteraction={false}
+          renderHeader={() => (
+            <Header
+              onBack={() => props.navigation.goBack()}
+              section={section}
+            />
+          )}
+          snapPoints={_snapPoint}
+          renderContent={() =>
+            section === 'sort' ? <SortOrg /> : <FilterContent />
+          }
+        />
+      )}
+
       {/* <RBSheet ref={refRBSheet}>
         <FilterContent />
       </RBSheet> */}
