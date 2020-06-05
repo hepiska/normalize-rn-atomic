@@ -7,6 +7,7 @@ export const productFilterType = {
   CHANGE_SEARCH: 'product-filter/CHANGE_SEARCH',
   SET_SELECTED_PRICE: 'product-filter/SET_SELECTED_PRICE',
   SET_SELECTED_COLLECTION: 'product-filter/SET_SELECTED_COLLECTION',
+  RESET_SELECTED_COLLECTION: 'product-filter/RESET_SELECTED_COLLECTION',
   ADD_DATA: 'product-filter/ADD_DATA',
   FETCH_PRODUCT: 'product-filter/FETCH_PRODUCT',
   CHANGE_SELECTED_BRAND: 'product-filter/CHANGE_SELECTED_BRAND',
@@ -14,8 +15,11 @@ export const productFilterType = {
   CLEAR_FILTER: 'product-filter/CLEAR_FILTER',
   SET_BRAND_FILTER: 'product-filter/SET_BRAND_FILTER',
   SET_COUNTED_PRODUCT: 'product-filter/SET_COUNTED_PRODUCT',
+  SET_ACTIVE_PAGE: 'product-filter/SET_ACTIVE_PAGE',
+  CLEAR_ACTIVE_PAGE: 'product-filter/CLEAR_ACTIVE',
   SET_APPLIED_FILTER: 'product-filter/SET_APPLIED_FILTER',
   CHANGE_SELECTED_CATEGORY: 'product-filter/CHANGE_SELECTED_CATEGORY',
+  SET_SELECTED_CATEGORY: 'product-filter/SET_SELECTED_CATEGORY',
 }
 
 interface PriceFilter {
@@ -43,6 +47,10 @@ export const setSelectedCollection = data => ({
   payload: data,
 })
 
+export const resetSelectedCollection = () => ({
+  type: productFilterType.RESET_SELECTED_COLLECTION,
+})
+
 const setCountedProducts = (data: any) => {
   return {
     type: productFilterType.SET_COUNTED_PRODUCT,
@@ -50,12 +58,18 @@ const setCountedProducts = (data: any) => {
   }
 }
 
-export const fetchCountProduct = params => {
-  const globState = deepClone(store.getState())
+export const setSelectedCategory = data => {
+  return {
+    type: productFilterType.SET_SELECTED_CATEGORY,
+    payload: data,
+  }
+}
 
+export const fetchCountProduct = params => {
+  const productFilter = deepClone(store.getState().productFilter)
   const _params = {
-    ...globState.productFilter.selected,
-    ...globState.productFilter.selected.prices,
+    ...productFilter.selected,
+    ...productFilter.selected.prices,
     ...params,
     is_commerce: true,
   }
@@ -98,6 +112,19 @@ export const changeSelectedBrand = (data: number) => {
   return {
     type: productFilterType.CHANGE_SELECTED_BRAND,
     payload: data,
+  }
+}
+
+export const setActivePage = ({ type, ids }) => {
+  return {
+    type: productFilterType.SET_ACTIVE_PAGE,
+    payload: { type, ids },
+  }
+}
+
+export const clearActivePage = () => {
+  return {
+    type: productFilterType.CLEAR_ACTIVE_PAGE,
   }
 }
 

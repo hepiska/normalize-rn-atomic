@@ -27,8 +27,13 @@ export const fontStyle =
           fontFamily: 'FuturaDemi',
         },
         playfairBold: {
-          fontFamily: 'Playfair Display',
-          fontWeight: 'bold',
+          fontFamily: 'PlayfairDisplay-Bold',
+        },
+        playfairMedium: {
+          fontFamily: 'PlayfairDisplay-Medium',
+        },
+        playfair: {
+          fontFamily: 'PlayfairDisplay-Regular',
         },
       })
     : StyleSheet.create({
@@ -53,6 +58,12 @@ export const fontStyle =
         },
         playfairBold: {
           fontFamily: 'PlayfairDisplay-Bold',
+        },
+        playfairMedium: {
+          fontFamily: 'PlayfairDisplay-Medium',
+        },
+        playfair: {
+          fontFamily: 'PlayfairDisplay-Regular',
         },
       })
 

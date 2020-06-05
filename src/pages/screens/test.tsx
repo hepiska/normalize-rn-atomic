@@ -4,7 +4,10 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import ImageAutoSchale from '@components/atoms/image-autoschale'
 import PostInsight from '@components/molecules/post-insight'
+import TwoColumnListLoader from '@components/atoms/loaders/two-column-card'
 import { images } from '@utils/constants'
+import ProductLisyHeader from '@components/atoms/loaders/product-list-header'
+import SearchAndFilterLoader from '@components/atoms/loaders/search-filter-loader'
 
 const TestPage = props => {
   const [image, setImage] = React.useState(null)
@@ -14,13 +17,13 @@ const TestPage = props => {
   const renimage = image || { uri: '' }
 
   return (
-    <View style={{ padding: 16, flex: 1 }} ref={toolTipsParent}>
+    <View style={{ flex: 1 }} ref={toolTipsParent}>
       <View ref={toolTipsTarget}>
         <Text>sas</Text>
       </View>
       <TouchableOpacity onPress={() => {}} />
       <ScrollView>
-        <PostInsight />
+        <SearchAndFilterLoader />
       </ScrollView>
     </View>
   )

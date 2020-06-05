@@ -11,6 +11,7 @@ const initialState = {
   search: '',
   section: 'brand',
   data: {},
+  activePage: {},
   selected: {
     collection_ids: '',
     prices: {
@@ -47,6 +48,17 @@ const productFilterReducer: Reducer<any> = (
       newState.selected.prices[action.payload.type] = action.payload.value
       return newState
 
+    case productFilterType.SET_ACTIVE_PAGE:
+      const newActive = {}
+      newActive[action.payload.type] = action.payload.ids.join(',')
+      // newActive[action.payload.type] = action.payload.ids.join(',')
+      newState.activePage = { ...newActive }
+      return newState
+
+    case productFilterType.CLEAR_ACTIVE_PAGE:
+      newState.activePage = {}
+      return newState
+
     case productFilterType.SET_FILTER:
       newState.data = action.payload
       if (action.payload.prices) {
@@ -81,6 +93,10 @@ const productFilterReducer: Reducer<any> = (
 
       return newState
 
+    case productFilterType.RESET_SELECTED_COLLECTION:
+      newState.selected.collection_ids = ''
+      return newState
+
     case productFilterType.CHANGE_SELECTED_CATEGORY:
       if (!selected.category_ids) {
         selected.category_ids = ',' + action.payload
@@ -93,6 +109,11 @@ const productFilterReducer: Reducer<any> = (
       selected.category_ids = selected.category_ids.replace(/(^,)|(,$)/g, '')
       newState.selected = selected
 
+      return newState
+
+    case productFilterType.SET_SELECTED_CATEGORY:
+      selected.category_ids = action.payload
+      newState.selected = selected
       return newState
 
     case productFilterType.CHANGE_SELECTED_BRAND:
@@ -112,7 +133,9 @@ const productFilterReducer: Reducer<any> = (
       newState.selected = {
         ...initialState.selected,
         prices: newState.selected.prices,
-        collection_ids: newState.selected.collection_ids,
+        collection_ids: newState.activePage.collection_ids || '',
+        category_ids: newState.activePage.category_ids || '',
+        brand_ids: newState.activePage.brand_ids || '',
       }
       newState.search = ''
       newState.applied = newState.selected

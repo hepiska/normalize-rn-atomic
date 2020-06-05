@@ -51,6 +51,9 @@ const categoryReducer: Reducer<PostState> = (
     case categoryActionType.SET_ACTIVE_CATEGORY:
       newState.activeCategory = action.payload
       return newState
+    case categoryActionType.ERROR:
+      newState.error = action.payload
+      return newState
     case categoryActionType.SET_LOADING:
       newState.loading = action.payload
       return newState

@@ -48,7 +48,7 @@ export const getFeaturedCategories = () => ({
     url: '/categories/featured',
     schema: [schema.category],
     startNetwork: () => {
-      return setCategoryLoading(true)
+      return [setCategoryLoading(true), setCategoryError(null)]
     },
     endNetwork: (status, error) => {
       if (status === 'error') {

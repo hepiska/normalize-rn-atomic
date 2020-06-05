@@ -48,11 +48,11 @@ export const getCollectionBySlug = slug => ({
     url: '/collections/' + slug,
     schema: schema.collection,
     startNetwork: () => {
-      return setCollectionLoading(true)
+      return [setCollectionLoading(true), setCollectionError(null)]
     },
-    endNetwork: status => {
+    endNetwork: (status, error) => {
       if (status === 'error') {
-        return [setActiveCollection(null)]
+        return [setCollectionError(error), setActiveCollection(null)]
       }
       return setCollectionLoading(false)
     },

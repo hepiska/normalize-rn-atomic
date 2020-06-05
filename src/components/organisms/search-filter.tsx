@@ -27,6 +27,7 @@ interface SearchIconType {
   selectedFilter: Array<string>
   onfilterSelected?: (FilterItemType) => void
   style?: ViewStyle
+  itemStyle?: ViewStyle
   inputProps?: TextInputProps
 }
 
@@ -46,6 +47,7 @@ const SearchFilter = ({
   selectedFilter,
   onfilterSelected,
   style,
+  itemStyle,
   filterItems,
   inputProps,
 }: SearchIconType) => {
@@ -86,7 +88,7 @@ const SearchFilter = ({
                   onPress={_onPress(data)}
                   key={`item-${index}`}
                   title={data.name}
-                  style={{ ...styles.item, ...border }}
+                  style={{ ...styles.item, ...border, ...itemStyle }}
                 />
               )
             })}

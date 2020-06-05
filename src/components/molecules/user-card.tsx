@@ -37,6 +37,7 @@ const styles = StyleSheet.create({
     marginTop: 8,
     width: 128,
     justifyContent: 'center',
+    alignItems: 'center',
     flexDirection: 'row',
   },
   container: {
@@ -69,6 +70,17 @@ const styles = StyleSheet.create({
     paddingLeft: 4,
     paddingRight: 4,
   },
+  usernameText: {
+    ...fontStyle.helveticaBold,
+    fontSize: 14,
+    color: colors.black100,
+  },
+  userText: {
+    ...fontStyle.helvetica,
+    fontSize: 14,
+    textAlign: 'center',
+    color: colors.black70,
+  },
 })
 
 class UserCard extends React.PureComponent<UserCardType, any> {
@@ -89,27 +101,24 @@ class UserCard extends React.PureComponent<UserCardType, any> {
         <TouchableOpacity
           style={styles.contentSegment}
           onPress={this.goToDetail}>
-          <Text style={{ ...fontStyle.helveticaBold, fontSize: 14 }}>
-            {user.username}
-          </Text>
+          <Text style={styles.usernameText}>{user.username}</Text>
           {user.group_id !== 4 && (
             <Gradient
               {...colors.ActivePurple}
               style={{
-                borderRadius: 16,
+                borderRadius: 14,
                 justifyContent: 'center',
+                height: 16,
+                width: 16,
                 alignItems: 'center',
                 marginLeft: 8,
-                padding: 4,
               }}>
               <Icon name="check" color="white" size={10} />
             </Gradient>
           )}
         </TouchableOpacity>
         <View style={styles.contentSegment}>
-          <Text style={{ ...fontStyle.helvetica, fontSize: 14 }}>
-            {user.name}
-          </Text>
+          <Text style={styles.userText}>{user.name}</Text>
         </View>
         <View style={{ flexDirection: 'row', marginTop: 16 }}>
           <Button
