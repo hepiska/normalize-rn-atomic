@@ -1,15 +1,15 @@
-import React, { Component, memo } from 'react'
+import React, { Component, memo, useState, useEffect } from 'react'
 import NavbarTop from '@components/molecules/navbar-top'
 import {
   View,
   Text,
   FlatList,
-  ScrollView,
   ViewStyle,
   StyleSheet,
   TextInputProps,
 } from 'react-native'
 import Field from '@components/atoms/field'
+import { ScrollView } from 'react-native-gesture-handler'
 import { colors } from '@utils/constants'
 import Pill from '@components/atoms/pill'
 import Icon from 'react-native-vector-icons/FontAwesome'
@@ -51,9 +51,25 @@ const SearchFilter = ({
   filterItems,
   inputProps,
 }: SearchIconType) => {
+  let timer = null
+  const [selected, setSelected] = useState([])
+  useEffect(() => {
+    setSelected(selectedFilter)
+    return () => {
+      if (timer) clearTimeout(timer)
+    }
+  }, [])
+
   const _onPress = item => () => {
-    if (onfilterSelected) {
-      onfilterSelected(item)
+    setSelected([item.value])
+    if (timer) {
+      timer = null
+    } else {
+      timer = setTimeout(() => {
+        if (onfilterSelected) {
+          onfilterSelected(item)
+        }
+      }, 600)
     }
   }
   return (
@@ -81,7 +97,7 @@ const SearchFilter = ({
             horizontal
             style={onSearchChange ? { marginVertical: 12 } : {}}>
             {filterItems.map((data, index) => {
-              const isSelected = selectedFilter?.includes(data.value)
+              const isSelected = selected?.includes(data.value)
               const border = isSelected ? { borderColor: colors.black100 } : {}
               return (
                 <Pill

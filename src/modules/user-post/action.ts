@@ -8,6 +8,7 @@ export const actionType = {
   SET_ERROR: 'user-post/SET_ERROR',
   SET_ORDER: 'user-post/SET_ORDER',
   ADD_ORDER: 'user-post/ADD_ORDER',
+  SET_REACH_END: 'user-post/SET_REACH_END',
 }
 
 const setuserPostLoading = data => ({
@@ -15,6 +16,7 @@ const setuserPostLoading = data => ({
   payload: data,
 })
 const setuserPostError = data => ({ type: actionType.SET_ERROR, payload: data })
+const setReachEnd = data => ({ type: actionType.SET_REACH_END, payload: data })
 
 const setUserPostOrder = (data, offset) => {
   if (offset) {
@@ -41,11 +43,15 @@ export const getUserPosts = (params): any => {
       startNetwork: () => setuserPostLoading(true),
       // endNetwork: () => setuserPostLoading(false),
       success: data => {
-        return [
+        const res = [
           ...dispatchPostEntities(data.entities),
           setUserPostOrder(data.result, params?.offset),
           setuserPostLoading(false),
         ]
+        if (data.result.length === 0) {
+          res.push(setReachEnd(true))
+        }
+        return res
       },
     },
   }

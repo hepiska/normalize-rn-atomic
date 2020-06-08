@@ -129,6 +129,7 @@ class MySavedProduct extends React.Component<any, any> {
     return (
       <View style={{ backgroundColor: 'white', paddingHorizontal: 16 }}>
         <SearchFilter
+          key="my-saved-filter"
           style={{ marginVertical: 8 }}
           selectedFilter={selectedFilter}
           onfilterSelected={this._selectFilter}
@@ -145,11 +146,19 @@ class MySavedProduct extends React.Component<any, any> {
     if (selected === 'products') {
       return (
         <ProductItem
-          style={{
-            margin: 16,
-            flex: 1,
-            // width: width / 2 - 16,
-          }}
+          style={
+            index / 2 === 0
+              ? {
+                  flex: 1,
+                  marginRight: 8,
+                  // width: width / 2 - 16,
+                }
+              : {
+                  flex: 1,
+                  marginLeft: 8,
+                  // width: width / 2 - 16,
+                }
+          }
           onAddtoCart={this._openCartModal(item)}
           productId={item}
           key={'producty ' + item + index}
@@ -195,7 +204,7 @@ class MySavedProduct extends React.Component<any, any> {
         <List
           data={data}
           loading={loading}
-          key={selectedFilter[0]}
+          key={'my-post-list' + selectedFilter[0]}
           onScroll={this._hanleScroll}
           style={{ paddingHorizontal: 8, paddingBottom: 240 }}
           columnWrapperStyle={{
@@ -204,6 +213,7 @@ class MySavedProduct extends React.Component<any, any> {
           }}
           bounces={false}
           onEndReached={this._fetchMore}
+          nestedScrollEnabled={true}
           scrollEnabled={scrollEnabled}
           ListEmptyComponent={this._emptyState}
           layoutType={this._getLayout()}

@@ -249,8 +249,9 @@ class ProductListPage extends React.Component<any, any> {
           this.props.navigation.navigate('modals', {
             screen: 'Share',
             params: {
-              title: 'The shonet product' + product.name,
-              uri: Config.SHONET_URI + '/products/' + product.id,
+              title: product.name + ' - The Shonet',
+              uri:
+                Config.SHONET_URI + '/products/' + product.slug || product.id,
               message: 'Shop ' + product.name + ' at The Shonet',
             },
           })

@@ -129,12 +129,25 @@ const Header = props => {
 
 const FilterBottomSheet = props => {
   const [finishAnimation, setFinishAnimation] = useState(false)
+  const bottomSheetRef = useRef(null)
+  let timeOut = null
 
   useEffect(() => {
     InteractionManager.runAfterInteractions(() => {
       setFinishAnimation(true)
     })
+    return () => {
+      if (timeOut) clearTimeout(timeOut)
+    }
   }, [])
+
+  useEffect(() => {
+    if (finishAnimation) {
+      timeOut = setTimeout(() => {
+        bottomSheetRef.current.snapTo(0)
+      }, 400)
+    }
+  }, [finishAnimation])
 
   const { isOpen, section } = props
 
@@ -148,7 +161,10 @@ const FilterBottomSheet = props => {
       {finishAnimation && (
         <BottomSheet
           onCloseEnd={() => props.navigation.goBack()}
-          initialSnap={0}
+          // ref={bottomSheetRef}
+          enabledBottomInitialAnimation={true}
+          initialSnap={_snapPoint.length - 1}
+          enabledBottomClamp={true}
           enabledContentGestureInteraction={false}
           renderHeader={() => (
             <Header

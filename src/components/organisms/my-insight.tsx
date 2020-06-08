@@ -49,6 +49,7 @@ class MyInsight extends React.Component<any, any> {
     return (
       <View style={{ backgroundColor: 'white', paddingHorizontal: 16 }}>
         <SearchFilter
+          key="my-insight-filter"
           style={{ marginVertical: 8 }}
           selectedFilter={selectedFilter}
           onfilterSelected={this._selectFilter}
@@ -86,6 +87,7 @@ class MyInsight extends React.Component<any, any> {
       <View style={{ width, flex: 1 }}>
         {this._header()}
         <ScrollView
+          key="my-post-list"
           nestedScrollEnabled={true}
           scrollEnabled={scrollEnabled}
           onScroll={this.handleScroll}

@@ -19,7 +19,7 @@ class MyPost extends React.Component<any, any> {
     selectedFilter: this.props.userPostStatus,
   }
 
-  limit = 5
+  limit = 20
   skip = 0
   lastskip = 0
 
@@ -58,7 +58,7 @@ class MyPost extends React.Component<any, any> {
   }
 
   _fetchMore = () => {
-    if (!this.props.loading) {
+    if (!this.props.loading && !this.props.isEndReached) {
       const newskip = this.skip + 1
       if (newskip > this.lastskip) {
         this.skip = newskip
@@ -116,6 +116,7 @@ class MyPost extends React.Component<any, any> {
     return (
       <View style={{ backgroundColor: 'white' }}>
         <SearchFilter
+          key="my-post-filter"
           style={{ marginVertical: 8 }}
           selectedFilter={displayedSelected}
           onfilterSelected={this._selectFilter}
@@ -142,21 +143,25 @@ class MyPost extends React.Component<any, any> {
   }
 
   render() {
-    const { posts, scrollEnabled } = this.props
+    const { posts, scrollEnabled, loading } = this.props
     return (
       <View style={{ width }}>
         <List
           data={posts}
+          key="my-post-list"
           onScroll={this._hanleScroll}
+          refreshing={loading}
+          onRefresh={() => {}}
           style={{ paddingHorizontal: 8 }}
           onEndReached={this._fetchMore}
-          scrollEnabled={scrollEnabled}
+          nestedScrollEnabled={true}
+          scrollEnabled={false}
           ListEmptyComponent={this._emptyState}
           layoutType="mansory"
           columnStyle={{ flex: 1, marginHorizontal: 8 }}
           numColumns={2}
           header={this._header}
-          ListFooterComponent={<View style={{ height: 200 }} />}
+          ListFooterComponent={<View style={{ height: 40 }} />}
           renderItem={this._renderItem}
         />
       </View>
@@ -167,6 +172,7 @@ class MyPost extends React.Component<any, any> {
 const mapStateToProps = state => ({
   userPostStatus: state.userPosts.status,
   posts: state.userPosts.order,
+  isEndReached: state.userPosts.isEndReached,
   loading: state.userPosts.loading,
 })
 const mapDispatchToProps = dispatch =>

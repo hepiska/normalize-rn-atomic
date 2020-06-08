@@ -105,7 +105,6 @@ class ShopPage extends React.Component<any, any> {
       <>
         <NavbarTopAnimated
           parentDim={{ coverheight: this.dimentionConstant.imageHeight }}
-          showBars
           showSearch
           showCart
           y={y}

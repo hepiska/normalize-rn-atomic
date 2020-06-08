@@ -6,6 +6,7 @@ import {
   View,
   Image,
   ViewStyle,
+  RefreshControl,
   TouchableWithoutFeedback,
   InteractionManager,
   Dimensions,
@@ -228,6 +229,46 @@ class ProfilPage extends React.PureComponent<any, any> {
   _onLayout = e => {
     ;(this as any).profileLayout = e.nativeEvent.layout
   }
+
+  TabMenuData = [
+    {
+      name: 'userpost',
+      title: 'Posts',
+      Component: (
+        <MyPost
+          navigation={this.props.navigation}
+          scrollEnabled={this.state.enableScrollContent}
+          disableScroll={this._disableContentScroll}
+          key="tabmenu-userpost"
+        />
+      ),
+    },
+    {
+      name: 'saved',
+      title: 'Saved List',
+      Component: (
+        <MySaved
+          navigation={this.props.navigation}
+          scrollEnabled={this.state.enableScrollContent}
+          disableScroll={this._disableContentScroll}
+          key="tabmenu-saved"
+        />
+      ),
+    },
+    {
+      name: 'insight',
+      title: 'Insight',
+      Component: (
+        <MyInsight
+          navigation={this.props.navigation}
+          scrollEnabled={this.state.enableScrollContent}
+          disableScroll={this._disableContentScroll}
+          key="tabmenu-insight"
+        />
+      ),
+    },
+  ]
+
   render() {
     const { isAuth, navigation, user } = this.props
     const {
@@ -239,45 +280,7 @@ class ProfilPage extends React.PureComponent<any, any> {
       finishAnimation,
     } = this.state
 
-    const TabMenuData = [
-      {
-        name: 'userpost',
-        title: 'Posts',
-        Component: (
-          <MyPost
-            navigation={this.props.navigation}
-            scrollEnabled={this.state.enableScrollContent}
-            disableScroll={this._disableContentScroll}
-            key="tabmenu-userpost"
-          />
-        ),
-      },
-      {
-        name: 'saved',
-        title: 'Saved List',
-        Component: (
-          <MySaved
-            navigation={this.props.navigation}
-            scrollEnabled={this.state.enableScrollContent}
-            disableScroll={this._disableContentScroll}
-            key="tabmenu-saved"
-          />
-        ),
-      },
-      {
-        name: 'insight',
-        title: 'Insight',
-        Component: (
-          <MyInsight
-            navigation={this.props.navigation}
-            scrollEnabled={this.state.enableScrollContent}
-            disableScroll={this._disableContentScroll}
-            key="tabmenu-insight"
-          />
-        ),
-      },
-    ]
-
+    // const TabMenuData =
     const imgSize = isVisible
       ? { width: width, height: width }
       : { width: 64, height: 64 }
@@ -303,7 +306,7 @@ class ProfilPage extends React.PureComponent<any, any> {
         <>
           <NavbarTop title={showName ? user.name : 'My profile'} />
           {finishAnimation ? (
-            <View style={{ height: height }}>
+            <View style={{ flex: 1 }}>
               <ScrollView
                 showsVerticalScrollIndicator={false}
                 onScroll={this._onScroll}
@@ -451,10 +454,12 @@ class ProfilPage extends React.PureComponent<any, any> {
                 <View
                   style={{
                     width,
-                    height,
+                    flex: 1,
+                    // height,
                   }}>
                   <TabMenu
-                    items={TabMenuData}
+                    isLazyload
+                    items={this.TabMenuData}
                     forceRender={enableScrollContent}
                     selectedItem={activeTab}
                     onChangeTab={this._changeSelected}
@@ -487,6 +492,7 @@ const mapStateToProps = state => {
     username = state.auth.data.user.username
     user = state.user.data[state.auth.data.user.id] || state.auth.data.user
   }
+
   return {
     isAuth,
     username,

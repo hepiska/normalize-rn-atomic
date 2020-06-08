@@ -7,7 +7,10 @@ import { bindActionCreators } from 'redux'
 import { getProductSaved } from '@modules/product-saved/action'
 import { getPostLiked } from '@modules/post-liked/action'
 import GlobalErrorAndWarning from '@src/components/molecules/global-error-warning'
-import { createStackNavigator } from '@react-navigation/stack'
+import {
+  createStackNavigator,
+  TransitionPresets,
+} from '@react-navigation/stack'
 import { createDrawerNavigator } from '@react-navigation/drawer'
 import ConstumeDrawer from '@components/organisms/drawer-costume'
 
@@ -22,12 +25,19 @@ const MainScreens = () => (
     <Stack.Screen
       name="Main"
       component={MainPage}
-      options={{ headerShown: false, animationEnabled: false }}
+      options={{
+        ...TransitionPresets.SlideFromRightIOS,
+        headerShown: false,
+        animationEnabled: false,
+      }}
     />
     <Stack.Screen
       name="Screens"
       component={Screens}
-      options={{ headerShown: false }}
+      options={{
+        ...TransitionPresets.SlideFromRightIOS,
+        headerShown: false,
+      }}
     />
   </Stack.Navigator>
 )
@@ -54,8 +64,8 @@ class Pages extends React.Component<any, any> {
           <Stack2.Screen
             name="RootScreens"
             options={{
+              ...TransitionPresets.SlideFromRightIOS,
               headerShown: false,
-              cardStyle: { backgroundColor: 'transparent' },
             }}
             component={MainWithModal}
           />

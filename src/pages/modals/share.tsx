@@ -106,12 +106,27 @@ class ShareModal extends React.Component<any, any> {
   }
   _ref: any = React.createRef()
 
+  timeOut = null
+
   componentDidMount() {
     InteractionManager.runAfterInteractions(() => {
       this.setState({ finishAnimation: true })
     })
   }
 
+  componentWillUnmount() {
+    if (this.timeOut) {
+      clearTimeout(this.timeOut)
+    }
+  }
+
+  componentDidUpdate() {
+    if (this.state.finishAnimation) {
+      this.timeOut = setTimeout(() => {
+        this._ref.snapTo(this.state.currentPos)
+      }, 150)
+    }
+  }
   _closeModal = () => this.props.navigation.goBack()
   _changeHeight = () => {
     if (this.state.currentPos === 1) {
@@ -211,12 +226,14 @@ class ShareModal extends React.Component<any, any> {
       </>
     )
   }
+  snapPoints = [500, 250, 0]
   render() {
     return (
       <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.7)' }}>
         <BottomSheet
-          snapPoints={[0, 250, 500]}
-          initialSnap={this.state.currentPos}
+          snapPoints={this.snapPoints}
+          snapEnabled={false}
+          initialSnap={this.snapPoints.length - 1}
           onClose={this._closeModal}
           bottomSheetProps={{
             enabledGestureInteraction: false,

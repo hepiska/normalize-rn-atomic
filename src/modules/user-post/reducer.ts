@@ -17,6 +17,7 @@ interface TransactionState {
 const initialState: any = {
   active: null,
   status: ['published', 'draft', 'archived'],
+  isEndReached: false,
   postcount: {},
   order: Immutable([]),
   loading: false,
@@ -42,6 +43,8 @@ const userPostReducer: Reducer<TransactionState> = (
     case actionType.SET_ERROR:
       newState.error = payload
       return newState
+    case actionType.SET_REACH_END:
+      newState.reachedEnd = payload
     default:
       return newState
   }

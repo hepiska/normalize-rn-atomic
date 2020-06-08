@@ -156,11 +156,11 @@ class ListMansoryStickyHeader extends React.Component<
           keyExtractor={this._keyExtractor}
           renderItem={this._renderSection}
         /> */}
-        {loading && (
+        {/* {loading && (
           <View style={styles.loaderContainerL}>
             <CircleLoader style={styles.loader} />
           </View>
-        )}
+        )} */}
       </View>
     )
   }

@@ -242,7 +242,7 @@ class Productlist extends Component<any, any> {
     if (brand) {
       params.brand_ids = brand.id
     }
-    if (!appliedFilters.category_ids) {
+    if (!appliedFilters.category_ids && category) {
       params.category_ids = category.id
     }
 
@@ -362,6 +362,10 @@ class Productlist extends Component<any, any> {
       headerData.title = collection.title
       headerData.image = collection.landscape_image_url || headerData.image
     }
+    if (!headerData.image) {
+      return null
+    }
+
     const loading = isCategoryLoading || isBrandLoading || isCollectionLoading
     return this.props.headerError ? (
       <ErrorOrg />
