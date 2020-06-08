@@ -43,11 +43,7 @@ const styles = StyleSheet.create({
 
 const isAllChildernIncluded = (children, str) => {
   let res = true
-<<<<<<< HEAD
   for (let i = 0; i < children?.length; i++) {
-=======
-  for (let i = 0; i < children.length; i++) {
->>>>>>> 35540c5cdbceb00b400bb4eb130eb7a5797ad8ad
     res = res && str.includes(children[i])
     if (!res) {
       return res

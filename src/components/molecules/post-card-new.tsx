@@ -478,6 +478,7 @@ const VerticalCart = ({
 class PostListItem extends React.PureComponent<PostListItemType, any> {
   state: any = {
     defaultImage: null,
+    isPostLiked: this.props.isLiked,
   }
 
   _onLike = () => {
@@ -485,6 +486,9 @@ class PostListItem extends React.PureComponent<PostListItemType, any> {
       navigate('modals', { screen: 'LoginModal' })
     } else {
       this.props.onLike(this.props.post.id)
+      this.setState(state => ({
+        isPostLiked: !state.isPostLiked,
+      }))
     }
   }
 
@@ -527,7 +531,7 @@ class PostListItem extends React.PureComponent<PostListItemType, any> {
       type = 'default',
       isLiked,
     } = this.props
-    const { layout } = this.state
+    const { layout, isPostLiked } = this.state
     if (post) {
       if (fullscreen) {
         return (
@@ -543,7 +547,7 @@ class PostListItem extends React.PureComponent<PostListItemType, any> {
             type={type}
             onShare={this._onShare}
             onLayout={this._onLayout}
-            isLiked={isLiked}
+            isLiked={isPostLiked}
           />
         )
       } else {
@@ -558,7 +562,7 @@ class PostListItem extends React.PureComponent<PostListItemType, any> {
             type={type}
             onShare={this._onShare}
             onLayout={this._onLayout}
-            isLiked={isLiked}
+            isLiked={isPostLiked}
           />
         )
       }

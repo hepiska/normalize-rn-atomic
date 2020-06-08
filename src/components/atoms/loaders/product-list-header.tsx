@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-import React, { useState } from 'react'
-=======
 import React from 'react'
->>>>>>> 35540c5cdbceb00b400bb4eb130eb7a5797ad8ad
 import { View, ViewStyle } from 'react-native'
 import ContentLoader from 'react-content-loader/native'
 import { Rect } from 'react-native-svg'

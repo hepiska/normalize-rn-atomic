@@ -124,6 +124,7 @@ class ProductListPage extends React.Component<any, any> {
   state = {
     selectedVariant: 1,
     isUserSelectVariant: false,
+    isProductSaved: this.props.isSaved,
     finishAnimation: false,
   }
   _breadcrumb = []
@@ -222,7 +223,9 @@ class ProductListPage extends React.Component<any, any> {
 
   onSaveProduct = () => {
     const { isSaved, product, deleteProductSaved, addProductSaved } = this.props
-
+    this.setState(state => ({
+      isProductSaved: !state.isProductSaved,
+    }))
     const onSave = isSaved
       ? deleteProductSaved(product.id)
       : addProductSaved(product.id)
@@ -305,8 +308,12 @@ class ProductListPage extends React.Component<any, any> {
 
   render() {
     const { product, loading, isSaved } = this.props
-    const { selectedVariant, isUserSelectVariant, filteredAttributes } = this
-      .state as any
+    const {
+      selectedVariant,
+      isUserSelectVariant,
+      filteredAttributes,
+      isProductSaved,
+    } = this.state as any
     let returnExchange = ''
     if (
       product.flags?.includes('returnable') &&
@@ -547,7 +554,7 @@ class ProductListPage extends React.Component<any, any> {
                 }}
               />
 
-              <ButtonGroup items={this.groupButton(isSaved)} />
+              <ButtonGroup items={this.groupButton(isProductSaved)} />
 
               <View
                 style={{

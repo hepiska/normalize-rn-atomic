@@ -96,6 +96,7 @@ const ProductCard = ({
   const _onLayout = e => {
     setLayout(e.nativeEvent.layout)
   }
+  const [isProductSaved, setProductSaved] = useState(isSaved)
 
   const [defaultImage, setImage] = useState(null)
   const [attributeSelected, setAttributeSelected] = useState(null)
@@ -120,6 +121,7 @@ const ProductCard = ({
       triggerLogin()
     } else {
       onSave(product.id)
+      setProductSaved(!isProductSaved)
     }
   }
 
@@ -167,7 +169,7 @@ const ProductCard = ({
   ) : (
     <ProductCardVertical
       composeStyle={composeStyle}
-      isSaved={isSaved}
+      isSaved={isProductSaved}
       thumbnailImage={thumbnailImage}
       onPress={onPress}
       image={image}

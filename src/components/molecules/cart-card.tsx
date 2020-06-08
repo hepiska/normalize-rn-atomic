@@ -104,6 +104,7 @@ const Overlay = () => (
 class CartCard extends React.Component<CartCardType, any> {
   state = {
     defaultImage: null,
+    isProductSaved: this.props.isSaved,
   }
 
   componentDidMount() {
@@ -184,6 +185,9 @@ class CartCard extends React.Component<CartCardType, any> {
 
   _onSave = () => {
     this.props.onSave(this.props.product.id)
+    this.setState(state => ({
+      isProductSaved: !state.isProductSaved,
+    }))
   }
 
   render() {
@@ -198,6 +202,7 @@ class CartCard extends React.Component<CartCardType, any> {
       isSaved,
       gotoProductDetail,
     } = this.props
+    const { isProductSaved } = this.state
 
     const images = variant.image_urls
     const random = Math.floor(Math.random() * images.length)
@@ -323,9 +328,13 @@ class CartCard extends React.Component<CartCardType, any> {
                       <PressAbbleDiv onPress={this._onSave}>
                         <View style={{ ...styles.icon }}>
                           <IconMa
-                            name={isSaved ? 'bookmark' : 'bookmark-border'}
+                            name={
+                              isProductSaved ? 'bookmark' : 'bookmark-border'
+                            }
                             size={16}
-                            color={isSaved ? colors.black60 : colors.black90}
+                            color={
+                              isProductSaved ? colors.black60 : colors.black90
+                            }
                           />
                         </View>
                       </PressAbbleDiv>

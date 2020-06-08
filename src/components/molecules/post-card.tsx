@@ -89,6 +89,7 @@ const renderIconType = type => {
 class PostListItem extends React.PureComponent<PostListItemType, any> {
   state = {
     defaultImage: null,
+    isPostLiked: this.props.isLiked,
   }
 
   _onLike = () => {
@@ -96,6 +97,9 @@ class PostListItem extends React.PureComponent<PostListItemType, any> {
       navigate('modals', { screen: 'LoginModal' })
     } else {
       this.props.onLike(this.props.post.id)
+      this.setState(state => ({
+        isPostLiked: !state.isPostLiked,
+      }))
     }
   }
 
@@ -117,6 +121,7 @@ class PostListItem extends React.PureComponent<PostListItemType, any> {
       type = 'default',
       isLiked,
     } = this.props
+    const { isPostLiked } = this.state
 
     let width = 246
     if (!horizontal && style) {
@@ -224,7 +229,7 @@ class PostListItem extends React.PureComponent<PostListItemType, any> {
                   <IconFa
                     name="heart"
                     size={16}
-                    color={isLiked ? colors.black100 : colors.black50}
+                    color={isPostLiked ? colors.black100 : colors.black50}
                   />
                   <Font
                     style={{ ...fontStyle.helvetica }}
