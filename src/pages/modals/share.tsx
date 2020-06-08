@@ -40,7 +40,7 @@ const shareData = [
   {
     name: 'WhatsApp',
     id: 'whatsapp',
-    image: require('@assets/icons/whatsapp-icon-lage.png'),
+    image: require('@assets/icons/whatsapp-icon-large.png'),
     share_type: Share.Social.WHATSAPP,
   },
 ]
