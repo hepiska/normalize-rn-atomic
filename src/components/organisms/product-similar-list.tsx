@@ -5,7 +5,8 @@ import { connect } from 'react-redux'
 import { Div, Font } from '@components/atoms/basic'
 import { colors } from '@src/utils/constants'
 import { OutlineButton } from '@src/components/atoms/button'
-import ProductCard from '@components/molecules/product-card'
+import ProductCard from '@components/molecules/product-card-new'
+// import ProductCard from '@components/molecules/product-card'
 import { productListData } from '@hocs/data/product'
 import { productApi } from '@modules/product/action'
 import { fontStyle } from '../commont-styles'
@@ -56,10 +57,11 @@ class ProductSimilar extends Component<any, any> {
         key={item}
         productId={item}
         style={{
-          wrappermargin: 0,
-          paddingHorizontal: 0,
-          minHeight: null,
+          // wrappermargin: 0,
+          // paddingHorizontal: 0,
+          // minHeight: null,
           width: width / 2 - 24,
+          // flex: 1,
         }}
       />
     )
@@ -68,7 +70,7 @@ class ProductSimilar extends Component<any, any> {
   render() {
     const { products, loading } = this.props
     return (
-      <Div _flex={1} _margin="64px 0px" _width="100%" align="flex-start">
+      <Div _margin="64px 0px" align="flex-start">
         <View style={{ marginLeft: 0, marginRight: 0 }}>
           <Text
             style={{
@@ -82,15 +84,14 @@ class ProductSimilar extends Component<any, any> {
         {loading ? (
           <YouMightAlsoLikeLoader />
         ) : (
-          <Div
-            _width="100%"
-            _direction="row"
-            _flex={1}
-            align="flex-start"
-            justify="space-between"
-            style={{ flexWrap: 'wrap' }}>
+          <View
+            style={{
+              flexWrap: 'wrap',
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+            }}>
             {products.map(item => this._renderItem({ item }))}
-          </Div>
+          </View>
         )}
       </Div>
     )

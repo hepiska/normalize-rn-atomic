@@ -13,7 +13,8 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { productApi } from '@modules/product/action'
 import NavbarTop from '@components/molecules/navbar-top'
-import ProductCard from '@components/molecules/product-card'
+// import ProductCard from '@components/molecules/product-card'
+import ProductCard from '@components/molecules/product-card-new'
 import { productListData } from '@hocs/data/product'
 import { getBrand } from '@modules/brand/action'
 import FilterTriger from '@components/organisms/product-filter-buttons'
@@ -308,7 +309,9 @@ class Productlist extends Component<any, any> {
             style={{
               // flex: 1,
               // wrappermargin: 8,
-              width: width / 2,
+              // width: width / 2,
+              margin: 8,
+              flex: 1,
             }}
           />,
         )

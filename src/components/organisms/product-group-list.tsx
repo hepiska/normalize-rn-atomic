@@ -16,7 +16,8 @@ import ImagesWithPreviews from '@components/organisms/images-with-preview'
 import ContentExpandable from '@components/molecules/content-expandable'
 import ImageCoverContentLayout from '@src/components/layouts/image-cover-animated-content'
 import ProductOverviewCard from '@src/components/molecules/product-overview-card-body'
-import ProductCard from '@components/molecules/product-card'
+import ProductCard from '@components/molecules/product-card-new'
+// import ProductCard from '@components/molecules/product-card'
 import Animated from 'react-native-reanimated'
 
 const { width } = Dimensions.get('screen')
@@ -34,7 +35,11 @@ const renderItem = ({ item }) => {
   return (
     <ProductItem
       product={item}
-      style={{ width: width / 2 - 16 - 8, marginRight: 16 }}
+      // style={{ width: width / 2 - 16 - 8, marginRight: 16 }}
+      style={{
+        width: width / 2 - 16,
+        margin: 16,
+      }}
     />
   )
 }

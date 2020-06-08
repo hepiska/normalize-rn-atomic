@@ -10,7 +10,8 @@ import { getPostLiked } from '@modules/post-liked/action'
 
 import { getProductSaved } from '@modules/product-saved/action'
 import PostListItem from '@src/components/molecules/post-card-new'
-import ProductCard from '@src/components/molecules/product-card'
+// import ProductCard from '@src/components/molecules/product-card'
+import ProductCard from '@src/components/molecules/product-card-new'
 
 import { postListData } from '@hocs/data/post'
 import { productListData } from '@hocs/data/product'
@@ -145,8 +146,9 @@ class MySavedProduct extends React.Component<any, any> {
       return (
         <ProductItem
           style={{
-            wrappermargin: 16,
-            width: width / 2,
+            margin: 16,
+            flex: 1,
+            // width: width / 2 - 16,
           }}
           onAddtoCart={this._openCartModal(item)}
           productId={item}

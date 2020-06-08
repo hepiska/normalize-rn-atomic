@@ -17,7 +17,8 @@ import { globalDimention, colors } from '@utils/constants'
 import NavbarTop from '@components/molecules/navbar-top'
 import SearchEmptyState from '@components/molecules/search-empty-state'
 import { productListData } from '@hocs/data/product'
-import ProductCard from '@components/molecules/product-card'
+// import ProductCard from '@components/molecules/product-card'
+import ProductCard from '@components/molecules/product-card-new'
 import InviniteLoader from '@src/components/atoms/loaders/invinite'
 
 const { width } = Dimensions.get('screen')
@@ -121,9 +122,11 @@ class SearchList extends Component<any, any> {
         productId={item}
         key={'' + item}
         style={{
-          flex: 1 / 2,
-          wrappermargin: 4,
-          width: width / 2,
+          // flex: 1 / 2,
+          // wrappermargin: 4,
+          // width: width / 2,
+          margin: 8,
+          flex: 1,
         }}
       />
     )
