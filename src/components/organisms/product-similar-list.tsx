@@ -57,9 +57,6 @@ class ProductSimilar extends Component<any, any> {
         key={item}
         productId={item}
         style={{
-          // wrappermargin: 0,
-          // paddingHorizontal: 0,
-          // minHeight: null,
           width: width / 2 - 24,
           // flex: 1,
         }}

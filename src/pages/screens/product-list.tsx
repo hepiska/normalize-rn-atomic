@@ -307,9 +307,7 @@ class Productlist extends Component<any, any> {
             // product={item}
             key={'' + section.data[i] + index}
             style={{
-              // flex: 1,
-              // wrappermargin: 8,
-              // width: width / 2,
+              maxWidth: width / 2 - 16,
               margin: 8,
               flex: 1,
             }}

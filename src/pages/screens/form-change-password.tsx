@@ -1,5 +1,5 @@
-import React, { Component, useMemo } from 'react'
-import { View, Text, Alert } from 'react-native'
+import React, { Component, useMemo, useEffect, useState } from 'react'
+import { View, Text, Alert, InteractionManager } from 'react-native'
 import { connect } from 'react-redux'
 import NavbarTop from '@src/components/molecules/navbar-top'
 import { colors, regex } from '@utils/constants'
@@ -12,8 +12,17 @@ import { fontStyle } from '@src/components/commont-styles'
 import { changePassword } from '@modules/user/action'
 
 import { bindActionCreators } from 'redux'
+import FormLoader from '@src/components/atoms/loaders/form'
 
 const ChangePassword = props => {
+  const [finishAnimation, setFinishAnimation] = useState(false)
+
+  useEffect(() => {
+    InteractionManager.runAfterInteractions(() => {
+      setFinishAnimation(true)
+    })
+  }, [])
+
   const _onSubmit = async ({ isValid, state }) => {
     if (isValid) {
       const result = {}
@@ -59,59 +68,65 @@ const ChangePassword = props => {
           leftContent={['back']}
           style={{ borderBottomWidth: 1, borderBottomColor: colors.black50 }}
         />
-        <ScrollView style={{ flex: 1 }}>
-          <View style={{ paddingHorizontal: 16 }}>
-            <Text
-              style={{
-                ...fontStyle.helvetica,
-                fontSize: 14,
-                marginTop: 24,
-                marginBottom: 10,
-              }}>
-              Please enter your new password
-            </Text>
-            <TextInputOutline
-              label="Current Password"
-              style={formStyles.field}
-              value={state.current_password.value}
-              onChangeText={handleOnChange('current_password')}
-              error={state.current_password.error}
-              autoCapitalize="none"
-            />
-            <TextInputOutline
-              label="New Password"
-              style={formStyles.field}
-              value={state.new_password.value}
-              onChangeText={handleOnChange('new_password')}
-              error={state.new_password.error}
-              autoCapitalize="none"
-            />
-            <TextInputOutline
-              label="Confirm Password"
-              style={formStyles.field}
-              value={state.confirm_password.value}
-              onChangeText={handleOnChange('confirm_password')}
-              error={state.confirm_password.error}
-              autoCapitalize="none"
-            />
-          </View>
-        </ScrollView>
-        <View style={{ padding: 16 }}>
-          <GradientButton
-            onPress={handleOnSubmit}
-            loading={props.loading}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 0 }}
-            colors={['#3067E4', '#8131E2']}
-            title="Change Password"
-            fontStyle={formStyles.buttonText}
-            style={formStyles.button}
-            disabled={disable}
-          />
-        </View>
+        {finishAnimation ? (
+          <>
+            <ScrollView style={{ flex: 1 }}>
+              <View style={{ paddingHorizontal: 16 }}>
+                <Text
+                  style={{
+                    ...fontStyle.helvetica,
+                    fontSize: 14,
+                    marginTop: 24,
+                    marginBottom: 10,
+                  }}>
+                  Please enter your new password
+                </Text>
+                <TextInputOutline
+                  label="Current Password"
+                  style={formStyles.field}
+                  value={state.current_password.value}
+                  onChangeText={handleOnChange('current_password')}
+                  error={state.current_password.error}
+                  autoCapitalize="none"
+                />
+                <TextInputOutline
+                  label="New Password"
+                  style={formStyles.field}
+                  value={state.new_password.value}
+                  onChangeText={handleOnChange('new_password')}
+                  error={state.new_password.error}
+                  autoCapitalize="none"
+                />
+                <TextInputOutline
+                  label="Confirm Password"
+                  style={formStyles.field}
+                  value={state.confirm_password.value}
+                  onChangeText={handleOnChange('confirm_password')}
+                  error={state.confirm_password.error}
+                  autoCapitalize="none"
+                />
+              </View>
+            </ScrollView>
+            <View style={{ padding: 16 }}>
+              <GradientButton
+                onPress={handleOnSubmit}
+                loading={props.loading}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+                colors={['#3067E4', '#8131E2']}
+                title="Change Password"
+                fontStyle={formStyles.buttonText}
+                style={formStyles.button}
+                disabled={disable}
+              />
+            </View>
+          </>
+        ) : (
+          <FormLoader style={{ margin: 16 }} />
+        )}
       </>
     ),
-    [state, props, disable],
+    [state, props, disable, finishAnimation],
   )
 }
 

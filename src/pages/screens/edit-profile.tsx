@@ -6,6 +6,7 @@ import {
   ImageStore,
   Platform,
   Alert,
+  InteractionManager,
 } from 'react-native'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
@@ -25,6 +26,7 @@ import Camera from '@src/pages/modals/camera'
 import { request } from '@utils/services'
 import RNFS from 'react-native-fs'
 import { calculateYear } from '@utils/helpers'
+import FormLoader from '@src/components/atoms/loaders/form'
 
 const options = {
   gender: [
@@ -38,14 +40,19 @@ const EditProfile = props => {
   const [selectedDataPos, setSelectedDataPos] = useState<any>({})
   const [isCameraOpen, setCameraOpen] = useState(false)
   const [pictureSection, setPictureSection] = useState(null)
+  const [finishAnimation, setFinishAnimation] = useState(false)
+
   let pickerRef = null
   let datePickerRef = null
 
   useEffect(() => {
     const { userId } = props
-    if (userId) {
-      getUser(userId, 'id')
-    }
+    InteractionManager.runAfterInteractions(() => {
+      setFinishAnimation(true)
+      if (userId) {
+        getUser(userId, 'id')
+      }
+    })
   }, [])
 
   const _onSubmit = async ({ isValid, state }) => {
@@ -204,6 +211,8 @@ const EditProfile = props => {
     return null
   }
 
+  console.log('finishAnimation ---', finishAnimation)
+
   return useMemo(
     () => (
       <>
@@ -218,125 +227,141 @@ const EditProfile = props => {
           leftContent={['back']}
           style={{ borderBottomWidth: 1, borderBottomColor: colors.black50 }}
         />
-        <PickerPopup
-          pickerRef={e => (pickerRef = e)}
-          value={selectedDataPos[activeLevel]}
-          title={pickerTitle}
-          items={pickerOptions}
-          onValueChange={(value, index, data) => {
-            if (data) {
-              _changeSelectedDataPos(activeLevel, value)
-              handleOnChange(activeLevel)(data.name)
-            }
-          }}
-        />
-        <DatePicker
-          datePickerRef={e => (datePickerRef = e)}
-          value={
-            state.birthdate.value ? new Date(state.birthdate.value) : new Date()
-          }
-          onChange={date =>
-            handleOnChange('birthdate')(date.toLocaleDateString())
-          }
-          maximumDate={new Date(calculateYear(10))}
-        />
-        <ScrollView style={{ flex: 1, backgroundColor: 'white' }}>
-          <ProfilePicture
-            photoUrl={state.photo_url.value}
-            openCamera={openCamera}
-            type="edit"
-          />
-
-          {/* user info */}
-          <View style={{ paddingHorizontal: 16 }}>
-            <TextInputOutline
-              label="Username"
-              style={formStyles.field}
-              value={state.username.value}
-              onChangeText={handleOnChange('username')}
-              error={state.username.error}
-              autoCapitalize="none"
+        {finishAnimation ? (
+          <>
+            <PickerPopup
+              pickerRef={e => (pickerRef = e)}
+              value={selectedDataPos[activeLevel]}
+              title={pickerTitle}
+              items={pickerOptions}
+              onValueChange={(value, index, data) => {
+                if (data) {
+                  _changeSelectedDataPos(activeLevel, value)
+                  handleOnChange(activeLevel)(data.name)
+                }
+              }}
             />
-            <TextInputOutline
-              label="First Name"
-              style={formStyles.field}
-              value={state.first_name.value}
-              onChangeText={handleOnChange('first_name')}
-              error={state.first_name.error}
-              autoCapitalize="none"
-            />
-            <TextInputOutline
-              label="Last Name"
-              style={formStyles.field}
-              value={state.last_name.value}
-              onChangeText={handleOnChange('last_name')}
-              error={state.last_name.error}
-              autoCapitalize="none"
-            />
-            <TextInputOutline
-              label="Bio"
-              style={formStyles.field}
+            <DatePicker
+              datePickerRef={e => (datePickerRef = e)}
               value={
-                state.biography.value &&
-                state.biography.value.replace(/(<([^>]+)>)/gi, '')
+                state.birthdate.value
+                  ? new Date(state.birthdate.value)
+                  : new Date()
               }
-              onChangeText={handleOnChange('biography')}
-              error={state.biography.error}
-              autoCapitalize="none"
+              onChange={date =>
+                handleOnChange('birthdate')(date.toLocaleDateString())
+              }
+              maximumDate={new Date(calculateYear(10))}
             />
-            <TouchableOpacity
-              style={{ width: '100%' }}
-              onPress={() => {
-                setActiveLevel('gender')
-                const newValue = options.gender.findIndex(
-                  dat => dat.name === state.gender.value,
-                )
-                _changeSelectedDataPos('gender', newValue)
-                pickerRef.show()
-              }}>
-              <TextInputOutline
-                label="Gender"
-                value={mapDataName(options.gender, state.gender.value)}
-                error={state.gender.error}
-                style={formStyles.field}
-                disabled
-                rightIcon={
-                  <Icon name={'caret-down'} size={22} color={colors.black80} />
-                }
+            <ScrollView style={{ flex: 1, backgroundColor: 'white' }}>
+              <ProfilePicture
+                photoUrl={state.photo_url.value}
+                openCamera={openCamera}
+                type="edit"
               />
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => datePickerRef.open()}
-              style={{ width: '100%' }}>
-              <TextInputOutline
-                label="Date Of Birth"
-                value={dayjs(state.birthdate.value).format('DD/MM/YYYY')}
-                error={state.birthdate.error}
-                style={formStyles.field}
-                disabled
-                rightIcon={
-                  <Icon name={'caret-down'} size={22} color={colors.black80} />
-                }
+
+              {/* user info */}
+              <View style={{ paddingHorizontal: 16 }}>
+                <TextInputOutline
+                  label="Username"
+                  style={formStyles.field}
+                  value={state.username.value}
+                  onChangeText={handleOnChange('username')}
+                  error={state.username.error}
+                  autoCapitalize="none"
+                />
+                <TextInputOutline
+                  label="First Name"
+                  style={formStyles.field}
+                  value={state.first_name.value}
+                  onChangeText={handleOnChange('first_name')}
+                  error={state.first_name.error}
+                  autoCapitalize="none"
+                />
+                <TextInputOutline
+                  label="Last Name"
+                  style={formStyles.field}
+                  value={state.last_name.value}
+                  onChangeText={handleOnChange('last_name')}
+                  error={state.last_name.error}
+                  autoCapitalize="none"
+                />
+                <TextInputOutline
+                  label="Bio"
+                  style={formStyles.field}
+                  value={
+                    state.biography.value &&
+                    state.biography.value.replace(/(<([^>]+)>)/gi, '')
+                  }
+                  onChangeText={handleOnChange('biography')}
+                  error={state.biography.error}
+                  autoCapitalize="none"
+                />
+                <TouchableOpacity
+                  style={{ width: '100%' }}
+                  onPress={() => {
+                    setActiveLevel('gender')
+                    const newValue = options.gender.findIndex(
+                      dat => dat.name === state.gender.value,
+                    )
+                    _changeSelectedDataPos('gender', newValue)
+                    pickerRef.show()
+                  }}>
+                  <TextInputOutline
+                    label="Gender"
+                    value={mapDataName(options.gender, state.gender.value)}
+                    error={state.gender.error}
+                    style={formStyles.field}
+                    disabled
+                    rightIcon={
+                      <Icon
+                        name={'caret-down'}
+                        size={22}
+                        color={colors.black80}
+                      />
+                    }
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => datePickerRef.open()}
+                  style={{ width: '100%' }}>
+                  <TextInputOutline
+                    label="Date Of Birth"
+                    value={dayjs(state.birthdate.value).format('DD/MM/YYYY')}
+                    error={state.birthdate.error}
+                    style={formStyles.field}
+                    disabled
+                    rightIcon={
+                      <Icon
+                        name={'caret-down'}
+                        size={22}
+                        color={colors.black80}
+                      />
+                    }
+                  />
+                </TouchableOpacity>
+              </View>
+            </ScrollView>
+            <View style={{ padding: 16 }}>
+              <GradientButton
+                onPress={handleOnSubmit}
+                loading={props.loading}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+                colors={['#3067E4', '#8131E2']}
+                title="Save"
+                fontStyle={formStyles.buttonText}
+                style={formStyles.button}
+                disabled={disable}
               />
-            </TouchableOpacity>
-          </View>
-        </ScrollView>
-        <View style={{ padding: 16 }}>
-          <GradientButton
-            onPress={handleOnSubmit}
-            loading={props.loading}
-            start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 0 }}
-            colors={['#3067E4', '#8131E2']}
-            title="Save"
-            fontStyle={formStyles.buttonText}
-            style={formStyles.button}
-            disabled={disable}
-          />
-        </View>
+            </View>
+          </>
+        ) : (
+          <FormLoader style={{ margin: 16 }} />
+        )}
       </>
     ),
-    [state, props, isCameraOpen, selectedDataPos],
+    [state, props, isCameraOpen, selectedDataPos, finishAnimation],
   )
 }
 

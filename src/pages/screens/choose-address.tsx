@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, View, StyleSheet } from 'react-native'
+import { Text, View, StyleSheet, InteractionManager } from 'react-native'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import NavbarTop from '@src/components/molecules/navbar-top'
@@ -10,6 +10,7 @@ import AddressCart from '@components/molecules/address-cart'
 import { colors } from '@src/utils/constants'
 import { getUserAddressById } from '@modules/address/action'
 import { getOptionShipment } from '@modules/shipment/action'
+import AddressDetail from '@components/atoms/loaders/address-detail'
 
 import Icon from 'react-native-vector-icons/FontAwesome'
 import {
@@ -36,10 +37,15 @@ const styles = StyleSheet.create({
 class ChooseAddressPage extends Component<any, any> {
   state = {
     tempSelectedAddress: this.props.selectedAddress,
+    finishAnimation: false,
   }
 
   componentDidMount() {
-    this.props.getUserAddressById()
+    InteractionManager.runAfterInteractions(() => {
+      this.setState({ finishAnimation: true })
+
+      this.props.getUserAddressById()
+    })
   }
 
   componentWillUnmount() {
@@ -90,7 +96,7 @@ class ChooseAddressPage extends Component<any, any> {
   }
   render() {
     const { addresses } = this.props
-    const { tempSelectedAddress } = this.state
+    const { tempSelectedAddress, finishAnimation } = this.state
     if (!addresses) {
       return null
     }
@@ -108,54 +114,60 @@ class ChooseAddressPage extends Component<any, any> {
             />
           }
         />
-        {/* in the future need change to flatlist */}
-        <ScrollDiv>
-          <View
-            style={{
-              borderBottomWidth: 1,
-              borderColor: colors.black50,
-              borderStyle: 'solid',
-            }}
-          />
-          {addresses.length > 0 &&
-            addresses?.map((value, key) => {
-              return (
-                <View
-                  key={`choose-address-${key}`}
-                  style={{
-                    paddingLeft: 16,
-                    paddingRight: 16,
-                  }}>
-                  <AddressHoc
-                    key={`address-${key}`}
-                    index={key}
-                    addressId={value}
-                    style={{
-                      borderTopWidth: key > 0 ? 1 : 0,
-                      paddingTop: 16,
-                      paddingBottom: 16,
-                      borderTopColor: key > 0 && colors.black50,
-                    }}
-                    onChangeAddress={this.changeAddress}
-                    tempSelectedAddress={tempSelectedAddress}
-                  />
-                </View>
-              )
-            })}
-        </ScrollDiv>
+        {finishAnimation ? (
+          <>
+            {/* in the future need change to flatlist */}
+            <ScrollDiv>
+              <View
+                style={{
+                  borderBottomWidth: 1,
+                  borderColor: colors.black50,
+                  borderStyle: 'solid',
+                }}
+              />
+              {addresses.length > 0 &&
+                addresses?.map((value, key) => {
+                  return (
+                    <View
+                      key={`choose-address-${key}`}
+                      style={{
+                        paddingLeft: 16,
+                        paddingRight: 16,
+                      }}>
+                      <AddressHoc
+                        key={`address-${key}`}
+                        index={key}
+                        addressId={value}
+                        style={{
+                          borderTopWidth: key > 0 ? 1 : 0,
+                          paddingTop: 16,
+                          paddingBottom: 16,
+                          borderTopColor: key > 0 && colors.black50,
+                        }}
+                        onChangeAddress={this.changeAddress}
+                        tempSelectedAddress={tempSelectedAddress}
+                      />
+                    </View>
+                  )
+                })}
+            </ScrollDiv>
 
-        {addresses.length > 0 && (
-          <View style={{ padding: 16 }}>
-            <GradientButton
-              onPress={this.setAddress}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 0 }}
-              colors={['#3067E4', '#8131E2']}
-              title="Use Address"
-              fontStyle={styles.buttonText}
-              style={styles.button}
-            />
-          </View>
+            {addresses.length > 0 && (
+              <View style={{ padding: 16 }}>
+                <GradientButton
+                  onPress={this.setAddress}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 0 }}
+                  colors={['#3067E4', '#8131E2']}
+                  title="Use Address"
+                  fontStyle={styles.buttonText}
+                  style={styles.button}
+                />
+              </View>
+            )}
+          </>
+        ) : (
+          <AddressDetail style={{ margin: 16 }} />
         )}
       </>
     )

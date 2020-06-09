@@ -35,10 +35,10 @@ const renderItem = ({ item }) => {
   return (
     <ProductItem
       product={item}
-      // style={{ width: width / 2 - 16 - 8, marginRight: 16 }}
       style={{
         width: width / 2 - 16,
         margin: 16,
+        maxWidth: width / 2 - 16,
       }}
     />
   )

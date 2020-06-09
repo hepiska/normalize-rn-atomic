@@ -93,18 +93,18 @@ PODS:
   - GTMSessionFetcher/Core (1.4.0)
   - GTMSessionFetcher/Full (1.4.0):
     - GTMSessionFetcher/Core (= 1.4.0)
-  - lottie-ios (3.1.8)
-  - lottie-react-native (3.4.0):
+  - lottie-ios (3.1.6)
+  - lottie-react-native (3.3.2):
     - lottie-ios (~> 3.1.3)
     - React
   - OneSignal (2.13.1)
-  - Permission-Camera (2.1.5):
+  - Permission-Camera (2.1.2):
     - RNPermissions
-  - Permission-LocationAlways (2.1.5):
+  - Permission-LocationAlways (2.1.2):
     - RNPermissions
-  - Permission-LocationWhenInUse (2.1.5):
+  - Permission-LocationWhenInUse (2.1.2):
     - RNPermissions
-  - Permission-PhotoLibrary (2.1.5):
+  - Permission-PhotoLibrary (2.1.2):
     - RNPermissions
   - RCTRequired (0.61.5)
   - RCTTypeSafety (0.61.5):
@@ -269,15 +269,15 @@ PODS:
     - React-cxxreact (= 0.61.5)
     - React-jsi (= 0.61.5)
   - React-jsinspector (0.61.5)
-  - react-native-camera (3.26.0):
+  - react-native-camera (3.24.1):
     - React
-    - react-native-camera/RCT (= 3.26.0)
-    - react-native-camera/RN (= 3.26.0)
-  - react-native-camera/RCT (3.26.0):
+    - react-native-camera/RCT (= 3.24.1)
+    - react-native-camera/RN (= 3.24.1)
+  - react-native-camera/RCT (3.24.1):
     - React
-  - react-native-camera/RN (3.26.0):
+  - react-native-camera/RN (3.24.1):
     - React
-  - react-native-cameraroll (1.7.2):
+  - react-native-cameraroll (1.6.1):
     - React
   - react-native-config (0.12.0):
     - React
@@ -347,30 +347,30 @@ PODS:
     - React-cxxreact (= 0.61.5)
     - React-jsi (= 0.61.5)
     - ReactCommon/jscallinvoker (= 0.61.5)
-  - RNCAsyncStorage (1.11.0):
+  - RNCAsyncStorage (1.9.0):
     - React
-  - RNCClipboard (1.2.2):
+  - RNCClipboard (1.2.1):
     - React
-  - RNCMaskedView (0.1.10):
+  - RNCMaskedView (0.1.7):
     - React
-  - RNDateTimePicker (2.4.0):
+  - RNDateTimePicker (2.3.2):
     - React
-  - RNDeviceInfo (5.6.1):
+  - RNDeviceInfo (5.5.4):
     - React
   - RNFS (2.16.6):
     - React
   - RNGestureHandler (1.6.1):
     - React
-  - RNGoogleSignin (4.0.3):
+  - RNGoogleSignin (4.0.1):
     - GoogleSignIn (~> 5.0.0)
     - React
-  - RNPermissions (2.1.5):
+  - RNPermissions (2.1.2):
     - React
-  - RNReanimated (1.9.0):
+  - RNReanimated (1.8.0):
     - React
-  - RNScreens (2.8.0):
+  - RNScreens (2.4.0):
     - React
-  - RNShare (3.3.2):
+  - RNShare (3.1.2):
     - React
   - RNSVG (10.1.0):
     - React
@@ -608,13 +608,13 @@ SPEC CHECKSUMS:
   GoogleSignIn: 7137d297ddc022a7e0aa4619c86d72c909fa7213
   GTMAppAuth: 4deac854479704f348309e7b66189e604cf5e01e
   GTMSessionFetcher: 6f5c8abbab8a9bce4bb3f057e317728ec6182b10
-  lottie-ios: 48fac6be217c76937e36e340e2d09cf7b10b7f5f
-  lottie-react-native: a664f59f1f298c2696dd0ae07b15cbdfc433cb02
+  lottie-ios: 85ce835dd8c53e02509f20729fc7d6a4e6645a0a
+  lottie-react-native: 2a1a82bb326ae51331a5520de0cf706733c6db69
   OneSignal: fa98eaa90372bb367b6a4a1c1622ffb9832c7600
-  Permission-Camera: 53d46bd722aea28d796e20f05fb3cbe6cde6ccb6
-  Permission-LocationAlways: 14ec76aa2912ea3a7ddc5b564d781bff51a5f3c8
-  Permission-LocationWhenInUse: 16ecd20d82341c6b4336dfe5520c098bea85a2f5
-  Permission-PhotoLibrary: 3400b260e5f80e0dd9c04d00c2ceab233bf88427
+  Permission-Camera: d7cc71123bca7f01a98f72e1cd1444fa00280375
+  Permission-LocationAlways: 1d1559d25d41771166b5b71eabf2aa5f5704a27f
+  Permission-LocationWhenInUse: 1944b00d437d66da3eb8319d69ed9ebe460fd756
+  Permission-PhotoLibrary: 20acb8db95e00912feb299d309cf319e5a05c676
   RCTRequired: b153add4da6e7dbc44aebf93f3cf4fcae392ddf1
   RCTTypeSafety: 9aa1b91d7f9310fc6eadc3cf95126ffe818af320
   React: b6a59ef847b2b40bb6e0180a97d0ca716969ac78
@@ -624,8 +624,8 @@ SPEC CHECKSUMS:
   React-jsi: cb2cd74d7ccf4cffb071a46833613edc79cdf8f7
   React-jsiexecutor: d5525f9ed5f782fdbacb64b9b01a43a9323d2386
   React-jsinspector: fa0ecc501688c3c4c34f28834a76302233e29dc0
-  react-native-camera: 9e3d60336e221d62e5b72adf551ca31ff74a94b5
-  react-native-cameraroll: a16e626822c6a61ed142de9cfae9d516216beb03
+  react-native-camera: cee386e852c0623ce3451173c0fcc90f92da4c24
+  react-native-cameraroll: c50ecf2e768882877ce5e412822f80e2395852c1
   react-native-config: f2c2ae45625a068c35681a16b9bfb1ca58b0adc7
   react-native-fbsdk: c35d42169e64aaf66f01713c1e18d0674f7f6519
   react-native-geolocation: 79c743ad7a2e86617811ef23f49308824e92520c
@@ -645,22 +645,22 @@ SPEC CHECKSUMS:
   React-RCTText: 9ccc88273e9a3aacff5094d2175a605efa854dbe
   React-RCTVibration: a49a1f42bf8f5acf1c3e297097517c6b3af377ad
   ReactCommon: 198c7c8d3591f975e5431bec1b0b3b581aa1c5dd
-  RNCAsyncStorage: db711e29e5e0500d9bd21aa0c2e397efa45302b1
-  RNCClipboard: a254f6e568bc713b7ef49646e216661369882030
-  RNCMaskedView: f5c7d14d6847b7b44853f7acb6284c1da30a3459
-  RNDateTimePicker: 39a3987baca0848368f71f02c45bf6e1e61041c0
-  RNDeviceInfo: ab2ab4ca9e7f2bc4f35d62ab6ce2b66f2cbf1e7a
+  RNCAsyncStorage: b16697280b08bab4b5f2f67f752d93d13a52e9ed
+  RNCClipboard: c368a830943cbdfba0c462fcb0604e59f61cd379
+  RNCMaskedView: 90dd32f5b786bd562e876e1421ea77c700cbf71e
+  RNDateTimePicker: 0f657a34a0f6465ab7d0255c24954693bc7a8cf6
+  RNDeviceInfo: 82e0a23d22ec73b2f71bd686a95d3dd278f223d7
   RNFS: 2bd9eb49dc82fa9676382f0585b992c424cd59df
   RNGestureHandler: 8f09cd560f8d533eb36da5a6c5a843af9f056b38
-  RNGoogleSignin: ccf71ee4b6cfd324fd788a41e457e2043838c0d9
-  RNPermissions: 1888705aebcc81714efa5dbff94351e4388ae012
-  RNReanimated: b5ccb50650ba06f6e749c7c329a1bc3ae0c88b43
-  RNScreens: 62211832af51e0aebcf6e8c36bcf7dd65592f244
-  RNShare: bd6518701db274b8ba282b33620885f2225a5bcf
+  RNGoogleSignin: 849967e0300695601cf094a8481350e79142b3c5
+  RNPermissions: c6ef18d3f039ddf72f05da3ad0e712b7f494b76d
+  RNReanimated: 955cf4068714003d2f1a6e2bae3fb1118f359aff
+  RNScreens: b5c0e1b2b04512919e78bd3898e144a157ce2363
+  RNShare: c19dbe4a7224098cd3cfc4d3b92c886ca817b3f0
   RNSVG: 069864be08c9fe065a2cf7e63656a34c78653c99
   RNVectorIcons: 0bb4def82230be1333ddaeee9fcba45f0b288ed4
   Yoga: f2a7cd4280bfe2cca5a7aed98ba0eb3d1310f18b
 
 PODFILE CHECKSUM: 6817bab74d50fadd8b55c9d40d0f469fd26f737d
 
-COCOAPODS: 1.9.1
+COCOAPODS: 1.8.4

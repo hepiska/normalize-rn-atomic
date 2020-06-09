@@ -137,12 +137,18 @@ const ProductCard = ({
   const image =
     defaultImage ||
     (!!images[0] &&
-      chageImageUri(images[0], { width: (layout && layout.width) || 0 }))
+      chageImageUri(images[0], {
+        width: (layout && layout.width) || 0,
+        height: (layout && layout.width * 1.5) || 0,
+      }))
 
   const thumbnailImage = defaultImage
     ? null
     : !!images[0] &&
-      chageImageUri(images[0], { width: (layout && layout.width / 20) || 0 })
+      chageImageUri(images[0], {
+        width: (layout && layout.width / 20) || 0,
+        height: (layout && (layout.width / 20) * 1.5) || 0,
+      })
 
   return horizontal ? (
     <ProductCardHorizontal

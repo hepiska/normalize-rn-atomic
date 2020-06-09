@@ -41,7 +41,7 @@ interface FollowCardType {
 const styles = StyleSheet.create({
   container: {
     width: width,
-    padding: 16,
+    paddingHorizontal: 16,
   },
   content: {
     flexDirection: 'row',
@@ -149,7 +149,7 @@ class FollowCard extends React.PureComponent<FollowCardType, any> {
                 />
               </View>
             </View>
-            <Divider marginTop={0} paddingHorizontal={16} />
+            <Divider marginTop={0} paddingHorizontal={0} />
           </View>
         </TouchableWithoutFeedback>
       </>

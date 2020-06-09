@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text } from 'react-native'
+import { View, Text, InteractionManager } from 'react-native'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import NavbarTop from '@components/molecules/navbar-top'
@@ -25,6 +25,7 @@ import {
 import { ScrollView } from 'react-native-gesture-handler'
 import { colors } from '@src/utils/constants'
 import { fontStyle, formStyles } from '@src/components/commont-styles'
+import ThreeColumnLoader from '@src/components/atoms/loaders/three-column-card'
 
 const dummy2 = [
   {
@@ -77,7 +78,15 @@ const dummy2 = [
 class TopicInterest extends React.Component<any, any> {
   state = {
     selectedTopicInterest: [], //[{ id: 7 }, { id: 5 }]
+    finishAnimation: false,
   }
+
+  componentDidMount() {
+    InteractionManager.runAfterInteractions(() => {
+      this.setState({ finishAnimation: true })
+    })
+  }
+
   handleSelectedTopicInt = id => {
     const isSelected = this.state.selectedTopicInterest.find(
       value => value.id === id,
@@ -97,69 +106,77 @@ class TopicInterest extends React.Component<any, any> {
 
   render() {
     const title = this.state.selectedTopicInterest.length > 0 ? 'Save' : 'Edit'
+    const { finishAnimation } = this.state
 
     return (
       <>
         <NavbarTop leftContent={['back']} title="Topic and Interest" />
-        <ScrollView style={{ flex: 1 }}>
-          <View>
-            <Text
-              style={{
-                ...fontStyle.playfairBold,
-                color: colors.black100,
-                fontSize: 24,
-                paddingHorizontal: 16,
-                paddingVertical: 16,
-              }}>
-              Select topic that interest you
-            </Text>
-            <Text
-              style={{
-                ...fontStyle.helvetica,
-                color: colors.black70,
-                fontSize: 14,
-                paddingHorizontal: 16,
-              }}>
-              You can choose more than one style
-            </Text>
+        {finishAnimation ? (
+          <>
+            <ScrollView style={{ flex: 1 }}>
+              <View>
+                <Text
+                  style={{
+                    ...fontStyle.playfairBold,
+                    color: colors.black100,
+                    fontSize: 24,
+                    paddingHorizontal: 16,
+                    paddingVertical: 16,
+                  }}>
+                  Select topic that interest you
+                </Text>
+                <Text
+                  style={{
+                    ...fontStyle.helvetica,
+                    color: colors.black70,
+                    fontSize: 14,
+                    paddingHorizontal: 16,
+                  }}>
+                  You can choose more than one style
+                </Text>
 
-            {/* dibawah ini harusnya dilooping */}
-            <Text
-              style={{
-                ...fontStyle.helveticaBold,
-                color: colors.black80,
-                fontSize: 16,
-                paddingHorizontal: 16,
-                paddingTop: 24,
-              }}>
-              Fashion
-            </Text>
-            <ListInterest
-              data={dummy2}
-              handleSelected={this.handleSelectedTopicInt}
-              selected={this.state.selectedTopicInterest}
-              style={{ paddingTop: 16 }}
-              imageType="big"
-              isPressable
-            />
-          </View>
-        </ScrollView>
-        <View style={{ padding: 16 }}>
-          <GradientButton
-            {...colors.ActivePurple}
-            disabled={
-              title === 'Save' && this.state.selectedTopicInterest.length === 0
-            }
-            style={formStyles.button}
-            onPress={() => {}}
-            title={title}
-            fontStyle={{
-              color: colors.white,
-              ...fontStyle.helveticaBold,
-              fontSize: 14,
-            }}
-          />
-        </View>
+                {/* dibawah ini harusnya dilooping */}
+                <Text
+                  style={{
+                    ...fontStyle.helveticaBold,
+                    color: colors.black80,
+                    fontSize: 16,
+                    paddingHorizontal: 16,
+                    paddingTop: 24,
+                  }}>
+                  Fashion
+                </Text>
+                <ListInterest
+                  data={dummy2}
+                  handleSelected={this.handleSelectedTopicInt}
+                  selected={this.state.selectedTopicInterest}
+                  style={{ paddingTop: 16 }}
+                  imageType="big"
+                  isPressable
+                />
+              </View>
+            </ScrollView>
+            <View style={{ padding: 16 }}>
+              <GradientButton
+                {...colors.ActivePurple}
+                disabled={
+                  title === 'Save' &&
+                  this.state.selectedTopicInterest.length === 0
+                }
+                style={formStyles.button}
+                onPress={() => {}}
+                title={title}
+                fontStyle={{
+                  color: colors.white,
+                  ...fontStyle.helveticaBold,
+                  fontSize: 14,
+                }}
+              />
+            </View>
+          </>
+        ) : (
+          <ThreeColumnLoader style={{ margin: 16 }} />
+        )}
       </>
     )
   }

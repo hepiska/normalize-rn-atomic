@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, StyleSheet } from 'react-native'
+import { View, StyleSheet, InteractionManager } from 'react-native'
 import { ScrollDiv } from '@components/atoms/basic'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
@@ -10,6 +10,7 @@ import { colors } from '@src/utils/constants'
 import { getTransactionById } from '@modules/transaction/action'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { CommonActions } from '@react-navigation/native'
+import PaymentLoader from '@src/components/atoms/loaders/courier-loader'
 
 const styles = StyleSheet.create({
   container: {
@@ -20,6 +21,9 @@ const styles = StyleSheet.create({
 })
 
 class PaymentMethodPage extends Component<any, any> {
+  state = {
+    finishAnimation: false,
+  }
   async componentDidMount() {
     const {
       getTransactionPaymentById,
@@ -28,11 +32,15 @@ class PaymentMethodPage extends Component<any, any> {
       transactionId,
     } = this.props
 
-    const _transactionId = route.params.transactionId || transactionId
-    if (_transactionId) {
-      getTransactionById(_transactionId)
-      getTransactionPaymentById(_transactionId)
-    }
+    InteractionManager.runAfterInteractions(() => {
+      this.setState({ finishAnimation: true })
+
+      const _transactionId = route.params.transactionId || transactionId
+      if (_transactionId) {
+        getTransactionById(_transactionId)
+        getTransactionPaymentById(_transactionId)
+      }
+    })
   }
 
   componentDidUpdate(prevProps) {
@@ -68,6 +76,8 @@ class PaymentMethodPage extends Component<any, any> {
       transactionPaymentData,
     } = this.props
 
+    const { finishAnimation } = this.state
+
     const groupingPayment = transactionPaymentOrder.reduce(
       (total, currentValue) => {
         const payment = transactionPaymentData[currentValue]
@@ -94,20 +104,24 @@ class PaymentMethodPage extends Component<any, any> {
           }
           style={{ borderBottomWidth: 1, borderBottomColor: colors.black50 }}
         />
-        <ScrollDiv>
-          <View {...styles.container}>
-            {Object.keys(groupingPayment).map((value, key) => {
-              return (
-                <GroupPaymentMethod
-                  key={`payment-method-${key}`}
-                  item={groupingPayment[value]}
-                  title={value}
-                  transactionId={transactionId}
-                />
-              )
-            })}
-          </View>
-        </ScrollDiv>
+        {finishAnimation ? (
+          <ScrollDiv>
+            <View {...styles.container}>
+              {Object.keys(groupingPayment).map((value, key) => {
+                return (
+                  <GroupPaymentMethod
+                    key={`payment-method-${key}`}
+                    item={groupingPayment[value]}
+                    title={value}
+                    transactionId={transactionId}
+                  />
+                )
+              })}
+            </View>
+          </ScrollDiv>
+        ) : (
+          <PaymentLoader style={{ margin: 16 }} />
+        )}
       </>
     )
   }

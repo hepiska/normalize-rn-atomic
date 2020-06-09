@@ -5,6 +5,7 @@ import { Rect } from 'react-native-svg'
 
 interface LoaderPropsType {
   style?: ViewStyle
+  disableFilter?: boolean
 }
 
 const SearchAndFilterLoader = (props: LoaderPropsType) => {
@@ -21,9 +22,13 @@ const SearchAndFilterLoader = (props: LoaderPropsType) => {
           height={103}
           width={layout.width}>
           <Rect x="" y="0" rx="8" ry="8" width={layout.width} height="42" />
-          <Rect x="" y="50" rx="8" ry="8" width={86} height="42" />
-          <Rect x="102" y="50" rx="8" ry="8" width={86} height="42" />
-          <Rect x="196" y="50" rx="8" ry="8" width={86} height="42" />
+          {!props.disableFilter && (
+            <>
+              <Rect x="" y="50" rx="8" ry="8" width={86} height="42" />
+              <Rect x="102" y="50" rx="8" ry="8" width={86} height="42" />
+              <Rect x="196" y="50" rx="8" ry="8" width={86} height="42" />
+            </>
+          )}
         </ContentLoader>
       )}
     </View>
