@@ -737,7 +737,7 @@ class ProductListPage extends React.Component<any, any> {
             </Div>
           </ImageCoverContentLayout>
 
-          {loading && (
+          {/* {loading && (
             <Div
               style={{ position: 'absolute', bottom: 0, left: 0 }}
               justify="center"
@@ -746,7 +746,7 @@ class ProductListPage extends React.Component<any, any> {
               _height="64px">
               <CircleLoader />
             </Div>
-          )}
+          )} */}
         </Div>
       </>
     )

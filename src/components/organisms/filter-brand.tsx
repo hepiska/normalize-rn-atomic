@@ -76,7 +76,7 @@ const FilterBrandOrg = (props: any) => {
     { _onChangeAlvabet, _onSearchChange },
   ] = useBrandFilter(props)
 
-  let brands = deepClone(props.brands || []).map(brandSection => {
+  let brands = ([...props.brands] || []).map(brandSection => {
     brandSection.data = brandSection.data.filter(brand => {
       return brand.name.toLowerCase().includes(search.toLowerCase())
     })
@@ -91,9 +91,9 @@ const FilterBrandOrg = (props: any) => {
 
   const _renderItem = ({ item }) => (
     <FilterBrandItem
+      key={'key-brand' + item.id}
       fontStyle={fontStyle.helvetica}
       onPress={brand => props.changeSelectedBrand(brand.id)}
-      key={item.id}
       isSelected={props.selectedBrand.includes(item.id)}
       item={item}
     />

@@ -18,7 +18,6 @@ import { colors, images as defaultImages } from '@utils/constants'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import IconFa from 'react-native-vector-icons/FontAwesome'
 import IconMC from 'react-native-vector-icons/MaterialCommunityIcons'
-import InviniteLoader from '@components/atoms/loaders/invinite'
 import Config from 'react-native-config'
 import { navigate } from '@src/root-navigation'
 import Line from '@components/atoms/line'
@@ -567,7 +566,7 @@ class PostListItem extends React.PureComponent<PostListItemType, any> {
         )
       }
     }
-    return <InviniteLoader />
+    return null
   }
 }
 

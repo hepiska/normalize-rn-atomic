@@ -3,7 +3,6 @@ import { View, Text, FlatList, Image, Dimensions } from 'react-native'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { Div, Font } from '@components/atoms/basic'
-import InviniteLoader from '@components/atoms/loaders/invinite'
 import Field from '@components/atoms/field'
 import { getFollowerFollowing } from '@modules/user/action'
 import { colors } from '@utils/constants'
@@ -148,6 +147,8 @@ class FollowList extends Component<any, any> {
       <>
         <FlatList
           style={{ width: width, flex: 1 }}
+          onRefresh={this._freshfetch}
+          refreshing={userLoading}
           ListHeaderComponent={this._renderSearch()}
           ListEmptyComponent={this._emptyComponent}
           data={follows}
@@ -157,16 +158,6 @@ class FollowList extends Component<any, any> {
           renderItem={this._renderItem}
           stickyHeaderIndices={[0]}
         />
-        {userLoading && (
-          <Div
-            style={{ position: 'absolute', bottom: 0, left: 0 }}
-            justify="center"
-            _width={width}
-            _background="rgba(0,0,0,0.3)"
-            _height="64px">
-            <InviniteLoader />
-          </Div>
-        )}
       </>
     )
   }

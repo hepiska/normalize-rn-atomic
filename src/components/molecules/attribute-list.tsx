@@ -39,7 +39,7 @@ const getAntributesItem = (label: string, data: any, isSelected?: boolean) => {
           _width="40px"
           _height="40px"
           style={{ marginRight: 16 }}
-          _border={`2px solid ${isSelected ? colors.black100 : colors.black50}`}
+          _border={`1px solid ${isSelected ? colors.black100 : colors.black50}`}
           radius="20px"
           _background={
             colorString.get(data.metadata) ? data.metadata : 'transparent'
@@ -53,7 +53,7 @@ const getAntributesItem = (label: string, data: any, isSelected?: boolean) => {
           radius="4px"
           _padding="8px"
           style={{ marginRight: 8 }}
-          _border={`2px solid ${
+          _border={`1px solid ${
             isSelected ? colors.black100 : colors.black50
           }`}>
           <Font>{data.label}</Font>

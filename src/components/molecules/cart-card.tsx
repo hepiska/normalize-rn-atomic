@@ -127,7 +127,6 @@ class CartCard extends React.Component<CartCardType, any> {
     const fixAttributes = attributes.find(_att => {
       return _att.attribute_id !== attribute.attribute_id
     })
-    console.log('====asas', attributes)
     const changeAttribute = {
       ...attributes.find(_att => {
         return _att.attribute_id === attribute.attribute_id

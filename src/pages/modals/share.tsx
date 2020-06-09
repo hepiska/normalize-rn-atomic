@@ -226,7 +226,7 @@ class ShareModal extends React.Component<any, any> {
       </>
     )
   }
-  snapPoints = [500, 250, 0]
+  snapPoints = [500, 250, 1]
   render() {
     return (
       <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.7)' }}>

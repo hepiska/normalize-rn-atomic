@@ -145,7 +145,7 @@ const FilterBottomSheet = props => {
     if (finishAnimation) {
       timeOut = setTimeout(() => {
         bottomSheetRef.current.snapTo(0)
-      }, 400)
+      }, 300)
     }
   }, [finishAnimation])
 
@@ -153,15 +153,15 @@ const FilterBottomSheet = props => {
 
   const _snapPoint =
     section !== 'sort'
-      ? [height * 0.8, height * 0.5, 0]
-      : [Math.max(360, height * 0.5), 0]
+      ? [height * 0.98, height * 0.8, height * 0.5, 1]
+      : [Math.max(360, height * 0.5), 1]
 
   return (
     <>
       {finishAnimation && (
         <BottomSheet
           onCloseEnd={() => props.navigation.goBack()}
-          // ref={bottomSheetRef}
+          ref={bottomSheetRef}
           enabledBottomInitialAnimation={true}
           initialSnap={_snapPoint.length - 1}
           enabledBottomClamp={true}

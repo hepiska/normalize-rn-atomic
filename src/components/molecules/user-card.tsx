@@ -14,7 +14,6 @@ import { colors } from '@utils/constants'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import Gradient from 'react-native-linear-gradient'
 import { Button } from '@components/atoms/button'
-import InviniteLoader from '@components/atoms/loaders/invinite'
 
 interface UserCardType {
   user: any

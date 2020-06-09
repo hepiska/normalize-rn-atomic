@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { View, Text, TouchableWithoutFeedback } from 'react-native'
 import { Div, PressAbbleDiv, Image, Font } from '@components/atoms/basic'
-import Animated, { Easing } from 'react-native-reanimated'
+import Animated, { Easing, cos } from 'react-native-reanimated'
 import HTML from 'react-native-render-html'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import { colors } from '@utils/constants'
@@ -74,10 +74,16 @@ class ContentExpandable extends React.Component<ContentExpandableType, any> {
       inputRange: [0, 1],
       outputRange: [0, 180],
     })
-    const height = interpolate(this.iconAnimatedValue, {
+    // const height = interpolate(this.iconAnimatedValue, {
+    //   inputRange: [0, 1],
+    //   outputRange: [0, 248],
+    // })
+    const opacity = interpolate(this.iconAnimatedValue, {
       inputRange: [0, 1],
-      outputRange: [0, 248],
+      outputRange: [0, 1],
     })
+
+    const display = !this.state.isOpen ? 'flex' : 'none'
     const transform: any = [{ rotate: concat(rotation, 'deg') }]
 
     return (
@@ -115,8 +121,14 @@ class ContentExpandable extends React.Component<ContentExpandableType, any> {
           </View>
         </TouchableWithoutFeedback>
         {!this.state.isOpen && divider}
-        <Animated.ScrollView
-          style={{ width: '100%', height: height, overflow: 'scroll' }}>
+        <Animated.View
+          style={{
+            width: '100%',
+            opacity,
+            display,
+            overflow: 'scroll',
+            paddingBottom: 16,
+          }}>
           {typeof content === 'string' ? (
             <HTML
               html={content.replace(/\\\\r\\\\n/g, '').replace(/\\r\\n/g, '')}
@@ -124,7 +136,7 @@ class ContentExpandable extends React.Component<ContentExpandableType, any> {
           ) : (
             content
           )}
-        </Animated.ScrollView>
+        </Animated.View>
       </View>
     )
   }

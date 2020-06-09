@@ -20,7 +20,6 @@ import SearchEmptyState from '@components/molecules/search-empty-state'
 import { productListData } from '@hocs/data/product'
 // import ProductCard from '@components/molecules/product-card'
 import ProductCard from '@components/molecules/product-card-new'
-import InviniteLoader from '@src/components/atoms/loaders/invinite'
 import SearchListLoader from '@src/components/atoms/loaders/search-list'
 
 const { width } = Dimensions.get('screen')
@@ -175,6 +174,8 @@ class SearchList extends Component<any, any> {
           <View style={{ flex: 1 }}>
             <FlatList
               numColumns={2}
+              refreshing={loading}
+              onRefresh={this._freshFetch}
               keyExtractor={this._keyExtractor}
               ListHeaderComponent={this._renderSearch()}
               data={dataSearch}
@@ -185,16 +186,6 @@ class SearchList extends Component<any, any> {
               scrollIndicatorInsets={{ right: 1 }}
               stickyHeaderIndices={[0]}
             />
-            {loading && (
-              <Div
-                style={{ position: 'absolute', bottom: 0, left: 0 }}
-                justify="center"
-                _width="100%"
-                _background="rgba(0,0,0,0.3)"
-                _height="64px">
-                <InviniteLoader />
-              </Div>
-            )}
           </View>
         ) : (
           <SearchListLoader style={{ margin: 16 }} />

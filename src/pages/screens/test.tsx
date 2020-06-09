@@ -11,6 +11,7 @@ import SearchAndFilterLoader from '@components/atoms/loaders/search-filter-loade
 import ShopLoader from '@components/atoms/loaders/shop'
 import ProductDetailLoader from '@components/atoms/loaders/product-detail'
 import ProductListLoadereLoader from '@components/atoms/loaders/product-list'
+import ContentExpandable from '@components/molecules/content-expandable'
 
 const TestPage = props => {
   const [image, setImage] = React.useState(null)
@@ -25,7 +26,16 @@ const TestPage = props => {
         <Text>sas</Text>
       </View>
       <TouchableOpacity onPress={() => {}} />
-      <ProductListLoadereLoader />
+      <ContentExpandable
+        id="asasa"
+        title="asasas"
+        content={
+          <View
+            style={{ height: 400, width: '100%', backgroundColor: 'black' }}
+          />
+        }
+      />
+      <Text>asasssasasasss</Text>
       {/* <ShopLoader /> */}
       {/* <ScrollView>
         // <ProductDetailLoader />

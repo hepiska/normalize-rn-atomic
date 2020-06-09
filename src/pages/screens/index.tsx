@@ -52,7 +52,7 @@ function InsiderStack() {
       mode="card"
       initialRouteName={InitialPage.screens}
       screenOptions={{
-        ...TransitionPresets.TransitionPresets,
+        ...TransitionPresets.SlideFromRightIOS,
         cardStyle: {
           backgroundColor: 'white',
         },

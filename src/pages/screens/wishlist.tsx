@@ -7,7 +7,6 @@ import { getProductSaved } from '@modules/product-saved/action'
 import NavbarTop from '@components/molecules/navbar-top'
 import { productListData } from '@hocs/data/product'
 import ProductCard from '@components/molecules/product-card'
-import InviniteLoader from '@src/components/atoms/loaders/invinite'
 
 const { width } = Dimensions.get('screen')
 
@@ -81,23 +80,15 @@ class Wishlist extends Component<any, any> {
         <View style={{ flex: 1 }}>
           <FlatList
             numColumns={2}
+            onRefresh={this._freshFetch}
             keyExtractor={this._keyExtractor}
+            refreshing={loading}
             data={products}
             renderItem={this._renderItem}
             onEndReached={this._fetchMore}
             onEndReachedThreshold={0.99}
             scrollIndicatorInsets={{ right: 1 }}
           />
-          {loading && (
-            <Div
-              style={{ position: 'absolute', bottom: 0, left: 0 }}
-              justify="center"
-              _width="100%"
-              _background="rgba(0,0,0,0.3)"
-              _height="64px">
-              <InviniteLoader />
-            </Div>
-          )}
         </View>
       </>
     )

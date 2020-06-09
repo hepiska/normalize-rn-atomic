@@ -74,13 +74,13 @@ export const getOneUserAddressById = addressId => ({
   type: API,
   payload: {
     url: '/users/' + getMe().id + '/addresses/' + addressId,
-    schema: [schema.address],
+    schema: schema.address,
     startNetwork: () => {
       return setAddressLoading(true)
     },
     success: data => {
       return [
-        setAddressData(data.entities.address),
+        setAddressData({ data: data.entities.address }),
         setActiveAddress(data.result),
         setAddressLoading(false),
       ]
