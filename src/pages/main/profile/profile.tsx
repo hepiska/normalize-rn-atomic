@@ -39,6 +39,7 @@ import MyPost from '@components/organisms/my-post'
 import MySaved from '@components/organisms/my-saved'
 import MyInsight from '@components/organisms/my-insight'
 import FocusContainer from '@src/components/molecules/focus-container'
+import HTML from 'react-native-render-html'
 
 const headerHeight = 54
 const { width, height } = Dimensions.get('screen')
@@ -441,16 +442,21 @@ class ProfilPage extends React.PureComponent<any, any> {
                     </View>
                     {/* description */}
                     <View style={{ marginTop: 8 }}>
-                      <Text
-                        style={{
-                          ...fontStyle.helvetica,
-                          fontSize: 12,
-                          color: colors.black80,
-                        }}>
-                        {user.biography || user.biography !== ''
-                          ? user.biography
-                          : 'Welcome to my page'}
-                      </Text>
+                      <HTML
+                        html={user.biography || '<p>Welcome to my page</p>'}
+                        tagsStyles={{
+                          p: {
+                            ...fontStyle.helvetica,
+                            fontSize: 12,
+                            color: colors.black80,
+                          },
+                          b: {
+                            ...fontStyle.helveticaBold,
+                            fontSize: 12,
+                            color: colors.black80,
+                          },
+                        }}
+                      />
                     </View>
                   </View>
 

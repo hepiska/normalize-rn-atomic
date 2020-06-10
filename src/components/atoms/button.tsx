@@ -15,6 +15,7 @@ interface ButtonType {
   style?: ViewStyle
   onPress: Function
   disabled?: boolean
+  loaderColor?: string
 }
 
 StyleSheet.absoluteFill
@@ -165,6 +166,7 @@ export const Button = ({
   onPress,
   rightIcon,
   disabled = false,
+  loaderColor,
 }: ButtonType) => {
   return (
     <PressAbbleDiv
@@ -186,6 +188,7 @@ export const Button = ({
           style={{ width: 20, height: 20 }}
           name="spinner"
           size={24}
+          loaderColor={loaderColor}
         />
       ) : (
         <Font

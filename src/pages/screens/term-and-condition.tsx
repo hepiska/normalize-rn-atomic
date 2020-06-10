@@ -5,16 +5,7 @@ import Config from 'react-native-config'
 import { colors } from '@utils/constants'
 import NavbarTop from '@src/components/molecules/navbar-top'
 import ArticleLoader from '@src/components/atoms/loaders/article'
-
-const run = `(function() {
-  var header = document.getElementsByClassName("header-container");
-  header[0].remove();
-  var mainWrapper = document.getElementsByClassName("main-wrapper");
-  mainWrapper[0].style.paddingTop = "15px";
-  var footer = document.getElementsByClassName("footer-nav"); 
-  footer[0].remove();
-  true
-})()`
+import { removeHeaderWebviewScript } from '@utils/helpers'
 
 class TermConditionWebView extends Component<any, any> {
   webref = null
@@ -47,7 +38,7 @@ class TermConditionWebView extends Component<any, any> {
             onLoadEnd={syntheticEvent => {
               const { nativeEvent } = syntheticEvent
               if (!nativeEvent.loading) {
-                this.webref.injectJavaScript(run)
+                this.webref.injectJavaScript(removeHeaderWebviewScript)
               }
             }}
             originWhitelist={['https://*']}

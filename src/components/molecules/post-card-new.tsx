@@ -93,9 +93,11 @@ const FullscreenCard = ({
       : post.title
 
   const subtitle =
-    post.subtitle && post.subtitle.length > maxSubtitle
+    post.subtitle &&
+    post.subtitle !== undefined &&
+    post.subtitle.length > maxSubtitle
       ? post.subtitle.substring(0, maxSubtitle) + '...'
-      : post.subtitle
+      : null
   return (
     <View
       style={{
@@ -212,7 +214,7 @@ const FullscreenCard = ({
               marginRight: 4,
               color: colors.black80,
             }}>
-            {post.subtitle}
+            {subtitle}
           </Text>
         </View>
       )}

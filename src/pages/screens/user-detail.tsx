@@ -1,10 +1,15 @@
-import React, { Component } from 'react'
+import React, { Component, useRef, useEffect } from 'react'
 import { Alert } from 'react-native'
 import WebView from 'react-native-webview'
 import Config from 'react-native-config'
 import { connect } from 'react-redux'
 import NavbarTop from '@src/components/molecules/navbar-top'
 import { colors } from '@utils/constants'
+import {
+  removeHeaderWebviewScript,
+  clearLocalStorageScript,
+  injectTokenScript,
+} from '@utils/helpers'
 
 const run = `(function() {
   var header = document.getElementsByClassName("header-container");
@@ -14,41 +19,56 @@ const run = `(function() {
   true
 })()`
 
-class UserDetail extends Component<any, any> {
-  webref = null
+const UserDetail = props => {
+  const mywebView = useRef(null)
+  useEffect(() => {
+    return () => {
+      mywebView.current.injectJavaScript(clearLocalStorageScript())
+    }
+  }, [])
 
-  _navChange = navState => {
+  const _navChange = navState => {
     console.log('sasd', navState)
   }
-  render() {
-    const { username } = this.props
-    if (!username) {
-      return null
-    }
-    return (
-      <>
-        <NavbarTop
-          title={username}
-          leftContent={['back']}
-          style={{ borderBottomWidth: 1, borderBottomColor: colors.black50 }}
-        />
-        <WebView
-          ref={r => (this.webref = r)}
-          source={{
-            uri: Config.SHONET_URI + '/users/' + username,
-          }}
-          onNavigationStateChange={this._navChange}
-          onLoadEnd={syntheticEvent => {
-            const { nativeEvent } = syntheticEvent
-            if (!nativeEvent.loading) {
-              this.webref.injectJavaScript(run)
-            }
-          }}
-          originWhitelist={['https://*']}
-        />
-      </>
-    )
+
+  const {
+    username,
+    auth_data: { id_token, user },
+  } = props
+  if (!username) {
+    return null
   }
+  return (
+    <>
+      <NavbarTop
+        title={username}
+        leftContent={['back']}
+        style={{ borderBottomWidth: 1, borderBottomColor: colors.black50 }}
+      />
+      <WebView
+        ref={mywebView}
+        sharedCookiesEnabled
+        injectedJavaScriptBeforeContentLoaded={injectTokenScript(
+          id_token,
+          user,
+        )}
+        source={{
+          uri: Config.SHONET_URI + '/users/' + username,
+          headers: {
+            Cookie: `tokenId=${id_token}`,
+          },
+        }}
+        onNavigationStateChange={_navChange}
+        onLoadEnd={syntheticEvent => {
+          const { nativeEvent } = syntheticEvent
+          if (!nativeEvent.loading) {
+            mywebView.current.injectJavaScript(removeHeaderWebviewScript)
+          }
+        }}
+        originWhitelist={['https://*']}
+      />
+    </>
+  )
 }
 const mapStateToProps = (state, ownProps) => {
   const userId = ownProps.route.params.userId || null
@@ -59,6 +79,7 @@ const mapStateToProps = (state, ownProps) => {
 
   return {
     username,
+    auth_data: state.auth.data || {},
   }
 }
 export default connect(mapStateToProps, null)(UserDetail)

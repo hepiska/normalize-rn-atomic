@@ -467,13 +467,31 @@ class ProductListPage extends React.Component<any, any> {
                   color={colors.black100}>
                   {product.brand.name}
                 </Font>
-                <Font
-                  style={{ ...fontStyle.helveticaThin, fontWeight: '300' }}
-                  size={18}
-                  _margin="4px"
-                  color={colors.gray3}>
-                  {product.name}
-                </Font>
+                <HTML
+                  html={`<productname>${product.name}</productname>`}
+                  renderers={{
+                    // eslint-disable-next-line react/display-name
+                    productname: (
+                      htmlAttribs,
+                      children,
+                      convertedCSSStyles,
+                      passProps,
+                    ) => {
+                      return (
+                        <Text
+                          style={{
+                            ...fontStyle.helveticaThin,
+                            fontWeight: '300',
+                            fontSize: 18,
+                            margin: 4,
+                            color: colors.black80,
+                          }}>
+                          {passProps.rawChildren[0].data}
+                        </Text>
+                      )
+                    },
+                  }}
+                />
                 {isUserSelectVariant ? (
                   <Price
                     {...varianData.price}

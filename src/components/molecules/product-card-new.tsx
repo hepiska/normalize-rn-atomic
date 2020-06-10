@@ -18,6 +18,7 @@ import RangePrice from '@components/molecules/range-price'
 import { setImage as chageImageUri } from '@utils/helpers'
 import ColorList from '@components/molecules/color-list'
 import { navigate } from '@src/root-navigation'
+import HTML from 'react-native-render-html'
 
 interface ProductCardType {
   product: any
@@ -219,7 +220,8 @@ const ProductCardHorizontal = ({
   layout,
   onLayout,
 }) => {
-  const productName = product.name.replace(/\n|\r/g, '')
+  const productName =
+    '<productname>' + product.name.replace(/\n|\r/g, '') + '</productname>'
   const price: any = {}
   if (!product.max_price_after_disc && !product.min_price_after_disc) {
     price.from = product.min_price
@@ -276,17 +278,32 @@ const ProductCardHorizontal = ({
           }}>
           {brand.name}
         </Text>
-        <Text
-          style={{
-            ...fontStyle.helvetica,
-            fontSize: typeDict[type].sub,
-            margin: 4,
-            color: colors.black80,
+        <HTML
+          html={productName}
+          renderers={{
+            // eslint-disable-next-line react/display-name
+            productname: (
+              htmlAttribs,
+              children,
+              convertedCSSStyles,
+              passProps,
+            ) => {
+              return (
+                <Text
+                  style={{
+                    ...fontStyle.helvetica,
+                    fontSize: typeDict[type].sub,
+                    margin: 4,
+                    color: colors.black80,
+                  }}
+                  numberOfLines={1}
+                  ellipsizeMode="tail">
+                  {passProps.rawChildren[0].data}
+                </Text>
+              )
+            },
           }}
-          numberOfLines={1}
-          ellipsizeMode="tail">
-          {productName}
-        </Text>
+        />
         {variantPrice ? (
           <Price {...variantPrice} />
         ) : (
@@ -336,7 +353,8 @@ const ProductCardVertical = ({
   if (!product) {
     return null
   }
-  const productName = product.name.replace(/\n|\r/g, '')
+  const productName =
+    '<productname>' + product.name.replace(/\n|\r/g, '') + '</productname>'
   const price: any = {}
   if (!product.max_price_after_disc && !product.min_price_after_disc) {
     price.from = product.min_price
@@ -418,18 +436,33 @@ const ProductCardVertical = ({
           }}>
           {brand.name}
         </Text>
-        <Text
-          style={{
-            ...fontStyle.helveticaThin,
-            fontWeight: '300',
-            fontSize: typeDict[type].sub,
-            margin: 4,
-            color: colors.black80,
+        <HTML
+          html={productName}
+          renderers={{
+            // eslint-disable-next-line react/display-name
+            productname: (
+              htmlAttribs,
+              children,
+              convertedCSSStyles,
+              passProps,
+            ) => {
+              return (
+                <Text
+                  style={{
+                    ...fontStyle.helveticaThin,
+                    fontWeight: '300',
+                    fontSize: typeDict[type].sub,
+                    margin: 4,
+                    color: colors.black80,
+                  }}
+                  numberOfLines={2}
+                  ellipsizeMode="tail">
+                  {passProps.rawChildren[0].data}
+                </Text>
+              )
+            },
           }}
-          numberOfLines={2}
-          ellipsizeMode="tail">
-          {productName}
-        </Text>
+        />
         {isAtributesShow && colorAttributes && (
           <ColorList
             selectedId={attributeSelected ? attributeSelected.id : null}
