@@ -9,8 +9,10 @@ import jwtDecode from 'jwt-decode'
 import { removeHeaderWebviewScript } from '@utils/helpers'
 import NavbarTop from '@src/components/molecules/navbar-top'
 import { images } from '@utils/constants'
+import { injectTokenScript } from '@utils/helpers'
 
-const injectToken = (token, user, expiresAt) => `
+const injectToken = (token, user, expiresAt) => {
+  return `
   (function(){
     document.cookie="tokenId=${token}"
     localStorage.setItem("tokenId", "${token}")
@@ -22,6 +24,7 @@ const injectToken = (token, user, expiresAt) => `
   })();
   true;
 `
+}
 
 const LookBookDetail = props => {
   const mywebView = useRef(null) as any
@@ -40,11 +43,7 @@ const LookBookDetail = props => {
       <WebView
         ref={mywebView}
         sharedCookiesEnabled
-        injectedJavaScript={injectToken(
-          id_token,
-          JSON.stringify(user),
-          expiresAt,
-        )}
+        injectedJavaScript={injectTokenScript(id_token, JSON.stringify(user))}
         // injectedJavaScriptBeforeContentLoaded={injectToken(id_token, user)}
         onLoadEnd={syntheticEvent => {
           const { nativeEvent } = syntheticEvent

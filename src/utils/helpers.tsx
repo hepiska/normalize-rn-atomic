@@ -4,6 +4,7 @@ import { uriSchreenMap, colors } from './constants'
 import { PERMISSIONS, check, request } from 'react-native-permissions'
 import { store } from '@src/init-store'
 import dayjs from 'dayjs'
+import jwtDecode from 'jwt-decode'
 
 const currencyNum = inp => {
   const a = inp
@@ -217,3 +218,20 @@ export const removeHeaderWebviewScript = `(function() {
 })()
 true;
 `
+
+export const injectTokenScript = (id_token, user) => {
+  const token: { exp: number } = jwtDecode(id_token)
+
+  return `
+  (function(){
+    document.cookie="tokenId=${id_token}"
+    localStorage.setItem("tokenId", "${id_token}")
+    localStorage.setItem("user", JSON.stringify(${user}))
+    localStorage.setItem("expiresAt", "${token.exp * 1000}")
+
+    window.ReactNativeWebView.postMessage(JSON.stringify(localStorage.getItem("user")))
+
+  })();
+  true;
+`
+}
