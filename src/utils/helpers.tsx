@@ -226,8 +226,7 @@ export const injectTokenScript = (id_token, user) => {
 
   const token: { exp: number } = jwtDecode(id_token)
   const expiresAt = JSON.stringify(token.exp * 1000)
-  console.log(expiresAt)
-
+  user = JSON.stringify(user)
   return `
   (function(){
     document.cookie="tokenId=${id_token}"
@@ -242,7 +241,7 @@ export const injectTokenScript = (id_token, user) => {
 `
 }
 
-const clearLocalStorageScript = () => {
+export const clearLocalStorageScript = () => {
   return `
   (function(){
     document.cookie=null

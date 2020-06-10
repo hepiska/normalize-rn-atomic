@@ -41,7 +41,7 @@ const LookBookDetail = props => {
         sharedCookiesEnabled
         injectedJavaScriptBeforeContentLoaded={injectTokenScript(
           id_token,
-          JSON.stringify(user),
+          user,
         )}
         onLoadEnd={syntheticEvent => {
           const { nativeEvent } = syntheticEvent
