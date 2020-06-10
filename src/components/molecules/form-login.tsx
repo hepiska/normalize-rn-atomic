@@ -1,11 +1,11 @@
 import React, { useState, useMemo, useEffect, useCallback } from 'react'
-import { Image, StyleSheet } from 'react-native'
+import { StyleSheet } from 'react-native'
 import { withNavigation } from 'react-navigation'
 import { useDispatch, useSelector } from 'react-redux'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { Div, Font, PressAbbleDiv } from '@components/atoms/basic'
 import { colors } from '@src/utils/constants'
-import { Button, OutlineButton } from '@components/atoms/button'
+import { Button } from '@components/atoms/button'
 import TextInputOutline from '@src/components/atoms/field-floating'
 import {
   loginApi,
@@ -18,12 +18,7 @@ import {
   ButtonFacebookSignin,
   ButtonGoogleSignIn,
 } from '@components/atoms/button-social-auth'
-import {
-  AccessToken,
-  LoginManager,
-  GraphRequest,
-  GraphRequestManager,
-} from 'react-native-fbsdk'
+import { connect } from 'react-redux'
 
 const styles = StyleSheet.create({
   width100: {
@@ -65,9 +60,10 @@ const styles = StyleSheet.create({
 
 interface FormLogin {
   navigation: any
+  loading: boolean
 }
 
-const FormLogin: React.FC<FormLogin> = ({ navigation }) => {
+const FormLogin: React.FC<FormLogin> = ({ navigation, loading }) => {
   const dispatch = useDispatch()
   const { data, error, called } = useSelector(_authSelector)
 
@@ -241,6 +237,8 @@ const FormLogin: React.FC<FormLogin> = ({ navigation }) => {
               onPress={handleOnSubmit}
               style={styles.btnSubmit}
               fontStyle={styles.btnSubmitText}
+              loading={loading}
+              loaderColor={colors.white}
             />
 
             <Div _width="100%" _direction="row" _margin="16px 0px">
@@ -259,8 +257,12 @@ const FormLogin: React.FC<FormLogin> = ({ navigation }) => {
         </Div>
       </Div>
     ),
-    [state, error, showPassword],
+    [state, error, showPassword, loading],
   )
 }
 
-export default withNavigation(FormLogin)
+const mapStateToProps = state => ({
+  loading: state.auth.loading,
+})
+
+export default withNavigation(connect(mapStateToProps, null)(FormLogin))

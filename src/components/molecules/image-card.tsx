@@ -33,6 +33,15 @@ const styles = StyleSheet.create({
 
 const imageWidth = 0.75 * width
 
+const getImageUri = item => {
+  if (!item.mobile_image_url) {
+    return item.image_url
+  } else if (item.mobile_image_url === 'None') {
+    return item.image_url
+  }
+  return item.mobile_image_url
+}
+
 const ImageCard = ({ item, navigation, style }: ItemJumbotronType) => {
   const _onPress = () => {
     const parsedUri = item.target_url.split('/')
@@ -54,7 +63,7 @@ const ImageCard = ({ item, navigation, style }: ItemJumbotronType) => {
       <View style={composeStyle}>
         <ImageAutoSchale
           source={{
-            uri: setImage(item.mobile_image_url || item.image_url, {
+            uri: setImage(getImageUri(item), {
               width: imageWidth,
             }),
           }}

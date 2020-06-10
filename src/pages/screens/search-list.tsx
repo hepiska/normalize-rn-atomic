@@ -6,6 +6,7 @@ import {
   SafeAreaView,
   StyleSheet,
   FlatList,
+  InteractionManager,
 } from 'react-native'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
@@ -17,8 +18,9 @@ import { globalDimention, colors } from '@utils/constants'
 import NavbarTop from '@components/molecules/navbar-top'
 import SearchEmptyState from '@components/molecules/search-empty-state'
 import { productListData } from '@hocs/data/product'
-import ProductCard from '@components/molecules/product-card'
-import InviniteLoader from '@src/components/atoms/loaders/invinite'
+// import ProductCard from '@components/molecules/product-card'
+import ProductCard from '@components/molecules/product-card-new'
+import SearchListLoader from '@src/components/atoms/loaders/search-list'
 
 const { width } = Dimensions.get('screen')
 
@@ -27,12 +29,19 @@ const ProductWithCardHoc = productListData(ProductCard)
 class SearchList extends Component<any, any> {
   state = {
     searchKey: '',
+    finishAnimation: false,
   }
   limit = 25
   skip = 0
   lastSkip = 0
   startSearch = false
   timer = null
+
+  componentDidMount() {
+    InteractionManager.runAfterInteractions(() => {
+      this.setState({ finishAnimation: true })
+    })
+  }
 
   componentWillUnmount() {
     if (this.props.dataSearch) {
@@ -121,9 +130,9 @@ class SearchList extends Component<any, any> {
         productId={item}
         key={'' + item}
         style={{
-          flex: 1 / 2,
-          wrappermargin: 4,
-          width: width / 2,
+          margin: 8,
+          flex: 1,
+          maxWidth: width / 2 - 16,
         }}
       />
     )
@@ -157,33 +166,30 @@ class SearchList extends Component<any, any> {
 
   render() {
     const { dataSearch, loading } = this.props
+    const { finishAnimation } = this.state
     return (
       <>
         <NavbarTop leftContent={['back']} title="Search" />
-        <View style={{ flex: 1 }}>
-          <FlatList
-            numColumns={2}
-            keyExtractor={this._keyExtractor}
-            ListHeaderComponent={this._renderSearch()}
-            data={dataSearch}
-            renderItem={this._renderItem}
-            onEndReached={this._fetchMore}
-            onEndReachedThreshold={0.99}
-            ListEmptyComponent={this._emptyComponent}
-            scrollIndicatorInsets={{ right: 1 }}
-            stickyHeaderIndices={[0]}
-          />
-          {loading && (
-            <Div
-              style={{ position: 'absolute', bottom: 0, left: 0 }}
-              justify="center"
-              _width="100%"
-              _background="rgba(0,0,0,0.3)"
-              _height="64px">
-              <InviniteLoader />
-            </Div>
-          )}
-        </View>
+        {finishAnimation ? (
+          <View style={{ flex: 1 }}>
+            <FlatList
+              numColumns={2}
+              refreshing={loading}
+              onRefresh={this._freshFetch}
+              keyExtractor={this._keyExtractor}
+              ListHeaderComponent={this._renderSearch()}
+              data={dataSearch}
+              renderItem={this._renderItem}
+              onEndReached={this._fetchMore}
+              onEndReachedThreshold={0.99}
+              ListEmptyComponent={this._emptyComponent}
+              scrollIndicatorInsets={{ right: 1 }}
+              stickyHeaderIndices={[0]}
+            />
+          </View>
+        ) : (
+          <SearchListLoader style={{ margin: 16 }} />
+        )}
       </>
     )
   }

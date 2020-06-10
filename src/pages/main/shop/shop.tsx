@@ -1,5 +1,10 @@
-import React from 'react'
-import { View, StyleSheet, RefreshControl } from 'react-native'
+import React, { useEffect } from 'react'
+import {
+  View,
+  StyleSheet,
+  RefreshControl,
+  InteractionManager,
+} from 'react-native'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { collectionApi } from '@modules/collection/action'
@@ -13,6 +18,7 @@ import { globalDimention } from '@utils/constants'
 import { onScroll } from 'react-native-redash'
 import NavbarTopAnimated from '@components/molecules/navbar-top-animated'
 import FeaturedCategory from '@components/organisms/featured-category'
+import ShopLoader from '@components/atoms/loaders/shop'
 
 const styles = StyleSheet.create({
   container: {
@@ -33,8 +39,14 @@ const { Value } = Animated
 const y = new Value(0)
 
 class ShopPage extends React.Component<any, any> {
+  state = {
+    finishAnimation: false,
+  }
   componentDidMount() {
-    this._fetchData()
+    InteractionManager.runAfterInteractions(() => {
+      this._fetchData()
+      this.setState({ finishAnimation: true })
+    })
   }
   dimentionConstant = {
     imageHeight: globalDimention.jumbotronSize.height,
@@ -85,11 +97,14 @@ class ShopPage extends React.Component<any, any> {
   render() {
     const { page, navigation, loading } = this.props
 
+    if (!this.state.finishAnimation || loading) {
+      return <ShopLoader style={{ marginHorizontal: 16 }} />
+    }
+
     return (
       <>
         <NavbarTopAnimated
           parentDim={{ coverheight: this.dimentionConstant.imageHeight }}
-          showBars
           showSearch
           showCart
           y={y}

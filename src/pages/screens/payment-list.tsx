@@ -1,6 +1,12 @@
 import React, { Component } from 'react'
 import NavbarTop from '@components/molecules/navbar-top'
-import { View, Text, FlatList, ScrollView } from 'react-native'
+import {
+  View,
+  Text,
+  FlatList,
+  ScrollView,
+  InteractionManager,
+} from 'react-native'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import Field from '@components/atoms/field'
@@ -14,13 +20,16 @@ import OrderEmptyState from '@src/components/molecules/order-empty-state'
 import { OutlineButton } from '@src/components/atoms/button'
 import { fontStyle } from '@src/components/commont-styles'
 import { navigate } from '@src/root-navigation'
+import PaymentListLoader from '@components/atoms/loaders/one-column-card'
+import PaymentListPageLoader from '@components/atoms/loaders/payment-list'
 
 const PayMentCardWithData = transactionListData(PaymentCard)
 
-class OrderList extends Component<any, any> {
+class PaymentList extends Component<any, any> {
   state = {
     searchKey: '',
     selectedFilter: this.props.filterOptions,
+    finishAnimation: true,
   }
   timeout = null
   limit = 5
@@ -28,7 +37,10 @@ class OrderList extends Component<any, any> {
   lastskip = 0
 
   componentDidMount() {
-    this._freshfetch()
+    InteractionManager.runAfterInteractions(() => {
+      this._freshfetch()
+      this.setState({ finishAnimation: true })
+    })
   }
 
   _selectFilter = item => {
@@ -103,6 +115,11 @@ class OrderList extends Component<any, any> {
     )
   }
   _renderItem = ({ item }) => {
+    const { transactionLoading } = this.props
+
+    if (transactionLoading && this.skip === 0) {
+      return <PaymentListLoader style={{ marginLeft: 16 }} />
+    }
     return <PayMentCardWithData transactionId={item} />
   }
   _fetchMore = () => {
@@ -164,24 +181,29 @@ class OrderList extends Component<any, any> {
   _keyExtractor = (item, id) => `trans-${item} -${id}`
   render() {
     const { transactions, transactionLoading } = this.props
+    const { finishAnimation } = this.state
     return (
       <>
         <NavbarTop leftContent={['back']} title="Payment List" />
-        <View style={{ flex: 1 }}>
-          <FlatList
-            style={{ paddingTop: 12, paddingHorizontal: 16 }}
-            onRefresh={this._freshfetch}
-            refreshing={transactionLoading}
-            ListHeaderComponent={this._renderFilter}
-            ListEmptyComponent={this._emptyComponent}
-            data={transactions}
-            onEndReached={this._fetchMore}
-            onEndReachedThreshold={0.99}
-            keyExtractor={this._keyExtractor}
-            renderItem={this._renderItem}
-            scrollIndicatorInsets={{ right: 1 }}
-          />
-        </View>
+        {finishAnimation ? (
+          <View style={{ flex: 1 }}>
+            <FlatList
+              style={{ paddingTop: 12, paddingHorizontal: 16 }}
+              onRefresh={this._freshfetch}
+              refreshing={transactionLoading}
+              ListHeaderComponent={this._renderFilter}
+              ListEmptyComponent={this._emptyComponent}
+              data={transactions}
+              onEndReached={this._fetchMore}
+              onEndReachedThreshold={0.99}
+              keyExtractor={this._keyExtractor}
+              renderItem={this._renderItem}
+              scrollIndicatorInsets={{ right: 1 }}
+            />
+          </View>
+        ) : (
+          <PaymentListPageLoader style={{ margin: 16 }} />
+        )}
       </>
     )
   }
@@ -198,4 +220,4 @@ const mapStateToProps = (state: any) => {
 const mapDispatchToProps = dispatch =>
   bindActionCreators({ getAllTransaction }, dispatch)
 
-export default connect(mapStateToProps, mapDispatchToProps)(OrderList)
+export default connect(mapStateToProps, mapDispatchToProps)(PaymentList)

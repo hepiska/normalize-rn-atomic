@@ -94,9 +94,12 @@ const TabMenu = ({
                 {typeof item.title === 'string' ? (
                   <Font
                     style={{
-                      ...fontStyle.helvetica,
+                      ...fontStyle.helveticaBold,
                       fontSize: 14,
-                      color: colors.black100,
+                      color:
+                        item.name === selectedItem
+                          ? colors.black100
+                          : colors.black60,
                     }}>
                     {item.title}
                   </Font>

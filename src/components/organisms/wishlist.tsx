@@ -6,7 +6,8 @@ import { Div, Font } from '@components/atoms/basic'
 import { colors } from '@src/utils/constants'
 import { OutlineButton } from '@src/components/atoms/button'
 import { getProductSaved } from '@modules/product-saved/action'
-import ProductCard from '@components/molecules/product-card'
+import ProductCard from '@components/molecules/product-card-new'
+// import ProductCard from '@components/molecules/product-card'
 import { productListData } from '@hocs/data/product'
 import { productApi } from '@modules/product/action'
 import { fontStyle } from '../commont-styles'
@@ -94,8 +95,9 @@ class Wishlist extends Component<any, any> {
                 onAddtoCart={this._openCartModal(item)}
                 productId={item}
                 style={{
-                  wrappermargin: 8,
-                  paddingHorizontal: 0,
+                  // wrappermargin: 8,
+                  // paddingHorizontal: 0,
+                  margin: 8,
                   width: width / 2 - 16,
                 }}
               />

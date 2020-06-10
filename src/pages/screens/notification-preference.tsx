@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet, InteractionManager } from 'react-native'
 import NavbarTop from '@src/components/molecules/navbar-top'
 import { colors } from '@utils/constants'
 import { connect } from 'react-redux'
@@ -12,6 +12,7 @@ import {
 } from '@modules/user/action'
 import { bindActionCreators } from 'redux'
 import { deepClone } from '@src/utils/helpers'
+import ActionListLoader from '@components/atoms/loaders/action-list-loader'
 
 const styles = StyleSheet.create({
   playfair24: {
@@ -22,9 +23,15 @@ const styles = StyleSheet.create({
 })
 
 class NotificationPreferene extends Component<any, any> {
-  state = {}
+  state = {
+    finishAnimation: false,
+  }
   componentDidMount() {
-    this.props.getNotificationPreferences()
+    InteractionManager.runAfterInteractions(() => {
+      this.setState({ finishAnimation: true })
+
+      this.props.getNotificationPreferences()
+    })
   }
 
   handleSwitchToggle = key => {
@@ -37,6 +44,7 @@ class NotificationPreferene extends Component<any, any> {
   }
   render() {
     const { notificationSetting } = this.props
+    const { finishAnimation } = this.state
 
     const notificationMenu = [
       {
@@ -88,27 +96,31 @@ class NotificationPreferene extends Component<any, any> {
           leftContent={['back']}
           style={{ borderBottomWidth: 1, borderBottomColor: colors.black50 }}
         />
-        <ScrollView>
-          <View style={{ paddingHorizontal: 16, marginTop: 4 }}>
-            {notificationMenu.map((item, key) => (
-              <View
-                key={`notification-preference-${key}`}
-                style={{ marginVertical: 20 }}>
-                <Text style={{ ...styles.playfair24 }}>{item.title}</Text>
-                {item.subMenu.map((subItem, subKey) => (
-                  <ToggleListCard
-                    title={subItem.title}
-                    desc={subItem.desc}
-                    index={subKey}
-                    key={`${item.title}-${subKey}`}
-                    onPress={subItem.onPress}
-                    isEnabled={subItem.isEnabled}
-                  />
-                ))}
-              </View>
-            ))}
-          </View>
-        </ScrollView>
+        {finishAnimation ? (
+          <ScrollView>
+            <View style={{ paddingHorizontal: 16, marginTop: 4 }}>
+              {notificationMenu.map((item, key) => (
+                <View
+                  key={`notification-preference-${key}`}
+                  style={{ marginVertical: 20 }}>
+                  <Text style={{ ...styles.playfair24 }}>{item.title}</Text>
+                  {item.subMenu.map((subItem, subKey) => (
+                    <ToggleListCard
+                      title={subItem.title}
+                      desc={subItem.desc}
+                      index={subKey}
+                      key={`${item.title}-${subKey}`}
+                      onPress={subItem.onPress}
+                      isEnabled={subItem.isEnabled}
+                    />
+                  ))}
+                </View>
+              ))}
+            </View>
+          </ScrollView>
+        ) : (
+          <ActionListLoader style={{ margin: 16 }} />
+        )}
       </>
     )
   }

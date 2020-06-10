@@ -8,6 +8,8 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 const styles = StyleSheet.create({
   leftAction: {
     marginRight: 24,
+    width: 46,
+    height: 46,
   },
 })
 

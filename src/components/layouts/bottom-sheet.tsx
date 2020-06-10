@@ -1,5 +1,5 @@
-import React, { ReactElement } from 'react'
-import { Dimensions, StyleSheet } from 'react-native'
+import React, { ReactElement, useState, useEffect } from 'react'
+import { Dimensions, StyleSheet, InteractionManager } from 'react-native'
 import { Div, Font, TouchableWithoutFeedback } from '@components/atoms/basic'
 import BottomSheet from 'reanimated-bottom-sheet'
 import { colors } from '@utils/constants'
@@ -25,12 +25,15 @@ const Header = props => {
       _background="white"
       _padding="16px 0px 0px"
       style={styles.bottomSheetHeader}>
-      <Div
-        _width="40px"
-        _height="4px"
-        _background={colors.black90}
-        radius="2"
-      />
+      {props.snapEnabled && (
+        <Div
+          _width="40px"
+          _height="4px"
+          _background={colors.black90}
+          radius="2"
+        />
+      )}
+
       <Div
         _direction="row"
         _width="100%"
@@ -60,6 +63,7 @@ interface BottomSheetModalType {
   snapPoints: Array<number>
   children: ReactElement
   leftAction?: ReactElement
+  snapEnabled?: boolean
   bottomSheetProps?: any
   title?: string
 }
@@ -69,23 +73,40 @@ const BottomSheetLay = ({
   title,
   onClose,
   snapPoints,
+  snapEnabled = true,
   children,
   initialSnap,
   bottomSheetProps,
 }: BottomSheetModalType) => {
+  const [finishAnimation, setFinishAnimation] = useState(false)
+
+  useEffect(() => {
+    InteractionManager.runAfterInteractions(() => {
+      setFinishAnimation(true)
+    })
+  }, [])
   return (
     <>
-      <BottomSheet
-        {...bottomSheetProps}
-        onCloseEnd={onClose}
-        enabledContentGestureInteraction={false}
-        initialSnap={initialSnap}
-        renderHeader={() => <Header leftAction={leftAction} title={title} />}
-        snapPoints={snapPoints}
-        renderContent={() => children}
-      />
+      {finishAnimation && (
+        <BottomSheet
+          {...bottomSheetProps}
+          onCloseEnd={onClose}
+          enabledContentGestureInteraction={false}
+          initialSnap={initialSnap}
+          renderHeader={() => (
+            <Header
+              leftAction={leftAction}
+              snapEnabled={snapEnabled}
+              title={title}
+            />
+          )}
+          snapPoints={snapPoints}
+          renderContent={() => children}
+        />
+      )}
+
       <TouchableWithoutFeedback onPress={onClose}>
-        <Div bg="rgba(0,0,0,0.7)" _height={height} _width="100%" />
+        <Div _height={height} _width="100%" />
       </TouchableWithoutFeedback>
     </>
   )

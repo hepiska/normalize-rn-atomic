@@ -11,7 +11,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import TextInputOutline from '@src/components/atoms/field-floating'
 import { GradientButton } from '@components/atoms/button'
-import { setnewaddress } from '@modules/address/action'
+import { addNewAddress } from '@modules/address/action'
 import CirleLoader from '@src/components/atoms/loaders/cirle'
 
 import { colors } from '@utils/constants'
@@ -148,6 +148,6 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch =>
-  bindActionCreators({ setnewaddress }, dispatch)
+  bindActionCreators({ addNewAddress }, dispatch)
 
 export default connect(null, mapDispatchToProps)(DetailAddress)

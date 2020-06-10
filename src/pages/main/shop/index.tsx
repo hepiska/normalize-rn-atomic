@@ -1,18 +1,21 @@
 import React from 'react'
-import { createStackNavigator } from '@react-navigation/stack'
+import {
+  createStackNavigator,
+  TransitionPresets,
+} from '@react-navigation/stack'
 import initialPageConfig from '@pages/page-initial.config'
 import ShopPage from './shop'
 import BrandList from './brand-list'
 // import CartPage from './cart'
 
 const Stack = createStackNavigator()
-
 function ShopStack() {
   return (
     <Stack.Navigator
       initialRouteName={initialPageConfig.shop}
       headerMode="none"
       screenOptions={{
+        ...TransitionPresets.SlideFromRightIOS,
         cardStyle: {
           backgroundColor: 'white',
         },

@@ -8,7 +8,6 @@ import {
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { Div, Font, PressAbbleDiv } from '@components/atoms/basic'
-import InviniteLoader from '@components/atoms/loaders/invinite'
 import BrandCard from '@components/molecules/brand-card'
 import FilterTriger from '@components/organisms/brand-filter-buttons'
 import {
@@ -157,6 +156,8 @@ class BrandList extends Component<any, any> {
           {this._renderHeader()}
           <FlatList
             onEndReached={this._fetchMore}
+            refreshing={loading}
+            onRefresh={this._freshfetch}
             onEndReachedThreshold={0.97}
             showsHorizontalScrollIndicator={false}
             decelerationRate="fast"
@@ -166,16 +167,6 @@ class BrandList extends Component<any, any> {
             renderItem={this._renderItem}
             scrollIndicatorInsets={{ right: 1 }}
           />
-          {loading && (
-            <Div
-              style={{ position: 'absolute', bottom: 0, left: 0 }}
-              justify="center"
-              _width="100%"
-              _background="rgba(0,0,0,0.3)"
-              _height="64px">
-              <InviniteLoader />
-            </Div>
-          )}
         </Div>
       </>
     )

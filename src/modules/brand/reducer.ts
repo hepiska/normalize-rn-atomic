@@ -58,6 +58,9 @@ const brandReducer: Reducer<BrandState> = (
     case brandActionType.CLEAR_SEARCH:
       newState.search = ''
       return newState
+    case brandActionType.ERROR:
+      newState.error = action.payload
+      return newState
     case brandActionType.RESET_BRAND:
       newState.data = Immutable({})
       newState.order = Immutable([])

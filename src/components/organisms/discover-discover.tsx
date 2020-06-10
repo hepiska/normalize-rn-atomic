@@ -93,7 +93,7 @@ class DiscoverOrg extends React.Component<any, any> {
   _renderItem = ({ item, index }) => {
     return (
       <PostItem
-        style={{ marginBottom: 8 }}
+        style={{ marginBottom: 16 }}
         key={`horizontal-list-post-${index}`}
         postId={item}
         idx={index}
@@ -107,6 +107,7 @@ class DiscoverOrg extends React.Component<any, any> {
       <View style={{ backgroundColor: 'white', paddingHorizontal: 16 }}>
         <SearchFilter
           style={{ marginBottom: 16 }}
+          itemStyle={{ backgroundColor: 'white' }}
           selectedFilter={selectedFilter}
           onfilterSelected={this._selectFilter}
           filterItems={this.filterOptions}
@@ -135,6 +136,7 @@ class DiscoverOrg extends React.Component<any, any> {
             onScroll={this._hanleScroll}
             onEndReached={this._fetchMore}
             scrollEnabled={scrollEnabled}
+            rowStyle={{ paddingHorizontal: 8 }}
             ListEmptyComponent={this._emptyState}
             layoutType="mansory"
             ListHeaderComponent={this._header}

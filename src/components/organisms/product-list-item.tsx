@@ -9,7 +9,6 @@ import {
 import { colors } from '@utils/constants'
 import { formatRupiah, removeLineBreak } from '@utils/helpers'
 import Icon from 'react-native-vector-icons/MaterialIcons'
-import InviniteLoader from '@components/atoms/loaders/invinite'
 
 interface ProductListItemType {
   product: any
@@ -90,9 +89,7 @@ class ProductListItem extends React.PureComponent<ProductListItemType, any> {
           </Font>
         </React.Fragment>
       </PressAbbleDiv>
-    ) : (
-      <InviniteLoader />
-    )
+    ) : null
   }
 }
 

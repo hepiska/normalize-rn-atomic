@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { StyleSheet, View, Text } from 'react-native'
+import { StyleSheet, View, Text, InteractionManager } from 'react-native'
 import { connect } from 'react-redux'
 import NavbarTop from '@src/components/molecules/navbar-top'
 import { ScrollDiv, Font } from '@components/atoms/basic'
@@ -10,6 +10,7 @@ import { bindActionCreators } from 'redux'
 import { getOptionShipment } from '@modules/shipment/action'
 import ShipmentCart from '@components/molecules/shipment-cart'
 import { shipmentListData } from '@hocs/data/shipment'
+import CourierLoader from '@src/components/atoms/loaders/courier-loader'
 
 const ShipmentHoc = shipmentListData(ShipmentCart)
 
@@ -37,6 +38,9 @@ const styles = StyleSheet.create({
 })
 
 class ChooseCourierPage extends Component<any, any> {
+  state = {
+    finishAnimation: false,
+  }
   componentDidMount() {
     const {
       getOptionShipment,
@@ -47,61 +51,75 @@ class ChooseCourierPage extends Component<any, any> {
       test,
       warehouseId,
     } = this.props
-    getOptionShipment(variantIds, qtys, addressId, warehouseId)
+
+    InteractionManager.runAfterInteractions(() => {
+      this.setState({ finishAnimation: true })
+
+      getOptionShipment(variantIds, qtys, addressId, warehouseId)
+    })
   }
   render() {
     const { shipments, cartId, addressId, variantIds, warehouseId } = this.props
+    const { finishAnimation } = this.state
 
     return (
       <>
         <NavbarTop title="Shipment Courier" leftContent={['back']} />
-        <ScrollDiv>
-          <View {...styles.container}>
-            <View {...styles.shipmentCourier}>
-              <Icon name="business-time" size={16} color={colors.black100} />
-              <View style={{ marginLeft: 16 }}>
-                <Text style={{ ...styles.helvetica12, color: colors.black100 }}>
-                  Shipment duration starts when items have been received by the
-                  courier
-                </Text>
+        {finishAnimation ? (
+          <ScrollDiv>
+            <View {...styles.container}>
+              <View {...styles.shipmentCourier}>
+                <Icon name="business-time" size={16} color={colors.black100} />
+                <View style={{ marginLeft: 16 }}>
+                  <Text
+                    style={{ ...styles.helvetica12, color: colors.black100 }}>
+                    Shipment duration starts when items have been received by
+                    the courier
+                  </Text>
+                </View>
               </View>
-            </View>
 
-            <View
-              {...styles.shipmentCourier}
-              style={{
-                backgroundColor: 'rgba(0, 184, 0, 0.05)',
-                marginTop: 8,
-              }}>
-              <Icon
-                name="star-and-crescent"
-                size={16}
-                color={colors.greenAccent}
-              />
-              <View style={{ marginLeft: 16 }}>
-                <Text
-                  style={{ ...styles.helvetica12, color: colors.greenAccent }}>
-                  Ramadhan content courier will be write here so let’s make
-                  space
-                </Text>
-              </View>
-            </View>
-
-            {shipments[warehouseId]?.map((value, key) => {
-              return (
-                <ShipmentHoc
-                  key={`shipment-${key}`}
-                  style={{ marginTop: 16 }}
-                  shipmentId={value}
-                  index={key}
-                  variantIds={variantIds}
-                  addressId={addressId}
-                  warehouseId={warehouseId}
+              <View
+                {...styles.shipmentCourier}
+                style={{
+                  backgroundColor: 'rgba(0, 184, 0, 0.05)',
+                  marginTop: 8,
+                }}>
+                <Icon
+                  name="star-and-crescent"
+                  size={16}
+                  color={colors.greenAccent}
                 />
-              )
-            })}
-          </View>
-        </ScrollDiv>
+                <View style={{ marginLeft: 16 }}>
+                  <Text
+                    style={{
+                      ...styles.helvetica12,
+                      color: colors.greenAccent,
+                    }}>
+                    Ramadhan content courier will be write here so let’s make
+                    space
+                  </Text>
+                </View>
+              </View>
+
+              {shipments[warehouseId]?.map((value, key) => {
+                return (
+                  <ShipmentHoc
+                    key={`shipment-${key}`}
+                    style={{ marginTop: 16 }}
+                    shipmentId={value}
+                    index={key}
+                    variantIds={variantIds}
+                    addressId={addressId}
+                    warehouseId={warehouseId}
+                  />
+                )
+              })}
+            </View>
+          </ScrollDiv>
+        ) : (
+          <CourierLoader style={{ margin: 16 }} />
+        )}
       </>
     )
   }

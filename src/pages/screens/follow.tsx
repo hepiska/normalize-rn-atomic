@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { InteractionManager } from 'react-native'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { Font } from '@components/atoms/basic'
@@ -7,26 +8,12 @@ import { colors } from '@src/utils/constants'
 import TabMenu from '@components/layouts/tab-menu'
 import FollowList from '@components/organisms/follow-list'
 import { fontStyle } from '@src/components/commont-styles'
-
-// const items = user => [
-const items = [
-  {
-    name: 'Follower',
-    Component: <FollowList type="followers" />,
-    // title: `Followers (${user.follower_count || 0})`,
-    title: `Follower`,
-  },
-  {
-    name: 'Following',
-    Component: <FollowList type="followings" />,
-    // title: `Followings (${user.following_count || 0})`,
-    title: `Following`,
-  },
-]
+import CourierLoader from '@src/components/atoms/loaders/courier-loader'
 
 class Follow extends Component<any, any> {
   state = {
     activeTab: null,
+    finishAnimation: false,
   }
   items = () => {
     return [
@@ -67,6 +54,11 @@ class Follow extends Component<any, any> {
         activeTab: route.params.followType,
       })
     }
+    InteractionManager.runAfterInteractions(() => {
+      this.setState({
+        finishAnimation: true,
+      })
+    })
   }
   onChangeTab = item => {
     this.setState({
@@ -75,7 +67,7 @@ class Follow extends Component<any, any> {
   }
   render() {
     const { route, user, follower_count, following_count } = this.props
-    const { activeTab } = this.state
+    const { activeTab, finishAnimation } = this.state
 
     if (!activeTab) {
       return null
@@ -87,14 +79,18 @@ class Follow extends Component<any, any> {
           leftContent={['back']}
           style={{ borderBottomWidth: 1, borderBottomColor: colors.black50 }}
         />
-        <TabMenu
-          items={this.items()}
-          selectedItem={activeTab}
-          onChangeTab={this.onChangeTab}
-          forceRender={follower_count + following_count}
-          isScrollEnabled
-          isLazyload
-        />
+        {finishAnimation ? (
+          <TabMenu
+            items={this.items()}
+            selectedItem={activeTab}
+            onChangeTab={this.onChangeTab}
+            forceRender={follower_count + following_count}
+            isScrollEnabled
+            isLazyload
+          />
+        ) : (
+          <CourierLoader style={{ margin: 16 }} />
+        )}
       </>
     )
   }

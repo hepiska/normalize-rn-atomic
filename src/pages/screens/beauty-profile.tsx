@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text } from 'react-native'
+import { View, Text, InteractionManager } from 'react-native'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import NavbarTop from '@components/molecules/navbar-top'
@@ -25,6 +25,7 @@ import {
 import { ScrollView } from 'react-native-gesture-handler'
 import { colors } from '@src/utils/constants'
 import { fontStyle, formStyles } from '@src/components/commont-styles'
+import ThreeColumnLoader from '@src/components/atoms/loaders/three-column-card'
 
 const dummy = [
   {
@@ -111,6 +112,13 @@ class BeautyProfile extends React.Component<any, any> {
   state = {
     selectedSkinType: [], //[{ id: 7 }, { id: 5 }]
     selectedSkinConcern: [],
+    finishAnimation: false,
+  }
+
+  componentDidMount() {
+    InteractionManager.runAfterInteractions(() => {
+      this.setState({ finishAnimation: true })
+    })
   }
 
   handleSelectedSkinType = id => {
@@ -138,74 +146,81 @@ class BeautyProfile extends React.Component<any, any> {
 
   render() {
     const title = this.state.selectedSkinType.length > 0 ? 'Save' : 'Edit'
+    const { finishAnimation } = this.state
     return (
       <>
         <NavbarTop leftContent={['back']} title="Beauty Profile" />
-        <ScrollView style={{ flex: 1 }}>
-          <View>
-            <Text
-              style={{
-                ...fontStyle.playfairBold,
-                color: colors.black100,
-                fontSize: 24,
-                paddingHorizontal: 16,
-                paddingVertical: 24,
-              }}>
-              Skin Type
-            </Text>
-            <ListInterest
-              data={dummy}
-              handleSelected={this.handleSelectedSkinType}
-              selected={this.state.selectedSkinType}
-              style={{ paddingBottom: 16 }}
-              isPressable
-            />
-          </View>
-          <View>
-            <Text
-              style={{
-                ...fontStyle.playfairBold,
-                color: colors.black100,
-                fontSize: 24,
-                paddingHorizontal: 16,
-                paddingVertical: 16,
-              }}>
-              Skin Concern
-            </Text>
-            <Text
-              style={{
-                ...fontStyle.helvetica,
-                color: colors.black70,
-                fontSize: 14,
-                paddingHorizontal: 16,
-              }}>
-              You can choose more than one skin concern
-            </Text>
-            <ListInterest
-              data={dummy2}
-              handleSelected={this.handleSelectedSkinConcern}
-              selected={this.state.selectedSkinConcern}
-              style={{ paddingTop: 16 }}
-              isPressable
-            />
-          </View>
-        </ScrollView>
-        <View style={{ padding: 16 }}>
-          <GradientButton
-            {...colors.ActivePurple}
-            disabled={
-              title === 'Save' && this.state.selectedSkinType.length === 0
-            }
-            style={formStyles.button}
-            onPress={() => {}}
-            title={title}
-            fontStyle={{
-              color: colors.white,
-              ...fontStyle.helveticaBold,
-              fontSize: 14,
-            }}
-          />
-        </View>
+        {finishAnimation ? (
+          <>
+            <ScrollView style={{ flex: 1 }}>
+              <View>
+                <Text
+                  style={{
+                    ...fontStyle.playfairBold,
+                    color: colors.black100,
+                    fontSize: 24,
+                    paddingHorizontal: 16,
+                    paddingVertical: 24,
+                  }}>
+                  Skin Type
+                </Text>
+                <ListInterest
+                  data={dummy}
+                  handleSelected={this.handleSelectedSkinType}
+                  selected={this.state.selectedSkinType}
+                  style={{ paddingBottom: 16 }}
+                  isPressable
+                />
+              </View>
+              <View>
+                <Text
+                  style={{
+                    ...fontStyle.playfairBold,
+                    color: colors.black100,
+                    fontSize: 24,
+                    paddingHorizontal: 16,
+                    paddingVertical: 16,
+                  }}>
+                  Skin Concern
+                </Text>
+                <Text
+                  style={{
+                    ...fontStyle.helvetica,
+                    color: colors.black70,
+                    fontSize: 14,
+                    paddingHorizontal: 16,
+                  }}>
+                  You can choose more than one skin concern
+                </Text>
+                <ListInterest
+                  data={dummy2}
+                  handleSelected={this.handleSelectedSkinConcern}
+                  selected={this.state.selectedSkinConcern}
+                  style={{ paddingTop: 16 }}
+                  isPressable
+                />
+              </View>
+            </ScrollView>
+            <View style={{ padding: 16 }}>
+              <GradientButton
+                {...colors.ActivePurple}
+                disabled={
+                  title === 'Save' && this.state.selectedSkinType.length === 0
+                }
+                style={formStyles.button}
+                onPress={() => {}}
+                title={title}
+                fontStyle={{
+                  color: colors.white,
+                  ...fontStyle.helveticaBold,
+                  fontSize: 14,
+                }}
+              />
+            </View>
+          </>
+        ) : (
+          <ThreeColumnLoader style={{ margin: 16 }} />
+        )}
       </>
     )
   }

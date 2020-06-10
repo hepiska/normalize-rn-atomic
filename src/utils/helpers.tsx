@@ -4,6 +4,7 @@ import { uriSchreenMap, colors } from './constants'
 import { PERMISSIONS, check, request } from 'react-native-permissions'
 import { store } from '@src/init-store'
 import dayjs from 'dayjs'
+import jwtDecode from 'jwt-decode'
 
 const currencyNum = inp => {
   const a = inp
@@ -217,3 +218,42 @@ export const removeHeaderWebviewScript = `(function() {
 })()
 true;
 `
+
+export const urlScreenMap = url => {
+  const clearUrl = url.replace(Config.SHONET_URI, '')
+  const arrUrl = clearUrl.split('/').filter(a => Boolean(a))
+  return arrUrl
+}
+
+export const injectTokenScript = (id_token, user) => {
+  if (!id_token) {
+    return '(function(){})()'
+  }
+
+  const token: { exp: number } = jwtDecode(id_token)
+  const expiresAt = JSON.stringify(token.exp * 1000)
+  user = JSON.stringify(user)
+  return `
+  (function(){
+    document.cookie="tokenId=${id_token}"
+    localStorage.setItem("tokenId", "${id_token}")
+    localStorage.setItem("user", JSON.stringify(${user}))
+    localStorage.setItem("expiresAt","${expiresAt}")
+
+    window.ReactNativeWebView.postMessage(JSON.stringify(localStorage.getItem("user")))
+
+  })();
+  true;
+`
+}
+
+export const clearLocalStorageScript = () => {
+  return `
+  (function(){
+    document.cookie=null
+    localStorage.clear()
+
+  })();
+  true;
+`
+}

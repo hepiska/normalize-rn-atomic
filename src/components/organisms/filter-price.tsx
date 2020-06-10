@@ -1,4 +1,4 @@
-import React, { Component, useState, memo, useEffect } from 'react'
+import React, { Component, useState, memo, useEffect, useMemo } from 'react'
 import { Dimensions, FlatList, Modal, StyleSheet } from 'react-native'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
@@ -59,6 +59,9 @@ const FilterPriceOrg = ({
   setSelectedPrice,
   colectionPrices,
   fetchCountProduct,
+  selectedCategory,
+  activeCollection,
+  selectedBrand,
 }: any) => {
   const delta = colectionPrices.maximum_price - colectionPrices.minimum_price
 
@@ -107,42 +110,52 @@ const FilterPriceOrg = ({
         type: 'maximum_price',
         value: maxPrice,
       })
-      fetchCountProduct({ maximum_price: minPrice, minimum_price: maxPrice })
+      fetchCountProduct({
+        collection_ids: activeCollection,
+        maximum_price: maxPrice,
+        minimum_price: minPrice,
+        brand_ids: selectedBrand,
+        category_ids: selectedCategory,
+      })
     }, 500)
   }
-  return (
-    <Div
-      _width={width}
-      padd="0px 16px"
-      _height="100%"
-      radius="0"
-      justify="flex-start"
-      align="flex-start">
-      <Div _direction="row">
-        <PriceComponent label="Minimum Price " value={minimum_price} />
-        <PriceComponent label="Maximum Price " value={maximum_price} />
+
+  return useMemo(
+    () => (
+      <Div
+        _width={width}
+        padd="0px 16px"
+        _height="100%"
+        radius="0"
+        justify="flex-start"
+        align="flex-start">
+        <Div _direction="row">
+          <PriceComponent label="Minimum Price " value={minimum_price} />
+          <PriceComponent label="Maximum Price " value={maximum_price} />
+        </Div>
+        <Div _width="100%">
+          <MultiSlider
+            values={multiSlider}
+            isMarkersSeparated={true}
+            sliderLength={width * 0.8}
+            max={maxSlider}
+            trackStyle={{
+              height: 4,
+            }}
+            selectedStyle={{
+              backgroundColor: 'black',
+            }}
+            unselectedStyle={{
+              backgroundColor: 'silver',
+            }}
+            onValuesChange={_chageSlider}
+            onValuesChangeStart={() => parentScrollDisabled(false)}
+            onValuesChangeFinish={() => parentScrollDisabled(true)}
+          />
+        </Div>
       </Div>
-      <Div _width="100%">
-        <MultiSlider
-          values={multiSlider}
-          isMarkersSeparated={true}
-          sliderLength={width * 0.8}
-          max={maxSlider}
-          trackStyle={{
-            height: 4,
-          }}
-          selectedStyle={{
-            backgroundColor: 'black',
-          }}
-          unselectedStyle={{
-            backgroundColor: 'silver',
-          }}
-          onValuesChange={_chageSlider}
-          onValuesChangeStart={() => parentScrollDisabled(false)}
-          onValuesChangeFinish={() => parentScrollDisabled(true)}
-        />
-      </Div>
-    </Div>
+    ),
+    [maximum_price, minimum_price],
   )
 }
 
@@ -160,6 +173,15 @@ const mapStateToProps = state => ({
   colectionPrices: state.productFilter.data.prices || {},
   minimum_price: state.productFilter.selected.prices.minimum_price,
   maximum_price: state.productFilter.selected.prices.maximum_price,
+  activeCollection: state.productFilter.activePage.collection_ids || '',
+  selectedCategory:
+    state.productFilter.selected.category_ids ||
+    state.productFilter.activePage.category_ids ||
+    '',
+  selectedBrand:
+    state.productFilter.selected.brand_ids ||
+    state.productFilter.activePage.brand_ids ||
+    '',
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(FilterPriceOrg)

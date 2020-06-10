@@ -56,7 +56,7 @@ export const getProductSaved = () => ({
         productSavedSetLoading(false),
       ]
     },
-    error: () => {
+    error: error => {
       return [productSavedSetLoading(false)]
     },
   },

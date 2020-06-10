@@ -79,22 +79,24 @@ class Jumbotron extends React.Component<JumbotronType, any> {
           onViewableItemsChanged={this._onViewAbleChange}
           viewabilityConfig={this._itemVisiblePercentThreshold}
         />
-        <Div
-          flexDirection="row"
-          position="absolute"
-          style={styles.indicator}
-          justify="flex-start">
-          {data.map((_, k) => (
-            <PressAbbleDiv
-              _width="8px"
-              _height="8px"
-              radius="10"
-              key={`jumbotron-${k}`}
-              mar="0px 4px"
-              bg={k === this.state.childPosition ? '#455BE3' : '#949494'}
-            />
-          ))}
-        </Div>
+        {data.length > 1 && (
+          <Div
+            flexDirection="row"
+            position="absolute"
+            style={styles.indicator}
+            justify="flex-start">
+            {data.map((_, k) => (
+              <PressAbbleDiv
+                _width="8px"
+                _height="8px"
+                radius="10"
+                key={`jumbotron-${k}`}
+                mar="0px 4px"
+                bg={k === this.state.childPosition ? '#455BE3' : '#949494'}
+              />
+            ))}
+          </Div>
+        )}
       </View>
     )
   }

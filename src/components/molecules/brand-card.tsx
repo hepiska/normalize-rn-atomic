@@ -10,7 +10,6 @@ import { setImage } from '@utils/helpers'
 import { helveticaBlackTitleBold } from '@components/commont-styles'
 import { colors } from '@utils/constants'
 import { Button } from '@components/atoms/button'
-import InviniteLoader from '@components/atoms/loaders/invinite'
 
 interface BrandCardType {
   brand: any
@@ -94,9 +93,7 @@ class BrandCard extends React.PureComponent<BrandCardType, any> {
           </Div>
         </Div>
       </TouchableWithoutFeedback>
-    ) : (
-      <InviniteLoader />
-    )
+    ) : null
   }
 }
 

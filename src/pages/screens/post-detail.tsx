@@ -1,52 +1,92 @@
-import React, { Component } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import WebView from 'react-native-webview'
 import Config from 'react-native-config'
 import { connect } from 'react-redux'
 import NavbarTop from '@src/components/molecules/navbar-top'
 import { colors } from '@utils/constants'
-import { removeHeaderWebviewScript } from '@utils/helpers'
+import {
+  removeHeaderWebviewScript,
+  clearLocalStorageScript,
+  injectTokenScript,
+} from '@utils/helpers'
 
-class PostDetailPage extends Component<any, any> {
-  webref = null
+const PostDetailPage = props => {
+  const mywebView = useRef(null) as any
+  const [title, setTitle] = useState('')
 
-  render() {
-    const { post } = this.props
-    if (!post) {
-      return null
+  const {
+    post,
+    url,
+    auth_data: { id_token, user },
+  } = props
+  let uri = ''
+  if (post) {
+    uri =
+      Config.SHONET_URI +
+      `/articles/` +
+      (post.post_type === 'collection' ? `collection/` : '') +
+      post.permalink
+  }
+
+  useEffect(() => {
+    return () => {
+      mywebView.current.injectJavaScript(clearLocalStorageScript())
     }
+  }, [])
+
+  if (post || url) {
     return (
       <>
         <NavbarTop
-          title={post.title}
+          title={post?.title || title}
           leftContent={['back']}
           style={{ borderBottomWidth: 1, borderBottomColor: colors.black50 }}
         />
         <WebView
-          ref={r => (this.webref = r)}
-          source={{
-            uri: Config.SHONET_URI + `/${post.post_type}s/` + post.permalink,
+          ref={mywebView}
+          sharedCookiesEnabled
+          injectedJavaScriptBeforeContentLoaded={injectTokenScript(
+            id_token,
+            user,
+          )}
+          onLoadStart={syntheticEvent => {
+            const { nativeEvent } = syntheticEvent
+            setTitle(nativeEvent.title)
           }}
           onLoadEnd={syntheticEvent => {
             const { nativeEvent } = syntheticEvent
+            setTitle(nativeEvent.title)
             if (!nativeEvent.loading) {
-              this.webref.injectJavaScript(removeHeaderWebviewScript)
+              mywebView.current.injectJavaScript(removeHeaderWebviewScript)
             }
+          }}
+          source={{
+            uri: url ? Config.SHONET_URI + '/' + url : uri,
+            headers: {
+              Cookie: `tokenId=${id_token}`,
+            },
           }}
           originWhitelist={['https://*']}
         />
       </>
     )
   }
+  return null
 }
 const mapStateToProps = (state, ownProps) => {
   let post = null
-  const postId = ownProps.route.params.postId || null
+  const { params } = ownProps.route
+  const postId = params.postId || null
 
+  if (params.url) {
+    return { url: params.url, auth_data: state.auth.data || {} }
+  }
   if (postId) {
     post = state.post.data[postId] || null
   }
   return {
     post,
+    auth_data: state.auth.data || {},
   }
 }
 export default connect(mapStateToProps, null)(PostDetailPage)

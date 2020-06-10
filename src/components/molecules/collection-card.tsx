@@ -14,7 +14,6 @@ import {
 } from '@components/commont-styles'
 import { colors } from '@utils/constants'
 import Icon from 'react-native-vector-icons/FontAwesome'
-import InviniteLoader from '@components/atoms/loaders/invinite'
 
 interface CardListItemType {
   collection: any
@@ -88,9 +87,7 @@ class CardListItem extends React.PureComponent<CardListItemType, any> {
           </React.Fragment>
         </Div>
       </TouchableWithoutFeedback>
-    ) : (
-      <InviniteLoader />
-    )
+    ) : null
   }
 }
 

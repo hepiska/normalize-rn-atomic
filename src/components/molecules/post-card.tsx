@@ -13,7 +13,6 @@ import { helveticaNormalFont, fontStyle } from '@components/commont-styles'
 import { colors, images as defaultImages } from '@utils/constants'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import IconFa from 'react-native-vector-icons/FontAwesome'
-import InviniteLoader from '@components/atoms/loaders/invinite'
 import { navigate } from '@src/root-navigation'
 
 interface PostListItemType {
@@ -89,6 +88,7 @@ const renderIconType = type => {
 class PostListItem extends React.PureComponent<PostListItemType, any> {
   state = {
     defaultImage: null,
+    isPostLiked: this.props.isLiked,
   }
 
   _onLike = () => {
@@ -96,6 +96,9 @@ class PostListItem extends React.PureComponent<PostListItemType, any> {
       navigate('modals', { screen: 'LoginModal' })
     } else {
       this.props.onLike(this.props.post.id)
+      this.setState(state => ({
+        isPostLiked: !state.isPostLiked,
+      }))
     }
   }
 
@@ -117,6 +120,7 @@ class PostListItem extends React.PureComponent<PostListItemType, any> {
       type = 'default',
       isLiked,
     } = this.props
+    const { isPostLiked } = this.state
 
     let width = 246
     if (!horizontal && style) {
@@ -224,7 +228,7 @@ class PostListItem extends React.PureComponent<PostListItemType, any> {
                   <IconFa
                     name="heart"
                     size={16}
-                    color={isLiked ? colors.black100 : colors.black50}
+                    color={isPostLiked ? colors.black100 : colors.black50}
                   />
                   <Font
                     style={{ ...fontStyle.helvetica }}
@@ -240,7 +244,7 @@ class PostListItem extends React.PureComponent<PostListItemType, any> {
         </TouchableWithoutFeedback>
       )
     }
-    return <InviniteLoader />
+    return null
   }
 }
 

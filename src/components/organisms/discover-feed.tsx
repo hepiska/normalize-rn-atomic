@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, Dimensions } from 'react-native'
+import { View, Text, Dimensions, StyleSheet } from 'react-native'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import List from '@components/layouts/list-header'
@@ -15,6 +15,13 @@ import { colors } from '@utils/constants'
 import { Instagram } from 'react-content-loader/native'
 
 const PostItem = postListData(PostListItem)
+
+const styles = StyleSheet.create({
+  itemStyle: {
+    width: '100%',
+    paddingBottom: 16,
+  },
+})
 
 const { width, height } = Dimensions.get('screen')
 
@@ -88,7 +95,7 @@ class FeedOrg extends React.Component<any, any> {
         <View>
           <TopInsider navigation={this.props.navigation} />
           <PostItem
-            style={{ width: '100%', paddingTop: 8, paddingBottom: 24 }}
+            style={styles.itemStyle}
             key={`horizontal-list-post-${index}`}
             fullscreen
             postId={item}
@@ -103,7 +110,7 @@ class FeedOrg extends React.Component<any, any> {
           <HorizontalListLookBook navigation={this.props.navigation} />
 
           <PostItem
-            style={{ width: '100%', paddingTop: 8, paddingBottom: 24 }}
+            style={styles.itemStyle}
             key={`horizontal-list-post-${index}`}
             fullscreen
             postId={item}
@@ -118,7 +125,7 @@ class FeedOrg extends React.Component<any, any> {
         <View>
           <ProductTrending navigation={this.props.navigation} />
           <PostItem
-            style={{ width: '100%', paddingTop: 8, paddingBottom: 24 }}
+            style={styles.itemStyle}
             key={`horizontal-list-post-${index}`}
             fullscreen
             postId={item}
@@ -130,7 +137,7 @@ class FeedOrg extends React.Component<any, any> {
 
     return (
       <PostItem
-        style={{ width: '100%', paddingTop: 8, paddingBottom: 24 }}
+        style={styles.itemStyle}
         key={`horizontal-list-post-${index}`}
         fullscreen
         postId={item}

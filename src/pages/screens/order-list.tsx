@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import NavbarTop from '@components/molecules/navbar-top'
-import { View, Text, FlatList } from 'react-native'
+import { View, Text, FlatList, InteractionManager } from 'react-native'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import Field from '@components/atoms/field'
@@ -15,7 +15,8 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 import SearchFilter from '@components/organisms/search-filter'
 import { orderListData } from '@hocs/data/order'
 import OrderCard from '@components/molecules/order-card'
-import InviniteLoader from '@components/atoms/loaders/invinite'
+import OrderListLoader from '@components/atoms/loaders/one-column-card'
+import OrderListPageLoader from '@components/atoms/loaders/order-list'
 import OrderEmptyState from '@src/components/molecules/order-empty-state'
 
 const OrderHoc = orderListData(OrderCard)
@@ -31,6 +32,7 @@ class OrderList extends Component<any, any> {
     this.state = {
       searchKey: '',
       selectedFilter,
+      finishAnimation: false,
     }
   }
 
@@ -40,7 +42,10 @@ class OrderList extends Component<any, any> {
   lastSkip = 0
 
   componentDidMount() {
-    this._freshfetch()
+    InteractionManager.runAfterInteractions(() => {
+      this.setState({ finishAnimation: true })
+      this._freshfetch()
+    })
   }
 
   _selectFilter = item => {
@@ -134,6 +139,11 @@ class OrderList extends Component<any, any> {
     )
   }
   _renderItem = ({ item, index }) => {
+    const { loading } = this.props
+
+    if (loading && this.skip === 0) {
+      return <OrderListLoader style={{ marginLeft: 16 }} />
+    }
     return (
       <OrderHoc
         orderId={item}
@@ -156,39 +166,45 @@ class OrderList extends Component<any, any> {
   _keyExtractor = (item, index) => '' + item + index
   render() {
     const { orders } = this.props
+    const { finishAnimation } = this.state
+
     return (
       <>
         <NavbarTop leftContent={['back']} title="Order List" />
-        <View
-          style={{
-            flex: 1,
-          }}>
-          <FlatList
-            style={{ paddingHorizontal: 16, paddingTop: 12 }}
-            keyExtractor={this._keyExtractor}
-            ListHeaderComponent={this._renderFilter()}
-            data={orders}
-            renderItem={this._renderItem}
-            onEndReached={this._fetchMore}
-            onEndReachedThreshold={0.99}
-            ListEmptyComponent={this._emptyComponent}
-            scrollIndicatorInsets={{ right: 1 }}
-          />
-          {/* {this.props.loading && (
-            <View
-              style={{
-                position: 'absolute',
-                bottom: 0,
-                left: 0,
-                justifyContent: 'center',
-                width: '100%',
-                backgroundColor: 'rgba(0,0,0,0.3)',
-                height: 64,
-              }}>
-              <InviniteLoader />
-            </View>
-          )} */}
-        </View>
+        {finishAnimation ? (
+          <View
+            style={{
+              flex: 1,
+            }}>
+            <FlatList
+              style={{ paddingHorizontal: 16, paddingTop: 12 }}
+              keyExtractor={this._keyExtractor}
+              ListHeaderComponent={this._renderFilter()}
+              data={orders}
+              renderItem={this._renderItem}
+              onEndReached={this._fetchMore}
+              onEndReachedThreshold={0.99}
+              ListEmptyComponent={this._emptyComponent}
+              scrollIndicatorInsets={{ right: 1 }}
+            />
+            {/* {this.props.loading && (
+              <View
+                style={{
+                  position: 'absolute',
+                  bottom: 0,
+                  left: 0,
+                  justifyContent: 'center',
+                  width: '100%',
+                  backgroundColor: 'rgba(0,0,0,0.3)',
+                  height: 64,
+                }}>
+                <InviniteLoader />
+              </View>
+            )} */}
+          </View>
+        ) : (
+          <OrderListPageLoader style={{ margin: 16 }} />
+        )}
       </>
     )
   }

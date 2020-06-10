@@ -18,9 +18,9 @@ import { colors, images as defaultImages } from '@utils/constants'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import IconFa from 'react-native-vector-icons/FontAwesome'
 import IconMC from 'react-native-vector-icons/MaterialCommunityIcons'
-import InviniteLoader from '@components/atoms/loaders/invinite'
 import Config from 'react-native-config'
 import { navigate } from '@src/root-navigation'
+import Line from '@components/atoms/line'
 
 interface PostListItemType {
   post: any
@@ -85,11 +85,19 @@ const FullscreenCard = ({
   goToUsers,
   onLike,
 }: any) => {
-  const maxTitile = 200
+  const maxTitile = 3000
+  const maxSubtitle = 200
   const title =
     post.title.length > maxTitile
       ? post.title.substring(0, maxTitile) + '...'
       : post.title
+
+  const subtitle =
+    post.subtitle &&
+    post.subtitle !== undefined &&
+    post.subtitle.length > maxSubtitle
+      ? post.subtitle.substring(0, maxSubtitle) + '...'
+      : null
   return (
     <View
       style={{
@@ -101,6 +109,7 @@ const FullscreenCard = ({
         ...style,
       }}
       onLayout={onLayout}>
+      <Line />
       {user && (
         <View style={{ ...fullscreenstyles.sectionContainer }}>
           <View
@@ -122,7 +131,12 @@ const FullscreenCard = ({
               />
             </TouchableOpacity>
 
-            <Text style={{ ...fontStyle.helveticaBold, fontSize: 14 }}>
+            <Text
+              style={{
+                ...fontStyle.helveticaBold,
+                fontSize: 14,
+                color: colors.black100,
+              }}>
               {user.username}
             </Text>
           </View>
@@ -143,12 +157,28 @@ const FullscreenCard = ({
           </TouchableWithoutFeedback>
         </View>
       )}
+      <View style={{ ...fullscreenstyles.sectionContainer, marginVertical: 0 }}>
+        <Text
+          style={{
+            ...fontStyle.helvetica,
+            fontSize: 10,
+            color: colors.black70,
+          }}>
+          {post.post_type.toUpperCase()}
+        </Text>
+      </View>
       <View style={{ ...fullscreenstyles.sectionContainer }}>
-        <Text style={{ ...fontStyle.helveticaBold, fontSize: 16 }}>
+        <Text
+          style={{
+            ...fontStyle.playfairMedium,
+            fontSize: 18,
+            lineHeight: 25,
+            color: colors.black100,
+          }}>
           {title}
         </Text>
       </View>
-      {post.tags && (
+      {/* {post.tags && (
         <View
           style={{
             marginTop: 0,
@@ -168,8 +198,26 @@ const FullscreenCard = ({
             </Text>
           ))}
         </View>
+      )} */}
+      {subtitle && (
+        <View
+          style={{
+            marginTop: 0,
+            marginBottom: 8,
+            marginHorizontal: 16,
+            flexDirection: 'row',
+          }}>
+          <Text
+            style={{
+              ...fontStyle.helveticaThin,
+              fontSize: 12,
+              marginRight: 4,
+              color: colors.black80,
+            }}>
+            {subtitle}
+          </Text>
+        </View>
       )}
-
       <View
         style={{
           ...fullscreenstyles.sectionContainer,
@@ -268,6 +316,7 @@ const FullscreenCard = ({
                   ...fontStyle.helvetica,
                   fontSize: 12,
                   marginRight: 4,
+                  color: colors.black100,
                 }}>
                 {post.likes[0].user.username}
               </Text>
@@ -312,7 +361,7 @@ const VerticalCart = ({
   onShare,
   onLike,
 }: any) => {
-  const maxTitile = 40
+  const maxTitile = 3000
   const title =
     post.title.length > maxTitile
       ? post.title.substring(0, maxTitile) + '...'
@@ -324,7 +373,6 @@ const VerticalCart = ({
         paddingHorizontal: 1,
         // borderWidth: 1,
         borderRadius: 8,
-        // overflow: 'hidden',
         shadowColor: colors.black100,
         shadowOffset: {
           width: 0,
@@ -359,13 +407,22 @@ const VerticalCart = ({
             />
           </TouchableOpacity>
 
-          <Text style={{ ...fontStyle.helveticaBold, fontSize: 10 }}>
+          <Text
+            style={{
+              ...fontStyle.helveticaBold,
+              fontSize: 10,
+              color: colors.black80,
+            }}>
             {user.username}
           </Text>
         </View>
       )}
       {layout && (
-        <View style={{ marginVertical: 4 }}>
+        <View
+          style={{
+            marginVertical: 4,
+            overflow: 'hidden',
+          }}>
           <TouchableWithoutFeedback onPress={onPress}>
             <ImageAutoSchale
               source={{
@@ -378,8 +435,14 @@ const VerticalCart = ({
           </TouchableWithoutFeedback>
         </View>
       )}
-      <View style={{ marginVertical: 4, marginHorizontal: 8 }}>
-        <Text style={{ ...fontStyle.helveticaBold, fontSize: 10 }}>
+      <View style={{ marginVertical: 4, marginBottom: 5, marginHorizontal: 8 }}>
+        <Text
+          style={{
+            ...fontStyle.playfair,
+            fontSize: 10,
+            lineHeight: 12,
+            color: colors.black100,
+          }}>
           {title}
         </Text>
       </View>
@@ -416,6 +479,7 @@ const VerticalCart = ({
 class PostListItem extends React.PureComponent<PostListItemType, any> {
   state: any = {
     defaultImage: null,
+    isPostLiked: this.props.isLiked,
   }
 
   _onLike = () => {
@@ -423,6 +487,9 @@ class PostListItem extends React.PureComponent<PostListItemType, any> {
       navigate('modals', { screen: 'LoginModal' })
     } else {
       this.props.onLike(this.props.post.id)
+      this.setState(state => ({
+        isPostLiked: !state.isPostLiked,
+      }))
     }
   }
 
@@ -465,7 +532,7 @@ class PostListItem extends React.PureComponent<PostListItemType, any> {
       type = 'default',
       isLiked,
     } = this.props
-    const { layout } = this.state
+    const { layout, isPostLiked } = this.state
     if (post) {
       if (fullscreen) {
         return (
@@ -481,7 +548,7 @@ class PostListItem extends React.PureComponent<PostListItemType, any> {
             type={type}
             onShare={this._onShare}
             onLayout={this._onLayout}
-            isLiked={isLiked}
+            isLiked={isPostLiked}
           />
         )
       } else {
@@ -496,12 +563,12 @@ class PostListItem extends React.PureComponent<PostListItemType, any> {
             type={type}
             onShare={this._onShare}
             onLayout={this._onLayout}
-            isLiked={isLiked}
+            isLiked={isPostLiked}
           />
         )
       }
     }
-    return <InviniteLoader />
+    return null
   }
 }
 

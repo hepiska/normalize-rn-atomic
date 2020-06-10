@@ -30,14 +30,12 @@ let hasNotch = DeviceInfo.hasNotch()
 
 const LeftDiv = styled(Div)`
   position: absolute;
-  padding: 16px 12px;
   flex: 1;
   left: 0px;
 `
 
 const RightDiv = styled(Div)`
   position: absolute;
-  padding: 12px 12px;
   flex: 1;
   right: 0px;
 `

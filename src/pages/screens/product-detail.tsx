@@ -1,5 +1,11 @@
 import React from 'react'
-import { Dimensions, View, Text, StyleSheet } from 'react-native'
+import {
+  Dimensions,
+  View,
+  Text,
+  StyleSheet,
+  InteractionManager,
+} from 'react-native'
 import {
   Div,
   Font,
@@ -30,6 +36,7 @@ import { fontStyle } from '@components/commont-styles'
 import { GradientButton } from '@components/atoms/button'
 import { getProductById } from '@modules/product/action'
 import { setImage, deepClone, getDetailContent } from '@utils/helpers'
+import ProductListLoader from '@components/atoms/loaders/product-detail'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import {
   addProductSaved,
@@ -117,15 +124,20 @@ class ProductListPage extends React.Component<any, any> {
   state = {
     selectedVariant: 1,
     isUserSelectVariant: false,
+    isProductSaved: this.props.isSaved,
+    finishAnimation: false,
   }
   _breadcrumb = []
 
   componentDidMount() {
-    this._fetchData()
+    InteractionManager.runAfterInteractions(() => {
+      this._fetchData()
 
-    if (this.props.product && this.props.categories) {
-      this.renderBreadcrumb(this.props.product.category.id)
-    }
+      if (this.props.product && this.props.categories) {
+        this.renderBreadcrumb(this.props.product.category.id)
+      }
+      this.setState({ finishAnimation: true })
+    })
   }
 
   _fetchData = () => {
@@ -211,7 +223,9 @@ class ProductListPage extends React.Component<any, any> {
 
   onSaveProduct = () => {
     const { isSaved, product, deleteProductSaved, addProductSaved } = this.props
-
+    this.setState(state => ({
+      isProductSaved: !state.isProductSaved,
+    }))
     const onSave = isSaved
       ? deleteProductSaved(product.id)
       : addProductSaved(product.id)
@@ -235,8 +249,9 @@ class ProductListPage extends React.Component<any, any> {
           this.props.navigation.navigate('modals', {
             screen: 'Share',
             params: {
-              title: 'The shonet product' + product.name,
-              uri: Config.SHONET_URI + '/products/' + product.id,
+              title: product.name + ' - The Shonet',
+              uri:
+                Config.SHONET_URI + '/products/' + product.slug || product.id,
               message: 'Shop ' + product.name + ' at The Shonet',
             },
           })
@@ -294,8 +309,12 @@ class ProductListPage extends React.Component<any, any> {
 
   render() {
     const { product, loading, isSaved } = this.props
-    const { selectedVariant, isUserSelectVariant, filteredAttributes } = this
-      .state as any
+    const {
+      selectedVariant,
+      isUserSelectVariant,
+      filteredAttributes,
+      isProductSaved,
+    } = this.state as any
     let returnExchange = ''
     if (
       product.flags?.includes('returnable') &&
@@ -394,6 +413,11 @@ class ProductListPage extends React.Component<any, any> {
       }
       contentItem.push(newContent)
     }
+
+    if (!this.state.finishAnimation || loading) {
+      return <ProductListLoader style={{ marginHorizontal: 16 }} />
+    }
+
     return (
       <>
         <NavbarTopAnimated
@@ -443,13 +467,31 @@ class ProductListPage extends React.Component<any, any> {
                   color={colors.black100}>
                   {product.brand.name}
                 </Font>
-                <Font
-                  style={{ ...fontStyle.helveticaThin, fontWeight: '300' }}
-                  size={18}
-                  _margin="4px"
-                  color={colors.gray3}>
-                  {product.name}
-                </Font>
+                <HTML
+                  html={`<productname>${product.name}</productname>`}
+                  renderers={{
+                    // eslint-disable-next-line react/display-name
+                    productname: (
+                      htmlAttribs,
+                      children,
+                      convertedCSSStyles,
+                      passProps,
+                    ) => {
+                      return (
+                        <Text
+                          style={{
+                            ...fontStyle.helveticaThin,
+                            fontWeight: '300',
+                            fontSize: 18,
+                            margin: 4,
+                            color: colors.black80,
+                          }}>
+                          {passProps.rawChildren[0].data}
+                        </Text>
+                      )
+                    },
+                  }}
+                />
                 {isUserSelectVariant ? (
                   <Price
                     {...varianData.price}
@@ -531,7 +573,7 @@ class ProductListPage extends React.Component<any, any> {
                 }}
               />
 
-              <ButtonGroup items={this.groupButton(isSaved)} />
+              <ButtonGroup items={this.groupButton(isProductSaved)} />
 
               <View
                 style={{
@@ -713,7 +755,7 @@ class ProductListPage extends React.Component<any, any> {
             </Div>
           </ImageCoverContentLayout>
 
-          {loading && (
+          {/* {loading && (
             <Div
               style={{ position: 'absolute', bottom: 0, left: 0 }}
               justify="center"
@@ -722,7 +764,7 @@ class ProductListPage extends React.Component<any, any> {
               _height="64px">
               <CircleLoader />
             </Div>
-          )}
+          )} */}
         </Div>
       </>
     )

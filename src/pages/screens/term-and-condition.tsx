@@ -1,24 +1,27 @@
 import React, { Component } from 'react'
-
+import { InteractionManager } from 'react-native'
 import WebView from 'react-native-webview'
 import Config from 'react-native-config'
 import { colors } from '@utils/constants'
 import NavbarTop from '@src/components/molecules/navbar-top'
-
-const run = `(function() {
-  var header = document.getElementsByClassName("header-container");
-  header[0].remove();
-  var mainWrapper = document.getElementsByClassName("main-wrapper");
-  mainWrapper[0].style.paddingTop = "15px";
-  var footer = document.getElementsByClassName("footer-nav"); 
-  footer[0].remove();
-  true
-})()`
+import ArticleLoader from '@src/components/atoms/loaders/article'
+import { removeHeaderWebviewScript } from '@utils/helpers'
 
 class TermConditionWebView extends Component<any, any> {
   webref = null
+  state = {
+    finishAnimation: false,
+  }
+
+  componentDidMount() {
+    InteractionManager.runAfterInteractions(() => {
+      this.setState({ finishAnimation: true })
+    })
+  }
 
   render() {
+    const { finishAnimation } = this.state
+
     return (
       <>
         <NavbarTop
@@ -26,19 +29,23 @@ class TermConditionWebView extends Component<any, any> {
           leftContent={['back']}
           style={{ borderBottomWidth: 1, borderBottomColor: colors.black50 }}
         />
-        <WebView
-          ref={r => (this.webref = r)}
-          source={{
-            uri: Config.SHONET_URI + '/terms-and-condition',
-          }}
-          onLoadEnd={syntheticEvent => {
-            const { nativeEvent } = syntheticEvent
-            if (!nativeEvent.loading) {
-              this.webref.injectJavaScript(run)
-            }
-          }}
-          originWhitelist={['https://*']}
-        />
+        {finishAnimation ? (
+          <WebView
+            ref={r => (this.webref = r)}
+            source={{
+              uri: Config.SHONET_URI + '/terms-and-condition',
+            }}
+            onLoadEnd={syntheticEvent => {
+              const { nativeEvent } = syntheticEvent
+              if (!nativeEvent.loading) {
+                this.webref.injectJavaScript(removeHeaderWebviewScript)
+              }
+            }}
+            originWhitelist={['https://*']}
+          />
+        ) : (
+          <ArticleLoader style={{ margin: 16 }} />
+        )}
       </>
     )
   }

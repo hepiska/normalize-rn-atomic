@@ -7,6 +7,7 @@ import {
   Dimensions,
   Button,
   TouchableOpacity,
+  InteractionManager,
 } from 'react-native'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
@@ -21,6 +22,7 @@ import { OutlineButton, GradientButton } from '@components/atoms/button'
 import { showAlert, formatRupiah, countdown } from '@utils/helpers'
 import Clipboard from '@react-native-community/clipboard'
 import Icon from 'react-native-vector-icons/FontAwesome5'
+import IconFa from 'react-native-vector-icons/FontAwesome'
 import IconMi from 'react-native-vector-icons/MaterialIcons'
 import { PressAbbleDiv } from '@src/components/atoms/basic'
 import ContentExpandable from '@components/molecules/content-expandable'
@@ -30,6 +32,7 @@ import { navigate, goBack } from '@src/root-navigation'
 import BottomSheetModal from '@src/components/layouts/bottom-sheet-modal'
 import ActionListCard from '@components/molecules/action-list-card'
 import { sendEmail } from '@utils/helpers'
+import PaymentDetailLoader from '@src/components/atoms/loaders/payment-detail-loader'
 
 const Divider = ({ marginTop }) => (
   <View
@@ -178,12 +181,15 @@ class PaymentWaiting extends Component<any, any> {
       seconds: 0,
       hours: 0,
     },
+    finishAnimation: false,
   }
 
   async componentDidMount() {
     const { transactionId, transaction, route } = this.props
     const { holdOpenWeb } = route.params || {}
-
+    InteractionManager.runAfterInteractions(() => {
+      this.setState({ finishAnimation: true })
+    })
     if (transactionId) {
       await this.callApi
       this.interval = setInterval(this.callApi, 10000)
@@ -205,6 +211,8 @@ class PaymentWaiting extends Component<any, any> {
   componentDidUpdate(prevProps) {
     const { transaction } = this.props
     if (prevProps.transaction.expiring_at !== transaction.expiring_at) {
+      clearInterval(this.interval)
+      clearInterval(this.count)
       const expired = transaction.expiring_at
 
       this.count = countdown(new Date(expired), data => {
@@ -638,6 +646,7 @@ class PaymentWaiting extends Component<any, any> {
 
   render() {
     const { transaction } = this.props
+    const { finishAnimation } = this.state
     if (!transaction) {
       return null
     }
@@ -646,68 +655,83 @@ class PaymentWaiting extends Component<any, any> {
         <NavbarTop
           title="Transaction Detail"
           leftAction={
-            <Icon
-              name="chevron-left"
-              onPress={this._handleBack}
-              size={22}
-              color={colors.black100}
-            />
+            <PressAbbleDiv
+              style={{ marginRight: 24, width: 46, height: 46 }}
+              onPress={this._handleBack}>
+              <IconFa
+                name="chevron-left"
+                onPress={this._handleBack}
+                size={20}
+                color={colors.black100}
+              />
+            </PressAbbleDiv>
           }
           rightAction={
-            <PressAbbleDiv onPress={this._toggleBottomSheet}>
-              <IconMi name="more-vert" size={22} color={colors.black100} />
+            <PressAbbleDiv
+              onPress={this._toggleBottomSheet}
+              style={{ marginLeft: 24, width: 46, height: 46 }}>
+              <IconMi name="more-vert" size={20} color={colors.black100} />
             </PressAbbleDiv>
           }
           style={{ borderBottomWidth: 1, borderBottomColor: colors.black50 }}
         />
         {this.renderBottomSheet()}
-
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          style={{ paddingHorizontal: 16, marginTop: 24, marginBottom: 24 }}>
-          <View style={styles.row}>
-            <Text style={styles.helvetica14}>Transaction ID</Text>
-            <Text style={styles.helveticaBold14}>{transaction.id}</Text>
-          </View>
-          <StatusAlert
-            style={styles.margin}
-            icon={statusToIcon(transaction.status)}
-            status={transaction.status}
-            text={statusToDescription(transaction.status)}
-          />
-          {this.renderCountdownTimer()}
-          {transaction.provider_payment_method?.group_payment ===
-            'Virtual Account' && this.renderVirtualAccountInfo()}
-          <ContentExpandable
-            paddingTitleVertical={24}
-            paddingTitleHorizontal={0}
-            title={this.renderTitleExpandable()}
-            rightTitle={this.renderRightTitleExpandable()}
-            content={this.renderContentExpandable()}
-            id={`payment-waiting-${transaction.id}`}
-            divider={<Divider marginTop={0} />}
-          />
-          {/* QR Code khusus gopay */}
-          {transaction.provider_payment_method?.name.toLowerCase() ===
-            'gopay' &&
-            transaction.actions[0]?.url && (
-              <View
-                style={{
-                  width: '100%',
-                  alignItems: 'center',
-                  marginTop: 32,
-                }}>
-                <ImageAutoSchale
-                  source={{ uri: transaction.actions[0]?.url }}
-                  width={256}
-                  style={styles.qrCode}
-                />
+        {finishAnimation ? (
+          <>
+            <ScrollView
+              showsVerticalScrollIndicator={false}
+              style={{
+                paddingHorizontal: 16,
+                marginTop: 24,
+                marginBottom: 24,
+              }}>
+              <View style={styles.row}>
+                <Text style={styles.helvetica14}>Transaction ID</Text>
+                <Text style={styles.helveticaBold14}>{transaction.id}</Text>
               </View>
-            )}
-          {transaction.provider_payment_method && this.renderPaymentGuide()}
-          <View />
-        </ScrollView>
-        {transaction.provider_payment_method && this.renderFooterButton()}
+              <StatusAlert
+                style={styles.margin}
+                icon={statusToIcon(transaction.status)}
+                status={transaction.status}
+                text={statusToDescription(transaction.status)}
+              />
+              {this.renderCountdownTimer()}
+              {transaction.provider_payment_method?.group_payment ===
+                'Virtual Account' && this.renderVirtualAccountInfo()}
+              <ContentExpandable
+                paddingTitleVertical={24}
+                paddingTitleHorizontal={0}
+                title={this.renderTitleExpandable()}
+                rightTitle={this.renderRightTitleExpandable()}
+                content={this.renderContentExpandable()}
+                id={`payment-waiting-${transaction.id}`}
+                divider={<Divider marginTop={0} />}
+              />
+              {/* QR Code khusus gopay */}
+              {transaction.provider_payment_method?.name.toLowerCase() ===
+                'gopay' &&
+                transaction.actions[0]?.url && (
+                  <View
+                    style={{
+                      width: '100%',
+                      alignItems: 'center',
+                      marginTop: 32,
+                    }}>
+                    <ImageAutoSchale
+                      source={{ uri: transaction.actions[0]?.url }}
+                      width={256}
+                      style={styles.qrCode}
+                    />
+                  </View>
+                )}
+              {transaction.provider_payment_method && this.renderPaymentGuide()}
+              <View />
+            </ScrollView>
+            {transaction.provider_payment_method && this.renderFooterButton()}
+          </>
+        ) : (
+          <PaymentDetailLoader style={{ margin: 16 }} />
+        )}
       </>
     )
   }

@@ -5,6 +5,7 @@ import Img from '@components/atoms/image'
 import { fontStyle } from '@components/commont-styles'
 import { setImage } from '@utils/helpers'
 import { images, colors } from '@src/utils/constants'
+import HTML from 'react-native-render-html'
 
 interface ProductOverviewCart {
   image: any
@@ -58,12 +59,22 @@ const ProductOverviewCart: React.FC<ProductOverviewCart> = ({
           _margin="0px 0px 8px">
           {brand}
         </Font>
-        <Font
-          style={{ ...fontStyle.helvetica }}
-          size={14}
-          color={colors.black100}>
-          {name}
-        </Font>
+        <HTML
+          html={`<name>${name}</name>`}
+          renderers={{
+            // eslint-disable-next-line react/display-name
+            name: (htmlAttribs, children, convertedCSSStyles, passProps) => {
+              return (
+                <Font
+                  style={{ ...fontStyle.helvetica }}
+                  size={14}
+                  color={colors.black100}>
+                  {passProps.rawChildren[0].data}
+                </Font>
+              )
+            },
+          }}
+        />
       </Div>
     </Div>
   )

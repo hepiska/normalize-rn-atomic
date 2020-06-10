@@ -11,7 +11,7 @@ const postListMap = (state, ownProps) => {
   const isLiked = !!state.postsLiked.data[postId]
   if (!ownProps.onPress) {
     ownProps.onPress = () => {
-      if (post.post_type === 'article') {
+      if (post.post_type === 'article' || post.post_type === 'collection') {
         navigate('Screens', {
           screen: 'PostDetail',
           params: { postId },

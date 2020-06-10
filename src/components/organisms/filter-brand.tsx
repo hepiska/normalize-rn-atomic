@@ -1,4 +1,11 @@
-import React, { Component, useState, useEffect, memo, useCallback } from 'react'
+import React, {
+  Component,
+  useState,
+  useEffect,
+  memo,
+  useCallback,
+  useMemo,
+} from 'react'
 import { Dimensions, StyleSheet, SectionList } from 'react-native'
 import { Div, Font } from '@components/atoms/basic'
 import { brandListData } from '@hocs/data/brand'
@@ -47,7 +54,12 @@ const useBrandFilter = (props: any) => {
     setAvailableAlfabet(getAlfabetFromBrandSection(props.brands))
   }, [props.brands])
   useEffect(() => {
-    props.fetchCountProduct({ brands: props.selectedBrand })
+    props.fetchCountProduct({
+      collection_ids: props.activeCollection,
+      brands: props.selectedBrand,
+      category_ids: props.selectedCategory || props.activeCategory,
+      ...props.selectedPrice,
+    })
   }, [props.selectedBrand])
   const _onSearchChange = e => {
     setSearch(e)
@@ -64,7 +76,7 @@ const FilterBrandOrg = (props: any) => {
     { _onChangeAlvabet, _onSearchChange },
   ] = useBrandFilter(props)
 
-  let brands = deepClone(props.brands || []).map(brandSection => {
+  let brands = ([...props.brands] || []).map(brandSection => {
     brandSection.data = brandSection.data.filter(brand => {
       return brand.name.toLowerCase().includes(search.toLowerCase())
     })
@@ -79,62 +91,71 @@ const FilterBrandOrg = (props: any) => {
 
   const _renderItem = ({ item }) => (
     <FilterBrandItem
+      key={'key-brand' + item.id}
       fontStyle={fontStyle.helvetica}
       onPress={brand => props.changeSelectedBrand(brand.id)}
-      key={item.id}
       isSelected={props.selectedBrand.includes(item.id)}
       item={item}
     />
   )
 
-  return (
-    <Div
-      _width={width}
-      _flex="1"
-      _height="100%"
-      radius="0"
-      justify="flex-start"
-      align="flex-start">
-      <Div _width="100%" _height="32px" _padding="0px 16px">
-        <Field
-          style={{ width: '100%' }}
-          value={search}
-          placeholder="Search Brand..."
-          onChangeText={_onSearchChange}
-          leftIcon={
-            <Icon
-              style={{ marginRight: 8 }}
-              name="search"
-              color={colors.black90}
-            />
-          }
+  return useMemo(
+    () => (
+      <Div
+        _width={width}
+        _flex="1"
+        _height="100%"
+        radius="0"
+        justify="flex-start"
+        align="flex-start">
+        <Div _width="100%" _height="32px" _padding="0px 16px">
+          <Field
+            style={{ width: '100%' }}
+            value={search}
+            placeholder="Search Brand..."
+            onChangeText={_onSearchChange}
+            leftIcon={
+              <Icon
+                style={{ marginRight: 8 }}
+                name="search"
+                color={colors.black90}
+              />
+            }
+          />
+        </Div>
+        <AlvabetSelectorMol
+          style={styles.container}
+          onSelect={_onChangeAlvabet}
+          available={availableAlfabet}
+        />
+        <SectionList
+          style={styles.sectionContainer}
+          renderSectionHeader={({ section: { title } }) => (
+            <Div _width="100%" bg="white" padd="8px 0px" align="flex-start">
+              <Font _padding="16px 0px 0px" style={fontStyle.helvetica}>
+                {title}
+              </Font>
+            </Div>
+          )}
+          sections={brands}
+          renderItem={_renderItem}
         />
       </Div>
-      <AlvabetSelectorMol
-        style={styles.container}
-        onSelect={_onChangeAlvabet}
-        available={availableAlfabet}
-      />
-      <SectionList
-        style={styles.sectionContainer}
-        renderSectionHeader={({ section: { title } }) => (
-          <Div _width="100%" bg="white" padd="8px 0px" align="flex-start">
-            <Font _padding="16px 0px 0px" style={fontStyle.helvetica}>
-              {title}
-            </Font>
-          </Div>
-        )}
-        sections={brands}
-        renderItem={_renderItem}
-      />
-    </Div>
+    ),
+    [props.brands, props.selectedBrand, filter, search],
   )
 }
 
 const mapStateToProps = state => ({
   brands: state.productFilter.data.brands || [],
+  selectedPrice: state.productFilter.selected.price,
+  activeCollection: state.productFilter.activePage.collection_ids || '',
   selectedBrand: state.productFilter.selected.brand_ids
     ? state.productFilter.selected.brand_ids
+    : '',
+  activeCategory: state.productFilter.activePage.category_ids || '',
+  selectedCategory: state.productFilter.selected.category_ids
+    ? state.productFilter.selected.category_ids
     : '',
 })
 const mapDispatchToProps = dispatch =>

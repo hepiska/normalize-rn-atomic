@@ -13,6 +13,7 @@ interface TitleDescriptionType {
   style?: ViewStyle
   title: string | ReactElement
   description: string | ReactElement
+  titleAction?: ReactElement
 }
 
 class TitleDescriptionCard extends React.Component<TitleDescriptionType, any> {
@@ -20,22 +21,25 @@ class TitleDescriptionCard extends React.Component<TitleDescriptionType, any> {
     defaultImage: null,
   }
   render() {
-    const { style, title, description } = this.props
+    const { style, title, description, titleAction } = this.props
 
     return (
       <View {...style} {...styles.container}>
-        {typeof title === 'string' ? (
-          <Text
-            style={{
-              ...fontStyle.futuraBold,
-              fontSize: 24,
-              color: colors.black100,
-            }}>
-            {title}
-          </Text>
-        ) : (
-          title
-        )}
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          {typeof title === 'string' ? (
+            <Text
+              style={{
+                ...fontStyle.futuraBold,
+                fontSize: 24,
+                color: colors.black100,
+              }}>
+              {title}
+            </Text>
+          ) : (
+            title
+          )}
+          {titleAction && titleAction}
+        </View>
         <View style={{ marginTop: 8 }}>
           {typeof description === 'string' ? (
             <Text

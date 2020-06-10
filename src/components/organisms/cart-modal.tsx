@@ -13,7 +13,7 @@ import { getProductById } from '@modules/product/action'
 import { addCart, changeVariant } from '@modules/cart/action'
 import { images, colors } from '@utils/constants'
 import { formatRupiah, deepClone } from '@utils/helpers'
-import CircleLoader from '@components/atoms/loaders/cirle'
+// import CircleLoader from '@components/atoms/loaders/cirle'
 
 const AbsDiv = styled(Div)`
   position: absolute;
@@ -226,16 +226,6 @@ class CartModal extends React.Component<any, any> {
             </Div>
           </AbsDiv>
         </Div>
-        {loading && (
-          <Div
-            style={{ position: 'absolute', bottom: 0, left: 0 }}
-            justify="center"
-            _width="100%"
-            _background="rgba(63,64,64,0.3)"
-            _height="64px">
-            <CircleLoader />
-          </Div>
-        )}
       </>
     )
   }

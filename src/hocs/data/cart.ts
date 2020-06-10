@@ -22,7 +22,7 @@ const cartListMap = (state, ownProps) => {
     variant = deepClone(cart.variant)
     isSaved = !!state.productsSaved.data[cart.variant.product_id]
     product = state.products.data[cart.variant.product_id]
-    if (variant.attribute_values) {
+    if (variant.attribute_values && product) {
       variant.attribute_values?.map(v => {
         const attribute = product.attributes.find(
           attribute => attribute.attribute_id === v.attribute_id,
@@ -39,7 +39,7 @@ const cartListMap = (state, ownProps) => {
     let qty = product.variant.qty
     cart = {}
     cart['qty'] = qty
-    variant = deepClone(product.variant)
+    variant = deepClone(product.variant && product)
     if (variant.attribute_values) {
       variant.attribute_values?.map(v => {
         const attribute = product.attributes.find(

@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import {
   Dimensions,
   ImageBackground,
+  InteractionManager,
   StyleSheet,
   SectionList,
   View,
@@ -12,12 +13,12 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { productApi } from '@modules/product/action'
 import NavbarTop from '@components/molecules/navbar-top'
-import ProductCard from '@components/molecules/product-card'
+// import ProductCard from '@components/molecules/product-card'
+import ProductCard from '@components/molecules/product-card-new'
 import { productListData } from '@hocs/data/product'
 import { getBrand } from '@modules/brand/action'
 import FilterTriger from '@components/organisms/product-filter-buttons'
-import { futuraTitleFont } from '@components/commont-styles'
-import InviniteLoader from '@components/atoms/loaders/invinite'
+import { futuraTitleFont, fontStyle } from '@components/commont-styles'
 import { getCollectionBySlug } from '@modules/collection/action'
 import { getCategory } from '@modules/category/action'
 import { deepClone } from '@utils/helpers'
@@ -25,14 +26,20 @@ import { colors } from '@utils/constants'
 import { setImage } from '@utils/helpers'
 import ErrorOrg from '@src/components/organisms/four-o-four'
 import ProductEmpty from '@components/organisms/product-empty'
+import ProductListLoader from '@components/atoms/loaders/two-column-card'
+import ProductHeader from '@components/atoms/loaders/product-list-header'
+import ProductListPageLoader from '@components/atoms/loaders/product-list'
 import {
   addFilterData,
   clearFilter,
   setBrandFilter,
   setFilter,
+  clearActivePage,
+  setActivePage,
   changeSelectedBrand,
   changeSelectedCategory,
   setSelectedCollection,
+  resetSelectedCollection,
 } from '@modules/product-filter/action'
 const { width } = Dimensions.get('window')
 
@@ -45,6 +52,9 @@ const styles = StyleSheet.create({
   itemFont: {
     color: colors.black70,
     fontSize: 14,
+  },
+  brandTitle: {
+    ...fontStyle.playfairBold,
   },
   sectionHeader: {
     backgroundColor: 'white',
@@ -62,6 +72,7 @@ class Productlist extends Component<any, any> {
   state = {
     skip: 0,
     headerName: 'Product',
+    finishAnimation: false,
   }
   limit = 20
 
@@ -72,17 +83,22 @@ class Productlist extends Component<any, any> {
 
   componentDidMount() {
     const { route, brand, category, getCategory } = this.props
-    if (route.params.from === 'collections' && route.params.collectionsSlug)
-      return this.props.getCollectionBySlug(route.params.collectionsSlug)
-    if (route.params.from === 'brands' && (brand || route.params.brandSlug)) {
-      return this.props.getBrand(route.params.brandsSlug || brand.id)
-    }
-    if (
-      route.params.from === 'categories' &&
-      (category || route.params.categoriesSlug)
-    ) {
-      return getCategory(route.params.categoriesSlug || category.id)
-    }
+
+    InteractionManager.runAfterInteractions(() => {
+      this.setState({ finishAnimation: true })
+
+      if (route.params.from === 'collections' && route.params.collectionsSlug)
+        return this.props.getCollectionBySlug(route.params.collectionsSlug)
+      if (route.params.from === 'brands' && (brand || route.params.brandSlug)) {
+        return this.props.getBrand(route.params.brandsSlug || brand.id)
+      }
+      if (
+        route.params.from === 'categories' &&
+        (category || route.params.categoriesSlug)
+      ) {
+        return getCategory(route.params.categoriesSlug || category.id)
+      }
+    })
   }
 
   componentDidUpdate(prevProps) {
@@ -136,6 +152,8 @@ class Productlist extends Component<any, any> {
   }
 
   componentWillUnmount() {
+    this.props.resetSelectedCollection()
+    this.props.clearActivePage()
     this.props.clearFilter()
   }
 
@@ -148,6 +166,8 @@ class Productlist extends Component<any, any> {
       setBrandFilter,
       changeSelectedBrand,
       setSelectedCollection,
+      setActivePage,
+      changeSelectedCategory,
     } = this.props
 
     if (collection) {
@@ -160,6 +180,8 @@ class Productlist extends Component<any, any> {
       })
       setSelectedCollection(collection.id)
       setBrandFilter(collection.brands)
+      setActivePage({ type: 'collection_ids', ids: [collection.id] })
+
       this._freshfetch()
     } else if (brand) {
       setFilter({
@@ -171,6 +193,7 @@ class Productlist extends Component<any, any> {
       })
       changeSelectedBrand(brand.id)
       setBrandFilter(brand.brands || [])
+      setActivePage({ type: 'brand_ids', ids: [brand.id] })
 
       this._freshfetch()
     } else if (category) {
@@ -181,7 +204,8 @@ class Productlist extends Component<any, any> {
           minimum_price: category.price_min,
         },
       })
-      changeSelectedCategory(category.id)
+      // changeSelectedCategory(category.id)
+      setActivePage({ type: 'category_ids', ids: [category.id] })
       setBrandFilter(category.brands)
       this._freshfetch()
     }
@@ -194,6 +218,7 @@ class Productlist extends Component<any, any> {
       search,
       sort,
       brand,
+      route,
       category,
     } = this.props
     const params: any = {
@@ -203,6 +228,8 @@ class Productlist extends Component<any, any> {
       ...sort.value,
       ...appliedFilters,
     }
+
+    const { from } = route.params
 
     if (search) {
       params.name = search
@@ -214,7 +241,7 @@ class Productlist extends Component<any, any> {
     if (brand) {
       params.brand_ids = brand.id
     }
-    if (category) {
+    if (!appliedFilters.category_ids && category) {
       params.category_ids = category.id
     }
 
@@ -254,6 +281,19 @@ class Productlist extends Component<any, any> {
   )
 
   _renderItem = ({ section, index }) => {
+    const {
+      isCategoryLoading,
+      isBrandLoading,
+      isCollectionLoading,
+    } = this.props
+
+    const headerLoading =
+      isCategoryLoading || isBrandLoading || isCollectionLoading
+
+    if ((this.props.loading && this.skip === 0) || headerLoading) {
+      return <ProductListLoader style={{ marginLeft: 16 }} />
+    }
+
     const numColumns = 2
     if (index % numColumns !== 0) return null
     const items = []
@@ -266,9 +306,9 @@ class Productlist extends Component<any, any> {
             // product={item}
             key={'' + section.data[i] + index}
             style={{
-              // flex: 1,
-              // wrappermargin: 8,
-              width: width / 2,
+              maxWidth: width / 2 - 16,
+              margin: 8,
+              flex: 1,
             }}
           />,
         )
@@ -295,7 +335,14 @@ class Productlist extends Component<any, any> {
   }
 
   _header = () => {
-    const { collection, brand, route } = this.props
+    const {
+      collection,
+      brand,
+      route,
+      isCategoryLoading,
+      isBrandLoading,
+      isCollectionLoading,
+    } = this.props
 
     if (route.params.from === 'categories') {
       return null
@@ -312,40 +359,52 @@ class Productlist extends Component<any, any> {
       headerData.title = collection.title
       headerData.image = collection.landscape_image_url || headerData.image
     }
+    if (!headerData.image) {
+      return null
+    }
 
+    const loading = isCategoryLoading || isBrandLoading || isCollectionLoading
     return this.props.headerError ? (
       <ErrorOrg />
     ) : (
       <View style={{ padding: 16 }}>
-        <View
-          style={{
-            height: imageHeight,
-            alignItems: 'center',
-            backgroundColor: colors.black100,
-            borderRadius: 8,
-            justifyContent: 'center',
-          }}>
-          {headerData.image && (
-            <Image
-              style={StyleSheet.absoluteFillObject}
-              source={{
-                uri: setImage(headerData.image, {
-                  width,
-                  height: imageHeight,
-                }),
-              }}
-            />
-          )}
-          <Font {...futuraTitleFont} color="white" size="24">
-            {headerData.title}
-          </Font>
-        </View>
+        {loading ? (
+          <ProductHeader />
+        ) : (
+          <View
+            style={{
+              height: imageHeight,
+              alignItems: 'center',
+              backgroundColor: colors.black100,
+              borderRadius: 8,
+              justifyContent: 'center',
+            }}>
+            {headerData.image && (
+              <Image
+                style={StyleSheet.absoluteFillObject}
+                source={{
+                  uri: setImage(headerData.image, {
+                    width,
+                    height: imageHeight,
+                  }),
+                }}
+              />
+            )}
+            <Font style={styles.brandTitle} color="white" size="24">
+              {headerData.title}
+            </Font>
+          </View>
+        )}
       </View>
     )
   }
 
-  emptyComponent = () =>
-    !this.props.headerError ? (
+  emptyComponent = () => {
+    const { headerError, loading } = this.props
+    if (loading && this.skip === 0) {
+      return <ProductListLoader style={{ margin: 16 }} />
+    }
+    return (
       <>
         <FilterTriger style={{ paddingHorizontal: 16 }} />
         <ProductEmpty
@@ -353,7 +412,8 @@ class Productlist extends Component<any, any> {
           subtitle="We're sorry! We can't find any products available"
         />
       </>
-    ) : null
+    )
+  }
 
   render() {
     const {
@@ -362,7 +422,9 @@ class Productlist extends Component<any, any> {
       loading,
       brand,
       collection,
+      selectedFilter,
       category,
+      headerError,
     } = this.props
     const headerData: any = {
       // image:
@@ -378,7 +440,12 @@ class Productlist extends Component<any, any> {
     } else if (category) {
       headerData.title = category.name
     }
-    const sectionData = products.length
+
+    if (loading) {
+      pagination.total
+    }
+
+    const sectionData = !headerError
       ? [
           {
             title: 'mantap',
@@ -392,35 +459,34 @@ class Productlist extends Component<any, any> {
         <NavbarTop
           leftContent={['back']}
           title={headerData.title || ''}
-          subtitle={`${pagination.total} Items`}
+          subtitle={
+            loading
+              ? 'loading....'
+              : `${headerError ? 0 : pagination.total} Items`
+          }
         />
-        <Div _width="100%" _flex="1" justify="flex-start">
-          <SectionList
-            onRefresh={this._freshfetch}
-            refreshing={loading}
-            ListHeaderComponent={this._header}
-            style={styles.sectionContainer}
-            onEndReachedThreshold={0.97}
-            onEndReached={this._fetchMore}
-            ListEmptyComponent={this.emptyComponent}
-            keyExtractor={this._keyExtractor}
-            renderSectionHeader={this._renderHeader}
-            sections={sectionData}
-            stickySectionHeadersEnabled
-            renderItem={this._renderItem}
-            scrollIndicatorInsets={{ right: 1 }}
-          />
-          {loading && (
-            <Div
-              style={{ position: 'absolute', bottom: 0, left: 0 }}
-              justify="center"
-              _width="100%"
-              _background="rgba(0,0,0,0.3)"
-              _height="64px">
-              <InviniteLoader />
-            </Div>
-          )}
-        </Div>
+
+        {this.state.finishAnimation ? (
+          <Div _width="100%" _flex="1" justify="flex-start">
+            <SectionList
+              onRefresh={this._freshfetch}
+              refreshing={loading}
+              ListHeaderComponent={this._header}
+              style={styles.sectionContainer}
+              onEndReachedThreshold={0.97}
+              onEndReached={this._fetchMore}
+              ListEmptyComponent={this.emptyComponent}
+              keyExtractor={this._keyExtractor}
+              renderSectionHeader={this._renderHeader}
+              sections={sectionData}
+              stickySectionHeadersEnabled
+              renderItem={this._renderItem}
+              scrollIndicatorInsets={{ right: 1 }}
+            />
+          </Div>
+        ) : (
+          <ProductListPageLoader style={{ margin: 16 }} />
+        )}
       </>
     )
   }
@@ -431,6 +497,7 @@ const mapDispatchToProps = dispatch =>
     {
       productApi,
       setBrandFilter,
+      resetSelectedCollection,
       setFilter,
       addFilterData,
       getCollectionBySlug,
@@ -438,6 +505,8 @@ const mapDispatchToProps = dispatch =>
       clearFilter,
       getBrand,
       changeSelectedCategory,
+      clearActivePage,
+      setActivePage,
       setSelectedCollection,
       getCategory,
     },
@@ -473,7 +542,6 @@ const mapStateToProps = (state, { route }) => {
   //     ...filterProps,
   //   }
   // }
-
   if (
     (route.params.from === 'collections' ||
       route.params.from === 'collection') &&
@@ -481,7 +549,7 @@ const mapStateToProps = (state, { route }) => {
   ) {
     return {
       collection: collectionId && state.collection.data[collectionId],
-      headerError: state.global.error,
+      headerError: state.collection.error,
       products: collectionId ? state.products.order : [],
       isCollectionLoading: state.collection.loading,
       loading: state.products.productsLoading,
@@ -490,7 +558,8 @@ const mapStateToProps = (state, { route }) => {
     }
   }
 
-  const brandId = route.params.brandId || route.params.brandsId
+  const brandId =
+    route.params.brandId || route.params.brandsId || state.brands.activeBrand
 
   if (
     (route.params.from === 'brands' || route.params.from === 'brand') &&
@@ -498,7 +567,7 @@ const mapStateToProps = (state, { route }) => {
   ) {
     return {
       brand: state.brands.data[brandId] || { id: brandId },
-      headerError: state.global.error,
+      headerError: state.brands.error,
       loading: state.products.productsLoading,
       isBrandLoading: state.brands.loading,
       products: state.products.order,
@@ -520,7 +589,7 @@ const mapStateToProps = (state, { route }) => {
   ) {
     return {
       category: state.categories.data[categoriesId] || { id: categoriesId },
-      headerError: state.global.error,
+      headerError: state.categories.error,
       loading: state.products.productsLoading,
       isCategoryLoading: state.categories.loading,
       products: state.products.order,

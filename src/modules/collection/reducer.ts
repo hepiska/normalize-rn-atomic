@@ -50,6 +50,10 @@ const productReducer: Reducer<CollectionState> = (
     case collectionActionType.SET_ACTIVE_COLLECTION:
       newState.activeCollection = action.payload
       return newState
+
+    case collectionActionType.ERROR:
+      newState.error = action.payload
+      return newState
     default:
       return newState
   }

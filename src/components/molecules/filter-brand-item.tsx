@@ -34,9 +34,25 @@ interface SelectAbleItemType {
 }
 
 class SelectAbleItem extends React.PureComponent<SelectAbleItemType, any> {
+  state = {
+    isSelected: this.props.isSelected,
+  }
+  componentDidUpdate(prevProps) {
+    if (
+      prevProps.isSelected !== this.props.isSelected &&
+      this.state.isSelected !== this.props.isSelected
+    ) {
+      this.setState({ isSelected: this.props.isSelected })
+    }
+  }
+
   _onPress = () => {
     const { item, onPress } = this.props
-    onPress(item)
+    this.setState({ isSelected: !this.state.isSelected }, () => {
+      setTimeout(() => {
+        onPress(item)
+      }, 300)
+    })
   }
 
   getRadius = shape => {
@@ -50,13 +66,8 @@ class SelectAbleItem extends React.PureComponent<SelectAbleItemType, any> {
   }
 
   render() {
-    const {
-      style,
-      item,
-      isSelected,
-      selectorShape = 'square',
-      fontStyle,
-    } = this.props
+    const { style, item, selectorShape = 'square', fontStyle } = this.props
+    const { isSelected } = this.state
     const composeStyle = { ...styles.container, ...style }
 
     return (

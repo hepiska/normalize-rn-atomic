@@ -1,12 +1,7 @@
 import React from 'react'
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  ViewStyle,
-} from 'react-native'
+import { View, Text, StyleSheet, ViewStyle } from 'react-native'
 import { fontStyle } from '@components/commont-styles'
+import { TouchableOpacity } from 'react-native-gesture-handler'
 import { colors } from '@utils/constants'
 
 const styles = StyleSheet.create({

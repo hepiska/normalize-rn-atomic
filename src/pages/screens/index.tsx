@@ -1,5 +1,9 @@
 import React from 'react'
-import { createStackNavigator } from '@react-navigation/stack'
+import {
+  createStackNavigator,
+  CardStyleInterpolators,
+  TransitionPresets,
+} from '@react-navigation/stack'
 import AddNewAddress from './add-address'
 import AddNewAddressManual from './add-address-manual'
 import UserDetail from './user-detail'
@@ -48,6 +52,7 @@ function InsiderStack() {
       mode="card"
       initialRouteName={InitialPage.screens}
       screenOptions={{
+        ...TransitionPresets.SlideFromRightIOS,
         cardStyle: {
           backgroundColor: 'white',
         },

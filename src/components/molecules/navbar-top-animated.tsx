@@ -1,6 +1,6 @@
 import React from 'react'
 import DeviceInfo from 'react-native-device-info'
-import { Dimensions, StyleSheet, SafeAreaView, View } from 'react-native'
+import { Dimensions, StyleSheet, SafeAreaView, View, Text } from 'react-native'
 import { Div, Font, Image, PressAbbleDiv } from '@components/atoms/basic'
 import LinearGradient from 'react-native-linear-gradient'
 import { globalDimention, colors } from '@utils/constants'
@@ -11,6 +11,7 @@ import { fontStyle } from '@components/commont-styles'
 import CartAction from '@components/atoms/cart-action-button'
 import { useNavigation } from '@react-navigation/native'
 import { navigate } from '@src/root-navigation'
+import HTML from 'react-native-render-html'
 
 const { interpolate, Extrapolate } = Animated
 
@@ -25,14 +26,12 @@ const styles = StyleSheet.create({
 
 const LeftDiv = styled(PressAbbleDiv)`
   position: absolute;
-  padding: 16px 12px;
   flex: 1;
   top: 0;
   left: 0px;
 `
 const RightDiv = styled(Div)`
   position: absolute;
-  padding: 16px 16px 12px;
   flex: 1;
   top: 0;
   right: 0px;
@@ -126,9 +125,9 @@ const NavbarTopAnimated: React.SFC<NavbarBottomProps> = ({
         justify="center"
         zIndex="10"
         _direction="row">
-        <LeftDiv zIndex="2" _height={55} _direction="row">
+        <LeftDiv zIndex="2" _direction="row">
           {showBack && (
-            <PressAbbleDiv onPress={_onBack}>
+            <PressAbbleDiv onPress={_onBack} style={{ width: 36, height: 52 }}>
               <Icon name="chevron-left" size={20} color={colors.black100} />
             </PressAbbleDiv>
           )}
@@ -141,31 +140,55 @@ const NavbarTopAnimated: React.SFC<NavbarBottomProps> = ({
         <Div
           padd="16px 12px"
           overflow="visible"
-          width={width - 132}
+          width={200}
           _direction="row"
           minHeight={48}
           wrap="wrap"
           {...style}
           align="center">
-          <Animated.Text
-            style={[
-              {
-                ...fontStyle.helveticaBold,
-                flexWrap: 'wrap',
-                color: 'black',
-                fontSize: 16,
-                textAlign: 'center',
-                fontWeight: '400',
-              },
-              { opacity: textOpacity },
-            ]}>
-            {title}
-          </Animated.Text>
+          <Animated.View style={[{ opacity: textOpacity }]}>
+            {title ? (
+              <HTML
+                html={`<title>${title}</title>`}
+                renderers={{
+                  // eslint-disable-next-line react/display-name
+                  title: (
+                    htmlAttribs,
+                    children,
+                    convertedCSSStyles,
+                    passProps,
+                  ) => {
+                    return (
+                      <Text
+                        numberOfLines={1}
+                        ellipsizeMode="tail"
+                        style={{
+                          ...fontStyle.helveticaBold,
+                          flexWrap: 'wrap',
+                          color: 'black',
+                          fontSize: 16,
+                          textAlign: 'center',
+                          fontWeight: '400',
+                        }}>
+                        {passProps.rawChildren[0].data}
+                      </Text>
+                    )
+                  },
+                }}
+              />
+            ) : null}
+          </Animated.View>
         </Div>
 
-        <RightDiv _flex="1" _height={55} _direction="row">
+        <RightDiv _flex="1" _direction="row">
           {showSearch && (
-            <PressAbbleDiv onPress={_onSearch} style={styles.rightAction}>
+            <PressAbbleDiv
+              onPress={_onSearch}
+              style={{
+                width: 36,
+                height: 52,
+                ...styles.rightAction,
+              }}>
               <Icon name="search" size={20} color={colors.black100} />
             </PressAbbleDiv>
           )}

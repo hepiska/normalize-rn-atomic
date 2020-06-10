@@ -14,7 +14,23 @@ export default class CirleLoader extends React.Component<any, any> {
   render() {
     return (
       <View style={{ ...styles.container, ...this.props.style }}>
-        <LottieView source={require('./cirle-loader.json')} autoPlay loop />
+        <LottieView
+          source={require('./cirle-loader.json')}
+          autoPlay
+          loop
+          colorFilters={
+            this.props.loaderColor && [
+              {
+                keypath: 'Oval',
+                color: this.props.loaderColor,
+              },
+              {
+                keypath: 'Oval Copy',
+                color: this.props.loaderColor,
+              },
+            ]
+          }
+        />
       </View>
     )
   }

@@ -44,6 +44,11 @@ export const setBrandLoading = (data: any) => ({
   payload: data,
 })
 
+export const setBrandError = (data: any) => ({
+  type: brandActionType.ERROR,
+  payload: data,
+})
+
 export const changeSearch = (data: string) => ({
   type: brandActionType.CHANGE_SEARCH,
   payload: data,
@@ -57,24 +62,40 @@ export const resetBrand = () => ({
   type: brandActionType.RESET_BRAND,
 })
 
-export const getBrand = id => ({
-  type: API,
-  payload: {
-    url: '/brands/' + id,
-    schema: schema.brandFull,
-    startNetwork: () => {
-      return setBrandLoading(true)
+export const getBrand = id => {
+  const params = {
+    id_type: 'id',
+  }
+  if (!Number(id)) {
+    params.id_type = 'slug'
+  }
+  return {
+    type: API,
+    payload: {
+      url: '/brands/' + id,
+      schema: schema.brandFull,
+      requestParams: { params },
+      startNetwork: () => {
+        return setBrandLoading(true)
+      },
+      endNetwork: (type, err) => {
+        if (type === 'error') {
+          return setBrandError(err)
+        }
+        return setBrandLoading(false)
+      },
+      success: data => {
+        return [
+          setCategoryData(data.entities.category),
+          setBrandData(data.entities.brand),
+          setActiveBrand(data.result),
+          setBrandError({}),
+          setBrandLoading(false),
+        ]
+      },
     },
-    success: data => {
-      return [
-        setCategoryData(data.entities.category),
-        setBrandData(data.entities.brand),
-        setActiveBrand(data.result),
-        setBrandLoading(false),
-      ]
-    },
-  },
-})
+  }
+}
 
 export const brandApi = (params, url) => ({
   type: API,

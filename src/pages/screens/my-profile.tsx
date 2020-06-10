@@ -6,7 +6,8 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { productApi } from '@modules/product/action'
 import { getProductSaved } from '@modules/product-saved/action'
-import ProductCard from '@components/molecules/product-card'
+// import ProductCard from '@components/molecules/product-card'
+import ProductCard from '@components/molecules/product-card-new'
 import { productListData } from '@hocs/data/product'
 import ActionTabMenu from '@components/molecules/action-tab-menu'
 import { capitalEachWord } from '@utils/helpers'
@@ -118,7 +119,8 @@ class MyProfile extends React.Component<any, any> {
     return (
       <ProductWithCardHoc
         style={{
-          wrappermargin: 16,
+          // wrappermargin: 16,
+          margin: 16,
           width: width / 2,
         }}
         productId={item}

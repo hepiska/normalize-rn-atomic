@@ -11,7 +11,8 @@ import { colors } from '@utils/constants'
 import PostCard from '@components/molecules/post-card'
 import CollectionCard from '@components/molecules/post-card'
 import BrandCard from '@components/molecules/brand-card'
-import ProductCard from '@components/molecules/product-card'
+import ProductCard from '@components/molecules/product-card-new'
+// import ProductCard from '@components/molecules/product-card'
 import { postListData } from '@hocs/data/post'
 import { collectionListData } from '@hocs/data/collection'
 import { nestedScreenMap } from '@utils/constants'
@@ -44,10 +45,12 @@ const styles = StyleSheet.create({
     // flex: 1,
 
     width: width / 2 - 8,
-    marginTop: 0,
-    marginLeft: 8,
-    marginRight: 8,
-    marginBottom: 0,
+    // marginTop: 0,
+    // marginLeft: 8,
+    // marginRight: 8,
+    // marginBottom: 0,
+    marginVertical: 0,
+    marginHorizontal: 8,
     paddingHorizontal: 0,
   },
   buttonText: {
@@ -99,7 +102,10 @@ class HorizontalList extends React.Component<HorizontalListType, any> {
             productId={item}
             key={`horizontal-list-product-${index}`}
             isAtributesShow={true}
-            style={{ ...styles.productCard, wrappermargin: 4 }}
+            // style={{ ...styles.productCard, wrappermargin: 4 }}
+            style={{
+              ...styles.productCard,
+            }}
           />
         )
       case 'brand':

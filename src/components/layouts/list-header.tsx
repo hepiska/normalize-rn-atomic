@@ -3,7 +3,6 @@ import { View, SectionList, ViewStyle, StyleSheet } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
 import Column from '@components/organisms/mansory-column'
 import Animated from 'react-native-reanimated'
-import CircleLoader from '@components/atoms/loaders/cirle'
 import { onScroll } from 'react-native-redash'
 
 export enum LayoutType {
@@ -156,11 +155,11 @@ class ListMansoryStickyHeader extends React.Component<
           keyExtractor={this._keyExtractor}
           renderItem={this._renderSection}
         /> */}
-        {loading && (
+        {/* {loading && (
           <View style={styles.loaderContainerL}>
             <CircleLoader style={styles.loader} />
           </View>
-        )}
+        )} */}
       </View>
     )
   }
