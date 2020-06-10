@@ -219,6 +219,12 @@ export const removeHeaderWebviewScript = `(function() {
 true;
 `
 
+export const urlScreenMap = url => {
+  const clearUrl = url.replace(Config.SHONET_URI, '')
+  const arrUrl = clearUrl.split('/').filter(a => Boolean(a))
+  return arrUrl
+}
+
 export const injectTokenScript = (id_token, user) => {
   if (!id_token) {
     return '(function(){})()'

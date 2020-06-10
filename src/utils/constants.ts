@@ -132,6 +132,34 @@ export const nestedScreenMap = (key, params?) => {
         params,
       },
     },
+    users: {
+      screen: 'Screens',
+      params: {
+        screen: 'UserDetail',
+        params,
+      },
+    },
+    insiders: {
+      screen: 'Screens',
+      params: {
+        screen: 'UserDetail',
+        params,
+      },
+    },
+    posts: {
+      screen: 'Screens',
+      params: {
+        screen: 'PostDetail',
+        params,
+      },
+    },
+    articles: {
+      screen: 'Screens',
+      params: {
+        screen: 'PostDetail',
+        params,
+      },
+    },
   }
   return map[key]
 }

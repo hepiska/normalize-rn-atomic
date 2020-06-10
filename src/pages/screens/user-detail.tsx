@@ -3,8 +3,10 @@ import { Alert } from 'react-native'
 import WebView from 'react-native-webview'
 import Config from 'react-native-config'
 import { connect } from 'react-redux'
+import { urlScreenMap } from '@utils/helpers'
+
 import NavbarTop from '@src/components/molecules/navbar-top'
-import { colors } from '@utils/constants'
+import { colors, nestedScreenMap } from '@utils/constants'
 import {
   removeHeaderWebviewScript,
   clearLocalStorageScript,
@@ -28,7 +30,18 @@ const UserDetail = props => {
   }, [])
 
   const _navChange = navState => {
-    console.log('sasd', navState)
+    if (!navState.url.includes('?initial=true')) {
+      const urlArr = urlScreenMap(navState.url)
+
+      const params: any = {}
+      if (urlArr[0] === 'users' || urlArr[0] === 'insiders') {
+        params.username = urlArr[1]
+      } else if (urlArr[0] === 'posts' || urlArr[0] === 'articles') {
+        params.url = urlArr.join('/')
+      }
+      const screen = nestedScreenMap(urlArr[0], params)
+      props.navigation.push(screen.screen, screen.params)
+    }
   }
 
   const {
@@ -53,7 +66,7 @@ const UserDetail = props => {
           user,
         )}
         source={{
-          uri: Config.SHONET_URI + '/users/' + username,
+          uri: Config.SHONET_URI + '/users/' + username + '?initial=true',
           headers: {
             Cookie: `tokenId=${id_token}`,
           },
@@ -75,6 +88,9 @@ const mapStateToProps = (state, ownProps) => {
   let username = null
   if (userId) {
     username = state.user.data[userId]?.username
+  }
+  if (ownProps.route.params.username) {
+    username = ownProps.route.params.username
   }
 
   return {
