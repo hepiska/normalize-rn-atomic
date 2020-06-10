@@ -12,11 +12,12 @@ import { GradientButton } from '@components/atoms/button'
 import { colors } from '@utils/constants'
 import Geolocation from 'react-native-geolocation-service'
 import { showAlert, checkLocationPermit } from '@utils/helpers'
-import Icon from 'react-native-vector-icons/MaterialIcons'
+import Icon from 'react-native-vector-icons/FontAwesome'
 import { googeMapsReq } from '@utils/services'
 import SearchAddress from '@components/organisms/search-address'
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps'
 import Modal from 'react-native-modal'
+import { PressAbbleDiv } from '../atoms/basic'
 
 const headerHeight = 54
 
@@ -156,7 +157,11 @@ class MapModal extends React.PureComponent<any, any> {
         <NavbarTop
           style={styles.header}
           leftAction={
-            <Icon name="close" size={24} onPress={this._closeModal} />
+            <PressAbbleDiv
+              onPress={this._closeModal}
+              style={{ marginRight: 24, width: 46, height: 46 }}>
+              <Icon name="close" size={20} />
+            </PressAbbleDiv>
           }
           title={title}
         />

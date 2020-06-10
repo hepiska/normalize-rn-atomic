@@ -55,8 +55,6 @@ const initialActiveTab = 'userpost'
 const styles = StyleSheet.create({
   header: { height: headerHeight },
   image: {
-    width: 64,
-    height: 64,
     borderRadius: 100,
   },
   futuraBold20: {
@@ -299,9 +297,15 @@ class ProfilPage extends React.PureComponent<any, any> {
     if (user) {
       const image =
         defaultImage ||
-        (!!user.photo_url
-          ? changeImageUri(user.photo_url, imgSize)
-          : defaultImages.product)
+        (!!user.photo_url && changeImageUri(user.photo_url, imgSize))
+
+      const thumbnailImage = defaultImage
+        ? null
+        : !!user.photo_url &&
+          changeImageUri(user.photo_url, {
+            width: imgSize.width,
+            height: imgSize.height,
+          })
       return (
         <>
           <NavbarTop title={showName ? user.name : 'My profile'} />
@@ -319,15 +323,22 @@ class ProfilPage extends React.PureComponent<any, any> {
                   onLayout={this._onLayout}>
                   {/* photo, name, fols */}
                   <View style={{ flexDirection: 'row' }}>
-                    <TouchableOpacity onPress={this._openModal}>
+                    <TouchableOpacity onPress={image ? this._openModal : null}>
                       <ImageAutoSchale
+                        errorStyle={{
+                          width: imgSize.width,
+                          height: imgSize.height,
+                        }}
+                        thumbnailSource={
+                          typeof thumbnailImage === 'string'
+                            ? { uri: thumbnailImage }
+                            : thumbnailImage
+                        }
                         source={
                           typeof image === 'string' ? { uri: image } : image
                         }
-                        onError={() => {
-                          this.setState({ defaultImage: defaultImages.product })
-                        }}
-                        style={styles.image}
+                        width={imgSize.width}
+                        style={{ ...styles.image }}
                       />
                     </TouchableOpacity>
                     <Modal isVisible={isVisible} style={{ margin: 0 }}>

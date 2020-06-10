@@ -113,7 +113,9 @@ const AtributesList = ({
         </Font>
         <Text
           style={{ ...fontStyle.helvetica, fontSize: 14, color: colors.gray3 }}>
-          {selectedAttribute.label}
+          {selectedAttribute.label
+            ? selectedAttribute.label.replace(/(\r\n|\n|\r)/gm, '')
+            : ''}
         </Text>
       </Div>
       <ScrollDiv horizontal _margin="8px 0px" radius="0px">

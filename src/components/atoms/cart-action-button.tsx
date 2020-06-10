@@ -12,7 +12,9 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 
 const styles = StyleSheet.create({
   rightAction: {
-    marginLeft: 24,
+    width: 36,
+    height: 52,
+    marginRight: 6,
   },
   leftAction: {
     marginRight: 24,
@@ -25,11 +27,11 @@ const styles = StyleSheet.create({
     position: 'absolute',
     height: 16,
     width: 16,
-    top: -6,
+    top: 8,
+    right: 2,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 8,
-    right: -6,
   },
 })
 

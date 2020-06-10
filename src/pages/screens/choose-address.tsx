@@ -3,7 +3,7 @@ import { Text, View, StyleSheet, InteractionManager } from 'react-native'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import NavbarTop from '@src/components/molecules/navbar-top'
-import { Div, ScrollDiv } from '@components/atoms/basic'
+import { Div, ScrollDiv, PressAbbleDiv } from '@components/atoms/basic'
 import { GradientButton } from '@components/atoms/button'
 import { addressListData } from '@hocs/data/address'
 import AddressCart from '@components/molecules/address-cart'
@@ -106,12 +106,16 @@ class ChooseAddressPage extends Component<any, any> {
           title="Shipping Address"
           leftContent={['back']}
           rightAction={
-            <Icon
-              name="plus"
+            <PressAbbleDiv
               onPress={this._addnewaddress}
-              color={colors.black100}
-              size={16}
-            />
+              style={{ marginLeft: 24, width: 46, height: 46 }}>
+              <Icon
+                name="plus"
+                onPress={this._addnewaddress}
+                color={colors.black100}
+                size={16}
+              />
+            </PressAbbleDiv>
           }
         />
         {finishAnimation ? (

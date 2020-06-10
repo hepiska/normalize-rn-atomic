@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { View, StyleSheet, InteractionManager } from 'react-native'
-import { ScrollDiv } from '@components/atoms/basic'
+import { ScrollDiv, PressAbbleDiv } from '@components/atoms/basic'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import NavbarTop from '@src/components/molecules/navbar-top'
@@ -100,7 +100,15 @@ class PaymentMethodPage extends Component<any, any> {
         <NavbarTop
           title="Payment Method"
           leftAction={
-            <Icon name="chevron-left" size={24} onPress={this._toPaymentList} />
+            <PressAbbleDiv
+              onPress={this._toPaymentList}
+              style={{ marginRight: 24, width: 46, height: 46 }}>
+              <Icon
+                name="chevron-left"
+                size={20}
+                onPress={this._toPaymentList}
+              />
+            </PressAbbleDiv>
           }
           style={{ borderBottomWidth: 1, borderBottomColor: colors.black50 }}
         />

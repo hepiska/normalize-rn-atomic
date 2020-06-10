@@ -22,6 +22,7 @@ import { OutlineButton, GradientButton } from '@components/atoms/button'
 import { showAlert, formatRupiah, countdown } from '@utils/helpers'
 import Clipboard from '@react-native-community/clipboard'
 import Icon from 'react-native-vector-icons/FontAwesome5'
+import IconFa from 'react-native-vector-icons/FontAwesome'
 import IconMi from 'react-native-vector-icons/MaterialIcons'
 import { PressAbbleDiv } from '@src/components/atoms/basic'
 import ContentExpandable from '@components/molecules/content-expandable'
@@ -210,6 +211,8 @@ class PaymentWaiting extends Component<any, any> {
   componentDidUpdate(prevProps) {
     const { transaction } = this.props
     if (prevProps.transaction.expiring_at !== transaction.expiring_at) {
+      clearInterval(this.interval)
+      clearInterval(this.count)
       const expired = transaction.expiring_at
 
       this.count = countdown(new Date(expired), data => {
@@ -652,16 +655,22 @@ class PaymentWaiting extends Component<any, any> {
         <NavbarTop
           title="Transaction Detail"
           leftAction={
-            <Icon
-              name="chevron-left"
-              onPress={this._handleBack}
-              size={22}
-              color={colors.black100}
-            />
+            <PressAbbleDiv
+              style={{ marginRight: 24, width: 46, height: 46 }}
+              onPress={this._handleBack}>
+              <IconFa
+                name="chevron-left"
+                onPress={this._handleBack}
+                size={20}
+                color={colors.black100}
+              />
+            </PressAbbleDiv>
           }
           rightAction={
-            <PressAbbleDiv onPress={this._toggleBottomSheet}>
-              <IconMi name="more-vert" size={22} color={colors.black100} />
+            <PressAbbleDiv
+              onPress={this._toggleBottomSheet}
+              style={{ marginLeft: 24, width: 46, height: 46 }}>
+              <IconMi name="more-vert" size={20} color={colors.black100} />
             </PressAbbleDiv>
           }
           style={{ borderBottomWidth: 1, borderBottomColor: colors.black50 }}
