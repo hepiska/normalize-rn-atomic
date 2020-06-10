@@ -220,16 +220,33 @@ true;
 `
 
 export const injectTokenScript = (id_token, user) => {
+  if (!id_token) {
+    return '(function(){})()'
+  }
+
   const token: { exp: number } = jwtDecode(id_token)
+  const expiresAt = JSON.stringify(token.exp * 1000)
+  console.log(expiresAt)
 
   return `
   (function(){
     document.cookie="tokenId=${id_token}"
     localStorage.setItem("tokenId", "${id_token}")
     localStorage.setItem("user", JSON.stringify(${user}))
-    localStorage.setItem("expiresAt", "${token.exp * 1000}")
+    localStorage.setItem("expiresAt","${expiresAt}")
 
     window.ReactNativeWebView.postMessage(JSON.stringify(localStorage.getItem("user")))
+
+  })();
+  true;
+`
+}
+
+const clearLocalStorageScript = () => {
+  return `
+  (function(){
+    document.cookie=null
+    localStorage.clear()
 
   })();
   true;

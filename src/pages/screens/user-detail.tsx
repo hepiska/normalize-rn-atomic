@@ -17,6 +17,9 @@ const run = `(function() {
 class UserDetail extends Component<any, any> {
   webref = null
 
+  _navChange = navState => {
+    console.log('sasd', navState)
+  }
   render() {
     const { username } = this.props
     if (!username) {
@@ -34,6 +37,7 @@ class UserDetail extends Component<any, any> {
           source={{
             uri: Config.SHONET_URI + '/users/' + username,
           }}
+          onNavigationStateChange={this._navChange}
           onLoadEnd={syntheticEvent => {
             const { nativeEvent } = syntheticEvent
             if (!nativeEvent.loading) {
