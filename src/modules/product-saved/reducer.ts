@@ -5,6 +5,7 @@ import { persistReducer } from 'redux-persist'
 import { productSavedActionType } from './action'
 import { deepClone } from '@utils/helpers'
 import AsyncStorage from '@react-native-community/async-storage'
+import CONFIG from 'react-native-config'
 
 interface ProductSavedState {
   readonly data: Object
@@ -58,9 +59,14 @@ const productSavedReducer: Reducer<ProductSavedState> = (
   }
 }
 
-const postPersistConfig = {
+const presistConfig = {
   key: 'product-saved',
   storage: AsyncStorage,
 }
 
-export default persistReducer(postPersistConfig, productSavedReducer)
+const exportReducer =
+  CONFIG.USE_PRESIST !== 'false'
+    ? persistReducer(presistConfig, productSavedReducer)
+    : productSavedReducer
+
+export default exportReducer

@@ -2,7 +2,7 @@ import React from 'react'
 import { View, SectionList, ViewStyle, StyleSheet } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
 import Column from '@components/organisms/mansory-column'
-import Animated from 'react-native-reanimated'
+import Animated, { call } from 'react-native-reanimated'
 import { onScroll } from 'react-native-redash'
 
 export enum LayoutType {
@@ -36,6 +36,7 @@ interface ListStikyHeaderType {
   rowStyle: ViewStyle
   columnStyle: ViewStyle
   y: any
+  getListRef?: any
   renderItem: () =>
     | React.ReactElement
     | React.ReactElement
@@ -115,6 +116,7 @@ class ListMansoryStickyHeader extends React.Component<
       loading,
       renderItem,
       numColumns,
+      getListRef,
       columnWrapperStyle,
       ...props
     } = this.props
@@ -132,34 +134,14 @@ class ListMansoryStickyHeader extends React.Component<
       <View style={{ flex: 1 }}>
         <AnimatedFlatlist
           data={groupData}
+          scrollEventThrottle={16}
+          ref={getListRef}
           onScroll={onScroll({ y })}
           key="flat-list"
           keyExtractor={this._keyExtractor}
           renderItem={this._renderSection}
           {...composeprops}
         />
-        {/* <AnimatedFlatlist
-          removeClippedSubviews={true}
-          ListHeaderComponent={header}
-          contentContainerStyle={{
-            justifyContent: 'flex-start',
-          }}
-          onScroll={onScroll({ y })}
-          stickyHeaderIndices={[0]}
-          stickySectionHeadersEnabled={true}
-          automaticallyAdjustContentInsets={false}
-          renderSectionHeader={stickyHeader}
-          key="section-list"
-          {...props}
-          data={groupData}
-          keyExtractor={this._keyExtractor}
-          renderItem={this._renderSection}
-        /> */}
-        {/* {loading && (
-          <View style={styles.loaderContainerL}>
-            <CircleLoader style={styles.loader} />
-          </View>
-        )} */}
       </View>
     )
   }

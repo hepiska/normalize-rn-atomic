@@ -7,7 +7,7 @@ import List from '@components/layouts/list-header'
 import SearchFilter from '@components/organisms/search-filter'
 import { getUserPosts } from '@modules/user-post/action'
 import { getPostLiked } from '@modules/post-liked/action'
-
+import Animated, { interpolate, Extrapolate } from 'react-native-reanimated'
 import { getProductSaved } from '@modules/product-saved/action'
 import PostListItem from '@src/components/molecules/post-card-new'
 // import ProductCard from '@src/components/molecules/product-card'
@@ -39,6 +39,7 @@ class MySavedProduct extends React.Component<any, any> {
   limit = 10
   skip = 0
   lastskip = 0
+  listRef = null
 
   componentDidMount() {
     this._freshfetch()
@@ -98,6 +99,7 @@ class MySavedProduct extends React.Component<any, any> {
   _getLayout = () => {
     const { selectedFilter } = this.state
     const selected = selectedFilter[0]
+
     if (selected === 'products') return 'normal'
     return 'mansory'
   }
@@ -165,7 +167,6 @@ class MySavedProduct extends React.Component<any, any> {
         />
       )
     } else {
-      // return null
       return (
         <PostItem
           style={{ width: '100%', marginVertical: 8 }}
@@ -194,22 +195,46 @@ class MySavedProduct extends React.Component<any, any> {
   }
 
   render() {
-    const { scrollEnabled, loading } = this.props
+    const {
+      scrollEnabled,
+      loading,
+      style,
+      contentHeight,
+      y,
+      getListRef,
+      ...props
+    } = this.props
     const { selectedFilter } = this.state
     const data = this._getData()
-    // return null
+    const headerPoss = interpolate(y, {
+      inputRange: [0, contentHeight],
+      outputRange: [contentHeight, 0],
+      extrapolate: Extrapolate.CLAMP,
+    })
     return (
-      <View style={{ width, flex: 1 }}>
-        {this._header()}
+      <View style={{ width, flex: 1, ...style }}>
+        <Animated.View style={{ transform: [{ translateY: headerPoss }] }}>
+          {this._header()}
+        </Animated.View>
         <List
           data={data}
+          y={y}
           loading={loading}
           key={'my-post-list' + selectedFilter[0]}
-          onScroll={this._hanleScroll}
           style={{ paddingHorizontal: 8, paddingBottom: 240 }}
           columnWrapperStyle={{
             justifyContent: 'space-between',
             paddingHorizontal: 12,
+          }}
+          getListRef={ref => {
+            this.listRef = ref
+            getListRef(ref)
+          }}
+          onLayout={() => {
+            this.listRef.getNode().scrollToOffset({
+              offset: contentHeight,
+              animated: false,
+            })
           }}
           bounces={false}
           onEndReached={this._fetchMore}
@@ -219,7 +244,7 @@ class MySavedProduct extends React.Component<any, any> {
           layoutType={this._getLayout()}
           columnStyle={{ flex: 1, marginHorizontal: 8 }}
           numColumns={2}
-          // header={this._header}
+          {...props}
           ListFooterComponent={<View style={{ height: 200 }} />}
           renderItem={this._renderItem}
         />

@@ -141,7 +141,7 @@ class ImageAutoSchale extends React.Component<ImageAutoSchaleType, any> {
       : { ...size, ...style }
 
     let aplliedContainerStyle = imageLoaded
-      ? { ...style, ...containerStyle }
+      ? { ...styles.container, ...style, ...containerStyle }
       : { ...styles.container, ...style, ...containerStyle }
 
     if (this.state.isError || !imageLoaded) {

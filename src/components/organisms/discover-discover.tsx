@@ -125,7 +125,13 @@ class DiscoverOrg extends React.Component<any, any> {
     const { posts, scrollEnabled, loading } = this.props
     const firsLoading = loading && !this.skip
     return (
-      <View style={{ width, flex: 1, paddingTop: 4 }}>
+      <View
+        style={{
+          width,
+          flex: 1,
+          paddingTop: 4,
+          backgroundColor: colors.white,
+        }}>
         {firsLoading ? (
           <TwoColumnListLoader />
         ) : (

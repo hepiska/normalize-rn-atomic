@@ -5,6 +5,7 @@ import { persistReducer } from 'redux-persist'
 import { pageActionType } from './action'
 import { deepClone } from '@utils/helpers'
 import AsyncStorage from '@react-native-community/async-storage'
+import CONFIG from 'react-native-config'
 
 interface PageDataType {
   readonly data: Object
@@ -45,9 +46,14 @@ const pagereducer: Reducer<PageDataType> = (
   }
 }
 
-const postPersistConfig = {
+const presistConfig = {
   key: 'page',
   storage: AsyncStorage,
 }
 
-export default persistReducer(postPersistConfig, pagereducer)
+const exportReducer =
+  CONFIG.USE_PRESIST !== 'false'
+    ? persistReducer(presistConfig, pagereducer)
+    : pagereducer
+
+export default exportReducer

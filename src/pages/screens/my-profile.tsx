@@ -176,6 +176,7 @@ class MyProfile extends React.Component<any, any> {
 
   render() {
     const { userPostStatus, productsSaved } = this.props
+    console.log('=====sndnannada')
     return (
       <>
         <NavbarTopAnimated

@@ -41,7 +41,8 @@ const RightDiv = styled(Div)`
 `
 
 const styles = StyleSheet.create({
-  saveArea: { backgroundColor: 'rgba(0,0,0,0.5)' },
+  saveArea: { backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 2 },
+
   container: {
     paddingHorizontal: 16,
     paddingVertical: 12,
@@ -118,9 +119,10 @@ const NavbarTop: React.SFC<NavbarTopProps> = ({
   onBeforeBack,
   leftAction,
   rightAction,
+  ...props
 }) => {
   return (
-    <SafeAreaView style={styles.saveArea}>
+    <SafeAreaView style={styles.saveArea} {...props}>
       <View style={{ ...styles.container, ...style }}>
         <RenderLeftContent
           content={leftContent}

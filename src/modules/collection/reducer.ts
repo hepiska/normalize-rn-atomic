@@ -3,6 +3,8 @@ import Immutable from 'seamless-immutable'
 import { ErrorType } from '@utils/globalInterface'
 import { persistReducer } from 'redux-persist'
 import { collectionActionType } from './action'
+import CONFIG from 'react-native-config'
+
 import AsyncStorage from '@react-native-community/async-storage'
 
 interface CollectionState {
@@ -59,9 +61,14 @@ const productReducer: Reducer<CollectionState> = (
   }
 }
 
-const postPersistConfig = {
+const persistConfig = {
   key: 'collection',
   storage: AsyncStorage,
 }
 
-export default persistReducer(postPersistConfig, productReducer)
+const exportReducer =
+  CONFIG.USE_PRESIST !== 'false'
+    ? persistReducer(persistConfig, productReducer)
+    : productReducer
+
+export default exportReducer

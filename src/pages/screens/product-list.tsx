@@ -425,11 +425,17 @@ class Productlist extends Component<any, any> {
       selectedFilter,
       category,
       headerError,
+      isCategoryLoading,
+      isBrandLoading,
+      isCollectionLoading,
     } = this.props
     const headerData: any = {
       // image:
       // 'https://shonet.imgix.net/commerce/Loueve/#LJRING14-MAIN.jpg?q=75&auto=compress,format&w=350',
     }
+
+    const brandLoading =
+      isCategoryLoading || isBrandLoading || isCollectionLoading
 
     if (brand) {
       headerData.title = brand?.name
@@ -460,7 +466,7 @@ class Productlist extends Component<any, any> {
           leftContent={['back']}
           title={headerData.title || ''}
           subtitle={
-            loading
+            brandLoading && loading && this.skip === 0
               ? 'loading....'
               : `${headerError ? 0 : pagination.total} Items`
           }
@@ -527,21 +533,6 @@ const mapStateToProps = (state, { route }) => {
     appliedFilters,
   }
 
-  // const commontErrorProps = {
-  //   globalError: state.global.error,
-  //   Producterror: state.products.error,
-  // }
-
-  // if (state.global.error || state.collection.error || state.products.error) {
-  //   return {
-  //     globalError: state.global.error,
-  //     products: [],
-  //     loading: state.products.productsLoading,
-  //     collectionError: state.collection.error,
-  //     Producterror: state.products.error,
-  //     ...filterProps,
-  //   }
-  // }
   if (
     (route.params.from === 'collections' ||
       route.params.from === 'collection') &&

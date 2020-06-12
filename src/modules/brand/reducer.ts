@@ -4,6 +4,7 @@ import { ErrorType } from '@utils/globalInterface'
 import { persistReducer } from 'redux-persist'
 import { brandActionType } from './action'
 import AsyncStorage from '@react-native-community/async-storage'
+import CONFIG from 'react-native-config'
 
 interface BrandState {
   readonly data: Object
@@ -75,4 +76,9 @@ const brandersistConfig = {
   storage: AsyncStorage,
 }
 
-export default persistReducer(brandersistConfig, brandReducer)
+const exportReducer =
+  CONFIG.USE_PRESIST !== 'false'
+    ? persistReducer(brandersistConfig, brandReducer)
+    : brandReducer
+
+export default exportReducer
