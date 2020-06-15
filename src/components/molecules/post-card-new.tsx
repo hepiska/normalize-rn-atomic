@@ -28,9 +28,12 @@ interface PostListItemType {
   type?: string
   idx: string | number
   onPress: () => void
+  onUserPress: (user) => void
   onLike: (postId) => void
+  onBookmark: (postId) => void
   fullscreen?: boolean
   isLiked?: boolean
+  isBookmarked?: boolean
   style?: any
   isAuth?: boolean
 }
@@ -77,13 +80,16 @@ const FullscreenCard = ({
   layout,
   post,
   isLiked,
+  isBookmarked,
   onLayout,
   style,
   onPress,
+  onUserPress,
   onShare,
-  goToUser,
+  // goToUser,
   goToUsers,
   onLike,
+  onBookmark,
 }: any) => {
   const maxTitile = 3000
   const maxSubtitle = 200
@@ -112,12 +118,12 @@ const FullscreenCard = ({
       <Line />
       {user && (
         <View style={{ ...fullscreenstyles.sectionContainer }}>
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-            }}>
-            <TouchableOpacity onPress={() => goToUser(user)}>
+          <TouchableOpacity onPress={onUserPress(user)}>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+              }}>
               <Image
                 source={{
                   uri: setImage(user.photo_url, { width: 64 }),
@@ -129,17 +135,17 @@ const FullscreenCard = ({
                   marginRight: 8,
                 }}
               />
-            </TouchableOpacity>
 
-            <Text
-              style={{
-                ...fontStyle.helveticaBold,
-                fontSize: 14,
-                color: colors.black100,
-              }}>
-              {user.username}
-            </Text>
-          </View>
+              <Text
+                style={{
+                  ...fontStyle.helveticaBold,
+                  fontSize: 14,
+                  color: colors.black100,
+                }}>
+                {user.username}
+              </Text>
+            </View>
+          </TouchableOpacity>
           <IconFa name="ellipsis-h" size={16} />
         </View>
       )}
@@ -255,10 +261,10 @@ const FullscreenCard = ({
             color={colors.black70}
           />
           <IconMC
-            name="bookmark-outline"
+            name={isBookmarked ? 'bookmark' : 'bookmark-outline'}
             size={20}
             style={{ marginLeft: 26 }}
-            onPress={onShare}
+            onPress={onBookmark}
             color={colors.black70}
           />
         </View>
@@ -310,7 +316,7 @@ const FullscreenCard = ({
               }}>
               Liked By
             </Text>
-            <TouchableOpacity onPress={() => goToUser(post.likes[0].user)}>
+            <TouchableOpacity onPress={onUserPress(post.likes[0].user)}>
               <Text
                 style={{
                   ...fontStyle.helvetica,
@@ -480,6 +486,7 @@ class PostListItem extends React.PureComponent<PostListItemType, any> {
   state: any = {
     defaultImage: null,
     isPostLiked: this.props.isLiked,
+    isPostBookmarked: this.props.isBookmarked,
   }
 
   _onLike = () => {
@@ -489,6 +496,17 @@ class PostListItem extends React.PureComponent<PostListItemType, any> {
       this.props.onLike(this.props.post.id)
       this.setState(state => ({
         isPostLiked: !state.isPostLiked,
+      }))
+    }
+  }
+
+  _onBookmark = () => {
+    if (!this.props.isAuth) {
+      navigate('modals', { screen: 'LoginModal' })
+    } else {
+      this.props.onBookmark(this.props.post.id)
+      this.setState(state => ({
+        isPostBookmarked: !state.isPostBookmarked,
       }))
     }
   }
@@ -504,22 +522,22 @@ class PostListItem extends React.PureComponent<PostListItemType, any> {
     })
   }
 
-  _onUserCliked = () => {
-    navigate('Screens', {
-      screen: 'UserDetail',
-      params: { userId: this.props.user.id },
-    })
-  }
+  // _onUserCliked = () => {
+  //   navigate('Screens', {
+  //     screen: 'UserDetail',
+  //     params: { userId: this.props.user.id },
+  //   })
+  // }
 
   _onLayout = e => {
     this.setState({ layout: e.nativeEvent.layout })
   }
   _goToUsers = () => {
-    console.log('===== to users')
+    console.log('===== to users banyak')
   }
-  _goToUser = user => {
-    console.log('===== to users', user)
-  }
+  // _goToUser = user => {
+  //   console.log('===== to user saja', user)
+  // }
 
   render() {
     const {
@@ -527,28 +545,32 @@ class PostListItem extends React.PureComponent<PostListItemType, any> {
       user,
       idx,
       onPress,
+      onUserPress,
       fullscreen = false,
       style,
       type = 'default',
       isLiked,
     } = this.props
-    const { layout, isPostLiked } = this.state
+    const { layout, isPostLiked, isPostBookmarked } = this.state
     if (post) {
       if (fullscreen) {
         return (
           <FullscreenCard
             onPress={onPress}
+            onUserPress={onUserPress}
             post={post}
             user={user}
             goToUsers={this._goToUsers}
-            goToUser={this._goToUser}
+            // goToUser={this._goToUser}
             onLike={this._onLike}
+            onBookmark={this._onBookmark}
             layout={layout}
             style={style}
             type={type}
             onShare={this._onShare}
             onLayout={this._onLayout}
             isLiked={isPostLiked}
+            isBookmarked={isPostBookmarked}
           />
         )
       } else {

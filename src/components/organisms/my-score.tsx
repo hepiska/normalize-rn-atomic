@@ -65,9 +65,6 @@ class MyScore extends React.Component<MyScoreType, any> {
   render() {
     const { insights } = this.props
 
-    if (!insights.statistics) {
-      return null
-    }
     return (
       <View>
         {/* score */}
@@ -78,26 +75,28 @@ class MyScore extends React.Component<MyScoreType, any> {
         </FocusContainer>
 
         {/* score breakdown */}
-        <TitleDescriptionCard
-          title="Score Breakdown"
-          description={
-            <View style={{ marginVertical: 16 }}>
-              <Text
-                style={{
-                  ...fontStyle.helvetica,
-                  fontSize: 12,
-                  color: colors.black70,
-                }}>
-                {`Score is calculated since ${dayjs(insights.date.start).format(
-                  'DD MMM YYYY',
-                )}`}
-              </Text>
-              {Object.keys(insights.statistics).map(value =>
-                this.renderSummary(value),
-              )}
-            </View>
-          }
-        />
+        {insights?.date && insights?.statistics && (
+          <TitleDescriptionCard
+            title="Score Breakdown"
+            description={
+              <View style={{ marginVertical: 16 }}>
+                <Text
+                  style={{
+                    ...fontStyle.helvetica,
+                    fontSize: 12,
+                    color: colors.black70,
+                  }}>
+                  {`Score is calculated since ${dayjs(
+                    insights.date.start,
+                  ).format('DD MMM YYYY')}`}
+                </Text>
+                {Object.keys(insights.statistics).map(value =>
+                  this.renderSummary(value),
+                )}
+              </View>
+            }
+          />
+        )}
 
         {/* the shonet tips */}
         <FocusContainer

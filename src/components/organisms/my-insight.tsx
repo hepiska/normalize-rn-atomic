@@ -9,6 +9,7 @@ import MyAudience from '@components/organisms/my-audience'
 import MyRevenue from '@components/organisms/my-revenue'
 import dayjs from 'dayjs'
 import { getInsightSummary } from '@modules/insights/action'
+// import { getInsiderStatus } from '@modules/user/action'
 
 const { width } = Dimensions.get('screen')
 
@@ -34,6 +35,7 @@ class MyInsight extends React.Component<any, any> {
       insider_progress: '',
     }
     this.props.getInsightSummary(params)
+    // this.props.getInsiderStatus()
   }
 
   _selectFilter = item => {
@@ -105,6 +107,6 @@ const mapStateToProps = state => ({
   insights: state.insights.data,
 })
 const mapDispatchToProps = dispatch =>
-  bindActionCreators({ getInsightSummary }, dispatch)
+  bindActionCreators({ getInsightSummary /* getInsiderStatus */ }, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(MyInsight)

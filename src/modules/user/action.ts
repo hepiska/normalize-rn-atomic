@@ -18,6 +18,7 @@ export const userActionType = {
   SET_USER_LOADING: 'user/SET_USER_LOADING',
   SET_USER_LOADINGS: 'user/SET_USER_LOADINGS',
   SET_TRENDING_INSIDER_ORDER: 'user/SET_TRENDING_INSIDER_ORDER',
+  SET_INSIDER_DATA: 'user/SET_INSIDER_DATA',
   ERROR: 'user/ERROR',
   DEFAULT: 'user/DEFAULT',
 }
@@ -286,6 +287,27 @@ export const setNotificationSetting = (data: any) => {
         return [setUserNotification(data), setUserLoading(false)]
       },
       error: data => {
+        return [setUserLoading(false)]
+      },
+    },
+  }
+}
+
+export const setInsiderData = (data: any) => ({
+  type: userActionType.SET_INSIDER_DATA,
+  payload: data,
+})
+
+export const getInsiderStatus = () => {
+  return {
+    type: API,
+    payload: {
+      url: '/account/insiders/status',
+      startNetwork: () => setUserLoading(true),
+      success: data => {
+        return [setInsiderData(data[0]), setUserLoading(false)]
+      },
+      error: error => {
         return [setUserLoading(false)]
       },
     },

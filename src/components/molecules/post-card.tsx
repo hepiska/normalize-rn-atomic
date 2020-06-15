@@ -21,6 +21,7 @@ interface PostListItemType {
   type?: string
   idx: string | number
   onPress: () => void
+  onUserPress: (user) => void
   onLike: (postId) => void
   horizontal?: boolean
   isLiked?: boolean
@@ -102,12 +103,12 @@ class PostListItem extends React.PureComponent<PostListItemType, any> {
     }
   }
 
-  _onUserCliked = () => {
-    navigate('Screens', {
-      screen: 'UserDetail',
-      params: { userId: this.props.user.id },
-    })
-  }
+  // _onUserCliked = () => {
+  //   navigate('Screens', {
+  //     screen: 'UserDetail',
+  //     params: { userId: this.props.user.id },
+  //   })
+  // }
 
   render() {
     const {
@@ -115,6 +116,7 @@ class PostListItem extends React.PureComponent<PostListItemType, any> {
       user,
       idx,
       onPress,
+      onUserPress,
       horizontal = false,
       style,
       type = 'default',
@@ -203,7 +205,7 @@ class PostListItem extends React.PureComponent<PostListItemType, any> {
                 mar="8px 0 0 0"
                 justify="space-between"
                 flexDirection="row">
-                <PressAbbleDiv flexDirection="row" onPress={this._onUserCliked}>
+                <PressAbbleDiv flexDirection="row" onPress={onUserPress(user)}>
                   <ImageAutoSchale
                     source={
                       typeof user.photo_url === 'string'
