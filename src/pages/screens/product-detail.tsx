@@ -468,7 +468,7 @@ class ProductListPage extends React.Component<any, any> {
                   {product.brand.name}
                 </Font>
                 <HTML
-                  html={`<productname>${product.name}</productname>`}
+                  html={`<productname>${product?.name || ''}</productname>`}
                   renderers={{
                     // eslint-disable-next-line react/display-name
                     productname: (
@@ -486,7 +486,7 @@ class ProductListPage extends React.Component<any, any> {
                             margin: 4,
                             color: colors.black80,
                           }}>
-                          {passProps.rawChildren[0].data}
+                          {passProps?.rawChildren[0]?.data || ''}
                         </Text>
                       )
                     },

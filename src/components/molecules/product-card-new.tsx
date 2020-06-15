@@ -298,7 +298,7 @@ const ProductCardHorizontal = ({
                   }}
                   numberOfLines={1}
                   ellipsizeMode="tail">
-                  {passProps.rawChildren[0].data}
+                  {passProps?.rawChildren[0]?.data || ''}
                 </Text>
               )
             },
@@ -457,7 +457,7 @@ const ProductCardVertical = ({
                   }}
                   numberOfLines={2}
                   ellipsizeMode="tail">
-                  {passProps.rawChildren[0].data}
+                  {passProps?.rawChildren[0]?.data || ''}
                 </Text>
               )
             },

@@ -87,23 +87,21 @@ const BottomSheetLay = ({
   }, [])
   return (
     <>
-      {finishAnimation && (
-        <BottomSheet
-          {...bottomSheetProps}
-          onCloseEnd={onClose}
-          enabledContentGestureInteraction={false}
-          initialSnap={initialSnap}
-          renderHeader={() => (
-            <Header
-              leftAction={leftAction}
-              snapEnabled={snapEnabled}
-              title={title}
-            />
-          )}
-          snapPoints={snapPoints}
-          renderContent={() => children}
-        />
-      )}
+      <BottomSheet
+        {...bottomSheetProps}
+        onCloseEnd={onClose}
+        enabledContentGestureInteraction={false}
+        initialSnap={initialSnap}
+        renderHeader={() => (
+          <Header
+            leftAction={leftAction}
+            snapEnabled={snapEnabled}
+            title={title}
+          />
+        )}
+        snapPoints={snapPoints}
+        renderContent={() => finishAnimation && children}
+      />
 
       <TouchableWithoutFeedback onPress={onClose}>
         <Div _height={height} _width="100%" />

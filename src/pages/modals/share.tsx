@@ -121,24 +121,17 @@ class ShareModal extends React.Component<any, any> {
   }
 
   componentDidUpdate() {
-    if (this.state.finishAnimation) {
-      this.timeOut = setTimeout(() => {
-        this._ref.snapTo(this.state.currentPos)
-      }, 150)
-    }
+    this._ref.snapTo(this.state.currentPos)
+    // if (this.state.finishAnimation) {
+    //   console.log('did update')
+    // this.timeOut = setTimeout(() => {
+    //   console.log('timeout')
+    //   // 3. ini dicomment aja. . kalau udajh kelar timeout dicopot.
+    //   // this._ref.snapTo(this.state.currentPos)
+    // }, 150)
+    // }
   }
   _closeModal = () => this.props.navigation.goBack()
-  _changeHeight = () => {
-    if (this.state.currentPos === 1) {
-      this.setState({ currentPos: 2 }, () => {
-        this._ref.snapTo(this.state.currentPos)
-      })
-    } else {
-      this.setState({ currentPos: 1 }, () => {
-        this._ref.snapTo(this.state.currentPos)
-      })
-    }
-  }
 
   _showMessage = () => {
     if (Platform.OS === 'android') {
@@ -208,8 +201,9 @@ class ShareModal extends React.Component<any, any> {
   }
 
   _renderItem = () => {
-    if (this.state.currentPos === 1)
+    if (this.state.currentPos === 1) {
       return (
+        // this.state.finishAnimation && (
         <>
           {shareData.map(_dat => (
             <ShareCart key={_dat.id} {..._dat} onPress={this._share(_dat)} />
@@ -217,7 +211,10 @@ class ShareModal extends React.Component<any, any> {
           <ShareCart {...moreData} onPress={this._defaultShare} />
         </>
       )
+      // )
+    }
     return (
+      // this.state.finishAnimation && (
       <>
         {shareData.map(_dat => (
           <ShareList key={_dat.id} {..._dat} onPress={this._share(_dat)} />
@@ -225,36 +222,41 @@ class ShareModal extends React.Component<any, any> {
         <ShareList {...moreData} onPress={this._defaultShare} />
       </>
     )
+    // )
   }
-  snapPoints = [500, 250, 1]
+  snapPoints = [500, 250, 0]
   render() {
+    console.log('finish ---', this.state.finishAnimation)
     return (
-      <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.7)' }}>
-        <BottomSheet
-          snapPoints={this.snapPoints}
-          snapEnabled={false}
-          initialSnap={this.snapPoints.length - 1}
-          onClose={this._closeModal}
-          bottomSheetProps={{
-            enabledGestureInteraction: false,
-            ref: ref => (this._ref = ref),
-          }}
-          title="Share">
-          <View
-            style={{
-              display: 'flex',
-              width,
-              paddingVertical: 16,
-              justifyContent:
-                this.state.currentPos === 2 ? 'flex-start' : 'space-between',
-              backgroundColor: 'white',
-              flexDirection: this.state.currentPos === 1 ? 'row' : 'column',
-              height: '100%',
-            }}>
-            {this._renderItem()}
-          </View>
-        </BottomSheet>
-      </View>
+      this.state.finishAnimation && (
+        <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.7)' }}>
+          <BottomSheet
+            snapPoints={this.snapPoints}
+            snapEnabled={false}
+            initialSnap={this.snapPoints.length - 1}
+            onClose={this._closeModal}
+            bottomSheetProps={{
+              enabledGestureInteraction: false,
+              ref: ref => (this._ref = ref),
+            }}
+            title="Share">
+            <View
+              style={{
+                display: 'flex',
+                width,
+                paddingVertical: 16,
+                justifyContent:
+                  this.state.currentPos === 2 ? 'flex-start' : 'space-between',
+                backgroundColor: 'white',
+                flexDirection: this.state.currentPos === 1 ? 'row' : 'column',
+                height: '100%',
+              }}>
+              {/* {this.state.finishAnimation && this._renderItem()} */}
+              {this._renderItem()}
+            </View>
+          </BottomSheet>
+        </View>
+      )
     )
   }
 }
