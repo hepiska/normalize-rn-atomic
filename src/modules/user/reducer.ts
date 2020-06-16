@@ -40,7 +40,7 @@ const userReducer: Reducer<UserState> = (
     case userActionType.CHANGE_FOLLOW_DATA:
       const newData = {}
       newData[action.payload.user_id] = {
-        ...deepClone(newState.data[action.payload.user_id]),
+        ...newState.data[action.payload.user_id],
         is_followed: action.payload.is_followed,
       }
       newState.data = Immutable.merge(

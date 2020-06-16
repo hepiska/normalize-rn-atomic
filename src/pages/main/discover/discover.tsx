@@ -27,8 +27,7 @@ const DiscoverSearchComponent = ({ onPress }) => {
   )
 }
 
-const DiscoverPage = ({ navigation }) => {
-  const [selected, setSelected] = React.useState('feed')
+const DiscoverPage = () => {
   const [finishAnimation, setFinishAnimation] = React.useState(false)
   const onSearchPress = () => {
     console.log('on discover search')
@@ -43,6 +42,8 @@ const DiscoverPage = ({ navigation }) => {
   if (!finishAnimation) {
     return <Instagram />
   }
+
+  // return null
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>

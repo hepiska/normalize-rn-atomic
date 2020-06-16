@@ -22,7 +22,7 @@ const initialState: any = {
 }
 
 const checkoutReducer: Reducer<CheckoutState> = (
-  state: CheckoutState = deepClone(initialState),
+  state: CheckoutState = { ...initialState },
   action: AnyAction,
 ) => {
   let newState = { ...state }

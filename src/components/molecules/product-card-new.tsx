@@ -17,7 +17,8 @@ import { OutlineButton } from '@components/atoms/button'
 import RangePrice from '@components/molecules/range-price'
 import { setImage as chageImageUri } from '@utils/helpers'
 import ColorList from '@components/molecules/color-list'
-import { navigate } from '@src/root-navigation'
+import { navigate, push } from '@src/root-navigation'
+
 import HTML from 'react-native-render-html'
 
 interface ProductCardType {
@@ -25,10 +26,10 @@ interface ProductCardType {
   brand?: any
   isSaved?: boolean
   isShowRangePrice: boolean
-  onPress: () => void
   onAddtoCart: (productId) => void
   isAtributesShow: boolean
-  onSave: (productId) => void
+  deleteProductSaved: (productId) => void
+  addProductSaved: (productId) => void
   style?: ViewStyle
   horizontal?: boolean
   isAuth?: boolean
@@ -82,9 +83,9 @@ const ProductCard = ({
   product,
   style,
   brand = {},
-  onSave,
   onAddtoCart,
-  onPress,
+  deleteProductSaved,
+  addProductSaved,
   horizontal = false,
   isAtributesShow = true,
   isShowRangePrice = true,
@@ -121,9 +122,19 @@ const ProductCard = ({
     if (!isAuth) {
       triggerLogin()
     } else {
-      onSave(product.id)
       setProductSaved(!isProductSaved)
+      if (isSaved) {
+        deleteProductSaved(product.id)
+      } else {
+        addProductSaved(product.id)
+      }
     }
+  }
+  const onPress = () => {
+    push('Screens', {
+      screen: 'ProductDetail',
+      params: { productId: product.id },
+    })
   }
 
   const selectedVariant =
@@ -212,6 +223,8 @@ const ProductCardHorizontal = ({
   onAddtoCart,
   thumbnailImage,
   variantPrice,
+  deleteProductSaved,
+  addProductSaved,
   isShowRangePrice,
   colorAttributes,
   isAtributesShow,
@@ -256,6 +269,7 @@ const ProductCardHorizontal = ({
               }
               source={typeof image === 'string' ? { uri: image } : image}
               width={layout.width}
+              height={1.5 * layout.width}
               style={styles.image}
             />
           </TouchableWithoutFeedback>
@@ -413,6 +427,7 @@ const ProductCardVertical = ({
               }
               source={typeof image === 'string' ? { uri: image } : image}
               width={layout.width}
+              height={1.5 * layout.width}
               style={{ ...styles.image }}
             />
           </TouchableWithoutFeedback>

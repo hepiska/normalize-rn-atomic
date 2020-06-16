@@ -534,38 +534,59 @@ class ProfilPage extends React.PureComponent<any, any> {
   }
 
   render() {
-    const { index } = this.state
+    const { index, finishAnimation } = this.state
+    const { isAuth, user } = this.props
+
+    // return null
+
+    if (!isAuth) {
+      return (
+        <ProfileEmptyState
+          onPress={() => navigate('modals', { screen: 'LoginModal' })}
+        />
+      )
+    }
+    if (isAuth && !user) {
+      return null
+    }
+
     return (
       <>
         <NavbarTop title={'My profile'} style={{ zIndex: 2 }} />
-        <Animated.Code>
-          {() =>
-            call([this.y], ([val]) => {
-              this.scrollPos = val
-            })
-          }
-        </Animated.Code>
-        <View style={{ flex: 1 }}>
-          <TabView
-            navigationState={{ index, routes }}
-            renderScene={this.renderScene}
-            renderTabBar={props => {
-              return (
-                <TabMenuCursor
-                  {...props}
-                  y={this.y}
-                  contentHeight={contentHeight}
-                />
-              )
-            }}
-            onIndexChange={this.changeIndex}
-            initialLayout={{
-              height: 0,
-              width: Dimensions.get('window').width,
-            }}
-          />
-        </View>
-        {this.renderHeader()}
+        {finishAnimation ? (
+          <>
+            <Animated.Code>
+              {() =>
+                call([this.y], ([val]) => {
+                  this.scrollPos = val
+                })
+              }
+            </Animated.Code>
+            <View style={{ flex: 1 }}>
+              <TabView
+                navigationState={{ index, routes }}
+                renderScene={this.renderScene}
+                renderTabBar={props => {
+                  return (
+                    <TabMenuCursor
+                      {...props}
+                      y={this.y}
+                      contentHeight={contentHeight}
+                    />
+                  )
+                }}
+                onIndexChange={this.changeIndex}
+                initialLayout={{
+                  height: 0,
+                  width: Dimensions.get('window').width,
+                }}
+              />
+            </View>
+            {this.renderHeader()}
+          </>
+        ) : (
+          <ProfileLoader style={{ marginVertical: 8, marginHorizontal: 16 }} />
+        )}
       </>
     )
     return null

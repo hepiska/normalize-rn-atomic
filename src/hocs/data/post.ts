@@ -1,41 +1,25 @@
 import { connect } from 'react-redux'
-import { Linking } from 'react-native'
 import { navigate } from '@src/root-navigation'
 import { bindActionCreators } from 'redux'
 import { addLikedPost, removeLikedPost } from '@modules/post-liked/action'
+import { makeGetPost } from '@modules/post/selector'
+import { makeGetUser } from '@modules/user/selector'
+import { makePostLiked } from '@modules/post-liked/selector'
 import {
   addBookmarkPost,
   removeBookmarkPost,
 } from '@modules/post-bookmarked/action'
 
 const postListMap = (state, ownProps) => {
-  const { postId } = ownProps
-  const post = state.post.data[postId] || {}
-  const user = state.user.data[post.user]
-  const isLiked = !!state.postsLiked.data[postId]
-  const isBookmarked = !!state.postsBookmarked.data[postId]
-  if (!ownProps.onPress) {
-    ownProps.onPress = () => {
-      if (post.post_type === 'article' || post.post_type === 'collection') {
-        navigate('Screens', {
-          screen: 'PostDetail',
-          params: { postId },
-        }) // revisi: navigasi ke post id
-      }
-      if (post.post_type === 'youtube') {
-        Linking.openURL(post.permalink)
-      }
-    }
-  }
+  const getPost = makeGetPost()
+  const getUser = makeGetUser()
+  const getIsLiked = makePostLiked()
 
-  if (!ownProps.onUserPress) {
-    ownProps.onUserPress = user => () => {
-      navigate('Screens', {
-        screen: 'UserDetail',
-        params: { userId: user.id },
-      })
-    }
-  }
+  const { postId } = ownProps
+  const post = getPost(state, postId)
+  const user = getUser(state, post.user)
+  const isLiked = getIsLiked(state, postId)
+  const isBookmarked = !!state.postsBookmarked.data[postId]
 
   return {
     post,
@@ -58,18 +42,6 @@ const mapDispatchToProps = dispatch => {
   )
 }
 
-const mergeProps = (stateProps, dispatchProps, ownProps) => {
-  const onLike = stateProps.isLiked
-    ? dispatchProps.removeLikedPost
-    : dispatchProps.addLikedPost
-
-  const onBookmark = stateProps.isBookmarked
-    ? dispatchProps.removeBookmarkPost
-    : dispatchProps.addBookmarkPost
-
-  return { ...stateProps, ...ownProps, onLike, onBookmark }
-}
-
 export function postListData(WrappedComponent) {
-  return connect(postListMap, mapDispatchToProps, mergeProps)(WrappedComponent)
+  return connect(postListMap, mapDispatchToProps)(WrappedComponent)
 }

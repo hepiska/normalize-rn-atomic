@@ -22,6 +22,8 @@ import { setImage as chageImageUri } from '@utils/helpers'
 import UserSaved from '@components/molecules/user-saved'
 import ColorList from '@components/molecules/color-list'
 import { navigate } from '@src/root-navigation'
+import { addProductSaved } from '@src/modules/product-saved/action'
+import { product } from '@src/modules/normalize-schema'
 
 const AbsDiv = styled(PressAbbleDiv)`
   position: absolute;
@@ -45,6 +47,8 @@ interface ProductCardType {
   isShowRangePrice: boolean
   onPress: () => void
   onAddtoCart: (productId) => void
+  deleteProductSaved: (productId) => void
+  addProductSaved: (productId) => void
   isAtributesShow: boolean
   onSave: (productId) => void
   style?: ViewExtend
@@ -102,11 +106,12 @@ const ProductCard = ({
   product,
   style,
   brand = {},
-  onSave,
+  isSaved,
   onAddtoCart,
   isAtributesShow = true,
   isShowRangePrice = true,
-  isSaved,
+  deleteProductSaved,
+  addProductSaved,
   onPress,
   horizontal = false,
   isAuth,
@@ -120,7 +125,6 @@ const ProductCard = ({
   width = composeStyle.wrappermargin
     ? width - composeStyle.wrappermargin
     : width
-
   const [defaultImage, setImage] = useState(null)
   const [attributeSelected, setAttributeSelected] = useState(null)
   const [selectedVariantId, setSelectedVariantId] = useState(null)
@@ -140,10 +144,15 @@ const ProductCard = ({
   }
 
   const _onSave = () => {
+    console.log('=======', deleteProductSaved)
     if (!isAuth) {
       triggerLogin()
     } else {
-      onSave(product.id)
+      // if (isSaved) {
+      //   deleteProductSaved(product.id)
+      // } else {
+      //   addProductSaved(product.id)
+      // }
     }
   }
 
@@ -356,7 +365,6 @@ const ProductCardVertical = ({
     price.exTo = product.max_price
     price.withDiscount = true
   }
-
   isShowRangePrice = product.min_price !== product.max_price
 
   return (
@@ -385,6 +393,7 @@ const ProductCardVertical = ({
             }
             source={typeof image === 'string' ? { uri: image } : image}
             width={width}
+            height={1.5 * width}
             style={{ ...styles.image }}
           />
         </Div>

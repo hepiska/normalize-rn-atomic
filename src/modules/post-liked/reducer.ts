@@ -24,7 +24,7 @@ const initialState: any = {
 }
 
 const postLikedReducer: Reducer<PostLikedState> = (
-  state: PostLikedState = deepClone(initialState),
+  state: PostLikedState = { ...initialState },
   action: AnyAction,
 ) => {
   const newState = { ...state }

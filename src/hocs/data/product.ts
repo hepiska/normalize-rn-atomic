@@ -4,28 +4,27 @@ import {
   addProductSaved,
   deleteProductSaved,
 } from '@modules/product-saved/action'
-import { navigate } from '@src/root-navigation'
-import { addCart } from '@modules/cart/action'
-import { deepClone } from '@utils/helpers'
+import { makeCloneProduct } from '@modules/selector-general'
+
+import { makeSelectedProducts } from '@modules/product/selector'
+import { makeIsSaved } from '@modules/product-saved/selector'
+import { category } from '@src/modules/normalize-schema'
 
 const productListMap = (state, ownProps) => {
-  const { productId } = ownProps
-  const product = state.products.data[productId]
+  const getSelectedProducts = makeSelectedProducts()
+  const getIsSaved = makeIsSaved()
+  const cloneProduct = makeCloneProduct()
 
-  const _product = deepClone(product)
+  const product = getSelectedProducts(state, ownProps)
 
-  const isSaved = !!state.productsSaved.data[productId]
+  const _product = cloneProduct(product)
+
+  const isSaved = getIsSaved(state, ownProps)
   if (!_product) return {}
-  // const product = ownProps.product
-  ownProps.onPress = () => {
-    navigate('Screens', { screen: 'ProductDetail', params: { productId } })
-  }
   return {
     product: _product,
     brand: state.brands.data[_product.brand],
     isSaved,
-    // brand: product.brand,
-    category: state.categories[state.products[productId]],
     isAuth: state.auth.isAuth,
   }
 }
@@ -40,18 +39,6 @@ const mapDispatchToProps = dispatch => {
   )
 }
 
-const mergeProps = (stateProps, dispatchProps, ownProps) => {
-  const onSave = stateProps.isSaved
-    ? dispatchProps.deleteProductSaved
-    : dispatchProps.addProductSaved
-
-  return { ...stateProps, ...ownProps, onSave }
-}
-
 export function productListData(WrappedComponent) {
-  return connect(
-    productListMap,
-    mapDispatchToProps,
-    mergeProps,
-  )(WrappedComponent)
+  return connect(productListMap, mapDispatchToProps)(WrappedComponent)
 }

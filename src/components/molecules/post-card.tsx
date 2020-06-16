@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, View, Linking } from 'react-native'
 import {
   Div,
   PressAbbleDiv,
@@ -14,17 +14,25 @@ import { colors, images as defaultImages } from '@utils/constants'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import IconFa from 'react-native-vector-icons/FontAwesome'
 import { navigate } from '@src/root-navigation'
+import Config from 'react-native-config'
 
 interface PostListItemType {
   post: any
   user: any
   type?: string
   idx: string | number
-  onPress: () => void
-  onUserPress: (user) => void
+  onPress: (post: any) => void
   onLike: (postId) => void
+  removeLikedPost: (postId) => void
+  addLikedPost: (postId) => void
+  onUserPress: (user) => void
+  onBookmark: (postId) => void
+  addBookmarkPost: (postId) => void
+  removeBookmarkPost: (postId) => void
+  fullscreen?: boolean
   horizontal?: boolean
   isLiked?: boolean
+  isBookmarked: boolean
   style?: any
   isAuth?: boolean
 }
@@ -92,15 +100,67 @@ class PostListItem extends React.PureComponent<PostListItemType, any> {
     isPostLiked: this.props.isLiked,
   }
 
+  _onPress = () => {
+    const { post, ...props } = this.props
+
+    if (props.onPress) {
+      props.onPress(post)
+      return
+    }
+
+    if (post.post_type === 'article' || post.post_type === 'collection') {
+      navigate('Screens', {
+        screen: 'PostDetail',
+        params: { postId: post.id },
+      }) // revisi: navigasi ke post id
+    } else if (post.post_type === 'youtube') {
+      Linking.openURL(post.permalink)
+    }
+  }
+
   _onLike = () => {
+    const { isLiked, addLikedPost, removeLikedPost } = this.props
+
     if (!this.props.isAuth) {
       navigate('modals', { screen: 'LoginModal' })
     } else {
-      this.props.onLike(this.props.post.id)
+      if (isLiked) {
+        removeLikedPost(this.props.post.id)
+      } else {
+        addLikedPost(this.props.post)
+      }
+
       this.setState(state => ({
         isPostLiked: !state.isPostLiked,
       }))
     }
+  }
+
+  _onBookmark = () => {
+    if (!this.props.isAuth) {
+      navigate('modals', { screen: 'LoginModal' })
+    } else {
+      if (this.props.isBookmarked) {
+        this.props.removeBookmarkPost(this.props.post.id)
+      } else {
+        this.props.addBookmarkPost(this.props.post.id)
+      }
+
+      this.setState(state => ({
+        isPostBookmarked: !state.isPostBookmarked,
+      }))
+    }
+  }
+
+  _onShare = () => {
+    const { post } = this.props
+    navigate('modals', {
+      screen: 'Share',
+      params: {
+        title: post.title,
+        uri: Config.SHONET_URI + '/articles/' + post.id,
+      },
+    })
   }
 
   // _onUserCliked = () => {
@@ -109,6 +169,15 @@ class PostListItem extends React.PureComponent<PostListItemType, any> {
   //     params: { userId: this.props.user.id },
   //   })
   // }
+
+  _goToUser = user => () => {
+    if (!this.props.onUserPress) {
+      navigate('Screens', {
+        screen: 'UserDetail',
+        params: { userId: user.id },
+      })
+    }
+  }
 
   render() {
     const {
@@ -205,7 +274,9 @@ class PostListItem extends React.PureComponent<PostListItemType, any> {
                 mar="8px 0 0 0"
                 justify="space-between"
                 flexDirection="row">
-                <PressAbbleDiv flexDirection="row" onPress={onUserPress(user)}>
+                <PressAbbleDiv
+                  flexDirection="row"
+                  onPress={this._goToUser(user)}>
                   <ImageAutoSchale
                     source={
                       typeof user.photo_url === 'string'
