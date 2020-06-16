@@ -92,7 +92,7 @@ class FollowCard extends React.PureComponent<FollowCardType, any> {
     const thumbnailImage = this.state.defaultImage
       ? null
       : !!user.photo_url &&
-        changeImageUri(user.photo_url, { width: 40, height: 40 })
+        changeImageUri(user.photo_url, { width: 8, height: 8 })
 
     if (!user) {
       return null
@@ -105,6 +105,7 @@ class FollowCard extends React.PureComponent<FollowCardType, any> {
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <ImageAutoSchale
                   errorStyle={{ width: 40, height: 40 }}
+                  showErrorIcon={false}
                   thumbnailSource={
                     typeof thumbnailImage === 'string'
                       ? { uri: thumbnailImage }

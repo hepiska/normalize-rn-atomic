@@ -12,6 +12,7 @@ import EmtyState from '@components/molecules/order-empty-state'
 import { colors } from '@utils/constants'
 import SearchFilter from '@components/organisms/search-filter'
 import TwoColumnListLoader from '@components/atoms/loaders/two-column-card'
+import PostLoader from '@components/atoms/loaders/post-card'
 
 const PostItem = postListData(PostListItem)
 
@@ -170,6 +171,7 @@ class DiscoverOrg extends React.Component<any, any> {
           style={{ paddingTop: 8 }}
           onScroll={this._hanleScroll}
           onEndReached={this._fetchMore}
+          mansoryLoader={<PostLoader />}
           scrollEnabled={scrollEnabled}
           rowStyle={{ paddingHorizontal: 8 }}
           ListEmptyComponent={this._emptyState}

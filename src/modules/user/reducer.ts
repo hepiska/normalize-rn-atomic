@@ -6,6 +6,7 @@ import { deepClone } from '@src/utils/helpers'
 
 interface UserState {
   readonly data: Object
+  reachedEnd: boolean
   readonly trendingOrder: Object
   readonly order: Array<number>
   readonly notification: Object
@@ -17,6 +18,7 @@ interface UserState {
 const initialState: UserState = {
   data: Immutable({}),
   order: Immutable([]),
+  reachedEnd: false,
   trendingOrder: Immutable([]),
   notification: Immutable({}),
   pagination: {},

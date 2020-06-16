@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
 const ProductWithCardHoc = productListData(ProductCard)
 
 const imageHeight = 103
-
+let laspost = 0
 class Productlist extends Component<any, any> {
   state = {
     skip: 0,
@@ -75,14 +75,27 @@ class Productlist extends Component<any, any> {
     finishAnimation: false,
   }
   limit = 20
+  scroll = null
 
+  laspost = 0
   skip = 0
   lastskip = 0
 
   navListener = null
-
+  unlisten
   componentDidMount() {
     const { route, brand, category, getCategory } = this.props
+    this.unlisten = this.props.navigation.addListener('focus', () => {
+      console.log('==========focus', laspost)
+      if (this.scroll) {
+        this.scroll.scrollToLocation({
+          animated: false,
+          itemIndex: laspost,
+          sectionIndex: 0,
+        })
+      }
+      // this.scroll.scrollTo({ y: this.laspost, animated: false })
+    })
 
     InteractionManager.runAfterInteractions(() => {
       this.setState({ finishAnimation: true })
@@ -155,6 +168,9 @@ class Productlist extends Component<any, any> {
     this.props.resetSelectedCollection()
     this.props.clearActivePage()
     this.props.clearFilter()
+    if (this.unlisten) {
+      this.unlisten()
+    }
   }
 
   _setInitialState() {
@@ -415,6 +431,22 @@ class Productlist extends Component<any, any> {
     )
   }
 
+  onCheckViewableItems = ({ viewableItems, changed }) => {
+    if (viewableItems[0].index) {
+      laspost = viewableItems[0].index
+    }
+  }
+
+  _renderFooter = () => {
+    const { loading } = this.props
+
+    return (
+      <View style={{ height: 300 }}>
+        {loading && <ProductListLoader style={{ margin: 16 }} />}
+      </View>
+    )
+  }
+
   render() {
     const {
       products,
@@ -429,6 +461,7 @@ class Productlist extends Component<any, any> {
       isBrandLoading,
       isCollectionLoading,
     } = this.props
+
     const headerData: any = {
       // image:
       // 'https://shonet.imgix.net/commerce/Loueve/#LJRING14-MAIN.jpg?q=75&auto=compress,format&w=350',
@@ -477,10 +510,17 @@ class Productlist extends Component<any, any> {
             <SectionList
               onRefresh={this._freshfetch}
               refreshing={loading}
+              ref={ref => (this.scroll = ref)}
               ListHeaderComponent={this._header}
               style={styles.sectionContainer}
               onEndReachedThreshold={0.97}
               onEndReached={this._fetchMore}
+              onViewableItemsChanged={this.onCheckViewableItems}
+              viewabilityConfig={{
+                itemVisiblePercentThreshold: 50, //means if 50% of the item is visible
+              }}
+              scrollEventThrottle={16}
+              ListFooterComponent={this._renderFooter}
               ListEmptyComponent={this.emptyComponent}
               keyExtractor={this._keyExtractor}
               renderSectionHeader={this._renderHeader}

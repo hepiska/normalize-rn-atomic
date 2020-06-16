@@ -1,4 +1,3 @@
-import { QueryParams } from '@utils/globalInterface'
 import { API } from '../action-types'
 import * as schema from '@modules/normalize-schema'
 import { getMe } from '@src/utils/helpers'
