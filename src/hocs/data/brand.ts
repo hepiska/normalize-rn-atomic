@@ -1,23 +1,13 @@
 import { connect } from 'react-redux'
 import { navigate, navigationInf } from '@src/root-navigation'
 import { NavigationActions } from 'react-navigation'
+import { makeSelectedBrands } from '@modules/brand/selector'
 
 const brandListMap = (state, ownProps) => {
-  const { brandId } = ownProps
-  const brand = state.brands.data[brandId]
+  const getBrands = makeSelectedBrands()
+  const brand = getBrands(state, ownProps.brandId)
 
-  ownProps.onPress = () => {
-    // const navigation = navigationInf()
-    // const navigateAction = NavigationActions.navigate({
-    //   routeName: 'ProductList',
-
-    //   params: {},
-
-    //   action: NavigationActions.navigate({ routeName: 'SubProfileRoute' }),
-    // })
-    navigate('ProductList', { brandsId: brandId, from: 'brands' })
-  }
-
+  if (!brand) return null
   return {
     brand,
   }

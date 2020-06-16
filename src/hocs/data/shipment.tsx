@@ -1,12 +1,9 @@
 import { connect } from 'react-redux'
-import { navigate, navigationInf } from '@src/root-navigation'
-import { NavigationActions } from 'react-navigation'
+import { makeSelectedShipments } from '@src/modules/shipment/selector'
 
 const shipmentListMap = (state, ownProps) => {
-  const { shipmentId, warehouseId } = ownProps
-  const shipment = state.shipments.data[warehouseId][shipmentId]
-
-  ownProps.onPress = () => {}
+  const getShipment = makeSelectedShipments()
+  const shipment = getShipment(state, ownProps)
 
   return {
     shipment,

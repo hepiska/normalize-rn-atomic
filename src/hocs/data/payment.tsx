@@ -1,9 +1,9 @@
 import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
+import { makeGetTransaction } from '@modules/transaction/selector'
 
 const transactionListMap = (state, ownProps) => {
-  const { transactionId } = ownProps
-  const transaction = state.transaction.data[transactionId]
+  const getTransaction = makeGetTransaction()
+  const transaction = getTransaction(state, ownProps.transactionId)
 
   return {
     transaction,

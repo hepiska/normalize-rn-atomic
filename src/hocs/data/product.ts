@@ -15,7 +15,7 @@ const productListMap = (state, ownProps) => {
   const getIsSaved = makeIsSaved()
   const cloneProduct = makeCloneProduct()
 
-  const product = getSelectedProducts(state, ownProps)
+  const product = getSelectedProducts(state, ownProps.productId)
 
   const _product = cloneProduct(product)
 

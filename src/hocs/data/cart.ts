@@ -8,20 +8,33 @@ import {
 import { removeCart, changeCartQty } from '@modules/cart/action'
 import { navigate } from '@src/root-navigation'
 import { getProductById } from '@modules/product/action'
+import { makeSelectorCarts } from '@src/modules/cart/selector'
+import { makeSelectedProducts } from '@src/modules/product/selector'
+import { makeSelectedBrands } from '@src/modules/brand/selector'
+import { makeCloneProduct } from '@modules/selector-general'
+import { makeIsSaved } from '@src/modules/product-saved/selector'
 
 const cartListMap = (state, ownProps) => {
-  const { cartId, productId } = ownProps
+  const getSelectedCarts = makeSelectorCarts()
+  const getSelectedProducts = makeSelectedProducts()
+  const getSelectedBrands = makeSelectedBrands()
+  const getIsSaved = makeIsSaved()
+
+  const cloneVariant = makeCloneProduct()
+
   let cart
   let brand
   let variant
   let isSaved
   let product
-  if (cartId) {
-    cart = state.carts.data[cartId]
-    brand = cart.brand
-    variant = deepClone(cart.variant)
-    isSaved = !!state.productsSaved.data[cart.variant.product_id]
-    product = state.products.data[cart.variant.product_id]
+
+  if (ownProps.cartId) {
+    cart = getSelectedCarts(state, ownProps)
+    brand = getSelectedBrands(state, cart.brand.id)
+    variant = cloneVariant(cart.variant)
+    isSaved = getIsSaved(state, cart.variant.product_id)
+    product = getSelectedProducts(state, cart.variant.product_id)
+
     if (variant.attribute_values && product) {
       variant.attribute_values?.map(v => {
         const attribute = product.attributes.find(
@@ -33,13 +46,13 @@ const cartListMap = (state, ownProps) => {
     }
   }
 
-  if (productId) {
-    const product = state.products.data[productId]
-    brand = state.brands.data[product.brand]
+  if (ownProps.productId) {
+    product = getSelectedProducts(state, ownProps.productId)
+    brand = getSelectedBrands(state, product.brand)
     let qty = product.variant.qty
     cart = {}
     cart['qty'] = qty
-    variant = deepClone(product.variant && product)
+    variant = cloneVariant(product.variant && product)
     if (variant.attribute_values) {
       variant.attribute_values?.map(v => {
         const attribute = product.attributes.find(
@@ -50,15 +63,6 @@ const cartListMap = (state, ownProps) => {
       })
     }
   }
-
-  ownProps.gotoProductDetail = () => {
-    const _productId = product.id
-    navigate('Screens', {
-      screen: 'ProductDetail',
-      params: { productId: _productId },
-    })
-  }
-
   return {
     cart,
     brand,

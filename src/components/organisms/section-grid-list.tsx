@@ -9,7 +9,6 @@ import {
 import { OutlineButton } from '@components/atoms/button'
 import { colors } from '@utils/constants'
 import ProductCard from '@components/molecules/product-card'
-import PostCard from '@components/molecules/post-card'
 import PostCardNew from '@src/components/molecules/post-card-new'
 import MansoryLayout from '@components/layouts/mansory-layout'
 import { productListData } from '@hocs/data/product'

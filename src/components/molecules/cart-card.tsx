@@ -39,7 +39,6 @@ interface CartCardType {
   removeCart: (data: any) => void
   changeCartQty: (data: any) => void
   removeSelectedVariant: (data: any) => void
-  gotoProductDetail?: () => void
 }
 
 const styles = StyleSheet.create({
@@ -189,6 +188,14 @@ class CartCard extends React.Component<CartCardType, any> {
     }))
   }
 
+  gotoProductDetail = () => {
+    const _productId = this.props.product.id
+    navigate('Screens', {
+      screen: 'ProductDetail',
+      params: { productId: _productId },
+    })
+  }
+
   render() {
     const {
       cart,
@@ -199,7 +206,6 @@ class CartCard extends React.Component<CartCardType, any> {
       isChecked,
       chooseCart,
       isSaved,
-      gotoProductDetail,
     } = this.props
     const { isProductSaved } = this.state
 
@@ -240,7 +246,7 @@ class CartCard extends React.Component<CartCardType, any> {
             <View style={{ width: '100%', flex: 1 }}>
               {/* image, desc */}
               <View style={{ flexDirection: 'row' }}>
-                <TouchableOpacity onPress={gotoProductDetail}>
+                <TouchableOpacity onPress={this.gotoProductDetail}>
                   <ImageAutoSchale
                     source={{
                       uri: image,
@@ -258,7 +264,7 @@ class CartCard extends React.Component<CartCardType, any> {
                   flexDirection="column"
                   align="flex-start"
                   _padding="0 0 0 16px">
-                  <TouchableOpacity onPress={gotoProductDetail}>
+                  <TouchableOpacity onPress={this.gotoProductDetail}>
                     <Text
                       ellipsizeMode="tail"
                       numberOfLines={1}
