@@ -5,6 +5,7 @@ import { persistReducer } from 'redux-persist'
 import { actionType } from './action'
 import { deepClone } from '@utils/helpers'
 import AsyncStorage from '@react-native-community/async-storage'
+import CONFIG from 'react-native-config'
 
 interface TransactionState {
   active: number
@@ -55,4 +56,9 @@ const presistConfig = {
   storage: AsyncStorage,
 }
 
-export default persistReducer(presistConfig, userPostReducer)
+const exportReducer =
+  CONFIG.USE_PRESIST !== 'false'
+    ? persistReducer(presistConfig, userPostReducer)
+    : userPostReducer
+
+export default exportReducer

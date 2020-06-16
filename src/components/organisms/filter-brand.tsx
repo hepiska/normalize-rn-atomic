@@ -19,7 +19,6 @@ import {
   changeSelectedBrand,
   fetchCountProduct,
 } from '@modules/product-filter/action'
-import { deepClone } from '@utils/helpers'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import AlvabetSelectorMol from '@components/molecules/alvabet-selector'
 import FilterBrandItem from '@components/molecules/filter-brand-item'

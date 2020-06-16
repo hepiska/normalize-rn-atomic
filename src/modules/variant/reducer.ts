@@ -5,6 +5,7 @@ import { actionType } from './action'
 import AsyncStorage from '@react-native-community/async-storage'
 import { ErrorType } from '@utils/globalInterface'
 import { deepClone } from '@utils/helpers'
+import CONFIG from 'react-native-config'
 
 interface VarianStateType {
   readonly data: Object
@@ -24,7 +25,7 @@ const initialState: VarianStateType = {
   loading: false,
 }
 
-const cartReducer: Reducer<VarianStateType> = (
+const variantReducer: Reducer<VarianStateType> = (
   state: VarianStateType = deepClone(initialState),
   action: AnyAction,
 ) => {
@@ -41,4 +42,14 @@ const cartReducer: Reducer<VarianStateType> = (
   }
 }
 
-export default cartReducer
+const presistConfig = {
+  key: 'variant',
+  storage: AsyncStorage,
+}
+
+const exportReducer =
+  CONFIG.USE_PRESIST !== 'false'
+    ? persistReducer(presistConfig, variantReducer)
+    : variantReducer
+
+export default exportReducer

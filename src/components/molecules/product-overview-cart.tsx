@@ -69,7 +69,7 @@ const ProductOverviewCart: React.FC<ProductOverviewCart> = ({
                   style={{ ...fontStyle.helvetica }}
                   size={14}
                   color={colors.black100}>
-                  {passProps.rawChildren[0].data}
+                  {passProps?.rawChildren[0]?.data}
                 </Font>
               )
             },

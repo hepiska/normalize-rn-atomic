@@ -35,6 +35,7 @@ const styles = StyleSheet.create({
   contentSegment: {
     marginTop: 8,
     width: 128,
+    paddingHorizontal: 8,
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'row',
@@ -100,7 +101,12 @@ class UserCard extends React.PureComponent<UserCardType, any> {
         <TouchableOpacity
           style={styles.contentSegment}
           onPress={this.goToDetail}>
-          <Text style={styles.usernameText}>{user.username}</Text>
+          <Text
+            style={styles.usernameText}
+            numberOfLines={1}
+            ellipsizeMode="tail">
+            {user.username}
+          </Text>
           {user.group_id !== 4 && (
             <Gradient
               {...colors.ActivePurple}
@@ -117,7 +123,9 @@ class UserCard extends React.PureComponent<UserCardType, any> {
           )}
         </TouchableOpacity>
         <View style={styles.contentSegment}>
-          <Text style={styles.userText}>{user.name}</Text>
+          <Text style={styles.userText} numberOfLines={1} ellipsizeMode="tail">
+            {user.name}
+          </Text>
         </View>
         <View style={{ flexDirection: 'row', marginTop: 16 }}>
           <Button

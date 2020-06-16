@@ -5,6 +5,7 @@ import { persistReducer } from 'redux-persist'
 import { postLikedActionType } from './action'
 import { deepClone } from '@utils/helpers'
 import AsyncStorage from '@react-native-community/async-storage'
+import CONFIG from 'react-native-config'
 
 interface PostLikedState {
   readonly data: Object
@@ -23,7 +24,7 @@ const initialState: any = {
 }
 
 const postLikedReducer: Reducer<PostLikedState> = (
-  state: PostLikedState = deepClone(initialState),
+  state: PostLikedState = { ...initialState },
   action: AnyAction,
 ) => {
   const newState = { ...state }
@@ -60,9 +61,14 @@ const postLikedReducer: Reducer<PostLikedState> = (
   }
 }
 
-const postPersistConfig = {
+const presistConfig = {
   key: 'post-liked',
   storage: AsyncStorage,
 }
 
-export default persistReducer(postPersistConfig, postLikedReducer)
+const exportReducer =
+  CONFIG.USE_PRESIST !== 'false'
+    ? persistReducer(presistConfig, postLikedReducer)
+    : postLikedReducer
+
+export default exportReducer

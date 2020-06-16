@@ -5,6 +5,7 @@ import { persistReducer } from 'redux-persist'
 import { shippingMethodsActionType } from './action'
 import { deepClone } from '@utils/helpers'
 import AsyncStorage from '@react-native-community/async-storage'
+import CONFIG from 'react-native-config'
 
 interface ShippingMethodsState {
   readonly data: Object
@@ -42,9 +43,14 @@ const shippingMethodsReducer: Reducer<ShippingMethodsState> = (
   }
 }
 
-const postPersistConfig = {
+const presistConfig = {
   key: 'shipping-methods',
   storage: AsyncStorage,
 }
 
-export default persistReducer(postPersistConfig, shippingMethodsReducer)
+const exportReducer =
+  CONFIG.USE_PRESIST !== 'false'
+    ? persistReducer(presistConfig, shippingMethodsReducer)
+    : shippingMethodsReducer
+
+export default exportReducer

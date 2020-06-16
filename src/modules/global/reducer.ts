@@ -8,7 +8,7 @@ const initialState = {
 }
 
 const productFilterReducer: Reducer<any> = (
-  state: any = deepClone(initialState),
+  state: any = { ...initialState },
   action: AnyAction,
 ) => {
   const newState = { ...state }

@@ -21,6 +21,7 @@ import shippingMethodsReducer from './shipping-methods/reducer'
 import orderReducer from './order/reducer'
 import productSavedActionType from './product-saved/reducer'
 import postLikedActionType from './post-liked/reducer'
+import postBookmarkReducer from './post-bookmarked/reducer'
 import transactionPaymentReducer from './transactions-payments/reducer'
 import commentReducer from './comment/reducer'
 import productAttributeReducer from './product-attribute/reducer'
@@ -57,6 +58,7 @@ const combinedReducer: Reducer<any> = combineReducers({
 
   page: pageReducer,
   post: postReducer,
+  postsBookmarked: postBookmarkReducer,
   postsLiked: postLikedActionType,
   productFilter: productFilterReducer,
   productsSaved: productSavedActionType,

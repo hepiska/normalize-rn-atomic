@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, memo } from 'react'
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
 import {
   Div,
@@ -9,6 +9,7 @@ import {
 } from '@components/atoms/basic'
 import ImageAutoSchale from '@components/atoms/image-autoschale'
 import { setImage } from '@utils/helpers'
+import { Linking } from 'react-native'
 import {
   helveticaNormalFont,
   fontStyle,
@@ -21,16 +22,24 @@ import IconMC from 'react-native-vector-icons/MaterialCommunityIcons'
 import Config from 'react-native-config'
 import { navigate } from '@src/root-navigation'
 import Line from '@components/atoms/line'
+import { post } from '@src/modules/normalize-schema'
 
 interface PostListItemType {
   post: any
   user: any
   type?: string
   idx: string | number
-  onPress: () => void
+  onPress: (post: any) => void
   onLike: (postId) => void
+  removeLikedPost: (postId) => void
+  addLikedPost: (postId) => void
+  onUserPress: (user) => void
+  onBookmark: (postId) => void
+  addBookmarkPost: (postId) => void
+  removeBookmarkPost: (postId) => void
   fullscreen?: boolean
   isLiked?: boolean
+  isBookmarked?: boolean
   style?: any
   isAuth?: boolean
 }
@@ -74,16 +83,19 @@ const renderIconType = type => {
 
 const FullscreenCard = ({
   user,
-  layout,
+  width,
   post,
   isLiked,
+  isBookmarked,
   onLayout,
   style,
   onPress,
+  onUserPress,
   onShare,
-  goToUser,
+  // goToUser,
   goToUsers,
   onLike,
+  onBookmark,
 }: any) => {
   const maxTitile = 3000
   const maxSubtitle = 200
@@ -112,12 +124,12 @@ const FullscreenCard = ({
       <Line />
       {user && (
         <View style={{ ...fullscreenstyles.sectionContainer }}>
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-            }}>
-            <TouchableOpacity onPress={() => goToUser(user)}>
+          <TouchableOpacity onPress={onUserPress(user)}>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+              }}>
               <Image
                 source={{
                   uri: setImage(user.photo_url, { width: 64 }),
@@ -129,30 +141,33 @@ const FullscreenCard = ({
                   marginRight: 8,
                 }}
               />
-            </TouchableOpacity>
 
-            <Text
-              style={{
-                ...fontStyle.helveticaBold,
-                fontSize: 14,
-                color: colors.black100,
-              }}>
-              {user.username}
-            </Text>
-          </View>
+              <Text
+                style={{
+                  ...fontStyle.helveticaBold,
+                  fontSize: 14,
+                  color: colors.black100,
+                }}>
+                {user.username}
+              </Text>
+            </View>
+          </TouchableOpacity>
           <IconFa name="ellipsis-h" size={16} />
         </View>
       )}
-      {layout && (
+      {width && (
         <View style={{ marginBottom: 8 }}>
           <TouchableWithoutFeedback onPress={onPress}>
             <ImageAutoSchale
               source={{
-                uri: setImage(post.image_url, { width: layout.width }),
+                uri: setImage(post.image_url, { width: width }),
               }}
-              errorStyle={{ width: layout.width, height: layout.width * 0.66 }}
-              thumbnailSource={{ uri: setImage(post.image_url, { width: 24 }) }}
-              width={layout.width}
+              errorStyle={{ width: width, height: width * 0.66 }}
+              containerStyle={{ width: width, height: width * 0.66 }}
+              thumbnailSource={{
+                uri: setImage(post.image_url, { width: 32, height: 32 }),
+              }}
+              width={width}
             />
           </TouchableWithoutFeedback>
         </View>
@@ -255,10 +270,10 @@ const FullscreenCard = ({
             color={colors.black70}
           />
           <IconMC
-            name="bookmark-outline"
+            name={isBookmarked ? 'bookmark' : 'bookmark-outline'}
             size={20}
             style={{ marginLeft: 26 }}
-            onPress={onShare}
+            onPress={onBookmark}
             color={colors.black70}
           />
         </View>
@@ -310,7 +325,7 @@ const FullscreenCard = ({
               }}>
               Liked By
             </Text>
-            <TouchableOpacity onPress={() => goToUser(post.likes[0].user)}>
+            <TouchableOpacity onPress={onUserPress(post.likes[0].user)}>
               <Text
                 style={{
                   ...fontStyle.helvetica,
@@ -352,7 +367,7 @@ const FullscreenCard = ({
 
 const VerticalCart = ({
   user,
-  layout,
+  width,
   post,
   isLiked,
   onLayout,
@@ -417,7 +432,7 @@ const VerticalCart = ({
           </Text>
         </View>
       )}
-      {layout && (
+      {width && (
         <View
           style={{
             marginVertical: 4,
@@ -426,11 +441,14 @@ const VerticalCart = ({
           <TouchableWithoutFeedback onPress={onPress}>
             <ImageAutoSchale
               source={{
-                uri: setImage(post.image_url, { width: layout.width }),
+                uri: setImage(post.image_url, { width: width }),
               }}
-              errorStyle={{ width: layout.width, height: layout.width * 0.66 }}
-              thumbnailSource={{ uri: setImage(post.image_url, { width: 24 }) }}
-              width={layout.width}
+              errorStyle={{ width: width, height: width * 0.66 }}
+              containerStyle={{ width: width, height: width * 0.66 }}
+              thumbnailSource={{
+                uri: setImage(post.image_url, { width: 12, height: 12 }),
+              }}
+              width={width}
             />
           </TouchableWithoutFeedback>
         </View>
@@ -476,19 +494,72 @@ const VerticalCart = ({
   )
 }
 
-class PostListItem extends React.PureComponent<PostListItemType, any> {
+const MemVerticalCard = memo(VerticalCart)
+const MemFullSizeCard = memo(FullscreenCard)
+
+class PostListItem extends React.Component<PostListItemType, any> {
   state: any = {
-    defaultImage: null,
     isPostLiked: this.props.isLiked,
+    width: null,
+    isPostBookmarked: this.props.isBookmarked,
+  }
+  shouldComponentUpdate(nextProps, nextState) {
+    if (this.state.isPostLiked !== nextState.isPostLiked) {
+      return true
+    }
+    if (nextState.width !== this.state.width) {
+      return true
+    }
+    return false
+  }
+  _onPress = () => {
+    const { post, ...props } = this.props
+
+    if (props.onPress) {
+      props.onPress(post)
+      return
+    }
+
+    if (post.post_type === 'article' || post.post_type === 'collection') {
+      navigate('Screens', {
+        screen: 'PostDetail',
+        params: { postId: post.id },
+      }) // revisi: navigasi ke post id
+    } else if (post.post_type === 'youtube') {
+      Linking.openURL(post.permalink)
+    }
   }
 
   _onLike = () => {
+    const { isLiked, addLikedPost, removeLikedPost } = this.props
+
     if (!this.props.isAuth) {
       navigate('modals', { screen: 'LoginModal' })
     } else {
-      this.props.onLike(this.props.post.id)
+      if (isLiked) {
+        removeLikedPost(this.props.post.id)
+      } else {
+        addLikedPost(this.props.post)
+      }
+
       this.setState(state => ({
         isPostLiked: !state.isPostLiked,
+      }))
+    }
+  }
+
+  _onBookmark = () => {
+    if (!this.props.isAuth) {
+      navigate('modals', { screen: 'LoginModal' })
+    } else {
+      if (this.props.isBookmarked) {
+        this.props.removeBookmarkPost(this.props.post.id)
+      } else {
+        this.props.addBookmarkPost(this.props.post.id)
+      }
+
+      this.setState(state => ({
+        isPostBookmarked: !state.isPostBookmarked,
       }))
     }
   }
@@ -504,22 +575,35 @@ class PostListItem extends React.PureComponent<PostListItemType, any> {
     })
   }
 
-  _onUserCliked = () => {
-    navigate('Screens', {
-      screen: 'UserDetail',
-      params: { userId: this.props.user.id },
-    })
-  }
+  // _onUserCliked = () => {
+  //   navigate('Screens', {
+  //     screen: 'UserDetail',
+  //     params: { userId: this.props.user.id },
+  //   })
+  // }
 
   _onLayout = e => {
-    this.setState({ layout: e.nativeEvent.layout })
+    if (!this.state.width) {
+      this.setState({ width: e.nativeEvent.layout.width })
+    }
   }
+
   _goToUsers = () => {
-    console.log('===== to users')
+    console.log('===== to users banyak')
   }
-  _goToUser = user => {
-    console.log('===== to users', user)
+
+  _goToUser = user => () => {
+    if (!this.props.onUserPress) {
+      navigate('Screens', {
+        screen: 'UserDetail',
+        params: { userId: user.id },
+      })
+    }
   }
+
+  // _goToUser = user => {
+  //   console.log('===== to user saja', user)
+  // }
 
   render() {
     const {
@@ -527,38 +611,41 @@ class PostListItem extends React.PureComponent<PostListItemType, any> {
       user,
       idx,
       onPress,
+      onUserPress,
       fullscreen = false,
       style,
       type = 'default',
-      isLiked,
     } = this.props
-    const { layout, isPostLiked } = this.state
+    const { width, isPostLiked, isPostBookmarked } = this.state
     if (post) {
       if (fullscreen) {
         return (
           <FullscreenCard
             onPress={onPress}
+            onUserPress={this._goToUser}
             post={post}
             user={user}
             goToUsers={this._goToUsers}
-            goToUser={this._goToUser}
+            // goToUser={this._goToUser}
             onLike={this._onLike}
-            layout={layout}
+            width={width}
             style={style}
             type={type}
+            onBookmark={this._onBookmark}
             onShare={this._onShare}
             onLayout={this._onLayout}
             isLiked={isPostLiked}
+            isBookmarked={isPostBookmarked}
           />
         )
       } else {
         return (
-          <VerticalCart
-            onPress={onPress}
+          <MemVerticalCard
+            onPress={this._onPress}
             post={post}
             user={user}
             onLike={this._onLike}
-            layout={layout}
+            width={width}
             style={style}
             type={type}
             onShare={this._onShare}

@@ -103,7 +103,7 @@ const MyContent = (props: MyContentType) => {
               alignItems: 'flex-start',
               flexWrap: 'wrap',
             }}>
-            {insights.statistics.top_posts.map((val, key) => (
+            {insights?.statistics?.top_posts?.map((val, key) => (
               <PostHoc
                 key={`best-post-${val}`}
                 postId={val}

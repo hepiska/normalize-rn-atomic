@@ -244,7 +244,7 @@ const mapDispatchToProps = dispatch =>
 const mapStateToProps = (state, ownProps) => {
   const productId = ownProps.route.params?.product
   const product = state.products.data[productId]
-  const _product = deepClone(product)
+  const _product = { ...product }
 
   return {
     product: _product,

@@ -5,6 +5,7 @@ import { persistReducer } from 'redux-persist'
 import { postActionType } from './action'
 import { deepClone } from '@utils/helpers'
 import AsyncStorage from '@react-native-community/async-storage'
+import CONFIG from 'react-native-config'
 
 interface PostType {}
 
@@ -52,9 +53,14 @@ const postLikedReducer: Reducer<PostState> = (
   }
 }
 
-const postPersistConfig = {
+const presistConfig = {
   key: 'post',
   storage: AsyncStorage,
 }
 
-export default persistReducer(postPersistConfig, postLikedReducer)
+const exportReducer =
+  CONFIG.USE_PRESIST !== 'false'
+    ? persistReducer(presistConfig, postLikedReducer)
+    : postLikedReducer
+
+export default exportReducer

@@ -35,7 +35,7 @@ export const getInsightSummary = params => ({
 
       const postById = normalizedPost.result?.map(val => getPostById(val))
 
-      let newInsight = deepClone(data)
+      let newInsight = { ...data }
       newInsight.statistics.top_posts = normalizedPost.result
       return [setInsightData(newInsight), postById, setInsightLoading(false)]
     },

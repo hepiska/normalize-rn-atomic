@@ -136,26 +136,20 @@ class MyPost extends React.Component<any, any> {
     )
   }
 
-  _hanleScroll = e => {
-    if (e.nativeEvent.contentOffset.y < 2) {
-      this.props.disableScroll && this.props.disableScroll()
-    }
-  }
-
   render() {
-    const { posts, scrollEnabled, loading } = this.props
+    const { posts, loading, y, style, getListRef, ...props } = this.props
     return (
-      <View style={{ width }}>
+      <View style={{ flex: 1, ...style }}>
         <List
+          getListRef={getListRef}
           data={posts}
           key="my-post-list"
-          onScroll={this._hanleScroll}
+          y={y}
           refreshing={loading}
           onRefresh={() => {}}
           style={{ paddingHorizontal: 8 }}
           onEndReached={this._fetchMore}
           nestedScrollEnabled={true}
-          scrollEnabled={false}
           ListEmptyComponent={this._emptyState}
           layoutType="mansory"
           columnStyle={{ flex: 1, marginHorizontal: 8 }}
@@ -163,6 +157,7 @@ class MyPost extends React.Component<any, any> {
           header={this._header}
           ListFooterComponent={<View style={{ height: 40 }} />}
           renderItem={this._renderItem}
+          {...props}
         />
       </View>
     )

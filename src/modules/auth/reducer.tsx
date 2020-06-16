@@ -4,6 +4,7 @@ import { ErrorType } from '@utils/globalInterface'
 import { authActionType } from './action'
 import { persistReducer } from 'redux-persist'
 import AsyncStorage from '@react-native-community/async-storage'
+import CONFIG from 'react-native-config'
 
 interface RegisterState {
   readonly loading: Boolean
@@ -59,10 +60,16 @@ const registerReducer: Reducer<RegisterState> = (
       return newState
   }
 }
-
-const brandersistConfig = {
+const presistConfig = {
   key: 'auth',
   storage: AsyncStorage,
 }
 
-export default persistReducer(brandersistConfig, registerReducer)
+// const exportReducer =
+//   CONFIG.USE_PRESIST !== 'false'
+//     ? persistReducer(brandersistConfig, registerReducer)
+//     : registerReducer
+
+const exportReducer = persistReducer(presistConfig, registerReducer)
+
+export default exportReducer

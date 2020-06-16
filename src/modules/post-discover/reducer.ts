@@ -3,8 +3,8 @@ import Immutable from 'seamless-immutable'
 import { ErrorType } from '@utils/globalInterface'
 import { persistReducer } from 'redux-persist'
 import { actionType } from './action'
-import { deepClone } from '@utils/helpers'
 import AsyncStorage from '@react-native-community/async-storage'
+import CONFIG from 'react-native-config'
 
 interface FeedState {
   readonly data: Object
@@ -47,9 +47,14 @@ const FeedReducer: Reducer<FeedState> = (
   }
 }
 
-const postPersistConfig = {
-  key: 'feed',
+const presistConfig = {
+  key: 'discover',
   storage: AsyncStorage,
 }
 
-export default persistReducer(postPersistConfig, FeedReducer)
+const exportReducer =
+  CONFIG.USE_PRESIST !== 'false'
+    ? persistReducer(presistConfig, FeedReducer)
+    : FeedReducer
+
+export default exportReducer

@@ -25,6 +25,7 @@ interface SearchIconType {
   onSearchChange?: (key: string) => void
   filterItems?: Array<FilterItemType>
   selectedFilter: Array<string>
+  onfilterClicked?: () => void
   onfilterSelected?: (FilterItemType) => void
   style?: ViewStyle
   itemStyle?: ViewStyle
@@ -49,6 +50,7 @@ const SearchFilter = ({
   style,
   itemStyle,
   filterItems,
+  onfilterClicked,
   inputProps,
 }: SearchIconType) => {
   let timer = null
@@ -62,6 +64,9 @@ const SearchFilter = ({
 
   const _onPress = item => () => {
     setSelected([item.value])
+    if (onfilterClicked) {
+      onfilterClicked()
+    }
     if (timer) {
       timer = null
     } else {

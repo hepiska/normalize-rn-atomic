@@ -35,7 +35,7 @@ interface ImageAutoSchaleType {
 
 let imageSize: any = null
 
-class ImageAutoSchale extends React.Component<ImageAutoSchaleType, any> {
+class ImageAutoSchale extends React.PureComponent<ImageAutoSchaleType, any> {
   state: any = {
     isError: false,
     isLoading: false,
@@ -43,6 +43,13 @@ class ImageAutoSchale extends React.Component<ImageAutoSchaleType, any> {
   mounted = true
   componentDidMount() {
     const { source, onError } = this.props
+    const { width, height } = this.props
+
+    if (width && height) {
+      this.calculateSize(width, height)
+      return
+    }
+
     if (source.uri) {
       imageSize = Image.getSize(
         source.uri,
@@ -100,11 +107,11 @@ class ImageAutoSchale extends React.Component<ImageAutoSchaleType, any> {
   }
 
   imageAnimated = new Animated.Value(0)
-  thumbnailAnimated = new Animated.Value(0)
+  thumbnailAnimated = new Animated.Value(1)
 
   handleThumbnailLoad = () => {
     Animated.timing(this.thumbnailAnimated, {
-      toValue: 1,
+      toValue: 0,
     }).start()
   }
   onImageLoad = () => {
@@ -117,7 +124,7 @@ class ImageAutoSchale extends React.Component<ImageAutoSchaleType, any> {
     if (this.props.onError) {
       this.props.onError
     }
-    this.setState({ isError: true })
+    this.setState({ isError: true, imageLoaded: true })
   }
   _loadStart = () => {
     // this.setState({ isLoading: true })
@@ -141,15 +148,20 @@ class ImageAutoSchale extends React.Component<ImageAutoSchaleType, any> {
       : { ...size, ...style }
 
     let aplliedContainerStyle = imageLoaded
-      ? { ...style, ...containerStyle }
+      ? { ...styles.container }
       : { ...styles.container, ...style, ...containerStyle }
 
-    if (this.state.isError || !imageLoaded) {
-      aplliedContainerStyle = { ...style, ...styles.container, ...errorStyle }
+    if (this.state.isError && imageLoaded) {
+      aplliedContainerStyle = {
+        ...style,
+        ...styles.container,
+        ...errorStyle,
+      }
     }
+
     return (
       <View style={aplliedContainerStyle}>
-        {thumbnailSource && (
+        {!this.state.isError && thumbnailSource && (
           <Animated.Image
             onLoadEnd={this.handleThumbnailLoad}
             onError={this.handleError}
@@ -159,16 +171,17 @@ class ImageAutoSchale extends React.Component<ImageAutoSchaleType, any> {
             {...props}
           />
         )}
-        {this.state.isError && (
+        {this.state.isError ? (
           <Icon name="image" size={48} color={colors.black60} />
+        ) : (
+          <Animated.Image
+            source={source}
+            style={[imageStyles, { opacity: this.imageAnimated }]}
+            onError={this.handleError}
+            onLoadEnd={this.onImageLoad}
+            {...props}
+          />
         )}
-        <Animated.Image
-          source={source}
-          style={imageStyles}
-          onError={this.handleError}
-          onLoadEnd={this.onImageLoad}
-          {...props}
-        />
       </View>
     )
   }

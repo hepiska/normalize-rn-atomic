@@ -20,9 +20,10 @@ const { width, height } = Dimensions.get('screen')
 class DiscoverOrg extends React.Component<any, any> {
   state = {
     selectedFilter: this.props.userPostStatus,
+    isWaitfilter: false,
   }
 
-  limit = 10
+  limit = 15
   skip = 0
   lastskip = 0
 
@@ -72,7 +73,7 @@ class DiscoverOrg extends React.Component<any, any> {
     } else {
       selectedFilter = [item.value]
     }
-    this.setState({ selectedFilter }, () => {
+    this.setState({ selectedFilter, isWaitfilter: false }, () => {
       this._freshfetch()
     })
   }
@@ -83,12 +84,14 @@ class DiscoverOrg extends React.Component<any, any> {
     this._fetchData(this.skip, null)
   }
 
-  _emptyState = () => (
-    <EmtyState
-      title={`No Post`}
-      description="You Dont Have Post in this Section"
-    />
-  )
+  _emptyState = () => {
+    return (
+      <EmtyState
+        title={`No Post`}
+        description="You Dont Have Post in this Section"
+      />
+    )
+  }
 
   _renderItem = ({ item, index }) => {
     return (
@@ -100,12 +103,16 @@ class DiscoverOrg extends React.Component<any, any> {
       />
     )
   }
+  _filterCliked = () => {
+    this.setState({ isWaitfilter: true })
+  }
   _header = () => {
     const { selectedFilter } = this.state
 
     return (
       <View style={{ backgroundColor: 'white', paddingHorizontal: 16 }}>
         <SearchFilter
+          onfilterClicked={this._filterCliked}
           style={{ marginBottom: 16 }}
           itemStyle={{ backgroundColor: 'white' }}
           selectedFilter={selectedFilter}
@@ -120,32 +127,60 @@ class DiscoverOrg extends React.Component<any, any> {
       this.props.disableScroll && this.props.disableScroll()
     }
   }
+  _renderfooter = () => {
+    const { loading } = this.props
+    // const firsLoading = loading && !this.skip
+    if (loading) {
+      return <TwoColumnListLoader />
+    }
+    return null
+  }
 
   render() {
     const { posts, scrollEnabled, loading } = this.props
-    const firsLoading = loading && !this.skip
+    const { isWaitfilter } = this.state
+    const firsLoading = (loading || isWaitfilter) && !this.skip
+    // const data = firsLoading && isWaitfilter ? [] : posts
     return (
-      <View style={{ width, flex: 1, paddingTop: 4 }}>
-        {firsLoading ? (
-          <TwoColumnListLoader />
-        ) : (
-          <List
-            data={posts}
-            loading={loading}
-            style={{ paddingTop: 8 }}
-            onScroll={this._hanleScroll}
-            onEndReached={this._fetchMore}
-            scrollEnabled={scrollEnabled}
-            rowStyle={{ paddingHorizontal: 8 }}
-            ListEmptyComponent={this._emptyState}
-            layoutType="mansory"
-            ListHeaderComponent={this._header}
-            columnStyle={{ flex: 1, marginHorizontal: 8 }}
-            numColumns={2}
-            ListFooterComponent={<View style={{ height: 200 }} />}
-            renderItem={this._renderItem}
-          />
+      <View
+        style={{
+          width,
+          flex: 1,
+          paddingTop: 4,
+          backgroundColor: colors.white,
+        }}>
+        {firsLoading && (
+          <View
+            style={{
+              width,
+              height,
+              position: 'absolute',
+              top: 62,
+              left: 0,
+              backgroundColor: colors.white,
+              zIndex: 200,
+            }}>
+            <TwoColumnListLoader />
+          </View>
         )}
+
+        <List
+          data={posts}
+          loading={loading}
+          style={{ paddingTop: 8 }}
+          onScroll={this._hanleScroll}
+          onEndReached={this._fetchMore}
+          scrollEnabled={scrollEnabled}
+          rowStyle={{ paddingHorizontal: 8 }}
+          ListEmptyComponent={this._emptyState}
+          renderFooter={this._renderfooter}
+          layoutType="mansory"
+          ListHeaderComponent={this._header}
+          columnStyle={{ flex: 1, marginHorizontal: 8 }}
+          numColumns={2}
+          ListFooterComponent={<View style={{ height: 200 }} />}
+          renderItem={this._renderItem}
+        />
       </View>
     )
   }

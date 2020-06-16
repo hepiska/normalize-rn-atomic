@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { createStore, applyMiddleware, compose } from 'redux'
 import { Provider } from 'react-redux'
-import { routerMiddleware } from 'react-router-redux'
+// import { routerMiddleware } from 'react-router-redux'
 import { NavigationContainer } from '@react-navigation/native'
 import { isMountedRef, navigationRef } from './root-navigation'
 const createHistory = require('history').createMemoryHistory
@@ -21,7 +21,7 @@ export const history = createHistory()
 const initialState = {}
 const enhancers = []
 const middleware = [
-  routerMiddleware(history),
+  // routerMiddleware(history),
   apiMidleware,
   multidipacerMidleware,
 ]

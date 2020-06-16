@@ -11,6 +11,7 @@ import {
   InteractionManager,
   Dimensions,
 } from 'react-native'
+import Animated, { call } from 'react-native-reanimated'
 import { withNavigation } from 'react-navigation'
 import { Div, Font, PressAbbleDiv } from '@components/atoms/basic'
 import Modal from 'react-native-modal'
@@ -22,6 +23,7 @@ import { setImage as changeImageUri } from '@utils/helpers'
 import { images as defaultImages, colors } from '@utils/constants'
 import { OutlineButton } from '@components/atoms/button'
 import Icon from 'react-native-vector-icons/FontAwesome5'
+import { onScroll } from 'react-native-redash'
 import IconEi from 'react-native-vector-icons/EvilIcons'
 import { getUser } from '@modules/user/action'
 import { fontStyle, borderStyle } from '@src/components/commont-styles'
@@ -33,16 +35,17 @@ import ActionListCard from '@components/molecules/action-list-card'
 import ProfileLoader from '@components/atoms/loaders/profile'
 import ImageViewer from 'react-native-image-zoom-viewer'
 import styled from 'styled-components/native'
-import TabMenu from '@src/components/layouts/tab-menu'
 import { ScrollView } from 'react-native-gesture-handler'
 import MyPost from '@components/organisms/my-post'
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs'
+import TabMenuCursor from '@components/molecules/tab-menu-cursor-animated'
+import { TabView, SceneMap } from 'react-native-tab-view'
+
 import MySaved from '@components/organisms/my-saved'
 import MyInsight from '@components/organisms/my-insight'
 import FocusContainer from '@src/components/molecules/focus-container'
 import HTML from 'react-native-render-html'
-
-const headerHeight = 54
-const { width, height } = Dimensions.get('screen')
+import TabMenuAnimated from '@src/components/layouts/tab-menu-animated'
 
 const navigateTo = (screen, screenName, params = {}) => {
   return navigate(screen, {
@@ -51,10 +54,19 @@ const navigateTo = (screen, screenName, params = {}) => {
   })
 }
 
+const { width, height } = Dimensions.get('screen')
+
 const initialActiveTab = 'userpost'
 
 const styles = StyleSheet.create({
-  header: { height: headerHeight },
+  header: {
+    top: 0,
+    height: 300,
+    paddingTop: 36,
+    width: '100%',
+    backgroundColor: colors.white,
+    position: 'absolute',
+  },
   image: {
     borderRadius: 100,
   },
@@ -124,9 +136,20 @@ const AbsDiv = styled(Div)`
   left: 0;
 `
 
+const contentHeight = 272
+const tabBarheight = 48
+const { interpolate, Extrapolate, Value } = Animated
+const Tab = createMaterialTopTabNavigator()
+
+const routes = [
+  { key: 'my-post', title: 'Post' },
+  { key: 'my-saved', title: 'Saved List' },
+]
+
 class ProfilPage extends React.PureComponent<any, any> {
   state = {
     defaultImage: null,
+    index: 0,
     activeTab: initialActiveTab,
     isVisible: false,
     showName: false,
@@ -134,9 +157,18 @@ class ProfilPage extends React.PureComponent<any, any> {
     finishAnimation: false,
   }
 
+  y = new Value(0)
+  headerLayout = null
+  isScroll = false
+  screenRef = []
+  myPostRef = null
+  mySavedRef = null
+  tabRef = null
+  offsets = {}
+  scrollPos = 0
+
   componentDidMount() {
     const { isAuth, username, getUser, user } = this.props
-
     InteractionManager.runAfterInteractions(() => {
       if (isAuth && username) {
         getUser(username, 'username')
@@ -145,9 +177,9 @@ class ProfilPage extends React.PureComponent<any, any> {
       }
       this.setState({ finishAnimation: true })
     })
-    // if (isAuth && user.id) {
-    //   getUser(user.id, 'id')
-    // }
+    // this.y.addListener(({ value }) => {
+    //   console.log('====', value)
+    // })
   }
 
   componentDidUpdate(prevProps) {
@@ -160,18 +192,47 @@ class ProfilPage extends React.PureComponent<any, any> {
       }
     }
   }
+  renderMypost = () => (
+    <MyPost
+      navigation={this.props.navigation}
+      y={this.y}
+      getListRef={ref => (this.myPostRef = ref)}
+      style={{ marginTop: tabBarheight, backgroundColor: 'white' }}
+      key="tabmenu-userpost"
+      contentContainerStyle={{
+        paddingTop: contentHeight,
+      }}
+    />
+  )
 
-  onPressStatusOrder = (filter, screenName) => () => {
-    navigateTo('Screens', screenName, {
-      selectedFilter: filter,
-      hideHeader: true,
-    })
+  _headerComp = () => (
+    <AbsDiv>
+      <TouchableWithoutFeedback onPress={this._closeModal}>
+        <Div _width="100%" align="flex-start" _margin="28px" _padding="20px">
+          <IconEi name="close" size={24} color={colors.black100} />
+        </Div>
+      </TouchableWithoutFeedback>
+    </AbsDiv>
+  )
+  renderMySaved = () => (
+    <MySaved
+      navigation={this.props.navigation}
+      y={this.y}
+      contentHeight={contentHeight}
+      // getListRef={ref => (this.mySavedRef = ref)}
+      style={{ marginTop: tabBarheight, backgroundColor: 'white' }}
+      key="tabmenu-userpost"
+      contentContainerStyle={{
+        paddingTop: contentHeight,
+      }}
+    />
+  )
+
+  _onLayout = e => {
+    ;(this as any).profileLayout = e.nativeEvent.layout
   }
-
-  onPressDetailOrder = () => {
-    navigateTo('Screens', 'OrderList', {})
-  }
-
+  _openModal = () => this.setState({ isVisible: true })
+  _closeModal = () => this.setState({ isVisible: false })
   gotoEditProfile = () => {
     navigateTo('Screens', 'EditProfile', {})
   }
@@ -187,112 +248,26 @@ class ProfilPage extends React.PureComponent<any, any> {
     })
   }
 
-  _openModal = () => this.setState({ isVisible: true })
-  _closeModal = () => this.setState({ isVisible: false })
-
-  _headerComp = () => (
-    <AbsDiv>
-      <TouchableWithoutFeedback onPress={this._closeModal}>
-        <Div _width="100%" align="flex-start" _margin="28px" _padding="20px">
-          <IconEi name="close" size={24} color={colors.black100} />
-        </Div>
-      </TouchableWithoutFeedback>
-    </AbsDiv>
-  )
-
-  _changeSelected = selectedItem => {
-    this.setState({ activeTab: selectedItem.name })
-  }
-  _onScroll = e => {
-    if (
-      (this as any).profileLayout.height / 2 - e.nativeEvent.contentOffset.y <
-      2
-    ) {
-      this.setState({ showName: true })
-    } else {
-      this.setState({ showName: false })
-    }
-
-    if (
-      (this as any).profileLayout.height - e.nativeEvent.contentOffset.y <
-      2
-    ) {
-      this.setState({ enableScrollContent: true })
-    } else {
-      this.setState({ enableScrollContent: false })
-    }
-  }
-  _disableContentScroll = () => {
-    this.setState({ enableScrollContent: false })
-  }
-  _onLayout = e => {
-    ;(this as any).profileLayout = e.nativeEvent.layout
-  }
-
-  TabMenuData = [
-    {
-      name: 'userpost',
-      title: 'Posts',
-      Component: (
-        <MyPost
-          navigation={this.props.navigation}
-          scrollEnabled={this.state.enableScrollContent}
-          disableScroll={this._disableContentScroll}
-          key="tabmenu-userpost"
-        />
-      ),
-    },
-    {
-      name: 'saved',
-      title: 'Saved List',
-      Component: (
-        <MySaved
-          navigation={this.props.navigation}
-          scrollEnabled={this.state.enableScrollContent}
-          disableScroll={this._disableContentScroll}
-          key="tabmenu-saved"
-        />
-      ),
-    },
-    {
-      name: 'insight',
-      title: 'Insight',
-      Component: (
-        <MyInsight
-          navigation={this.props.navigation}
-          scrollEnabled={this.state.enableScrollContent}
-          disableScroll={this._disableContentScroll}
-          key="tabmenu-insight"
-        />
-      ),
-    },
-  ]
-
-  render() {
+  renderHeader = () => {
     const { isAuth, navigation, user } = this.props
-    const {
-      defaultImage,
-      isVisible,
-      activeTab,
-      enableScrollContent,
-      showName,
-      finishAnimation,
-    } = this.state
+    const { defaultImage, showName, finishAnimation, isVisible } = this.state
 
-    // const TabMenuData =
+    const headerY = interpolate(this.y, {
+      inputRange: [0, contentHeight],
+      outputRange: [0, -contentHeight],
+      extrapolate: Extrapolate.CLAMP,
+    })
+
     const imgSize = isVisible
       ? { width: width, height: width }
       : { width: 64, height: 64 }
 
-    if (!isAuth) {
+    if (!user) {
       return (
-        <ProfileEmptyState
-          onPress={() => navigate('modals', { screen: 'LoginModal' })}
+        <Animated.View
+          style={[styles.header, { transform: [{ translateY: headerY }] }]}
         />
       )
-    }
-    if (isAuth && !user) {
-      return null
     }
 
     if (user) {
@@ -308,191 +283,312 @@ class ProfilPage extends React.PureComponent<any, any> {
             height: imgSize.height,
           })
       return (
-        <>
-          <NavbarTop title={showName ? user.name : 'My profile'} />
-          {finishAnimation ? (
-            <View style={{ flex: 1 }}>
-              <ScrollView
-                showsVerticalScrollIndicator={false}
-                onScroll={this._onScroll}
-                bounces={false}
-                nestedScrollEnabled={true}
-                scrollEventThrottle={20}
-                style={{ backgroundColor: colors.background, flex: 1 }}>
-                <View
-                  style={{ paddingHorizontal: 16, paddingVertical: 26 }}
-                  onLayout={this._onLayout}>
-                  {/* photo, name, fols */}
-                  <View style={{ flexDirection: 'row' }}>
-                    <TouchableOpacity onPress={image ? this._openModal : null}>
-                      <ImageAutoSchale
-                        errorStyle={{
-                          width: imgSize.width,
-                          height: imgSize.height,
-                        }}
-                        thumbnailSource={
-                          typeof thumbnailImage === 'string'
-                            ? { uri: thumbnailImage }
-                            : thumbnailImage
-                        }
-                        source={
-                          typeof image === 'string' ? { uri: image } : image
-                        }
-                        width={imgSize.width}
-                        style={{ ...styles.image }}
-                      />
-                    </TouchableOpacity>
-                    <Modal isVisible={isVisible} style={{ margin: 0 }}>
-                      <ImageViewer
-                        backgroundColor="white"
-                        enableSwipeDown
-                        renderHeader={this._headerComp}
-                        imageUrls={[{ url: image }]}
-                        onSwipeDown={this._closeModal}
-                        index={0}
-                      />
-                    </Modal>
-                    <View style={{ marginLeft: 26 }}>
-                      <View>
-                        <Text style={{ ...styles.futuraBold20 }}>
-                          {user.name}
-                        </Text>
-                      </View>
-                      <View style={{ marginTop: 4 }}>
-                        <Text
-                          style={{
-                            ...styles.helveticaBold12,
-                            color: user.username ? colors.black80 : colors.red1,
-                          }}>
-                          {user.username
-                            ? `@${user.username}`
-                            : 'Please input Username'}
-                        </Text>
-                      </View>
-                      <View style={{ marginTop: 8, flexDirection: 'row' }}>
-                        <TouchableOpacity
-                          onPress={this.gotoFollowPage('Follower')}>
-                          <Text
-                            style={{
-                              ...styles.helvetica12,
-                              color: colors.black80,
-                            }}>{`Followers ${user.follower_count || 0}`}</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity
-                          onPress={this.gotoFollowPage('Following')}>
-                          <View style={{ marginLeft: 24 }}>
-                            <Text
-                              style={{
-                                ...styles.helvetica12,
-                                color: colors.black80,
-                              }}>{`Following ${user.following_count ||
-                              0}`}</Text>
-                          </View>
-                        </TouchableOpacity>
-                      </View>
-                      <View style={{ marginTop: 12, flexDirection: 'row' }}>
-                        <OutlineButton
-                          title="Edit"
-                          onPress={this.gotoEditProfile}
-                          style={{ ...styles.button }}
-                          fontStyle={{
-                            ...fontStyle.helveticaBold,
-                            color: colors.black70,
-                            fontSize: 14,
-                            marginLeft: 8,
-                            lineHeight: 14,
-                          }}
-                          leftIcon="edit"
-                        />
-                        <OutlineButton
-                          title="Account"
-                          onPress={this.gotoAccountSetting}
-                          style={{ ...styles.button, marginLeft: 12 }}
-                          fontStyle={{
-                            ...fontStyle.helveticaBold,
-                            color: colors.black70,
-                            fontSize: 14,
-                            marginLeft: 8,
-                            lineHeight: 14,
-                          }}
-                          leftIcon="cog"
-                        />
-                      </View>
-                    </View>
-                  </View>
-
-                  {/* location and description */}
-                  <View style={{ marginTop: 12 }}>
-                    <View style={{ flexDirection: 'row' }}>
-                      <Icon
-                        name="map-marker-alt"
-                        size={16}
-                        color={colors.black60}
-                      />
-                      <View style={{ marginLeft: 10 }}>
-                        <Text
-                          style={{
-                            ...fontStyle.helvetica,
-                            fontSize: 12,
-                            color: colors.black70,
-                          }}>
-                          Shonetopia
-                        </Text>
-                      </View>
-                    </View>
-                    {/* description */}
-                    <View style={{ marginTop: 8 }}>
-                      <HTML
-                        html={user.biography || '<p>Welcome to my page</p>'}
-                        tagsStyles={{
-                          p: {
-                            ...fontStyle.helvetica,
-                            fontSize: 12,
-                            color: colors.black80,
-                          },
-                          b: {
-                            ...fontStyle.helveticaBold,
-                            fontSize: 12,
-                            color: colors.black80,
-                          },
-                        }}
-                      />
-                    </View>
-                  </View>
-
-                  {/* score */}
-                  <FocusContainer style={{ padding: 16, marginTop: 8 }}>
-                    <Text
-                      style={{ ...styles.helveticaBold24, color: '#3067E4' }}>
-                      0
-                    </Text>
-                  </FocusContainer>
+        <Animated.View
+          style={[styles.header, { transform: [{ translateY: headerY }] }]}>
+          <View
+            style={{ paddingHorizontal: 16, paddingVertical: 26 }}
+            onLayout={this._onLayout}>
+            {/* photo, name, fols */}
+            <View style={{ flexDirection: 'row' }}>
+              <TouchableOpacity onPress={image ? this._openModal : null}>
+                <ImageAutoSchale
+                  errorStyle={{
+                    width: imgSize.width,
+                    height: imgSize.height,
+                  }}
+                  thumbnailSource={
+                    typeof thumbnailImage === 'string'
+                      ? { uri: thumbnailImage }
+                      : thumbnailImage
+                  }
+                  source={typeof image === 'string' ? { uri: image } : image}
+                  width={imgSize.width}
+                  style={{ ...styles.image }}
+                />
+              </TouchableOpacity>
+              <Modal isVisible={isVisible} style={{ margin: 0 }}>
+                <ImageViewer
+                  backgroundColor="white"
+                  enableSwipeDown
+                  renderHeader={this._headerComp}
+                  imageUrls={[{ url: image }]}
+                  onSwipeDown={this._closeModal}
+                  index={0}
+                />
+              </Modal>
+              <View style={{ marginLeft: 26 }}>
+                <View>
+                  <Text style={{ ...styles.futuraBold20 }}>{user.name}</Text>
                 </View>
-                <View
-                  style={{
-                    width,
-                    flex: 1,
-                    // height,
-                  }}>
-                  <TabMenu
-                    isLazyload
-                    items={this.TabMenuData}
-                    forceRender={enableScrollContent}
-                    selectedItem={activeTab}
-                    onChangeTab={this._changeSelected}
+                <View style={{ marginTop: 4 }}>
+                  <Text
+                    style={{
+                      ...styles.helveticaBold12,
+                      color: user.username ? colors.black80 : colors.red1,
+                    }}>
+                    {user.username
+                      ? `@${user.username}`
+                      : 'Please input Username'}
+                  </Text>
+                </View>
+                <View style={{ marginTop: 8, flexDirection: 'row' }}>
+                  <TouchableOpacity onPress={this.gotoFollowPage('Follower')}>
+                    <Text
+                      style={{
+                        ...styles.helvetica12,
+                        color: colors.black80,
+                      }}>{`Followers ${user.follower_count || 0}`}</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={this.gotoFollowPage('Following')}>
+                    <View style={{ marginLeft: 24 }}>
+                      <Text
+                        style={{
+                          ...styles.helvetica12,
+                          color: colors.black80,
+                        }}>{`Following ${user.following_count || 0}`}</Text>
+                    </View>
+                  </TouchableOpacity>
+                </View>
+                <View style={{ marginTop: 12, flexDirection: 'row' }}>
+                  <OutlineButton
+                    title="Edit"
+                    onPress={this.gotoEditProfile}
+                    style={{ ...styles.button }}
+                    fontStyle={{
+                      ...fontStyle.helveticaBold,
+                      color: colors.black70,
+                      fontSize: 14,
+                      marginLeft: 8,
+                      lineHeight: 14,
+                    }}
+                    leftIcon="edit"
+                  />
+                  <OutlineButton
+                    title="Account"
+                    onPress={this.gotoAccountSetting}
+                    style={{ ...styles.button, marginLeft: 12 }}
+                    fontStyle={{
+                      ...fontStyle.helveticaBold,
+                      color: colors.black70,
+                      fontSize: 14,
+                      marginLeft: 8,
+                      lineHeight: 14,
+                    }}
+                    leftIcon="cog"
                   />
                 </View>
-              </ScrollView>
+              </View>
             </View>
-          ) : (
-            <ProfileLoader
-              style={{ marginVertical: 8, marginHorizontal: 16 }}
-            />
-          )}
-        </>
+
+            {/* location and description */}
+            <View style={{ marginTop: 12 }}>
+              <View style={{ flexDirection: 'row' }}>
+                <Icon name="map-marker-alt" size={16} color={colors.black60} />
+                <View style={{ marginLeft: 10 }}>
+                  <Text
+                    style={{
+                      ...fontStyle.helvetica,
+                      fontSize: 12,
+                      color: colors.black70,
+                    }}>
+                    Shonetopia
+                  </Text>
+                </View>
+              </View>
+              {/* description */}
+              <View style={{ marginTop: 8 }}>
+                <HTML
+                  html={user.biography || '<p>Welcome to my page</p>'}
+                  tagsStyles={{
+                    p: {
+                      ...fontStyle.helvetica,
+                      fontSize: 12,
+                      color: colors.black80,
+                    },
+                    b: {
+                      ...fontStyle.helveticaBold,
+                      fontSize: 12,
+                      color: colors.black80,
+                    },
+                  }}
+                />
+              </View>
+            </View>
+
+            {/* score */}
+            <FocusContainer style={{ padding: 16, marginTop: 8 }}>
+              <Text style={{ ...styles.helveticaBold24, color: '#3067E4' }}>
+                0
+              </Text>
+            </FocusContainer>
+          </View>
+        </Animated.View>
       )
     }
+  }
 
+  renderScene = ({ route, jumpTo }) => {
+    switch (route.key) {
+      case 'my-post':
+        return (
+          <MyPost
+            navigation={this.props.navigation}
+            y={this.y}
+            contentHeight={contentHeight}
+            universalScrollPoss={this.scrollPos}
+            onMomentumScrollBegin={this.onMomentumScrollBegin}
+            onScrollEndDrag={this.onScrollEndDrag}
+            onMomentumScrollEnd={this.onMomentumScrollEnd}
+            // onScroll={this.onScroll}
+            getListRef={ref => {
+              if (ref) {
+                const found = this.screenRef.find(e => e.key === route.key)
+                if (!found) {
+                  this.screenRef.push({
+                    key: route.key,
+                    ref: ref,
+                  })
+                }
+              }
+            }}
+            style={{ marginTop: tabBarheight, backgroundColor: 'white' }}
+            key="tabmenu-userpost"
+            contentContainerStyle={{
+              paddingTop: contentHeight,
+            }}
+          />
+        )
+      case 'my-saved':
+        return (
+          <MySaved
+            navigation={this.props.navigation}
+            lastScrollPos={this.offsets[route.key]}
+            y={this.y}
+            onMomentumScrollBegin={this.onMomentumScrollBegin}
+            onScrollEndDrag={this.onScrollEndDrag}
+            onMomentumScrollEnd={this.onMomentumScrollEnd}
+            contentHeight={contentHeight}
+            getListRef={ref => {
+              if (ref) {
+                const found = this.screenRef.find(e => e.key === route.key)
+                if (!found) {
+                  this.screenRef.push({
+                    key: route.key,
+                    ref: ref,
+                  })
+                }
+              }
+            }}
+            style={{ marginTop: tabBarheight, backgroundColor: 'white' }}
+            key="tabmenu-userpost"
+            contentContainerStyle={{
+              paddingTop: contentHeight,
+            }}
+          />
+        )
+    }
+  }
+
+  syncScrollOffset = () => {
+    const { index } = this.state
+    const curRouteKey = routes[index].key
+    this.screenRef.forEach(refitem => {
+      if (refitem.key !== curRouteKey) {
+        if (this.scrollPos < contentHeight && this.scrollPos >= 0) {
+          if (refitem.ref) {
+            refitem.ref
+              .getNode()
+              ?.scrollToOffset({ offset: this.scrollPos, animated: false })
+            this.offsets[refitem.key] == this.scrollPos
+          }
+        } else if (this.scrollPos > contentHeight) {
+          if (
+            this.offsets[refitem.key] < contentHeight ||
+            this.offsets[refitem.key] == undefined
+          ) {
+            refitem.ref
+              .getNode()
+              ?.scrollToOffset({ offset: contentHeight, animated: false })
+            this.offsets[refitem.key] == this.scrollPos
+          }
+        }
+      }
+    })
+  }
+
+  onMomentumScrollBegin = () => {
+    this.isScroll = true
+  }
+
+  onMomentumScrollEnd = () => {
+    this.isScroll = false
+    this.syncScrollOffset()
+  }
+
+  onScrollEndDrag = () => {
+    this.syncScrollOffset()
+  }
+
+  changeIndex = index => {
+    this.setState({ index })
+  }
+
+  render() {
+    const { index, finishAnimation } = this.state
+    const { isAuth, user } = this.props
+
+    // return null
+
+    if (!isAuth) {
+      return (
+        <ProfileEmptyState
+          onPress={() => navigate('modals', { screen: 'LoginModal' })}
+        />
+      )
+    }
+    if (isAuth && !user) {
+      return null
+    }
+
+    return (
+      <>
+        <NavbarTop title={'My profile'} style={{ zIndex: 2 }} />
+        {finishAnimation ? (
+          <>
+            <Animated.Code>
+              {() =>
+                call([this.y], ([val]) => {
+                  this.scrollPos = val
+                })
+              }
+            </Animated.Code>
+            <View style={{ flex: 1 }}>
+              <TabView
+                navigationState={{ index, routes }}
+                renderScene={this.renderScene}
+                renderTabBar={props => {
+                  return (
+                    <TabMenuCursor
+                      {...props}
+                      y={this.y}
+                      contentHeight={contentHeight}
+                    />
+                  )
+                }}
+                onIndexChange={this.changeIndex}
+                initialLayout={{
+                  height: 0,
+                  width: Dimensions.get('window').width,
+                }}
+              />
+            </View>
+            {this.renderHeader()}
+          </>
+        ) : (
+          <ProfileLoader style={{ marginVertical: 8, marginHorizontal: 16 }} />
+        )}
+      </>
+    )
     return null
   }
 }
