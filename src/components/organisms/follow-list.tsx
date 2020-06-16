@@ -10,6 +10,7 @@ import { userListData } from '@hocs/data/user'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { fontStyle } from '@src/components/commont-styles'
 import { navigate } from '@src/root-navigation'
+import FollowitemLoader from '@components/atoms/loaders/follow-item'
 import FollowCard from '@components/molecules/follow-card'
 
 const FollowCardHoc = userListData(FollowCard)
@@ -139,6 +140,16 @@ class FollowList extends Component<any, any> {
     )
   }
 
+  _renderFooterLoader = () => {
+    const { userLoading } = this.props
+
+    return (
+      <View
+        style={{ height: 100, width: '100%', backgroundColor: 'transparent' }}>
+        {userLoading && <FollowitemLoader style={{ margin: 16 }} />}
+      </View>
+    )
+  }
   _keyExtractor = (item, id) => `trans-${item} -${id}`
   render() {
     const { follows, userLoading } = this.props
@@ -154,6 +165,7 @@ class FollowList extends Component<any, any> {
           data={follows}
           onEndReached={this._fetchMore}
           onEndReachedThreshold={0.99}
+          ListFooterComponent={this._renderFooterLoader}
           keyExtractor={this._keyExtractor}
           renderItem={this._renderItem}
           stickyHeaderIndices={[0]}

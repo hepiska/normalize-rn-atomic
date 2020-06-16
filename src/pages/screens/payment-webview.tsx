@@ -192,11 +192,7 @@ class PaymentWebView extends Component<any, any> {
 
     return (
       <>
-        <NavbarTop
-          title="Payment"
-          leftContent={['back']}
-          style={{ borderBottomWidth: 1, borderBottomColor: colors.black50 }}
-        />
+        <NavbarTop title="Payment" leftContent={['back']} />
         <WebView
           ref={r => (this.webref = r)}
           source={source}

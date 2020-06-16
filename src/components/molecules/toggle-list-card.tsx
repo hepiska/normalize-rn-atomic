@@ -79,7 +79,7 @@ const ToggleListCard = ({
         </View>
       </View>
       <Switch
-        trackColor={{ false: 'red', true: colors.blue50 }}
+        trackColor={{ false: colors.black50, true: colors.blue50 }}
         thumbColor={isActive ? colors.white : colors.black60}
         style={{
           borderColor: isActive ? colors.blue50 : colors.black50,

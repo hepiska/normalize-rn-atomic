@@ -40,7 +40,7 @@ class FeaturedCategory extends React.Component<any, any> {
     return (
       <Pill
         title={item.title}
-        style={{ marginRight: 12 }}
+        style={{ marginRight: 12, paddingVertical: 10 }}
         onPress={this._onItemPress(item.slug)}
       />
     )

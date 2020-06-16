@@ -97,8 +97,8 @@ class Wishlist extends Component<any, any> {
                 style={{
                   // wrappermargin: 8,
                   // paddingHorizontal: 0,
-                  margin: 8,
-                  width: width / 2 - 16,
+                  marginVertical: 16,
+                  width: width / 2 - 24,
                 }}
               />
             ))

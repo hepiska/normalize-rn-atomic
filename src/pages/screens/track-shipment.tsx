@@ -51,11 +51,7 @@ class TrackShipment extends Component<any, any> {
 
     return (
       <>
-        <NavbarTop
-          title="Track Shipment"
-          leftContent={['back']}
-          style={{ borderBottomWidth: 1, borderBottomColor: colors.black50 }}
-        />
+        <NavbarTop title="Track Shipment" leftContent={['back']} />
         {finishAnimation ? (
           <ScrollView>
             <View {...styles.container}>

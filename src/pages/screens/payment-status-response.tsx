@@ -352,11 +352,7 @@ class PaymentWebView extends Component<any, any> {
     const { status } = route.params
     return (
       <>
-        <NavbarTop
-          title="Payment"
-          leftContent={['back']}
-          style={{ borderBottomWidth: 1, borderBottomColor: colors.black50 }}
-        />
+        <NavbarTop title="Payment" leftContent={['back']} />
         <View style={{ flex: 1, marginTop: 32 }}>
           {this._renderComponent(transaction.status || 'unpaid')}
         </View>

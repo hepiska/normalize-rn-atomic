@@ -110,7 +110,6 @@ class PaymentMethodPage extends Component<any, any> {
               />
             </PressAbbleDiv>
           }
-          style={{ borderBottomWidth: 1, borderBottomColor: colors.black50 }}
         />
         {finishAnimation ? (
           <ScrollDiv>

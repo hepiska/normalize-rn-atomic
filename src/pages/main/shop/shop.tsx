@@ -27,10 +27,12 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
   },
   firstSectionMargin: {
-    marginBottom: 12,
+    // marginBottom: 12,
+    marginVertical: 0,
+    paddingVertical: 0,
   },
   sectionMargin: {
-    marginVertical: 12,
+    marginVertical: 18,
   },
 })
 
@@ -128,7 +130,7 @@ class ShopPage extends React.Component<any, any> {
                       {key === 0 && (
                         <FeaturedCategory
                           key={'sections' + key}
-                          style={{ marginVertical: 12 }}
+                          style={{ marginVertical: 6 }}
                           navigation={navigation}
                         />
                       )}

@@ -12,11 +12,7 @@ class SizeGuideWebView extends Component<any, any> {
   render() {
     return (
       <>
-        <NavbarTop
-          title="Size Guide"
-          leftContent={['back']}
-          style={{ borderBottomWidth: 1, borderBottomColor: colors.black50 }}
-        />
+        <NavbarTop title="Size Guide" leftContent={['back']} />
         <WebView
           ref={r => (this.webref = r)}
           source={{

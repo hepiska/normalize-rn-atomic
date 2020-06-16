@@ -71,8 +71,8 @@ const styles = StyleSheet.create({
     marginLeft: 8,
   },
   defaultStyle: {
-    marginTop: 16,
-    marginBottom: 16,
+    // marginTop: 16,
+    // marginBottom: 16,
     borderRadius: 8,
     overflow: 'hidden',
     justifyContent: 'flex-start',

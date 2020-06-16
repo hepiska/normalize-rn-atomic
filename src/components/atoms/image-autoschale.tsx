@@ -25,6 +25,7 @@ interface ImageType {
 interface ImageAutoSchaleType {
   source: any
   onError?: any
+  showErrorIcon?: boolean
   thumbnailSource?: any
   errorStyle?: ViewStyle
   containerStyle?: ViewStyle
@@ -136,6 +137,7 @@ class ImageAutoSchale extends React.PureComponent<ImageAutoSchaleType, any> {
       errorStyle,
       style,
       width,
+      showErrorIcon = true,
       thumbnailSource,
       containerStyle,
       height,
@@ -148,7 +150,7 @@ class ImageAutoSchale extends React.PureComponent<ImageAutoSchaleType, any> {
       : { ...size, ...style }
 
     let aplliedContainerStyle = imageLoaded
-      ? { ...styles.container }
+      ? { ...styles.container, ...style }
       : { ...styles.container, ...style, ...containerStyle }
 
     if (this.state.isError && imageLoaded) {
@@ -171,7 +173,7 @@ class ImageAutoSchale extends React.PureComponent<ImageAutoSchaleType, any> {
             {...props}
           />
         )}
-        {this.state.isError ? (
+        {this.state.isError && showErrorIcon ? (
           <Icon name="image" size={48} color={colors.black60} />
         ) : (
           <Animated.Image

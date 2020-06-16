@@ -1,20 +1,14 @@
 import React from 'react'
-import {
-  StyleSheet,
-  Dimensions,
-  ViewStyle,
-  View,
-  Text,
-  Image,
-} from 'react-native'
-import { Font, TouchableWithoutFeedback } from '@components/atoms/basic'
+import { StyleSheet, Dimensions, ViewStyle, View, Text } from 'react-native'
+import { TouchableWithoutFeedback } from '@components/atoms/basic'
 import { fontStyle } from '@components/commont-styles'
 import { colors } from '@utils/constants'
-import Icon from 'react-native-vector-icons/FontAwesome5'
+import Icon from 'react-native-vector-icons/MaterialIcons'
 import ImageAutoSchale from '@components/atoms/image-autoschale'
-import { RadioButton } from '@components/atoms/radio-button'
 import { setImage as changeImageUri } from '@utils/helpers'
-import { Button } from '@components/atoms/button'
+import { Button, GradientButton } from '@components/atoms/button'
+import Gradient from 'react-native-linear-gradient'
+import { connect } from 'react-redux'
 
 const { width } = Dimensions.get('screen')
 
@@ -36,6 +30,9 @@ interface FollowCardType {
   user?: any
   isFollowed?: boolean
   onFollow: (userId) => void
+  disableDivider?: boolean
+  isGradientButton?: boolean
+  authId?: number
 }
 
 const styles = StyleSheet.create({
@@ -50,8 +47,6 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
   },
   image: {
-    width: 40,
-    height: 40,
     borderRadius: 100,
   },
   information: {
@@ -69,6 +64,13 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     paddingVertical: 4,
     paddingHorizontal: 8,
+    width: 65,
+  },
+  gradientButton: {
+    width: 88,
+    height: 28,
+    paddingHorizontal: 16,
+    borderRadius: 100,
   },
 })
 
@@ -82,7 +84,14 @@ class FollowCard extends React.PureComponent<FollowCardType, any> {
   }
 
   render() {
-    const { style, user, isFollowed } = this.props
+    const {
+      style,
+      user,
+      isFollowed,
+      disableDivider,
+      isGradientButton,
+      authId,
+    } = this.props
 
     const image =
       this.state.defaultImage ||
@@ -92,7 +101,7 @@ class FollowCard extends React.PureComponent<FollowCardType, any> {
     const thumbnailImage = this.state.defaultImage
       ? null
       : !!user.photo_url &&
-        changeImageUri(user.photo_url, { width: 40, height: 40 })
+        changeImageUri(user.photo_url, { width: 8, height: 8 })
 
     if (!user) {
       return null
@@ -100,11 +109,17 @@ class FollowCard extends React.PureComponent<FollowCardType, any> {
     return (
       <>
         <TouchableWithoutFeedback onPress={() => {}}>
-          <View style={{ ...style, ...styles.container }}>
+          <View style={{ ...styles.container, ...style }}>
             <View style={{ ...styles.content }}>
-              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  flex: 0.7,
+                }}>
                 <ImageAutoSchale
                   errorStyle={{ width: 40, height: 40 }}
+                  showErrorIcon={false}
                   thumbnailSource={
                     typeof thumbnailImage === 'string'
                       ? { uri: thumbnailImage }
@@ -114,9 +129,11 @@ class FollowCard extends React.PureComponent<FollowCardType, any> {
                   width={40}
                   style={styles.image}
                 />
-                <View style={{ ...styles.information }}>
+                <View style={{ ...styles.information, flex: 0.8 }}>
                   <View style={{}}>
                     <Text
+                      numberOfLines={1}
+                      ellipsizeMode="tail"
                       style={{
                         ...fontStyle.helveticaBold,
                         color: colors.black100,
@@ -127,8 +144,14 @@ class FollowCard extends React.PureComponent<FollowCardType, any> {
                   </View>
                   {/* if username available, show name. if username not avail, set name as username */}
                   {user.username && (
-                    <View style={{}}>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                      }}>
                       <Text
+                        numberOfLines={1}
+                        ellipsizeMode="tail"
                         style={{
                           ...fontStyle.helvetica,
                           color: colors.black70,
@@ -136,20 +159,55 @@ class FollowCard extends React.PureComponent<FollowCardType, any> {
                         }}>
                         {user.name}
                       </Text>
+                      {user.group_id !== 4 && (
+                        <Gradient
+                          {...colors.ActivePurple}
+                          style={{
+                            borderRadius: 14,
+                            justifyContent: 'center',
+                            height: 11,
+                            width: 11,
+                            alignItems: 'center',
+                            margin: 3,
+                          }}>
+                          <Icon name="check" color="white" size={8} />
+                        </Gradient>
+                      )}
                     </View>
                   )}
                 </View>
               </View>
-              <View>
-                <Button
-                  onPress={this.handleFollow}
-                  title={isFollowed ? 'Unfollow' : 'Follow'}
-                  fontStyle={styles.buttonText}
-                  style={styles.button}
-                />
-              </View>
+              {authId !== user.id && (
+                <View
+                  style={{
+                    flex: 0.3,
+                    justifyContent: 'flex-end',
+                    alignItems: 'flex-end',
+                  }}>
+                  {isGradientButton ? (
+                    <GradientButton
+                      onPress={this.handleFollow}
+                      start={{ x: 0, y: 0 }}
+                      end={{ x: 1, y: 0 }}
+                      colors={
+                        isFollowed ? ['#3067E4', '#8131E2'] : ['#000', '#000']
+                      }
+                      title={isFollowed ? 'Following' : 'Follow +'}
+                      fontStyle={styles.buttonText}
+                      style={styles.gradientButton}
+                    />
+                  ) : (
+                    <Button
+                      onPress={this.handleFollow}
+                      title={isFollowed ? 'Unfollow' : 'Follow'}
+                      fontStyle={styles.buttonText}
+                      style={styles.button}
+                    />
+                  )}
+                </View>
+              )}
             </View>
-            <Divider marginTop={0} paddingHorizontal={0} />
+            {!disableDivider && <Divider marginTop={0} paddingHorizontal={0} />}
           </View>
         </TouchableWithoutFeedback>
       </>
@@ -157,4 +215,10 @@ class FollowCard extends React.PureComponent<FollowCardType, any> {
   }
 }
 
-export default FollowCard
+const mapStateToProps = state => {
+  return {
+    authId: state.auth.data?.user?.id || null,
+  }
+}
+
+export default connect(mapStateToProps, null)(FollowCard)

@@ -1,7 +1,7 @@
 import { store } from '@src/init-store'
 import * as schema from '@modules/normalize-schema'
 import { API } from '../action-types'
-import { setUserData } from '../user/action'
+import { setUserData, setUserOrder, setUserLoading } from '../user/action'
 import { setPostData } from '../post/action'
 import { setCommentData } from '../comment/action'
 import { getMe } from '@utils/helpers'
@@ -119,6 +119,31 @@ export const removeLikedPost = postId => {
       },
       error: () => {
         return [postLikedLoading(false)]
+      },
+    },
+  }
+}
+
+export const getUserLikePost = (postId, params) => {
+  return {
+    type: API,
+    payload: {
+      url: '/posts/' + postId + '/likes',
+      requestParams: { params },
+      schema: [schema.post],
+      startNetwork: () => setUserLoading(true),
+      success: data => {
+        const user = data.entities.user
+        const userIds = Object.keys(user).map(val => user[val].id)
+
+        return [
+          setUserData(data.entities.user),
+          setUserOrder(userIds),
+          setUserLoading(false),
+        ]
+      },
+      error: () => {
+        return [setUserLoading(false)]
       },
     },
   }

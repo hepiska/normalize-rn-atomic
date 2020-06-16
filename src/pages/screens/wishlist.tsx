@@ -6,7 +6,7 @@ import { Div } from '@components/atoms/basic'
 import { getProductSaved } from '@modules/product-saved/action'
 import NavbarTop from '@components/molecules/navbar-top'
 import { productListData } from '@hocs/data/product'
-import ProductCard from '@components/molecules/product-card'
+import ProductCard from '@components/molecules/product-card-new'
 
 const { width } = Dimensions.get('screen')
 
@@ -62,9 +62,10 @@ class Wishlist extends Component<any, any> {
         productId={item}
         key={'' + item}
         style={{
-          flex: 1 / 2,
-          wrappermargin: 4,
-          width: width / 2,
+          width: width / 2 - 16,
+          marginHorizontal: 8,
+          marginVertical: 16,
+          flex: 1,
         }}
       />
     )
@@ -79,6 +80,7 @@ class Wishlist extends Component<any, any> {
         <NavbarTop leftContent={['back']} title="Wishlist" />
         <View style={{ flex: 1 }}>
           <FlatList
+            style={{ paddingHorizontal: 8 }}
             numColumns={2}
             onRefresh={this._freshFetch}
             keyExtractor={this._keyExtractor}

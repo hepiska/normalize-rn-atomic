@@ -24,11 +24,7 @@ class TermConditionWebView extends Component<any, any> {
 
     return (
       <>
-        <NavbarTop
-          title="Terms and Condition"
-          leftContent={['back']}
-          style={{ borderBottomWidth: 1, borderBottomColor: colors.black50 }}
-        />
+        <NavbarTop title="Terms and Condition" leftContent={['back']} />
         {finishAnimation ? (
           <WebView
             ref={r => (this.webref = r)}

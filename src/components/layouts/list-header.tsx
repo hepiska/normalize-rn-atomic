@@ -37,6 +37,10 @@ interface ListStikyHeaderType {
   columnStyle: ViewStyle
   y: any
   getListRef?: any
+  mansoryLoader: () =>
+    | React.ReactElement
+    | React.ReactElement
+    | React.ReactInstance
   renderItem: () =>
     | React.ReactElement
     | React.ReactElement
@@ -73,6 +77,20 @@ class ListMansoryStickyHeader extends React.Component<
         return data
     }
   }
+
+  mansoryFooterLoader = () => {
+    const { loading, mansoryLoader } = this.props
+
+    return (
+      <View style={{ height: 300, width: '100%' }}>
+        {loading &&
+          (typeof mansoryLoader === 'function'
+            ? mansoryLoader()
+            : mansoryLoader)}
+      </View>
+    )
+  }
+
   _renderSection = ({ item, index }) => {
     const {
       layoutType,
@@ -90,6 +108,7 @@ class ListMansoryStickyHeader extends React.Component<
                 <Column
                   style={columnStyle}
                   bounces={bounces}
+                  ListFooterComponent={this.mansoryFooterLoader}
                   initialNumInColsToRender={2}
                   colIndex={_index}
                   data={_data}

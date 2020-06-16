@@ -133,6 +133,7 @@ class MySavedProduct extends React.Component<any, any> {
         <SearchFilter
           key="my-saved-filter"
           style={{ marginVertical: 8 }}
+          itemStyle={{ paddingVertical: 8, paddingHorizontal: 12 }}
           selectedFilter={selectedFilter}
           onfilterSelected={this._selectFilter}
           filterItems={this.filterOptions}

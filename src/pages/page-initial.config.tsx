@@ -1,7 +1,7 @@
 export default {
   index: 'Main',
   main: 'Home',
-  screens: 'ChooseAddress',
+  screens: 'Test',
   shop: 'Shop',
   insider: 'User',
 }

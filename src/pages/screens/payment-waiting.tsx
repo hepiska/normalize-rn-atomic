@@ -673,7 +673,6 @@ class PaymentWaiting extends Component<any, any> {
               <IconMi name="more-vert" size={20} color={colors.black100} />
             </PressAbbleDiv>
           }
-          style={{ borderBottomWidth: 1, borderBottomColor: colors.black50 }}
         />
         {this.renderBottomSheet()}
         {finishAnimation ? (

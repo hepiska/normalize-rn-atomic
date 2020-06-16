@@ -70,7 +70,7 @@ class PaymentCard extends React.PureComponent<any, any> {
     return (
       <View style={{ padding: 16, ...borderStyle.all, marginBottom: 16 }}>
         <StatusAlert
-          style={styles.margin}
+          style={{ marginBottom: 8 }}
           icon={statusToIcon(transaction.status)}
           status={transaction.status}
           text={'Pay before ' + day(date).format('MMMM DD, HH:mm') + ' WIB'}

@@ -37,11 +37,7 @@ const PostDetailPage = props => {
   if (post || url) {
     return (
       <>
-        <NavbarTop
-          title={post?.title || title}
-          leftContent={['back']}
-          style={{ borderBottomWidth: 1, borderBottomColor: colors.black50 }}
-        />
+        <NavbarTop title={post?.title || title} leftContent={['back']} />
         <WebView
           ref={mywebView}
           sharedCookiesEnabled

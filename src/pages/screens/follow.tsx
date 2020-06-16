@@ -8,7 +8,7 @@ import { colors } from '@src/utils/constants'
 import TabMenu from '@components/layouts/tab-menu'
 import FollowList from '@components/organisms/follow-list'
 import { fontStyle } from '@src/components/commont-styles'
-import CourierLoader from '@src/components/atoms/loaders/courier-loader'
+import FollowListLoader from '@src/components/atoms/loaders/follow-list'
 
 class Follow extends Component<any, any> {
   state = {
@@ -77,7 +77,6 @@ class Follow extends Component<any, any> {
         <NavbarTop
           title={route.params.name || 'Follow Page'}
           leftContent={['back']}
-          style={{ borderBottomWidth: 1, borderBottomColor: colors.black50 }}
         />
         {finishAnimation ? (
           <TabMenu
@@ -89,7 +88,7 @@ class Follow extends Component<any, any> {
             isLazyload
           />
         ) : (
-          <CourierLoader style={{ margin: 16 }} />
+          <FollowListLoader style={{ margin: 16 }} />
         )}
       </>
     )
