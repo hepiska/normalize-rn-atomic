@@ -63,11 +63,7 @@ const ChangePassword = props => {
   return useMemo(
     () => (
       <>
-        <NavbarTop
-          title="Change Password"
-          leftContent={['back']}
-          style={{ borderBottomWidth: 1, borderBottomColor: colors.black50 }}
-        />
+        <NavbarTop title="Change Password" leftContent={['back']} />
         {finishAnimation ? (
           <>
             <ScrollView style={{ flex: 1 }}>

@@ -1,5 +1,5 @@
 import React from 'react'
-import { FlatList, StyleSheet, Dimensions, ViewStyle } from 'react-native'
+import { FlatList, StyleSheet, Dimensions, ViewStyle, View } from 'react-native'
 import { Div, Font } from '@components/atoms/basic'
 import {
   futuraTitleFont,
@@ -8,7 +8,7 @@ import {
 } from '@components/commont-styles'
 import { OutlineButton } from '@components/atoms/button'
 import { colors } from '@utils/constants'
-import PostCard from '@components/molecules/post-card'
+import PostCard from '@components/molecules/post-card-new'
 import CollectionCard from '@components/molecules/post-card'
 import BrandCard from '@components/molecules/brand-card'
 import ProductCard from '@components/molecules/product-card-new'
@@ -42,13 +42,7 @@ const styles = StyleSheet.create({
     marginTop: 16,
   },
   productCard: {
-    // flex: 1,
-
     width: width / 2 - 8,
-    // marginTop: 0,
-    // marginLeft: 8,
-    // marginRight: 8,
-    // marginBottom: 0,
     marginVertical: 0,
     marginHorizontal: 8,
     paddingHorizontal: 0,
@@ -78,12 +72,19 @@ class HorizontalList extends React.Component<HorizontalListType, any> {
       case 'post':
         if (this.props.data.posts) {
           return (
-            <PostHoc
-              horizontal
-              key={`horizontal-list-post-${index}`}
-              postId={item}
-              idx={index}
-            />
+            <View>
+              <PostHoc
+                key={`horizontal-list-post-${index}`}
+                postId={item}
+                style={{
+                  marginVertical: 8,
+                  marginHorizontal: 8,
+                  width: width * 0.8,
+                  marginLeft: index === 0 ? 16 : 8,
+                }}
+                idx={index}
+              />
+            </View>
           )
         } else if (this.props.data.collections) {
           return (
@@ -102,9 +103,9 @@ class HorizontalList extends React.Component<HorizontalListType, any> {
             productId={item}
             key={`horizontal-list-product-${index}`}
             isAtributesShow={true}
-            // style={{ ...styles.productCard, wrappermargin: 4 }}
             style={{
               ...styles.productCard,
+              marginLeft: index === 0 ? 16 : 8,
             }}
           />
         )
@@ -116,6 +117,9 @@ class HorizontalList extends React.Component<HorizontalListType, any> {
             key={index}
             item={item}
             navigation={this.props.navigation}
+            style={{
+              marginLeft: index === 0 ? 16 : 8,
+            }}
           />
         )
       default:
@@ -169,8 +173,8 @@ class HorizontalList extends React.Component<HorizontalListType, any> {
       <Div _width="100%" align="flex-start" style={style}>
         <Font
           style={fontStyle.playfairBold}
-          size="23px"
-          mar="0 0 24px 16px"
+          size="24px"
+          mar="0 0 16px 16px"
           color={colors.black100}>
           {data.title}
         </Font>

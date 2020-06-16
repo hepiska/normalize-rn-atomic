@@ -23,11 +23,7 @@ class OrderDetailPage extends Component<any, any> {
     const { finishAnimation } = this.state
     return (
       <>
-        <NavbarTop
-          title="Order Details"
-          leftContent={['back']}
-          style={{ borderBottomWidth: 1, borderBottomColor: colors.black50 }}
-        />
+        <NavbarTop title="Order Details" leftContent={['back']} />
         {finishAnimation ? (
           <ScrollView style={{ flex: 1, backgroundColor: 'white' }}>
             <OrderDetails orderId={orderId} />

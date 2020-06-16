@@ -122,6 +122,7 @@ class OrderList extends Component<any, any> {
 
     return (
       <SearchFilter
+        itemStyle={{ paddingVertical: 8, paddingHorizontal: 12 }}
         placeholder="Search With Invoice Number"
         selectedFilter={
           selectedFilter?.length === filterOptions.length
@@ -148,6 +149,7 @@ class OrderList extends Component<any, any> {
       <OrderHoc
         orderId={item}
         style={{
+          marginTop: index === 0 && 0,
           width: '100%',
         }}
       />

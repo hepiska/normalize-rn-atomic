@@ -25,11 +25,7 @@ class PaymentDetails extends Component<any, any> {
     const { finishAnimation } = this.state
     return (
       <>
-        <NavbarTop
-          title="Payment Details"
-          leftContent={['back']}
-          style={{ borderBottomWidth: 1, borderBottomColor: colors.black50 }}
-        />
+        <NavbarTop title="Payment Details" leftContent={['back']} />
         {finishAnimation ? (
           <PaymentHoc details={details} transactionId={transactionId} />
         ) : (

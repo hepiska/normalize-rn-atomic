@@ -6,6 +6,7 @@ import ProductFilter from '@components/organisms/product-filter'
 import FormLogin from '@src/components/molecules/form-login'
 import FormRegister from '@src/components/molecules/form-register-basic-information'
 import ConfirmationModal from './confirmation'
+import LikeListModal from '@pages/modals/like-list'
 
 import ShareModal from '@pages/modals/share'
 
@@ -38,6 +39,15 @@ function ModalStack() {
           cardStyle: { backgroundColor: 'transparent' },
         }}
         component={ShareModal}
+      />
+      <Stack.Screen
+        name="LikeList"
+        options={{
+          animationEnabled: false,
+
+          cardStyle: { backgroundColor: 'transparent' },
+        }}
+        component={LikeListModal}
       />
       <Stack.Screen
         name="LoginModal"

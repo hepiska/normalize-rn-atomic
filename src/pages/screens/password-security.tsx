@@ -16,10 +16,10 @@ const securityMenu = [
       navigate('Screens', { screen: 'FormChangePassword' })
     },
   },
-  {
-    title: 'PIN',
-    onPress: () => {},
-  },
+  // {
+  //   title: 'PIN',
+  //   onPress: () => {},
+  // },
 ]
 
 class PasswordSecurity extends Component<any, any> {
@@ -35,11 +35,7 @@ class PasswordSecurity extends Component<any, any> {
     const { finishAnimation } = this.state
     return (
       <>
-        <NavbarTop
-          title="Password &amp; Security"
-          leftContent={['back']}
-          style={{ borderBottomWidth: 1, borderBottomColor: colors.black50 }}
-        />
+        <NavbarTop title="Password &amp; Security" leftContent={['back']} />
         {finishAnimation ? (
           <ScrollView>
             <View style={{ paddingHorizontal: 16 }}>

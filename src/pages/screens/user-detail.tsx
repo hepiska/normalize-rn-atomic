@@ -53,11 +53,7 @@ const UserDetail = props => {
   }
   return (
     <>
-      <NavbarTop
-        title={username}
-        leftContent={['back']}
-        style={{ borderBottomWidth: 1, borderBottomColor: colors.black50 }}
-      />
+      <NavbarTop title={username} leftContent={['back']} />
       <WebView
         ref={mywebView}
         sharedCookiesEnabled

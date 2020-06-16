@@ -141,13 +141,13 @@ class BrandList extends Component<any, any> {
 
     const leftContent = ['back']
 
-    const rightContent = ['shop', 'notification', 'search']
+    // const rightContent = ['shop', 'notification', 'search']
 
     return (
       <>
         <NavbarTop
           leftContent={leftContent}
-          rightContent={rightContent}
+          // rightContent={rightContent}
           title={headerName}
           subtitle={`${pagination.total || 0} Items`}
         />

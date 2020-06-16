@@ -115,7 +115,7 @@ class DiscoverOrg extends React.Component<any, any> {
         <SearchFilter
           onfilterClicked={this._filterCliked}
           style={{ marginBottom: 16 }}
-          itemStyle={{ backgroundColor: 'white' }}
+          itemStyle={{ backgroundColor: 'white', paddingHorizontal: 12 }}
           selectedFilter={selectedFilter}
           onfilterSelected={this._selectFilter}
           filterItems={this.filterOptions}

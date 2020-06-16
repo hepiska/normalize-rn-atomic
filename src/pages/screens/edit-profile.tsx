@@ -222,11 +222,7 @@ const EditProfile = props => {
           closeCamera={closeCamera}
           isCamRollAvailable
         />
-        <NavbarTop
-          title="Edit Profile"
-          leftContent={['back']}
-          style={{ borderBottomWidth: 1, borderBottomColor: colors.black50 }}
-        />
+        <NavbarTop title="Edit Profile" leftContent={['back']} />
         {finishAnimation ? (
           <>
             <PickerPopup

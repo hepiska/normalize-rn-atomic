@@ -23,11 +23,7 @@ class PrivacyPolicyWebView extends Component<any, any> {
     const { finishAnimation } = this.state
     return (
       <>
-        <NavbarTop
-          title="Privacy Policy"
-          leftContent={['back']}
-          style={{ borderBottomWidth: 1, borderBottomColor: colors.black50 }}
-        />
+        <NavbarTop title="Privacy Policy" leftContent={['back']} />
         {finishAnimation ? (
           <WebView
             ref={r => (this.webref = r)}

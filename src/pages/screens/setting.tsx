@@ -40,11 +40,7 @@ class Settings extends Component<any, any> {
     const { finishAnimation } = this.state
     return (
       <>
-        <NavbarTop
-          title="Settings"
-          leftContent={['back']}
-          style={{ borderBottomWidth: 1, borderBottomColor: colors.black50 }}
-        />
+        <NavbarTop title="Settings" leftContent={['back']} />
         {finishAnimation ? (
           <ScrollView>
             <View style={{ paddingHorizontal: 16 }}>

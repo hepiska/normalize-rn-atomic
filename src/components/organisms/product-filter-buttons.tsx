@@ -95,7 +95,7 @@ const FilterTriger = (props: any) => {
           style={{ marginRight: 8, backgroundColor: colors.black100 }}
           leftIcon={
             <Icon
-              style={{ marginRight: 8 }}
+              // style={{ marginRight: 8 }}
               name="filter"
               color={colors.white}
             />

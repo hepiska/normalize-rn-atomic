@@ -134,12 +134,12 @@ class AccountSetting extends Component<any, any> {
       desc: 'Add or edit your delivery address',
       onPress: () => navigateTo('Screens', 'ChooseAddress', {}),
     },
-    {
-      icon: require('@src/assets/icons/return-or-exchange.png'),
-      title: 'My Return or Exchange',
-      desc: 'Track your past and current return or exchange',
-      onPress: () => {},
-    },
+    // {
+    //   icon: require('@src/assets/icons/return-or-exchange.png'),
+    //   title: 'My Return or Exchange',
+    //   desc: 'Track your past and current return or exchange',
+    //   onPress: () => {},
+    // },
   ]
 
   mySocialList = [
@@ -176,11 +176,11 @@ class AccountSetting extends Component<any, any> {
         navigate('Screens', { screen: 'Setting' })
       },
     },
-    {
-      icon: require('@src/assets/icons/question-circle.png'),
-      title: 'Help',
-      desc: 'Find the best answer to your question',
-    },
+    // {
+    //   icon: require('@src/assets/icons/question-circle.png'),
+    //   title: 'Help',
+    //   desc: 'Find the best answer to your question',
+    // },
     {
       icon: require('@src/assets/icons/logout.png'),
       title: 'Log Out',
@@ -309,7 +309,7 @@ class AccountSetting extends Component<any, any> {
                 </View>
               </View>
               {/* my social  */}
-              <View
+              {/* <View
                 style={{
                   marginTop: 54,
                 }}>
@@ -336,7 +336,7 @@ class AccountSetting extends Component<any, any> {
                     )
                   })}
                 </View>
-              </View>
+              </View> */}
               {/* others  */}
               <View
                 style={{

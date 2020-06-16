@@ -31,11 +31,7 @@ const LookBookDetail = props => {
   // console.log(`"${JSON.stringify(user)}"`)
   return (
     <>
-      <NavbarTop
-        title="Lookbook"
-        leftContent={['back']}
-        style={{ borderBottomWidth: 1, borderBottomColor: colors.black50 }}
-      />
+      <NavbarTop title="Lookbook" leftContent={['back']} />
       <WebView
         ref={mywebView}
         sharedCookiesEnabled

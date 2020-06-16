@@ -77,25 +77,46 @@ class NotificationPreferene extends Component<any, any> {
         ],
       },
       {
-        title: 'Email Notification Settings',
+        title: 'Email Settings',
         subMenu: [
           {
-            title: 'Trust this device',
-            desc:
-              "I don't want to be wasting time without you don't wanna throw away my life I need you",
-            onPress: () => {},
-            isEnabled: true,
+            title: 'Post Likes',
+            desc: 'Send email when user liked your posts',
+            onPress: () => {
+              this.handleSwitchToggle('notification_like_email')
+            },
+            isEnabled: notificationSetting.notification_like_email,
+          },
+          {
+            title: 'Post Comments',
+            desc: 'Send email when user commented on your posts',
+            onPress: () => {
+              this.handleSwitchToggle('notification_comment_email')
+            },
+            isEnabled: notificationSetting.notification_comment_email,
+          },
+          {
+            title: 'New Followers',
+            desc: 'Send email when user followed your profile',
+            onPress: () => {
+              this.handleSwitchToggle('notification_follow_email')
+            },
+            isEnabled: notificationSetting.notification_follow_email,
+          },
+          {
+            title: 'Weekly Overview',
+            desc: 'Send email of your profile overview every week',
+            onPress: () => {
+              this.handleSwitchToggle('notification_weekly_overview_email')
+            },
+            isEnabled: notificationSetting.notification_weekly_overview_email,
           },
         ],
       },
     ]
     return (
       <>
-        <NavbarTop
-          title="Notifications Preferences"
-          leftContent={['back']}
-          style={{ borderBottomWidth: 1, borderBottomColor: colors.black50 }}
-        />
+        <NavbarTop title="Notifications Preferences" leftContent={['back']} />
         {finishAnimation ? (
           <ScrollView>
             <View style={{ paddingHorizontal: 16, marginTop: 4 }}>

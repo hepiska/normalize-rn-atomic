@@ -77,7 +77,6 @@ class Follow extends Component<any, any> {
         <NavbarTop
           title={route.params.name || 'Follow Page'}
           leftContent={['back']}
-          style={{ borderBottomWidth: 1, borderBottomColor: colors.black50 }}
         />
         {finishAnimation ? (
           <TabMenu

@@ -344,7 +344,7 @@ const FullscreenCard = ({
                     fontSize: 12,
                     marginRight: 4,
                   }}>
-                  And
+                  and
                 </Text>
                 <TouchableOpacity onPress={goToUsers}>
                   <Text
@@ -589,7 +589,14 @@ class PostListItem extends React.Component<PostListItemType, any> {
   }
 
   _goToUsers = () => {
-    console.log('===== to users banyak')
+    const { post } = this.props
+    navigate('modals', {
+      screen: 'LikeList',
+      params: { postId: post.id },
+    })
+  }
+  _goToUser = user => {
+    console.log('===== to users', user)
   }
 
   _goToUser = user => () => {

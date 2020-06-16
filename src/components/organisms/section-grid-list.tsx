@@ -132,7 +132,11 @@ class SectionGridList extends React.Component<SectionGridListType, any> {
               <ImageCard
                 navigation={navigation}
                 item={item}
-                style={{ width: width - 16, marginBottom: 18 }}
+                style={{
+                  width: width - 32,
+                  marginBottom: 18,
+                  marginLeft: 16,
+                }}
                 key={'image-key' + key}
               />
             ))}
@@ -168,7 +172,7 @@ class SectionGridList extends React.Component<SectionGridListType, any> {
         align="flex-start"
         mar="12px 0"
         style={style}>
-        <Font style={fontStyle.playfairBold} size="23px" mar="0 0 24px 16px">
+        <Font style={fontStyle.playfairBold} size="24px" mar="0 0 16px 16px">
           {data.title}
         </Font>
         {this._renderItem()}
