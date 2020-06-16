@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { View, Text, Dimensions, ViewStyle } from 'react-native'
 import ContentLoader from 'react-content-loader/native'
 import { Rect, Circle } from 'react-native-svg'
+import { shimmerLoader } from '@utils/constants'
 
 interface LoaderPropsType {
   style?: ViewStyle
@@ -24,6 +25,7 @@ const TwoColumnListLoader = (props: LoaderPropsType) => {
       {layout && (
         <>
           <ContentLoader
+            {...shimmerLoader}
             viewBox={`0 0 ${layout.width} 248`}
             height={260}
             width={360}>
@@ -77,6 +79,7 @@ const TwoColumnListLoader = (props: LoaderPropsType) => {
             />
           </ContentLoader>
           <ContentLoader
+            {...shimmerLoader}
             viewBox={`0 0 ${layout.width} 248`}
             height={260}
             width={360}>

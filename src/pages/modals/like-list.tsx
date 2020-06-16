@@ -54,7 +54,6 @@ class LikeListModal extends React.Component<any, any> {
       },
       getUserLikePost,
     } = this.props
-
     getUserLikePost(postId, params)
   }
 

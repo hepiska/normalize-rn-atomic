@@ -60,6 +60,12 @@ export const colors = {
   },
 }
 
+export const shimmerLoader = {
+  backgroundColor: '#f5f6f7',
+  foregroundColor: '#D3D3D3',
+  speed: 1,
+}
+
 export const regex: any = {
   phoneNumber: /^(^\+62\s?|^0)(\d{3,4}){2}\d{3,4}$/,
   email: /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/,

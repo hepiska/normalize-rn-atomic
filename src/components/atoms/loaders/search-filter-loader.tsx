@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { View, ViewStyle, Text } from 'react-native'
 import ContentLoader from 'react-content-loader/native'
 import { Rect } from 'react-native-svg'
+import { shimmerLoader } from '@utils/constants'
 
 interface LoaderPropsType {
   style?: ViewStyle
@@ -18,6 +19,7 @@ const SearchAndFilterLoader = (props: LoaderPropsType) => {
     <View onLayout={_setLayout} style={props.style}>
       {layout && (
         <ContentLoader
+          {...shimmerLoader}
           viewBox={`0 0 ${layout.width} 103`}
           height={103}
           width={layout.width}>
