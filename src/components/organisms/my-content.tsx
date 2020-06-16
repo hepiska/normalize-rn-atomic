@@ -9,7 +9,7 @@ import CommingSoonPlaceholder from '@src/components/molecules/comming-soon'
 import TitleDescriptionCard from '@src/components/molecules/title-description-card'
 import dayjs from 'dayjs'
 import { postListData } from '@hocs/data/post'
-import PostCard from '@components/molecules/post-card'
+import PostCard from '@components/molecules/post-card-old'
 
 const { width } = Dimensions.get('window')
 const PostHoc = postListData(PostCard)
