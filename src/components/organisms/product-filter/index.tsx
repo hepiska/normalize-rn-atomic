@@ -1,13 +1,12 @@
 import React, { Component, useState, memo, useRef, useEffect } from 'react'
 import {
   Dimensions,
-  FlatList,
-  Modal,
   StyleSheet,
-  View,
   TouchableWithoutFeedback,
   TouchableOpacity,
   InteractionManager,
+  SafeAreaView,
+  View,
 } from 'react-native'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
@@ -74,7 +73,7 @@ const FilterContent = connect(
     <Div
       _width="100%"
       _background="white"
-      _height="100%"
+      _height="98%"
       _padding="0px 16px 80px"
       justify="flex-start">
       <TabMenu
@@ -157,27 +156,24 @@ const FilterBottomSheet = props => {
       : [Math.max(360, height * 0.5), 1]
 
   return (
-    <>
-      {finishAnimation && (
-        <BottomSheet
-          onCloseEnd={() => props.navigation.goBack()}
-          ref={bottomSheetRef}
-          enabledBottomInitialAnimation={true}
-          initialSnap={_snapPoint.length - 1}
-          enabledBottomClamp={true}
-          enabledContentGestureInteraction={false}
-          renderHeader={() => (
-            <Header
-              onBack={() => props.navigation.goBack()}
-              section={section}
-            />
-          )}
-          snapPoints={_snapPoint}
-          renderContent={() =>
-            section === 'sort' ? <SortOrg /> : <FilterContent />
-          }
-        />
-      )}
+    <SafeAreaView>
+      <BottomSheet
+        onCloseEnd={() => props.navigation.goBack()}
+        ref={bottomSheetRef}
+        enabledBottomInitialAnimation={true}
+        initialSnap={_snapPoint.length - 1}
+        enabledBottomClamp={true}
+        enabledContentGestureInteraction={false}
+        renderHeader={() => (
+          <Header onBack={() => props.navigation.goBack()} section={section} />
+        )}
+        snapPoints={_snapPoint}
+        renderContent={() => {
+          if (!finishAnimation)
+            return <View style={{ width: '100%', height: '100%' }} />
+          return section === 'sort' ? <SortOrg /> : <FilterContent />
+        }}
+      />
 
       {/* <RBSheet ref={refRBSheet}>
         <FilterContent />
@@ -186,7 +182,7 @@ const FilterBottomSheet = props => {
       <TouchableWithoutFeedback onPress={() => props.navigation.goBack()}>
         <Div bg="rgba(0,0,0,0.7)" _height={height} _width="100%" />
       </TouchableWithoutFeedback>
-    </>
+    </SafeAreaView>
   )
 }
 

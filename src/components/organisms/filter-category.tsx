@@ -1,4 +1,4 @@
-import React, { Component, useState, memo } from 'react'
+import React, { Component, useState, memo, PureComponent } from 'react'
 import {
   Dimensions,
   FlatList,
@@ -7,7 +7,7 @@ import {
   SectionList,
   View,
 } from 'react-native'
-import { connect } from 'react-redux'
+import { connect, batch } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { colors } from '@utils/constants'
 import {
@@ -20,6 +20,8 @@ import { categoryListData } from '@hocs/data/category'
 import SelectAbleItem, {
   SelectorShapeType,
 } from '@components/molecules/filter-brand-item'
+
+import { makeMapFilterCategories } from '@modules/product-filter/selector'
 
 const { width } = Dimensions.get('screen')
 
@@ -54,7 +56,7 @@ const isAllChildernIncluded = (children, str) => {
 
 const CategoryListItem = categoryListData(SelectAbleItem)
 
-class FilterBrandOrg extends Component<any, any> {
+class FilterBrandOrg extends PureComponent<any, any> {
   _renderItem = ({ item }) => {
     return (
       <CategoryListItem
@@ -100,12 +102,14 @@ class FilterBrandOrg extends Component<any, any> {
         }
       })
     }
-    this.props.setSelectedCategory(categoryId)
-    this.props.fetchCountProduct({
-      category_ids: categoryId || this.props.activeCategory,
-      collection_ids: this.props.activeCollection,
-      brand_ids: this.props.brans_ids,
-      ...this.props.selectedPrice,
+    batch(() => {
+      this.props.setSelectedCategory(categoryId)
+      this.props.fetchCountProduct({
+        category_ids: categoryId || this.props.activeCategory,
+        collection_ids: this.props.activeCollection,
+        brand_ids: this.props.brans_ids,
+        ...this.props.selectedPrice,
+      })
     })
   }
 
@@ -144,11 +148,9 @@ class FilterBrandOrg extends Component<any, any> {
 }
 
 const mapStateToProps = state => {
-  const categories = state.productFilter.data.categories || []
+  const mapCategoriesfilter = makeMapFilterCategories()
   return {
-    categories: categories.map(_id => {
-      return state.categories.data[_id]
-    }),
+    categories: mapCategoriesfilter(state),
     selectedPrice: state.productFilter.selected.price,
     activeCollection: state.productFilter.activePage.collection_ids || '',
     selectedBrand:

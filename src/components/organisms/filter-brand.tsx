@@ -1,3 +1,4 @@
+/* eslint-disable react/display-name */
 import React, {
   Component,
   useState,
@@ -23,6 +24,7 @@ import Icon from 'react-native-vector-icons/FontAwesome5'
 import AlvabetSelectorMol from '@components/molecules/alvabet-selector'
 import FilterBrandItem from '@components/molecules/filter-brand-item'
 import { fontStyle } from '../commont-styles'
+import { deepClone } from '@src/utils/helpers'
 
 const { width } = Dimensions.get('screen')
 
@@ -52,6 +54,7 @@ const useBrandFilter = (props: any) => {
   useEffect(() => {
     setAvailableAlfabet(getAlfabetFromBrandSection(props.brands))
   }, [props.brands])
+
   useEffect(() => {
     props.fetchCountProduct({
       collection_ids: props.activeCollection,
@@ -60,6 +63,7 @@ const useBrandFilter = (props: any) => {
       ...props.selectedPrice,
     })
   }, [props.selectedBrand])
+
   const _onSearchChange = e => {
     setSearch(e)
   }
@@ -75,18 +79,29 @@ const FilterBrandOrg = (props: any) => {
     { _onChangeAlvabet, _onSearchChange },
   ] = useBrandFilter(props)
 
-  let brands = ([...props.brands] || []).map(brandSection => {
-    brandSection.data = brandSection.data.filter(brand => {
-      return brand.name.toLowerCase().includes(search.toLowerCase())
-    })
-    return brandSection
-  })
-  brands = brands.filter(brandSection => {
-    if (!brandSection.data.length) {
-      return false
-    }
-    return filter ? brandSection.title === filter : true
-  })
+  let _brands = useMemo(() => {
+    let tembrands = (props.brands.length ? deepClone(props.brands) : []).map(
+      brandSection => {
+        brandSection.data = brandSection.data.filter(brand => {
+          return brand.name.toLowerCase().includes(search.toLowerCase())
+        })
+        return brandSection
+      },
+    )
+
+    return [...tembrands]
+  }, [search])
+
+  let brands = useMemo(
+    () =>
+      _brands.filter(brandSection => {
+        if (!brandSection.data.length) {
+          return false
+        }
+        return filter ? brandSection.title === filter : true
+      }),
+    [filter, _brands],
+  )
 
   const _renderItem = ({ item }) => (
     <FilterBrandItem
@@ -98,50 +113,47 @@ const FilterBrandOrg = (props: any) => {
     />
   )
 
-  return useMemo(
-    () => (
-      <Div
-        _width={width}
-        _flex="1"
-        _height="100%"
-        radius="0"
-        justify="flex-start"
-        align="flex-start">
-        <Div _width="100%" _height="32px" _padding="0px 16px">
-          <Field
-            style={{ width: '100%' }}
-            value={search}
-            placeholder="Search Brand..."
-            onChangeText={_onSearchChange}
-            leftIcon={
-              <Icon
-                style={{ marginRight: 8 }}
-                name="search"
-                color={colors.black90}
-              />
-            }
-          />
-        </Div>
-        <AlvabetSelectorMol
-          style={styles.container}
-          onSelect={_onChangeAlvabet}
-          available={availableAlfabet}
-        />
-        <SectionList
-          style={styles.sectionContainer}
-          renderSectionHeader={({ section: { title } }) => (
-            <Div _width="100%" bg="white" padd="8px 0px" align="flex-start">
-              <Font _padding="16px 0px 0px" style={fontStyle.helvetica}>
-                {title}
-              </Font>
-            </Div>
-          )}
-          sections={brands}
-          renderItem={_renderItem}
+  return (
+    <Div
+      _width={width}
+      _flex="1"
+      _height="100%"
+      radius="0"
+      justify="flex-start"
+      align="flex-start">
+      <Div _width="100%" _height="32px" _padding="0px 16px">
+        <Field
+          style={{ width: '100%' }}
+          value={search}
+          placeholder="Search Brand..."
+          onChangeText={_onSearchChange}
+          leftIcon={
+            <Icon
+              style={{ marginRight: 8 }}
+              name="search"
+              color={colors.black90}
+            />
+          }
         />
       </Div>
-    ),
-    [props.brands, props.selectedBrand, filter, search],
+      <AlvabetSelectorMol
+        style={styles.container}
+        onSelect={_onChangeAlvabet}
+        available={availableAlfabet}
+      />
+      <SectionList
+        style={styles.sectionContainer}
+        renderSectionHeader={({ section: { title } }) => (
+          <Div _width="100%" bg="white" padd="8px 0px" align="flex-start">
+            <Font _padding="16px 0px 0px" style={fontStyle.helvetica}>
+              {title}
+            </Font>
+          </Div>
+        )}
+        sections={brands}
+        renderItem={_renderItem}
+      />
+    </Div>
   )
 }
 

@@ -1,4 +1,4 @@
-import React, { useState, memo } from 'react'
+import React, { useState, memo, useMemo } from 'react'
 import {
   ViewStyle,
   StyleSheet,
@@ -144,21 +144,24 @@ const ProductCard = ({
   }
 
   const _onSave = () => {
-    console.log('=======', deleteProductSaved)
     if (!isAuth) {
       triggerLogin()
     } else {
-      // if (isSaved) {
-      //   deleteProductSaved(product.id)
-      // } else {
-      //   addProductSaved(product.id)
-      // }
+      if (isSaved) {
+        deleteProductSaved(product.id)
+      } else {
+        addProductSaved(product.id)
+      }
     }
   }
 
-  const selectedVariant =
-    product.variants.find(variant => variant.id === selectedVariantId) ||
-    product.variants[0]
+  const selectedVariant = useMemo(() => {
+    return (
+      product.variants.find(variant => variant.id === selectedVariantId) ||
+      product.variants[0]
+    )
+  }, [selectedVariantId, product])
+
   const images = selectedVariant.image_urls || product.image_urls || []
   // const random = Math.floor(Math.random() * images.length)
   const variantPrice = selectedVariantId && {
@@ -391,6 +394,7 @@ const ProductCardVertical = ({
                 ? { uri: thumbnailImage }
                 : thumbnailImage
             }
+            containerStyle={{ width: width, minWidth: 182 }}
             source={typeof image === 'string' ? { uri: image } : image}
             width={width}
             height={1.5 * width}

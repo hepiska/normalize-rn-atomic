@@ -1,6 +1,6 @@
 import React, { Component, useState, memo, useEffect, useMemo } from 'react'
 import { Dimensions, FlatList, Modal, StyleSheet } from 'react-native'
-import { connect } from 'react-redux'
+import { connect, batch } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { Div, Font } from '@components/atoms/basic'
 import { helveticaNormalFont } from '@components/commont-styles'
@@ -102,20 +102,22 @@ const FilterPriceOrg = ({
       const maxPrice = Math.floor(
         colectionPrices.minimum_price + (pos[1] / maxSlider) * delta,
       )
-      setSelectedPrice({
-        type: 'minimum_price',
-        value: minPrice,
-      })
-      setSelectedPrice({
-        type: 'maximum_price',
-        value: maxPrice,
-      })
-      fetchCountProduct({
-        collection_ids: activeCollection,
-        maximum_price: maxPrice,
-        minimum_price: minPrice,
-        brand_ids: selectedBrand,
-        category_ids: selectedCategory,
+      batch(() => {
+        setSelectedPrice({
+          type: 'minimum_price',
+          value: minPrice,
+        })
+        setSelectedPrice({
+          type: 'maximum_price',
+          value: maxPrice,
+        })
+        fetchCountProduct({
+          collection_ids: activeCollection,
+          maximum_price: maxPrice,
+          minimum_price: minPrice,
+          brand_ids: selectedBrand,
+          category_ids: selectedCategory,
+        })
       })
     }, 500)
   }

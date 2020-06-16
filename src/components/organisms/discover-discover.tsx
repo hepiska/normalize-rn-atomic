@@ -131,10 +131,12 @@ class DiscoverOrg extends React.Component<any, any> {
   _renderfooter = () => {
     const { loading } = this.props
     // const firsLoading = loading && !this.skip
-    if (loading) {
-      return <TwoColumnListLoader />
-    }
-    return null
+
+    return (
+      <View style={{ height: 600 }}>
+        {loading && this.skip > 0 && <TwoColumnListLoader />}
+      </View>
+    )
   }
 
   render() {

@@ -35,9 +35,12 @@ import ButtonGroup from '@components/molecules/button-group'
 import { fontStyle } from '@components/commont-styles'
 import { GradientButton } from '@components/atoms/button'
 import { getProductById } from '@modules/product/action'
-import { setImage, deepClone, getDetailContent } from '@utils/helpers'
+import { setImage, getDetailContent } from '@utils/helpers'
 import ProductListLoader from '@components/atoms/loaders/product-detail'
 import Icon from 'react-native-vector-icons/FontAwesome5'
+import { makeDeepClone } from '@modules/selector-general'
+import { makeSelectedProducts } from '@modules/product/selector'
+import { makeSelectedBrands } from '@modules/brand/selector'
 import {
   addProductSaved,
   deleteProductSaved,
@@ -617,6 +620,7 @@ class ProductListPage extends React.Component<any, any> {
                   {product.saved && userSaveProduct}
                 </View>
               </View>
+              {/* bisa di pisah jadi 1 organimis sendiri biar bisa di use memo itung2gannya refisit: enu */}
               {contentItem?.map((item, idx) => {
                 let newItem = null
                 if (typeof item.content !== 'string') {
@@ -750,8 +754,7 @@ class ProductListPage extends React.Component<any, any> {
                   />
                 )
               })}
-
-              <ProductSimilarList />
+              {product && <ProductSimilarList />}
             </Div>
           </ImageCoverContentLayout>
 
@@ -773,8 +776,14 @@ class ProductListPage extends React.Component<any, any> {
 
 const mapStateToProps = (state, ownProps) => {
   const productId = ownProps.route.params?.productId
-  const _product = deepClone(state.products.data[productId])
-  _product.brand = state.brands.data[_product.brand]
+  const getselectedProduct = makeSelectedProducts()
+  const getselectedBrand = makeSelectedBrands()
+  const deepClone = makeDeepClone()
+
+  const selectedProduct = getselectedProduct(state, productId)
+  const _product = deepClone(selectedProduct)
+
+  _product.brand = getselectedBrand(state, _product.brand)
 
   return {
     product: _product,

@@ -68,7 +68,7 @@ class ProductSimilar extends Component<any, any> {
   render() {
     const { products, loading } = this.props
     return (
-      <Div _margin="64px 0px" align="flex-start">
+      <Div _margin="32px 0px" align="stretch">
         <View style={{ marginLeft: 0, marginRight: 0 }}>
           <Text
             style={{
