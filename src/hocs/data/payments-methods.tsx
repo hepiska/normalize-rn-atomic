@@ -1,8 +1,10 @@
 import { connect } from 'react-redux'
+import { makeGetTransactionPayment } from '@src/modules/transactions-payments/selector'
 
 const paymentsMethodsListMap = (state, ownProps) => {
-  const paymentMethodId = ownProps.paymentMethodId
-  const paymentMethod = state.transactionsPayments.data[paymentMethodId]
+  const getTransactionMethod = makeGetTransactionPayment()
+  const paymentMethod = getTransactionMethod(state, ownProps.paymentMethodId)
+
   return {
     paymentMethod,
   }

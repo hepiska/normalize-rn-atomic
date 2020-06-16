@@ -69,7 +69,7 @@ class Wishlist extends Component<any, any> {
     }
     return (
       <Div _flex={1} _margin="64px 0px 0px" _width="100%" align="flex-start">
-        <View style={{ marginLeft: 8, marginRight: 8 }}>
+        <View>
           <Text
             style={{
               ...styles.futuraBold24,

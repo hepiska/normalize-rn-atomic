@@ -8,7 +8,7 @@ interface LoaderPropsType {
   style?: ViewStyle
 }
 
-const TwoColumnListLoader = (props: LoaderPropsType) => {
+const TwoCollumnCardLoaderSmall = (props: LoaderPropsType) => {
   const [layout, setLayout] = useState(null)
 
   const _setLayout = ({ nativeEvent }) => {
@@ -78,63 +78,9 @@ const TwoColumnListLoader = (props: LoaderPropsType) => {
               height="20"
             />
           </ContentLoader>
-          <ContentLoader
-            {...shimmerLoader}
-            viewBox={`0 0 ${layout.width} 248`}
-            height={260}
-            width={360}>
-            <Rect
-              x="0"
-              y="0"
-              rx="8"
-              ry="8"
-              width={layout.width / 2 - 16}
-              height="180"
-            />
-            <Rect
-              x="0"
-              y="188"
-              rx="8"
-              ry="8"
-              width={layout.width / 2 - 16}
-              height="20"
-            />
-            <Rect
-              x="0"
-              y="216"
-              rx="8"
-              ry="8"
-              width={layout.width / 2 - 16}
-              height="20"
-            />
-            <Rect
-              x={layout.width / 2}
-              y="0"
-              rx="8"
-              ry="8"
-              width={layout.width / 2 - 16}
-              height="180"
-            />
-            <Rect
-              x={layout.width / 2}
-              y="188"
-              rx="8"
-              ry="8"
-              width={layout.width / 2 - 16}
-              height="20"
-            />
-            <Rect
-              x={layout.width / 2}
-              y="216"
-              rx="8"
-              ry="8"
-              width={layout.width / 2 - 16}
-              height="20"
-            />
-          </ContentLoader>
         </>
       )}
     </View>
   )
 }
-export default TwoColumnListLoader
+export default TwoCollumnCardLoaderSmall

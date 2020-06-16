@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { ViewStyle, SafeAreaView } from 'react-native'
 import ContentLoader from 'react-content-loader/native'
 import { Rect } from 'react-native-svg'
+import { shimmerLoader } from '@utils/constants'
 
 interface LoaderPropsType {
   style?: ViewStyle
@@ -21,6 +22,7 @@ const CheckoutLoader = (props: LoaderPropsType) => {
       {layout && (
         <>
           <ContentLoader
+            {...shimmerLoader}
             viewBox={`0 0 ${layout.width} 150`}
             height={150}
             width={layout.width}>
@@ -45,6 +47,7 @@ const CheckoutLoader = (props: LoaderPropsType) => {
             <Rect x="0" y="112" rx="8" ry="8" width={180} height={14} />
           </ContentLoader>
           <ContentLoader
+            {...shimmerLoader}
             viewBox={`0 0 ${layout.width} 250`}
             height={250}
             width={layout.width}>

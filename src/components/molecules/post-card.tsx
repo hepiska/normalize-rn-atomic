@@ -1,5 +1,5 @@
-import React, { useState } from 'react'
-import { StyleSheet, Text, View, Linking } from 'react-native'
+import React, { useState, memo } from 'react'
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
 import {
   Div,
   PressAbbleDiv,
@@ -9,12 +9,20 @@ import {
 } from '@components/atoms/basic'
 import ImageAutoSchale from '@components/atoms/image-autoschale'
 import { setImage } from '@utils/helpers'
-import { helveticaNormalFont, fontStyle } from '@components/commont-styles'
+import { Linking } from 'react-native'
+import {
+  helveticaNormalFont,
+  fontStyle,
+  shadows,
+} from '@components/commont-styles'
 import { colors, images as defaultImages } from '@utils/constants'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import IconFa from 'react-native-vector-icons/FontAwesome'
-import { navigate } from '@src/root-navigation'
+import IconMC from 'react-native-vector-icons/MaterialCommunityIcons'
 import Config from 'react-native-config'
+import { navigate } from '@src/root-navigation'
+import Line from '@components/atoms/line'
+import { post } from '@src/modules/normalize-schema'
 
 interface PostListItemType {
   post: any
@@ -30,42 +38,21 @@ interface PostListItemType {
   addBookmarkPost: (postId) => void
   removeBookmarkPost: (postId) => void
   fullscreen?: boolean
-  horizontal?: boolean
   isLiked?: boolean
-  isBookmarked: boolean
+  isBookmarked?: boolean
   style?: any
   isAuth?: boolean
 }
 
-const styles = StyleSheet.create({
-  image: {
-    borderRadius: 8,
+const fullscreenstyles = StyleSheet.create({
+  sectionContainer: {
+    flexDirection: 'row',
+    marginVertical: 8,
+    marginHorizontal: 16,
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
-  postHorizontal: {
-    width: 246,
-    height: 164,
-  },
-  postVertical: {
-    width: 200,
-  },
-  touchableDiv: {
-    overflow: 'hidden',
-    marginRight: 16,
-    alignItems: 'flex-start',
-    justifyContent: 'flex-start',
-    height: 'auto',
-    width: 246,
-  },
-
-  tags: {
-    position: 'absolute',
-    right: 16,
-    top: 16,
-  },
-  // helvetica14: {
-  //   ...fontStyle.helvetica,
-  //   size: 14,
-  // }
+  rowContainer: { flexDirection: 'row', alignItems: 'center' },
 })
 
 const userImageStyle = StyleSheet.create({
@@ -94,12 +81,437 @@ const renderIconType = type => {
   }
 }
 
-class PostListItem extends React.PureComponent<PostListItemType, any> {
-  state = {
-    defaultImage: null,
-    isPostLiked: this.props.isLiked,
-  }
+const FullscreenCard = ({
+  user,
+  width,
+  post,
+  isLiked,
+  isBookmarked,
+  onLayout,
+  style,
+  onPress,
+  onUserPress,
+  onShare,
+  // goToUser,
+  goToUsers,
+  onLike,
+  onBookmark,
+}: any) => {
+  const maxTitile = 3000
+  const maxSubtitle = 200
+  const title =
+    post.title.length > maxTitile
+      ? post.title.substring(0, maxTitile) + '...'
+      : post.title
 
+  const subtitle =
+    post.subtitle &&
+    post.subtitle !== undefined &&
+    post.subtitle.length > maxSubtitle
+      ? post.subtitle.substring(0, maxSubtitle) + '...'
+      : null
+  return (
+    <View
+      style={{
+        // borderWidth: 1,
+        // overflow: 'hidden',
+
+        backgroundColor: 'white',
+        // borderColor: colors.black10,
+        ...style,
+      }}
+      onLayout={onLayout}>
+      <Line />
+      {user && (
+        <View style={{ ...fullscreenstyles.sectionContainer }}>
+          <TouchableOpacity onPress={onUserPress(user)}>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+              }}>
+              <Image
+                source={{
+                  uri: setImage(user.photo_url, { width: 64 }),
+                }}
+                style={{
+                  width: 32,
+                  height: 32,
+                  borderRadius: 16,
+                  marginRight: 8,
+                }}
+              />
+
+              <Text
+                style={{
+                  ...fontStyle.helveticaBold,
+                  fontSize: 14,
+                  color: colors.black100,
+                }}>
+                {user.username}
+              </Text>
+            </View>
+          </TouchableOpacity>
+          <IconFa name="ellipsis-h" size={16} />
+        </View>
+      )}
+      {width && (
+        <View style={{ marginBottom: 8 }}>
+          <TouchableWithoutFeedback onPress={onPress}>
+            <ImageAutoSchale
+              source={{
+                uri: setImage(post.image_url, { width: width }),
+              }}
+              errorStyle={{ width: width, height: width * 0.66 }}
+              containerStyle={{ width: width, height: width * 0.66 }}
+              thumbnailSource={{
+                uri: setImage(post.image_url, { width: 32, height: 32 }),
+              }}
+              width={width}
+            />
+          </TouchableWithoutFeedback>
+        </View>
+      )}
+      <View style={{ ...fullscreenstyles.sectionContainer, marginVertical: 0 }}>
+        <Text
+          style={{
+            ...fontStyle.helvetica,
+            fontSize: 10,
+            color: colors.black70,
+          }}>
+          {post.post_type.toUpperCase()}
+        </Text>
+      </View>
+      <View style={{ ...fullscreenstyles.sectionContainer }}>
+        <Text
+          style={{
+            ...fontStyle.playfairMedium,
+            fontSize: 18,
+            lineHeight: 25,
+            color: colors.black100,
+          }}>
+          {title}
+        </Text>
+      </View>
+      {/* {post.tags && (
+        <View
+          style={{
+            marginTop: 0,
+            marginBottom: 8,
+            marginHorizontal: 16,
+            flexDirection: 'row',
+          }}>
+          {post.tags?.map((tag, idx) => (
+            <Text
+              key={idx}
+              style={{
+                ...fontStyle.helveticaThin,
+                fontSize: 12,
+                marginRight: 4,
+              }}>
+              {tag.title}
+            </Text>
+          ))}
+        </View>
+      )} */}
+      {subtitle && (
+        <View
+          style={{
+            marginTop: 0,
+            marginBottom: 8,
+            marginHorizontal: 16,
+            flexDirection: 'row',
+          }}>
+          <Text
+            style={{
+              ...fontStyle.helveticaThin,
+              fontSize: 12,
+              marginRight: 4,
+              color: colors.black80,
+            }}>
+            {subtitle}
+          </Text>
+        </View>
+      )}
+      <View
+        style={{
+          ...fullscreenstyles.sectionContainer,
+        }}>
+        <View style={fullscreenstyles.rowContainer}>
+          <View style={{ ...fullscreenstyles.rowContainer, marginRight: 24 }}>
+            <IconFa
+              name={isLiked ? 'heart' : 'heart-o'}
+              onPress={onLike}
+              size={20}
+              color={isLiked ? colors.red2 : colors.black80}
+            />
+            <Font size="10.5px" color={colors.black80} padd="0 0 0 8px">
+              {post.like_count}
+            </Font>
+          </View>
+          <View style={fullscreenstyles.rowContainer}>
+            <IconFa
+              name="comment-o"
+              onPress={onLike}
+              size={20}
+              color={colors.black80}
+            />
+            <Font size="10.5px" color={colors.black80} padd="0 0 0 8px">
+              {post.comment_count}
+            </Font>
+          </View>
+        </View>
+
+        <View style={fullscreenstyles.rowContainer}>
+          <IconMC
+            name="share-outline"
+            size={20}
+            onPress={onShare}
+            color={colors.black70}
+          />
+          <IconMC
+            name={isBookmarked ? 'bookmark' : 'bookmark-outline'}
+            size={20}
+            style={{ marginLeft: 26 }}
+            onPress={onBookmark}
+            color={colors.black70}
+          />
+        </View>
+      </View>
+      {post.likes && (
+        <View
+          style={{
+            ...fullscreenstyles.sectionContainer,
+            marginTop: 0,
+            justifyContent: 'flex-start',
+          }}>
+          <TouchableOpacity
+            style={fullscreenstyles.rowContainer}
+            onPress={goToUsers}>
+            {post.likes.map((_like, idx) => {
+              const img = _like.user.photo_url
+              return (
+                <View
+                  key={`user-saved-${idx}`}
+                  style={{
+                    borderColor: colors.white,
+                    borderRadius: 20,
+                    borderWidth: 1,
+                    marginLeft: idx !== 0 ? -16 : 0,
+                  }}>
+                  <Image
+                    key={`image-user-saved-${idx}`}
+                    source={
+                      img
+                        ? { uri: img }
+                        : require('@src/assets/placeholder/placeholder2.jpg')
+                    }
+                    style={{
+                      width: 20,
+                      height: 20,
+                      borderRadius: 10,
+                    }}
+                  />
+                </View>
+              )
+            })}
+          </TouchableOpacity>
+          <View style={{ ...fullscreenstyles.rowContainer, marginLeft: 8 }}>
+            <Text
+              style={{
+                ...fontStyle.helveticaThin,
+                fontSize: 12,
+                marginRight: 4,
+              }}>
+              Liked By
+            </Text>
+            <TouchableOpacity onPress={onUserPress(post.likes[0].user)}>
+              <Text
+                style={{
+                  ...fontStyle.helvetica,
+                  fontSize: 12,
+                  marginRight: 4,
+                  color: colors.black100,
+                }}>
+                {post.likes[0].user.username}
+              </Text>
+            </TouchableOpacity>
+            {post && post.likes.length > 1 && (
+              <>
+                <Text
+                  style={{
+                    ...fontStyle.helveticaThin,
+                    fontSize: 12,
+                    marginRight: 4,
+                  }}>
+                  and
+                </Text>
+                <TouchableOpacity onPress={goToUsers}>
+                  <Text
+                    style={{
+                      ...fontStyle.helvetica,
+                      fontSize: 12,
+                      marginRight: 4,
+                    }}>
+                    {`${post.likes.length - 1} others`}
+                  </Text>
+                </TouchableOpacity>
+              </>
+            )}
+          </View>
+        </View>
+      )}
+    </View>
+  )
+}
+
+const VerticalCart = ({
+  user,
+  width,
+  post,
+  isLiked,
+  onLayout,
+  style,
+  onPress,
+  onShare,
+  onLike,
+}: any) => {
+  const maxTitile = 3000
+  const title =
+    post.title.length > maxTitile
+      ? post.title.substring(0, maxTitile) + '...'
+      : post.title
+  return (
+    <View
+      style={{
+        paddingVertical: 4,
+        paddingHorizontal: 1,
+        // borderWidth: 1,
+        borderRadius: 8,
+        shadowColor: colors.black100,
+        shadowOffset: {
+          width: 0,
+          height: 1,
+        },
+        backgroundColor: 'white',
+        shadowRadius: 1,
+        shadowOpacity: 0.18,
+        elevation: 1,
+        // borderColor: colors.black10,
+        ...style,
+      }}
+      onLayout={onLayout}>
+      {user && (
+        <View
+          style={{
+            flexDirection: 'row',
+            marginVertical: 4,
+            marginHorizontal: 8,
+          }}>
+          <TouchableOpacity>
+            <Image
+              source={{
+                uri: setImage(user.photo_url, { width: 24 }),
+              }}
+              style={{
+                width: 16,
+                height: 16,
+                borderRadius: 8,
+                marginRight: 8,
+              }}
+            />
+          </TouchableOpacity>
+
+          <Text
+            style={{
+              ...fontStyle.helveticaBold,
+              fontSize: 10,
+              color: colors.black80,
+            }}>
+            {user.username}
+          </Text>
+        </View>
+      )}
+      {width && (
+        <View
+          style={{
+            marginVertical: 4,
+            overflow: 'hidden',
+          }}>
+          <TouchableWithoutFeedback onPress={onPress}>
+            <ImageAutoSchale
+              source={{
+                uri: setImage(post.image_url, { width: width }),
+              }}
+              errorStyle={{ width: width, height: width * 0.66 }}
+              containerStyle={{ width: width, height: width * 0.66 }}
+              thumbnailSource={{
+                uri: setImage(post.image_url, { width: 12, height: 12 }),
+              }}
+              width={width}
+            />
+          </TouchableWithoutFeedback>
+        </View>
+      )}
+      <View style={{ marginVertical: 4, marginBottom: 5, marginHorizontal: 8 }}>
+        <Text
+          style={{
+            ...fontStyle.playfair,
+            fontSize: 10,
+            lineHeight: 12,
+            color: colors.black100,
+          }}>
+          {title}
+        </Text>
+      </View>
+      <View
+        style={{
+          flexDirection: 'row',
+          marginVertical: 4,
+          marginHorizontal: 8,
+          justifyContent: 'space-between',
+        }}>
+        <View style={{ flexDirection: 'row' }}>
+          <IconFa
+            name="heart"
+            onPress={onLike}
+            size={16}
+            color={isLiked ? colors.red2 : colors.black50}
+          />
+          <Font size="10.5px" color={colors.black70} padd="0 0 0 4px">
+            {post.like_count}
+          </Font>
+        </View>
+
+        <IconMC
+          name="share-outline"
+          size={16}
+          onPress={onShare}
+          color={colors.black70}
+        />
+      </View>
+    </View>
+  )
+}
+
+const MemVerticalCard = memo(VerticalCart)
+const MemFullSizeCard = memo(FullscreenCard)
+
+class PostListItem extends React.Component<PostListItemType, any> {
+  state: any = {
+    isPostLiked: this.props.isLiked,
+    width: null,
+    isPostBookmarked: this.props.isBookmarked,
+  }
+  shouldComponentUpdate(nextProps, nextState) {
+    if (this.state.isPostLiked !== nextState.isPostLiked) {
+      return true
+    }
+    if (nextState.width !== this.state.width) {
+      return true
+    }
+    return false
+  }
   _onPress = () => {
     const { post, ...props } = this.props
 
@@ -170,6 +582,20 @@ class PostListItem extends React.PureComponent<PostListItemType, any> {
   //   })
   // }
 
+  _onLayout = e => {
+    if (!this.state.width) {
+      this.setState({ width: e.nativeEvent.layout.width })
+    }
+  }
+
+  _goToUsers = () => {
+    const { post } = this.props
+    navigate('modals', {
+      screen: 'LikeList',
+      params: { postId: post.id },
+    })
+  }
+
   _goToUser = user => () => {
     if (!this.props.onUserPress) {
       navigate('Screens', {
@@ -186,136 +612,48 @@ class PostListItem extends React.PureComponent<PostListItemType, any> {
       idx,
       onPress,
       onUserPress,
-      horizontal = false,
+      fullscreen = false,
       style,
       type = 'default',
-      isLiked,
     } = this.props
-    const { isPostLiked } = this.state
-
-    let width = 246
-    if (!horizontal && style) {
-      const composeStyle = { ...style }
-
-      const margin = composeStyle.marginRight
-        ? Number(composeStyle.marginRight)
-        : Number(composeStyle.paddingHorizontal) * 2
-
-      width = Number(composeStyle.width) - margin
-      width = composeStyle.wrappermargin
-        ? width - composeStyle.wrappermargin
-        : width
-    }
-
-    const image =
-      this.state.defaultImage ||
-      (!!post.image_url &&
-        setImage(post.image_url, horizontal ? { width } : { width }))
-
-    if (post && user) {
-      return (
-        <TouchableWithoutFeedback onPress={onPress}>
-          <Div
-            style={
-              horizontal
-                ? {
-                    ...style,
-                    ...styles.touchableDiv,
-                    marginLeft: idx === 0 ? 16 : 0,
-                  }
-                : {
-                    ...style,
-                    width,
-                    marginTop: idx >= 2 ? 24 : 0,
-                  }
-            }>
-            {(post.post_type !== 'default' || post.post_type) && (
-              <PressAbbleDiv
-                style={styles.tags}
-                zIndex="2"
-                _background="rgba(26, 26, 26, 0.8)"
-                _width="24px"
-                _height="24px"
-                borderRadius="20px"
-                onPress={() =>
-                  console.log('tags pressed')
-                } /* revisi: diganti dengan navigation / action tags */
-              >
-                <Icon
-                  name={renderIconType(post.post_type)}
-                  size={12}
-                  color={colors.white}
-                />
-              </PressAbbleDiv>
-            )}
-
-            <ImageAutoSchale
-              source={typeof image === 'string' ? { uri: image } : image}
-              errorStyle={{ width, height: 0.66 * width }}
-              width={width}
-              style={styles.image}
-            />
-            <React.Fragment>
-              <Div _width="100%" align="flex-start">
-                <View style={{ marginTop: 8 }}>
-                  <Text
-                    style={{
-                      ...fontStyle.playfairBold,
-                      fontSize: type === 'large' ? 20 : 12,
-                      color: colors.black100,
-                    }}>
-                    {post.title}
-                  </Text>
-                </View>
-              </Div>
-
-              <Div
-                _width="100%"
-                mar="8px 0 0 0"
-                justify="space-between"
-                flexDirection="row">
-                <PressAbbleDiv
-                  flexDirection="row"
-                  onPress={this._goToUser(user)}>
-                  <ImageAutoSchale
-                    source={
-                      typeof user.photo_url === 'string'
-                        ? { uri: user.photo_url }
-                        : user.photo_url
-                    }
-                    // onError={() => {
-                    //   this.setState({ defaultImage: defaultImages.product })
-                    // }}
-                    style={userImageStyle[type] || userImageStyle['default']}
-                  />
-                  <Font
-                    style={{ ...fontStyle.futuraDemi, fontWeight: '500' }}
-                    size={type === 'large' ? '16px' : '10.5px'}
-                    weight={type === 'large' ? 'bold' : 'normal'}
-                    color={type === 'large' ? colors.black100 : colors.black70}
-                    padd="0 0 0 3px">
-                    {user.name}
-                  </Font>
-                </PressAbbleDiv>
-                <PressAbbleDiv flexDirection="row" onPress={this._onLike}>
-                  <IconFa
-                    name="heart"
-                    size={16}
-                    color={isPostLiked ? colors.black100 : colors.black50}
-                  />
-                  <Font
-                    style={{ ...fontStyle.helvetica }}
-                    size="14px"
-                    color={colors.black100}
-                    padd="0 0 0 4px">
-                    {post.like_count}
-                  </Font>
-                </PressAbbleDiv>
-              </Div>
-            </React.Fragment>
-          </Div>
-        </TouchableWithoutFeedback>
-      )
+    const { width, isPostLiked, isPostBookmarked } = this.state
+    if (post) {
+      if (fullscreen) {
+        return (
+          <FullscreenCard
+            onPress={onPress}
+            onUserPress={this._goToUser}
+            post={post}
+            user={user}
+            goToUsers={this._goToUsers}
+            // goToUser={this._goToUser}
+            onLike={this._onLike}
+            width={width}
+            style={style}
+            type={type}
+            onBookmark={this._onBookmark}
+            onShare={this._onShare}
+            onLayout={this._onLayout}
+            isLiked={isPostLiked}
+            isBookmarked={isPostBookmarked}
+          />
+        )
+      } else {
+        return (
+          <MemVerticalCard
+            onPress={this._onPress}
+            post={post}
+            user={user}
+            onLike={this._onLike}
+            width={width}
+            style={style}
+            type={type}
+            onShare={this._onShare}
+            onLayout={this._onLayout}
+            isLiked={isPostLiked}
+          />
+        )
+      }
     }
     return null
   }

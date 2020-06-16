@@ -1,11 +1,17 @@
 import { connect } from 'react-redux'
+import { makeSelectedOrder } from '@src/modules/order/selector'
+import { makeSelectedProducts } from '@src/modules/product/selector'
+import { makeSelectedBrands } from '@src/modules/brand/selector'
 
 const orderListMap = (state, ownProps) => {
-  const orderId = ownProps.orderId
-  const order = state.orders.data[orderId]
+  const getOrders = makeSelectedOrder()
+  const getProducts = makeSelectedProducts()
+  const getBrands = makeSelectedBrands()
+
+  const order = getOrders(state, ownProps.orderId)
   const products = order?.product
-  const oneProduct = state.products.data[products[0]]
-  const brand = state.brands.data[oneProduct.brand]
+  const oneProduct = getProducts(state, products[0])
+  const brand = getBrands(state, oneProduct.brand)
 
   return {
     order,

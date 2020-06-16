@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { View, ViewStyle, Dimensions, Text, SafeAreaView } from 'react-native'
 import ContentLoader from 'react-content-loader/native'
 import { Rect } from 'react-native-svg'
+import { shimmerLoader } from '@utils/constants'
 
 interface LoaderPropsType {
   style?: ViewStyle
@@ -20,6 +21,7 @@ const AddressDetailLoader = (props: LoaderPropsType) => {
       onLayout={_setLayout}>
       {layout && (
         <ContentLoader
+          {...shimmerLoader}
           viewBox={`0 0 ${layout.width} 150`}
           height={150}
           width={layout.width}>

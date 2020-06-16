@@ -10,11 +10,11 @@ import { setImage } from '@utils/helpers'
 import { helveticaBlackTitleBold } from '@components/commont-styles'
 import { colors } from '@utils/constants'
 import { Button } from '@components/atoms/button'
+import { navigate } from '@src/root-navigation'
 
 interface BrandCardType {
   brand: any
   idx: any
-  onPress: () => void
   imageOnly: boolean
 }
 
@@ -52,11 +52,20 @@ const styles = StyleSheet.create({
 })
 
 class BrandCard extends React.PureComponent<BrandCardType, any> {
+  handleOnPress = () => {
+    const { brand } = this.props
+    navigate('Screens', {
+      screen: 'ProductList',
+      params: {
+        brandsId: brand.id,
+        from: 'brands',
+      },
+    })
+  }
   render() {
-    const { brand, idx, onPress, imageOnly } = this.props
-
+    const { brand, idx, imageOnly } = this.props
     return brand ? (
-      <TouchableWithoutFeedback onPress={onPress}>
+      <TouchableWithoutFeedback onPress={this.handleOnPress}>
         <Div
           style={{
             ...styles.touchableDiv,

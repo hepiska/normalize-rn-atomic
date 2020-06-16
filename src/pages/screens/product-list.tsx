@@ -17,11 +17,11 @@ import NavbarTop from '@components/molecules/navbar-top'
 import ProductCard from '@components/molecules/product-card-new'
 import { productListData } from '@hocs/data/product'
 import { getBrand } from '@modules/brand/action'
+import { batch } from 'react-redux'
 import FilterTriger from '@components/organisms/product-filter-buttons'
 import { futuraTitleFont, fontStyle } from '@components/commont-styles'
 import { getCollectionBySlug } from '@modules/collection/action'
 import { getCategory } from '@modules/category/action'
-import { deepClone } from '@utils/helpers'
 import { colors } from '@utils/constants'
 import { setImage } from '@utils/helpers'
 import ErrorOrg from '@src/components/organisms/four-o-four'
@@ -29,6 +29,10 @@ import ProductEmpty from '@components/organisms/product-empty'
 import ProductListLoader from '@components/atoms/loaders/two-column-card'
 import ProductHeader from '@components/atoms/loaders/product-list-header'
 import ProductListPageLoader from '@components/atoms/loaders/product-list'
+import { makeDeepClone } from '@modules/selector-general'
+import { makeflatenFilter } from '@modules/product-filter/selector'
+import TwoCollumnCardLoaderSmall from '@components/atoms/loaders/two-column-card-small'
+
 import {
   addFilterData,
   clearFilter,
@@ -86,7 +90,6 @@ class Productlist extends Component<any, any> {
   componentDidMount() {
     const { route, brand, category, getCategory } = this.props
     this.unlisten = this.props.navigation.addListener('focus', () => {
-      console.log('==========focus', laspost)
       if (this.scroll) {
         this.scroll.scrollToLocation({
           animated: false,
@@ -165,9 +168,12 @@ class Productlist extends Component<any, any> {
   }
 
   componentWillUnmount() {
-    this.props.resetSelectedCollection()
-    this.props.clearActivePage()
-    this.props.clearFilter()
+    batch(() => {
+      this.props.resetSelectedCollection()
+      this.props.clearActivePage()
+      this.props.clearFilter()
+    })
+
     if (this.unlisten) {
       this.unlisten()
     }
@@ -187,42 +193,49 @@ class Productlist extends Component<any, any> {
     } = this.props
 
     if (collection) {
-      setFilter({
-        categories: collection.categories,
-        prices: {
-          maximum_price: collection.max_price,
-          minimum_price: collection.min_price,
-        },
+      batch(() => {
+        setFilter({
+          categories: collection.categories,
+          prices: {
+            maximum_price: collection.max_price,
+            minimum_price: collection.min_price,
+          },
+        })
+        setSelectedCollection(collection.id)
+        setBrandFilter(collection.brands)
+        setActivePage({ type: 'collection_ids', ids: [collection.id] })
       })
-      setSelectedCollection(collection.id)
-      setBrandFilter(collection.brands)
-      setActivePage({ type: 'collection_ids', ids: [collection.id] })
 
       this._freshfetch()
     } else if (brand) {
-      setFilter({
-        categories: brand.categories || [],
-        prices: {
-          maximum_price: brand.price_max,
-          minimum_price: brand.price_min,
-        },
+      batch(() => {
+        setFilter({
+          categories: brand.categories || [],
+          prices: {
+            maximum_price: brand.price_max,
+            minimum_price: brand.price_min,
+          },
+        })
+        changeSelectedBrand(brand.id)
+        setBrandFilter(brand.brands || [])
+        setActivePage({ type: 'brand_ids', ids: [brand.id] })
       })
-      changeSelectedBrand(brand.id)
-      setBrandFilter(brand.brands || [])
-      setActivePage({ type: 'brand_ids', ids: [brand.id] })
 
       this._freshfetch()
     } else if (category) {
-      setFilter({
-        categories: category.categories,
-        prices: {
-          maximum_price: category.price_max,
-          minimum_price: category.price_min,
-        },
+      batch(() => {
+        setFilter({
+          categories: category.categories,
+          prices: {
+            maximum_price: category.price_max,
+            minimum_price: category.price_min,
+          },
+        })
+        // changeSelectedCategory(category.id)
+        setActivePage({ type: 'category_ids', ids: [category.id] })
+        setBrandFilter(category.brands)
       })
-      // changeSelectedCategory(category.id)
-      setActivePage({ type: 'category_ids', ids: [category.id] })
-      setBrandFilter(category.brands)
+
       this._freshfetch()
     }
   }
@@ -432,7 +445,7 @@ class Productlist extends Component<any, any> {
   }
 
   onCheckViewableItems = ({ viewableItems, changed }) => {
-    if (viewableItems[0].index) {
+    if (viewableItems[0] && viewableItems[0].index) {
       laspost = viewableItems[0].index
     }
   }
@@ -441,8 +454,10 @@ class Productlist extends Component<any, any> {
     const { loading } = this.props
 
     return (
-      <View style={{ height: 300 }}>
-        {loading && <ProductListLoader style={{ margin: 16 }} />}
+      <View style={{ height: 286 }}>
+        {loading && this.skip > 0 && (
+          <TwoCollumnCardLoaderSmall style={{ margin: 16 }} />
+        )}
       </View>
     )
   }
@@ -560,9 +575,10 @@ const mapDispatchToProps = dispatch =>
   )
 
 const mapStateToProps = (state, { route }) => {
+  const deepClone = makeDeepClone()
+  const flatenFilter = makeflatenFilter()
   let appliedFilters = deepClone(state.productFilter.applied)
-  appliedFilters = { ...appliedFilters, ...appliedFilters.prices }
-  delete appliedFilters.prices
+  appliedFilters = flatenFilter(appliedFilters)
 
   const collectionId =
     route.params.collectionId || state.collection.activeCollection

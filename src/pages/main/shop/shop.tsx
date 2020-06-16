@@ -19,6 +19,7 @@ import { onScroll } from 'react-native-redash'
 import NavbarTopAnimated from '@components/molecules/navbar-top-animated'
 import FeaturedCategory from '@components/organisms/featured-category'
 import ShopLoader from '@components/atoms/loaders/shop'
+import { makeGetShopPage } from '@modules/page/selector'
 
 const styles = StyleSheet.create({
   container: {
@@ -155,19 +156,9 @@ const mapDispatchToProps = dispatch =>
   )
 
 const mapStateToProps = state => {
-  let denormalizedPage: any = {}
-  if (state.page.data.shop) {
-    denormalizedPage = deepClone(state.page.data.shop)
-    denormalizedPage.section = denormalizedPage.section
-      .map(sectionId => state.page.section[sectionId])
-      .sort((a, b) => {
-        if (a.order > b.order) return 1
-        if (a.order < b.order) return -1
-        return 0
-      })
-  }
+  const getShopPage = makeGetShopPage()
 
-  return { page: denormalizedPage, loading: state.page.loading.shop }
+  return { page: getShopPage(state), loading: state.page.loading.shop }
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ShopPage)

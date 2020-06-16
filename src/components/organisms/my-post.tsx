@@ -6,7 +6,7 @@ import List from '@components/layouts/list-header'
 import { capitalEachWord } from '@utils/helpers'
 import SearchFilter from '@components/organisms/search-filter'
 import { getUserPosts } from '@modules/user-post/action'
-import PostListItem from '@src/components/molecules/post-card-new'
+import PostListItem from '@src/components/molecules/post-card'
 import { postListData } from '@hocs/data/post'
 import EmtyState from '@components/molecules/order-empty-state'
 

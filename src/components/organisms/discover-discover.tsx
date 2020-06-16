@@ -6,7 +6,7 @@ import List from '@components/layouts/list-header'
 import { capitalEachWord } from '@utils/helpers'
 import { getUserPosts } from '@modules/user-post/action'
 import { fetchDicover } from '@modules/post-discover/action'
-import PostListItem from '@src/components/molecules/post-card-new'
+import PostListItem from '@src/components/molecules/post-card'
 import { postListData } from '@hocs/data/post'
 import EmtyState from '@components/molecules/order-empty-state'
 import { colors } from '@utils/constants'
@@ -131,10 +131,12 @@ class DiscoverOrg extends React.Component<any, any> {
   _renderfooter = () => {
     const { loading } = this.props
     // const firsLoading = loading && !this.skip
-    if (loading) {
-      return <TwoColumnListLoader />
-    }
-    return null
+
+    return (
+      <View style={{ height: 600 }}>
+        {loading && this.skip > 0 && <TwoColumnListLoader />}
+      </View>
+    )
   }
 
   render() {

@@ -1,7 +1,7 @@
 import React from 'react'
 import { FlatList } from 'react-native'
 
-class Column extends React.Component<any, any> {
+class Column extends React.PureComponent<any, any> {
   _renderItem = () => {}
   _keyExtractor = (item, index): string => {
     return (

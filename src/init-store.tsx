@@ -4,7 +4,6 @@ import { Provider } from 'react-redux'
 // import { routerMiddleware } from 'react-router-redux'
 import { NavigationContainer } from '@react-navigation/native'
 import { isMountedRef, navigationRef } from './root-navigation'
-const createHistory = require('history').createMemoryHistory
 import rootReducer from '@modules/index'
 import { composeWithDevTools } from 'redux-devtools-extension'
 import apiMidleware from '@modules/middleware/api'
@@ -15,16 +14,14 @@ import OneSignal from 'react-native-onesignal'
 import Pages from '@pages/index'
 import Config from 'react-native-config'
 import SplashScreen from 'react-native-splash-screen'
-export const history = createHistory()
+import { enableScreens } from 'react-native-screens'
+
+enableScreens()
 
 // initial store
 const initialState = {}
 const enhancers = []
-const middleware = [
-  // routerMiddleware(history),
-  apiMidleware,
-  multidipacerMidleware,
-]
+const middleware = [apiMidleware, multidipacerMidleware]
 
 export let presist = null
 export let store = null

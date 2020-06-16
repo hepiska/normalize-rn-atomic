@@ -6,14 +6,13 @@ import {
   getUserAddressById,
 } from '@modules/address/action'
 import { removeCheckoutAddressData } from '@modules/checkout/action'
+import { makeSelectedAddresses } from '@src/modules/address/selector'
 
 const addressListMap = (state, ownProps) => {
-  const { addressId } = ownProps
-  let address = null
-  if (addressId) {
-    address = state.addresses.data[addressId]
-  }
+  const getSelectedAddresses = makeSelectedAddresses()
+  const address = getSelectedAddresses(state, ownProps)
 
+  if (!address) return null
   return {
     address,
   }

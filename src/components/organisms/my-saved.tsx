@@ -9,7 +9,7 @@ import { getUserPosts } from '@modules/user-post/action'
 import { getPostLiked } from '@modules/post-liked/action'
 import Animated, { interpolate, Extrapolate } from 'react-native-reanimated'
 import { getProductSaved } from '@modules/product-saved/action'
-import PostListItem from '@src/components/molecules/post-card-new'
+import PostListItem from '@src/components/molecules/post-card'
 // import ProductCard from '@src/components/molecules/product-card'
 import ProductCard from '@src/components/molecules/product-card-new'
 

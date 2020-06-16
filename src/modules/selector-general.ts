@@ -7,3 +7,10 @@ export const makeCloneProduct = () =>
   createSelector([getProduct], product => {
     return deepClone(product)
   })
+
+const getData = data => data
+
+export const makeDeepClone = () =>
+  createSelector([getData], data => {
+    return deepClone(data)
+  })

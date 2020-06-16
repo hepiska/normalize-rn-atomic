@@ -3,11 +3,12 @@ import {
   ViewStyle,
   StyleSheet,
   View,
-  TouchableWithoutFeedback,
+  // TouchableWithoutFeedback,
   TouchableOpacity,
   Text,
 } from 'react-native'
 import ImageAutoSchale from '@components/atoms/image-autoschale'
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import IconFa from 'react-native-vector-icons/FontAwesome'
 import { colors, images as defaultImages } from '@utils/constants'
@@ -425,6 +426,7 @@ const ProductCardVertical = ({
                   ? { uri: thumbnailImage }
                   : thumbnailImage
               }
+              containerStyle={{ width: layout.width, height: 200 }}
               source={typeof image === 'string' ? { uri: image } : image}
               width={layout.width}
               height={1.5 * layout.width}

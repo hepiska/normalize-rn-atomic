@@ -51,7 +51,7 @@ class SelectAbleItem extends React.PureComponent<SelectAbleItemType, any> {
     this.setState({ isSelected: !this.state.isSelected }, () => {
       setTimeout(() => {
         onPress(item)
-      }, 300)
+      }, 600)
     })
   }
 
