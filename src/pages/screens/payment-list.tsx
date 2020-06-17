@@ -178,6 +178,18 @@ class PaymentList extends Component<any, any> {
     )
   }
 
+  _renderFooter = () => {
+    const { transactionLoading } = this.props
+
+    return (
+      <View style={{ height: 360 }}>
+        {transactionLoading && this.skip !== 0 && (
+          <PaymentListPageLoader style={{ margin: 16 }} />
+        )}
+      </View>
+    )
+  }
+
   _keyExtractor = (item, id) => `trans-${item} -${id}`
   render() {
     const { transactions, transactionLoading } = this.props
@@ -193,6 +205,7 @@ class PaymentList extends Component<any, any> {
               refreshing={transactionLoading}
               ListHeaderComponent={this._renderFilter}
               ListEmptyComponent={this._emptyComponent}
+              ListFooterComponent={this._renderFooter}
               data={transactions}
               onEndReached={this._fetchMore}
               onEndReachedThreshold={0.99}

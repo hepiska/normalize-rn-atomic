@@ -2,7 +2,6 @@ import React from 'react'
 import {
   View,
   Text,
-  FlatList,
   TouchableWithoutFeedback,
   Dimensions,
   ViewStyle,
@@ -12,7 +11,6 @@ import {
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import { colors } from '@src/utils/constants'
 import { fontStyle } from '../commont-styles'
-import { TouchableOpacity } from 'react-native-gesture-handler'
 const { width } = Dimensions.get('screen')
 const margin = 8
 const widthCard = width / 3 - margin * 2

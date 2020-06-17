@@ -15,6 +15,8 @@ import ProductCard from '@src/components/molecules/product-card-new'
 
 import { postListData } from '@hocs/data/post'
 import { productListData } from '@hocs/data/product'
+import TwoColumnListLoader from '../atoms/loaders/two-column-card'
+import PostLoader from '@components/atoms/loaders/post-card'
 
 import EmtyState from '@components/molecules/order-empty-state'
 
@@ -150,15 +152,17 @@ class MySavedProduct extends React.Component<any, any> {
       return (
         <ProductItem
           style={
-            index / 2 === 0
+            index % 2 === 0
               ? {
                   flex: 1,
                   marginRight: 8,
+                  marginVertical: 8,
                   // width: width / 2 - 16,
                 }
               : {
                   flex: 1,
                   marginLeft: 8,
+                  marginVertical: 8,
                   // width: width / 2 - 16,
                 }
           }
@@ -193,6 +197,16 @@ class MySavedProduct extends React.Component<any, any> {
     if (e.nativeEvent.contentOffset.y < 2) {
       this.props.disableScroll && this.props.disableScroll()
     }
+  }
+
+  _renderFooter = () => {
+    const { selectedFilter } = this.state
+    const selected = selectedFilter[0]
+
+    if (selected === 'products') {
+      return <TwoColumnListLoader />
+    }
+    return <PostLoader />
   }
 
   render() {
@@ -245,6 +259,7 @@ class MySavedProduct extends React.Component<any, any> {
           layoutType={this._getLayout()}
           columnStyle={{ flex: 1, marginHorizontal: 8 }}
           numColumns={2}
+          mansoryLoader={this._renderFooter}
           {...props}
           ListFooterComponent={<View style={{ height: 200 }} />}
           renderItem={this._renderItem}

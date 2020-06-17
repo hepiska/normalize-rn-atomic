@@ -21,6 +21,7 @@ import { productListData } from '@hocs/data/product'
 // import ProductCard from '@components/molecules/product-card'
 import ProductCard from '@components/molecules/product-card-new'
 import SearchListLoader from '@src/components/atoms/loaders/search-list'
+import TwoCollumnCardLoaderSmall from '@components/atoms/loaders/two-column-card-small'
 
 const { width } = Dimensions.get('screen')
 
@@ -164,6 +165,18 @@ class SearchList extends Component<any, any> {
     return null
   }
 
+  _renderFooter = () => {
+    const { loading } = this.props
+
+    return (
+      <View style={{ height: 200 }}>
+        {loading && this.skip !== 0 && (
+          <TwoCollumnCardLoaderSmall style={{ margin: 16 }} />
+        )}
+      </View>
+    )
+  }
+
   render() {
     const { dataSearch, loading } = this.props
     const { finishAnimation } = this.state
@@ -183,6 +196,7 @@ class SearchList extends Component<any, any> {
               onEndReached={this._fetchMore}
               onEndReachedThreshold={0.99}
               ListEmptyComponent={this._emptyComponent}
+              ListFooterComponent={this._renderFooter}
               scrollIndicatorInsets={{ right: 1 }}
               stickyHeaderIndices={[0]}
             />

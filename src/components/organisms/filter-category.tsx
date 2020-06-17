@@ -1,12 +1,5 @@
-import React, { Component, useState, memo, PureComponent } from 'react'
-import {
-  Dimensions,
-  FlatList,
-  Modal,
-  StyleSheet,
-  SectionList,
-  View,
-} from 'react-native'
+import React, { PureComponent } from 'react'
+import { Dimensions, StyleSheet, SectionList, View } from 'react-native'
 import { connect, batch } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { colors } from '@utils/constants'
@@ -15,7 +8,6 @@ import {
   fetchCountProduct,
   setSelectedCategory,
 } from '@modules/product-filter/action'
-import { helveticaNormalFont } from '@components/commont-styles'
 import { categoryListData } from '@hocs/data/category'
 import SelectAbleItem, {
   SelectorShapeType,

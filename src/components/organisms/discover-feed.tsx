@@ -152,6 +152,19 @@ class FeedOrg extends React.Component<any, any> {
     }
   }
 
+  _renderFooterLoader = () => {
+    const { loading } = this.props
+    return (
+      <View
+        style={{
+          height: 300,
+          width: '100%',
+        }}>
+        {loading && <Instagram />}
+      </View>
+    )
+  }
+
   render() {
     const { posts, scrollEnabled, loading } = this.props
     const firsLoading = loading && !this.skip
@@ -171,7 +184,7 @@ class FeedOrg extends React.Component<any, any> {
             layoutType="list"
             columnStyle={{ flex: 1, marginHorizontal: 8 }}
             numColumns={2}
-            ListFooterComponent={<View style={{ height: 200 }} />}
+            ListFooterComponent={this._renderFooterLoader}
             renderItem={this._renderItem}
           />
         )}

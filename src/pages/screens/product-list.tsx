@@ -458,6 +458,8 @@ class Productlist extends Component<any, any> {
         {loading && this.skip > 0 && (
           <TwoCollumnCardLoaderSmall style={{ margin: 16 }} />
         )}
+        {/* <View style={{ height: 300, marginVertical: 36 }}>
+        {loading && <ProductListLoader style={{ margin: 16 }} />} */}
       </View>
     )
   }

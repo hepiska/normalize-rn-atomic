@@ -18,6 +18,7 @@ import OrderCard from '@components/molecules/order-card'
 import OrderListLoader from '@components/atoms/loaders/one-column-card'
 import OrderListPageLoader from '@components/atoms/loaders/order-list'
 import OrderEmptyState from '@src/components/molecules/order-empty-state'
+import OneColumnListLoader from '@components/atoms/loaders/one-column-card'
 
 const OrderHoc = orderListData(OrderCard)
 
@@ -164,6 +165,15 @@ class OrderList extends Component<any, any> {
       />
     )
   }
+  _renderFooter = () => {
+    const { loading } = this.props
+
+    return (
+      <View style={{ height: 360, marginVertical: 32 }}>
+        {loading && this.skip !== 0 && <OneColumnListLoader />}
+      </View>
+    )
+  }
 
   _keyExtractor = (item, index) => '' + item + index
   render() {
@@ -187,22 +197,9 @@ class OrderList extends Component<any, any> {
               onEndReached={this._fetchMore}
               onEndReachedThreshold={0.99}
               ListEmptyComponent={this._emptyComponent}
+              ListFooterComponent={this._renderFooter}
               scrollIndicatorInsets={{ right: 1 }}
             />
-            {/* {this.props.loading && (
-              <View
-                style={{
-                  position: 'absolute',
-                  bottom: 0,
-                  left: 0,
-                  justifyContent: 'center',
-                  width: '100%',
-                  backgroundColor: 'rgba(0,0,0,0.3)',
-                  height: 64,
-                }}>
-                <InviniteLoader />
-              </View>
-            )} */}
           </View>
         ) : (
           <OrderListPageLoader style={{ margin: 16 }} />
