@@ -90,7 +90,7 @@ const FilterTriger = (props: any) => {
         showsHorizontalScrollIndicator={false}>
         <Button
           title="All Filters"
-          onPress={_openFilter()}
+          onPress={_openFilter('category')}
           fontStyle={{ color: colors.white }}
           style={{ marginRight: 8, backgroundColor: colors.black100 }}
           leftIcon={

@@ -14,6 +14,7 @@ const initialState = {
   activePage: {},
   selected: {
     collection_ids: '',
+    brand_ids: '',
     prices: {
       maximum_price: 10000000,
       minimum_price: 0,
@@ -21,6 +22,7 @@ const initialState = {
   },
   applied: {
     collection_ids: '',
+    brand_ids: '',
     prices: {
       maximum_price: 10000000,
       minimum_price: 0,
@@ -98,15 +100,16 @@ const productFilterReducer: Reducer<any> = (
       return newState
 
     case productFilterType.CHANGE_SELECTED_CATEGORY:
-      if (!selected.category_ids) {
-        selected.category_ids = ',' + action.payload
-      } else if (selected.category_ids.includes(action.payload)) {
-        const regex = new RegExp(`(,${action.payload})|(${action.payload})`)
-        selected.category_ids = selected.category_ids.replace(regex, '')
+      const selectedCategoryIds = selected.category_ids
+        ? selected.category_ids.split(',').map(value => parseInt(value))
+        : []
+      if (selectedCategoryIds.includes(action.payload)) {
+        let selectedIdx = selectedCategoryIds.indexOf(action.payload)
+        selectedCategoryIds.splice(selectedIdx, 1)
       } else {
-        selected.category_ids += ',' + action.payload
+        selectedCategoryIds.push(action.payload)
       }
-      selected.category_ids = selected.category_ids.replace(/(^,)|(,$)/g, '')
+      selected.category_ids = selectedCategoryIds.toString()
       newState.selected = selected
 
       return newState
@@ -117,15 +120,16 @@ const productFilterReducer: Reducer<any> = (
       return newState
 
     case productFilterType.CHANGE_SELECTED_BRAND:
-      if (!selected.brand_ids) {
-        selected.brand_ids = ',' + action.payload
-      } else if (selected.brand_ids.includes(action.payload)) {
-        const regex = new RegExp(`(,${action.payload})|(${action.payload})`)
-        selected.brand_ids = selected.brand_ids.replace(regex, '')
+      const selectedBrandIds = selected.brand_ids
+        ? selected.brand_ids.split(',').map(value => parseInt(value))
+        : []
+      if (selectedBrandIds.includes(action.payload)) {
+        let selectedIdx = selectedBrandIds.indexOf(action.payload)
+        selectedBrandIds.splice(selectedIdx, 1)
       } else {
-        selected.brand_ids += ',' + action.payload
+        selectedBrandIds.push(action.payload)
       }
-      selected.brand_ids = selected.brand_ids.replace(/(^,)|(,$)/g, '')
+      selected.brand_ids = selectedBrandIds.toString()
       newState.selected = selected
       return { ...newState }
 

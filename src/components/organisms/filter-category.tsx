@@ -73,13 +73,6 @@ class FilterBrandOrg extends PureComponent<any, any> {
   _setFilter = item => {
     this.props.changeSelectedCategory(item.id)
     let categoryId = this.props.selectedCategory
-    if (!categoryId) categoryId = +item.id
-    else if (categoryId.includes(item.id)) {
-      const regex = new RegExp(`(,${item.id})|(${item.id})`)
-      categoryId = categoryId.replace(regex, '')
-    } else {
-      categoryId += ',' + item.id
-    }
     this.props.fetchCountProduct({
       category_ids: categoryId || this.props.activeCategory,
     })

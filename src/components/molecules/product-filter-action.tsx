@@ -71,7 +71,7 @@ const ProductFilterAction = ({
             ? '...'
             : `Show ${formatCur(countedProducts.count)} Products`
         }
-        disabled={!countedProducts.count}
+        disabled={countedProducts.isLoading || !countedProducts.count}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 0 }}
         style={{ ...styles.largeButton, ...styles.buttonStyle }}

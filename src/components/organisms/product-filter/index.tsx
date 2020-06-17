@@ -73,7 +73,7 @@ const FilterContent = connect(
     <Div
       _width="100%"
       _background="white"
-      _height="98%"
+      _height="100%"
       _padding="0px 16px 80px"
       justify="flex-start">
       <TabMenu

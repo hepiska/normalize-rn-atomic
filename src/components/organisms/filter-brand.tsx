@@ -103,15 +103,20 @@ const FilterBrandOrg = (props: any) => {
     [filter, _brands],
   )
 
-  const _renderItem = ({ item }) => (
-    <FilterBrandItem
-      key={'key-brand' + item.id}
-      fontStyle={fontStyle.helvetica}
-      onPress={brand => props.changeSelectedBrand(brand.id)}
-      isSelected={props.selectedBrand.includes(item.id)}
-      item={item}
-    />
-  )
+  const _renderItem = ({ item }) => {
+    const selectedBrand = props.selectedBrand
+      .split(',')
+      .map(value => parseInt(value))
+    return (
+      <FilterBrandItem
+        key={'key-brand' + item.id}
+        fontStyle={fontStyle.helvetica}
+        onPress={brand => props.changeSelectedBrand(brand.id)}
+        isSelected={selectedBrand.includes(item.id)}
+        item={item}
+      />
+    )
+  }
 
   return (
     <Div
