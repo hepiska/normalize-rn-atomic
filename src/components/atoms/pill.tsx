@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactElement } from 'react'
 import { View, Text, StyleSheet, ViewStyle } from 'react-native'
 import { fontStyle } from '@components/commont-styles'
 import { TouchableOpacity } from 'react-native-gesture-handler'
@@ -21,13 +21,14 @@ interface PillType {
   onPress: () => void
   title: string
   style: ViewStyle
+  item?: ReactElement
 }
 
-const Pill = ({ onPress, title, style }: PillType) => {
+const Pill = ({ onPress, title, style, item }: PillType) => {
   const composeStyle = { ...styles.container, ...style }
   return (
     <TouchableOpacity style={composeStyle} onPress={onPress}>
-      <Text style={styles.text}>{title}</Text>
+      {item || <Text style={styles.text}>{title}</Text>}
     </TouchableOpacity>
   )
 }

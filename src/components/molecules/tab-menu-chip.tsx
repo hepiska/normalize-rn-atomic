@@ -89,8 +89,8 @@ const TabMenuNavigator = ({
               <View
                 style={{
                   paddingHorizontal: 16,
-                  borderRadius: 16,
-                  paddingVertical: 4,
+                  borderRadius: 40, // before: 16, real: 40
+                  paddingVertical: 8, // before: 4, real: 8
                 }}>
                 <Animated.View
                   style={[

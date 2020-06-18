@@ -118,7 +118,7 @@ class MyPost extends React.Component<any, any> {
       <View style={{ backgroundColor: 'white' }}>
         <SearchFilter
           key="my-post-filter"
-          style={{ marginVertical: 8 }}
+          style={{ marginVertical: 8, marginLeft: 8 }}
           itemStyle={{ paddingVertical: 8, paddingHorizontal: 12 }}
           selectedFilter={displayedSelected}
           onfilterSelected={this._selectFilter}
