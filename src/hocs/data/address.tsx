@@ -8,13 +8,16 @@ import {
 import { removeCheckoutAddressData } from '@modules/checkout/action'
 import { makeSelectedAddresses } from '@src/modules/address/selector'
 
-const addressListMap = (state, ownProps) => {
+const addressListMap = () => {
   const getSelectedAddresses = makeSelectedAddresses()
-  const address = getSelectedAddresses(state, ownProps)
 
-  if (!address) return null
-  return {
-    address,
+  return (state, ownProps) => {
+    const address = getSelectedAddresses(state, ownProps)
+
+    if (!address) return null
+    return {
+      address,
+    }
   }
 }
 

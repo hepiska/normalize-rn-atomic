@@ -37,21 +37,33 @@ const FilterTriger = (props: any) => {
   const [searchKey, setSearchKey] = useState(props.search)
 
   useEffect(() => {
-    setSearchKey(props.search)
-  }, [props.search])
+    return () => {
+      clearTimeout(timer)
+    }
+  }, [])
 
-  useEffect(() => {
+  const onSearch = e => {
+    setSearchKey(e)
+    if (timer) {
+      clearTimeout(timer)
+    }
     timer = setTimeout(() => {
-      props.changeSearch(searchKey)
-    }, 500)
-    return () => clearTimeout(timer)
-  }, [searchKey])
+      props.changeSearch(e)
+    }, 600)
+  }
 
   const _openFilter = (section?: any) => () => {
     if (section) {
-      props.openFilter(section)
+      // props.openFilter(section)
+      navigation.navigate('modals', {
+        screen: 'ProductFilter',
+        params: { section },
+      })
     }
-    navigation.navigate('modals', { screen: 'ProductFilter' })
+  }
+
+  const goToSort = () => {
+    navigation.navigate('modals', { screen: 'ProductSort' })
   }
 
   return (
@@ -60,7 +72,7 @@ const FilterTriger = (props: any) => {
         <Field
           value={searchKey}
           placeholder="Search for products..."
-          onChangeText={setSearchKey}
+          onChangeText={onSearch}
           leftIcon={
             <Icon
               style={{ marginRight: 8 }}
@@ -71,7 +83,7 @@ const FilterTriger = (props: any) => {
         />
         <Button
           title="Sort"
-          onPress={_openFilter('sort')}
+          onPress={goToSort}
           fontStyle={{ color: colors.white }}
           style={{ marginLeft: 8, backgroundColor: colors.black100 }}
           leftIcon={
@@ -101,9 +113,9 @@ const FilterTriger = (props: any) => {
             />
           }
         />
-        <FilterButton title="Brands" onPress={_openFilter('brand')} />
-        <FilterButton title="Categories" onPress={_openFilter('category')} />
-        <FilterButton title="Prices" onPress={_openFilter('price')} />
+        <FilterButton title="Brands" onPress={_openFilter('Brand')} />
+        <FilterButton title="Categories" onPress={_openFilter('Category')} />
+        <FilterButton title="Prices" onPress={_openFilter('Price')} />
       </ScrollDiv>
     </Div>
   )

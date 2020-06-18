@@ -25,24 +25,29 @@ const pagereducer: Reducer<PageDataType> = (
   state: any = deepClone(initialState),
   action: AnyAction,
 ) => {
-  const newState = { ...state }
+  let newState: any = {}
   switch (action.type) {
     case pageActionType.SET_PAGE:
+      newState = { ...state }
+
       newState.data = Immutable.merge(newState.data, action.payload)
       return newState
     case pageActionType.SET_SECTION:
+      newState = { ...state }
       newState.section = Immutable.merge(newState.data, action.payload)
       return newState
     case pageActionType.SET_LOADING:
+      newState = { ...state }
       if (typeof newState.loading === 'boolean') {
         newState.loading = {}
       }
       newState.loading[action.payload.key] = action.payload.value
       return newState
     case pageActionType.CLEAR_PAGE:
+      newState = { ...state }
       return initialState
     default:
-      return newState
+      return state
   }
 }
 

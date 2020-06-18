@@ -57,7 +57,7 @@ const productReducer: Reducer<CollectionState> = (
       newState.error = action.payload
       return newState
     default:
-      return newState
+      return state
   }
 }
 

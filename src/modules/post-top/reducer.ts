@@ -21,7 +21,7 @@ const topPostReducer: Reducer<any> = (
       newState.data[action.payload.key] = action.payload.data
       return newState
     default:
-      return newState
+      return state
   }
 }
 

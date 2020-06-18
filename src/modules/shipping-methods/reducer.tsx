@@ -39,7 +39,7 @@ const shippingMethodsReducer: Reducer<ShippingMethodsState> = (
     case shippingMethodsActionType.SET_DEFAULT:
       return newState
     default:
-      return newState
+      return state
   }
 }
 

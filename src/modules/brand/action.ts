@@ -76,7 +76,7 @@ export const getBrand = id => {
       schema: schema.brandFull,
       requestParams: { params },
       startNetwork: () => {
-        return setBrandLoading(true)
+        return [setBrandLoading(true), setBrandError(null)]
       },
       endNetwork: (type, err) => {
         if (type === 'error') {
@@ -89,7 +89,7 @@ export const getBrand = id => {
           setCategoryData(data.entities.category),
           setBrandData(data.entities.brand),
           setActiveBrand(data.result),
-          setBrandError({}),
+          setBrandError(null),
           setBrandLoading(false),
         ]
       },

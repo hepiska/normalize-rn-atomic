@@ -44,7 +44,7 @@ const shipmentReducer: Reducer<ShipmentState> = (
       newState.order = Immutable({})
       return newState
     default:
-      return newState
+      return state
   }
 }
 

@@ -34,7 +34,7 @@ const productFilterReducer: Reducer<any> = (
   state: any = { ...initialState },
   action: AnyAction,
 ) => {
-  const newState = deepClone(state)
+  const newState = { ...state }
   const selected = newState.selected
 
   switch (action.type) {
@@ -142,15 +142,15 @@ const productFilterReducer: Reducer<any> = (
         brand_ids: newState.activePage.brand_ids || '',
       }
       newState.search = ''
-      newState.applied = newState.selected
+      newState.applied = deepClone(newState.selected)
       return newState
 
     case productFilterType.SET_APPLIED_FILTER:
-      newState.applied = newState.selected
+      newState.applied = deepClone(newState.selected)
       newState.search = ''
       return newState
     default:
-      return newState
+      return state
   }
 }
 

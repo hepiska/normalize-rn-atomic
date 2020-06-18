@@ -24,7 +24,7 @@ const productReducer: Reducer<SortType> = (
       newState.selected = action.payload
       return newState
     default:
-      return newState
+      return state
   }
 }
 

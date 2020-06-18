@@ -40,7 +40,7 @@ const postLikedReducer: Reducer<PostBookmarkState> = (
       newState.loading = action.payload
       return newState
     default:
-      return newState
+      return state
   }
 }
 

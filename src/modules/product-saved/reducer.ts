@@ -55,7 +55,7 @@ const productSavedReducer: Reducer<ProductSavedState> = (
     case productSavedActionType.CLEAR:
       return initialState
     default:
-      return newState
+      return state
   }
 }
 

@@ -14,61 +14,62 @@ import { makeSelectedBrands } from '@src/modules/brand/selector'
 import { makeCloneProduct } from '@modules/selector-general'
 import { makeIsSaved } from '@src/modules/product-saved/selector'
 
-const cartListMap = (state, ownProps) => {
+const cartListMap = () => {
   const getSelectedCarts = makeSelectorCarts()
   const getSelectedProducts = makeSelectedProducts()
   const getSelectedBrands = makeSelectedBrands()
   const getIsSaved = makeIsSaved()
 
   const cloneVariant = makeCloneProduct()
+  return (state, ownProps) => {
+    let cart
+    let brand
+    let variant
+    let isSaved
+    let product
 
-  let cart
-  let brand
-  let variant
-  let isSaved
-  let product
+    if (ownProps.cartId) {
+      cart = getSelectedCarts(state, ownProps)
+      brand = getSelectedBrands(state, cart.brand.id)
+      variant = cloneVariant(cart.variant)
+      isSaved = getIsSaved(state, cart.variant.product_id)
+      product = getSelectedProducts(state, cart.variant.product_id)
 
-  if (ownProps.cartId) {
-    cart = getSelectedCarts(state, ownProps)
-    brand = getSelectedBrands(state, cart.brand.id)
-    variant = cloneVariant(cart.variant)
-    isSaved = getIsSaved(state, cart.variant.product_id)
-    product = getSelectedProducts(state, cart.variant.product_id)
-
-    if (variant.attribute_values && product) {
-      variant.attribute_values?.map(v => {
-        const attribute = product.attributes.find(
-          attribute => attribute.attribute_id === v.attribute_id,
-        )
-        v.label = attribute.label
-        return v
-      })
+      if (variant.attribute_values && product) {
+        variant.attribute_values?.map(v => {
+          const attribute = product.attributes.find(
+            attribute => attribute.attribute_id === v.attribute_id,
+          )
+          v.label = attribute.label
+          return v
+        })
+      }
     }
-  }
 
-  if (ownProps.productId) {
-    product = getSelectedProducts(state, ownProps.productId)
-    brand = getSelectedBrands(state, product.brand)
-    let qty = product.variant.qty
-    cart = {}
-    cart['qty'] = qty
-    variant = cloneVariant(product.variant && product)
-    if (variant.attribute_values) {
-      variant.attribute_values?.map(v => {
-        const attribute = product.attributes.find(
-          attribute => attribute.attribute_id === v.attribute_id,
-        )
-        v.label = attribute.label
-        return v
-      })
+    if (ownProps.productId) {
+      product = getSelectedProducts(state, ownProps.productId)
+      brand = getSelectedBrands(state, product.brand)
+      let qty = product.variant.qty
+      cart = {}
+      cart['qty'] = qty
+      variant = cloneVariant(product.variant && product)
+      if (variant.attribute_values) {
+        variant.attribute_values?.map(v => {
+          const attribute = product.attributes.find(
+            attribute => attribute.attribute_id === v.attribute_id,
+          )
+          v.label = attribute.label
+          return v
+        })
+      }
     }
-  }
-  return {
-    cart,
-    brand,
-    variant,
-    isSaved,
-    product,
+    return {
+      cart,
+      brand,
+      variant,
+      isSaved,
+      product,
+    }
   }
 }
 

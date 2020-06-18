@@ -10,23 +10,25 @@ import {
   removeBookmarkPost,
 } from '@modules/post-bookmarked/action'
 
-const postListMap = (state, ownProps) => {
+const postListMap = () => {
   const getPost = makeGetPost()
   const getUser = makeGetUser()
   const getIsLiked = makePostLiked()
 
-  const { postId } = ownProps
-  const post = getPost(state, postId)
-  const user = getUser(state, post.user)
-  const isLiked = getIsLiked(state, postId)
-  const isBookmarked = !!state.postsBookmarked.data[postId]
+  return (state, ownProps) => {
+    const { postId } = ownProps
+    const post = getPost(state, postId)
+    const user = getUser(state, post.user)
+    const isLiked = getIsLiked(state, postId)
+    const isBookmarked = !!state.postsBookmarked.data[postId]
 
-  return {
-    post,
-    user,
-    isLiked,
-    isBookmarked,
-    isAuth: state.auth.isAuth,
+    return {
+      post,
+      user,
+      isLiked,
+      isBookmarked,
+      isAuth: state.auth.isAuth,
+    }
   }
 }
 

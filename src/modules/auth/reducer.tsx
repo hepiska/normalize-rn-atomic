@@ -57,7 +57,7 @@ const registerReducer: Reducer<RegisterState> = (
       newState.usernameAvalaible = action.payload
       return newState
     default:
-      return newState
+      return state
   }
 }
 const presistConfig = {

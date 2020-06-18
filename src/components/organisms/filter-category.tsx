@@ -3,6 +3,7 @@ import { Dimensions, StyleSheet, SectionList, View } from 'react-native'
 import { connect, batch } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { colors } from '@utils/constants'
+import isEqual from 'lodash/isEqual'
 import {
   changeSelectedCategory,
   fetchCountProduct,
@@ -48,7 +49,15 @@ const isAllChildernIncluded = (children, str) => {
 
 const CategoryListItem = categoryListData(SelectAbleItem)
 
-class FilterBrandOrg extends PureComponent<any, any> {
+class FilterCategory extends PureComponent<any, any> {
+  shouldComponentUpdate(nextProps, nextState) {
+    const { state, props } = this
+
+    if (props.selectedCategory !== nextProps.selectedCategory) {
+      return true
+    }
+    return false
+  }
   _renderItem = ({ item }) => {
     return (
       <CategoryListItem
@@ -116,11 +125,14 @@ class FilterBrandOrg extends PureComponent<any, any> {
     )
   }
   _keyExtractor = (item, index) => '' + item.id + index
+
   render() {
-    const { categories } = this.props
+    const { categories, selectedCategory } = this.props
+    console.log('rerender cat')
     return (
-      <View style={{ flex: 1, width }}>
+      <View style={{ flex: 1, width, backgroundColor: 'white' }}>
         <SectionList
+          extraData={selectedCategory}
           style={styles.sectionContainer}
           keyExtractor={this._keyExtractor}
           renderSectionHeader={this._renderSectionHeader}
@@ -132,20 +144,23 @@ class FilterBrandOrg extends PureComponent<any, any> {
   }
 }
 
-const mapStateToProps = state => {
+const mapStateToProps = () => {
   const mapCategoriesfilter = makeMapFilterCategories()
-  return {
-    categories: mapCategoriesfilter(state),
-    selectedPrice: state.productFilter.selected.price,
-    activeCollection: state.productFilter.activePage.collection_ids || '',
-    selectedBrand:
-      state.productFilter.selected.brand_ids ||
-      state.productFilter.activePage.brand_ids ||
-      '',
-    activeCategory: state.productFilter.activePage.category_ids || '',
-    selectedCategory: state.productFilter.selected.category_ids
-      ? state.productFilter.selected.category_ids
-      : '',
+
+  return state => {
+    return {
+      categories: mapCategoriesfilter(state),
+      selectedPrice: state.productFilter.selected.price,
+      activeCollection: state.productFilter.activePage.collection_ids || '',
+      selectedBrand:
+        state.productFilter.selected.brand_ids ||
+        state.productFilter.activePage.brand_ids ||
+        '',
+      activeCategory: state.productFilter.activePage.category_ids || '',
+      selectedCategory: state.productFilter.selected.category_ids
+        ? state.productFilter.selected.category_ids
+        : '',
+    }
   }
 }
 
@@ -155,4 +170,4 @@ const mapDispatchToProps = dispatch =>
     dispatch,
   )
 
-export default connect(mapStateToProps, mapDispatchToProps)(FilterBrandOrg)
+export default connect(mapStateToProps, mapDispatchToProps)(FilterCategory)

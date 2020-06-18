@@ -68,7 +68,7 @@ const orderReducer: Reducer<OrderState> = (
     case orderActionType.DEFAULT:
       return initialState
     default:
-      return newState
+      return state
   }
 }
 

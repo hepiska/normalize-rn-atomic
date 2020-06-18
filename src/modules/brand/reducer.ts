@@ -67,7 +67,7 @@ const brandReducer: Reducer<BrandState> = (
       newState.order = Immutable([])
       return newState
     default:
-      return newState
+      return state
   }
 }
 

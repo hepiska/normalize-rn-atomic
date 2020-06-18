@@ -84,7 +84,7 @@ const cartReducer: Reducer<CartStateType> = (
       newState.error = action.payload
       return newState
     default:
-      return newState
+      return state
   }
 }
 

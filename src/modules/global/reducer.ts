@@ -20,7 +20,7 @@ const productFilterReducer: Reducer<any> = (
       newState.warning = action.payload
       return newState
     default:
-      return newState
+      return state
   }
 }
 

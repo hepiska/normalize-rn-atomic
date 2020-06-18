@@ -68,14 +68,6 @@ const FilterPriceOrg = ({
   const [multiSlider, changeMultiSlider] = useState([0, maxSlider])
   let timeout = null
 
-  // useEffect(() => {
-  //   fetchCountProduct({ maximum_price, minimum_price })
-  // }, [maximum_price, minimum_price])
-
-  const parentScrollDisabled = value => {
-    changeValueUiIneraction({ key: 'isScrollEnabled', value: value })
-  }
-
   useEffect(() => {
     const initialCursorMin = Math.round(
       ((minimum_price - colectionPrices.minimum_price) / delta) * maxSlider,
@@ -129,6 +121,7 @@ const FilterPriceOrg = ({
         padd="0px 16px"
         _height="100%"
         radius="0"
+        _background={colors.white}
         justify="flex-start"
         align="flex-start">
         <Div _direction="row">
@@ -151,8 +144,6 @@ const FilterPriceOrg = ({
               backgroundColor: 'silver',
             }}
             onValuesChange={_chageSlider}
-            onValuesChangeStart={() => parentScrollDisabled(false)}
-            onValuesChangeFinish={() => parentScrollDisabled(true)}
           />
         </Div>
       </Div>
@@ -164,7 +155,6 @@ const FilterPriceOrg = ({
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
-      changeValueUiIneraction,
       setSelectedPrice,
       fetchCountProduct,
     },
@@ -186,4 +176,7 @@ const mapStateToProps = state => ({
     '',
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(FilterPriceOrg)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(memo(FilterPriceOrg))

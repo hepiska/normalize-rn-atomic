@@ -1,14 +1,17 @@
 import { connect } from 'react-redux'
 import { makeSelectedCollections } from '@src/modules/collection/selector'
 
-const collectionListMap = (state, ownProps) => {
+const collectionListMap = () => {
   const getCollections = makeSelectedCollections()
-  const collection = getCollections(
-    state,
-    ownProps.collectionId || ownProps.collectionsID,
-  )
-  return {
-    collection,
+
+  return (state, ownProps) => {
+    const collection = getCollections(
+      state,
+      ownProps.collectionId || ownProps.collectionsID,
+    )
+    return {
+      collection,
+    }
   }
 }
 export function collectionListData(WrappedComponent) {

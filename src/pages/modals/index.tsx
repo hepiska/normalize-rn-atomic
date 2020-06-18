@@ -1,12 +1,15 @@
 import React from 'react'
 import { createStackNavigator } from '@react-navigation/stack'
 import CartModal from '@components/organisms/cart-modal'
-import ProductFilter from '@components/organisms/product-filter'
+// import ProductFilter from '@components/organisms/product-filter'
 // import initialPageConfig from '@pages/page-initial.config'
 import FormLogin from '@src/components/molecules/form-login'
 import FormRegister from '@src/components/molecules/form-register-basic-information'
 import ConfirmationModal from './confirmation'
 import LikeListModal from '@pages/modals/like-list'
+import ProductSortBottomSheet from './product-sort'
+import ProductFilter from './product-filter'
+import initialPageConfig from '@pages/page-initial.config'
 
 import ShareModal from '@pages/modals/share'
 
@@ -16,6 +19,7 @@ function ModalStack() {
   return (
     <Stack.Navigator
       mode="modal"
+      initialRouteName={initialPageConfig.modal}
       headerMode="none"
       screenOptions={{
         cardStyle: {
@@ -30,6 +34,14 @@ function ModalStack() {
           cardStyle: { backgroundColor: 'transparent' },
         }}
         component={ProductFilter}
+      />
+      <Stack.Screen
+        name="ProductSort"
+        options={{
+          animationEnabled: false,
+          cardStyle: { backgroundColor: 'transparent' },
+        }}
+        component={ProductSortBottomSheet}
       />
       <Stack.Screen
         name="Share"

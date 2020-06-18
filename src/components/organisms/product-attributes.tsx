@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, PureComponent } from 'react'
 import { Div, Font, PressAbbleDiv, ScrollDiv } from '@components/atoms/basic'
 import { colors } from '@utils/constants'
 import AttributeList from '@src/components/molecules/attribute-list'
@@ -14,7 +14,7 @@ interface ProductAttributesPropsType {
   onAttributesChanged?: (any) => void
 }
 
-class ProductAttributes extends Component<ProductAttributesPropsType, any> {
+class ProductAttributes extends PureComponent<ProductAttributesPropsType, any> {
   state = {
     selectedAttributes: this.props.selectedAttributes || [],
   }

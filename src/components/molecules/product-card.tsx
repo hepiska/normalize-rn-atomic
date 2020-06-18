@@ -1,4 +1,4 @@
-import React, { useState, memo, useMemo } from 'react'
+import React, { useState, memo, useMemo, useCallback } from 'react'
 import {
   ViewStyle,
   StyleSheet,
@@ -128,20 +128,41 @@ const ProductCard = ({
   const [defaultImage, setImage] = useState(null)
   const [attributeSelected, setAttributeSelected] = useState(null)
   const [selectedVariantId, setSelectedVariantId] = useState(null)
-  const colorAttributes =
-    product.attributes && product.attributes.find(x => x && x.label === 'Color')
+  const colorAttributes = useMemo(
+    () =>
+      product.attributes &&
+      product.attributes.find(x => x && x.label === 'Color'),
+    [product],
+  )
 
-  const onColorChange = (attribute, index) => () => {
-    const _filteredVariants = product.variants.filter(_variant => {
-      return _variant.attribute_values.find(
-        ({ attribute_id, attribute_value_id }) =>
-          attribute_id === colorAttributes.attribute_id &&
-          attribute_value_id === attribute.id,
-      )
-    })
-    setSelectedVariantId(_filteredVariants[0].id)
-    setAttributeSelected(attribute)
-  }
+  const onColorChange = useCallback(
+    () => (attribute, index) => () => {
+      const _filteredVariants = product.variants.filter(_variant => {
+        return _variant.attribute_values.find(
+          ({ attribute_id, attribute_value_id }) =>
+            attribute_id === colorAttributes.attribute_id &&
+            attribute_value_id === attribute.id,
+        )
+      })
+      console.log('======oncallback')
+      setSelectedVariantId(_filteredVariants[0].id)
+      setAttributeSelected(attribute)
+    },
+    [product],
+  )
+
+  // const onColorChange = (attribute, index) => () => {
+  //   const _filteredVariants = product.variants.filter(_variant => {
+  //     return _variant.attribute_values.find(
+  //       ({ attribute_id, attribute_value_id }) =>
+  //         attribute_id === colorAttributes.attribute_id &&
+  //         attribute_value_id === attribute.id,
+  //     )
+  //   })
+  //   console.log('======oncallback')
+  //   setSelectedVariantId(_filteredVariants[0].id)
+  //   setAttributeSelected(attribute)
+  // }
 
   const _onSave = () => {
     if (!isAuth) {
