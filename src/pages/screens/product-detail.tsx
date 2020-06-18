@@ -82,6 +82,14 @@ const styles = StyleSheet.create({
     height: 20,
     borderRadius: 100,
   },
+  stockWarning: {
+    width: '100%',
+    backgroundColor: 'rgba(26,26,26,.04)',
+    paddingVertical: 8,
+    paddingHorizontal: 16,
+    borderRadius: 8,
+    marginVertical: 12,
+  },
 })
 
 const y = new Value(0)
@@ -121,6 +129,17 @@ const renderImage = type => {
     default:
       return null
   }
+}
+
+const WarningLabel = ({ text }) => {
+  return (
+    <View
+      style={{
+        ...styles.stockWarning,
+      }}>
+      <Text style={{ ...fontStyle.helvetica, fontSize: 14 }}>{text}</Text>
+    </View>
+  )
 }
 
 class ProductListPage extends React.Component<any, any> {
@@ -537,6 +556,16 @@ class ProductListPage extends React.Component<any, any> {
                   onAllAttributesSelected={this._selectVariant}
                 />
               )}
+
+              {!varianData.is_available &&
+                selectedVariant === varianData.id &&
+                product.is_purchaseable && (
+                  <WarningLabel text="Sorry, this product is Out of Stock." />
+                )}
+
+              {!product.is_purchaseable && (
+                <WarningLabel text="Sorry, this product is currently unavailable" />
+              )}
               {returnExchange !== '' && (
                 <View
                   style={{
@@ -559,7 +588,12 @@ class ProductListPage extends React.Component<any, any> {
               <GradientButton
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 1 }}
-                disabled={loading || !product.is_commerce}
+                disabled={
+                  loading ||
+                  !product.is_commerce ||
+                  !varianData.is_available ||
+                  !product.is_purchaseable
+                }
                 colors={['#3067E4', '#8131E2']}
                 title={actionButton[productType].buttonText}
                 onPress={actionButton[productType].action}
