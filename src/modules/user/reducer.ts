@@ -90,7 +90,7 @@ const userReducer: Reducer<UserState> = (
       )
       return newState
     default:
-      return newState
+      return state
   }
 }
 

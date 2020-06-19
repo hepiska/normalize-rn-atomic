@@ -47,7 +47,7 @@ const userPostReducer: Reducer<TransactionState> = (
     case actionType.SET_REACH_END:
       newState.reachedEnd = payload
     default:
-      return newState
+      return state
   }
 }
 

@@ -22,3 +22,10 @@ export const makeMapFilterCategories = () =>
       })
     },
   )
+
+const getAppliedFilter = state => state.productFilter.applied
+
+export const makecloneAppliedFilter = () =>
+  createSelector([getAppliedFilter], applied => {
+    return deepClone(applied)
+  })

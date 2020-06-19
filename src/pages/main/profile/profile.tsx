@@ -38,7 +38,7 @@ import styled from 'styled-components/native'
 import { ScrollView } from 'react-native-gesture-handler'
 import MyPost from '@components/organisms/my-post'
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs'
-import TabMenuCursor from '@components/molecules/tab-menu-cursor-animated'
+import TabMenuCursor from '@src/components/molecules/tab-menu-cursor-animated'
 import { TabView, SceneMap } from 'react-native-tab-view'
 
 import MySaved from '@components/organisms/my-saved'

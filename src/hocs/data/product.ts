@@ -10,22 +10,23 @@ import { makeSelectedProducts } from '@modules/product/selector'
 import { makeIsSaved } from '@modules/product-saved/selector'
 import { category } from '@src/modules/normalize-schema'
 
-const productListMap = (state, ownProps) => {
+const productListMap = () => {
   const getSelectedProducts = makeSelectedProducts()
   const getIsSaved = makeIsSaved()
   const cloneProduct = makeCloneProduct()
+  return (state, ownProps) => {
+    const product = getSelectedProducts(state, ownProps.productId)
 
-  const product = getSelectedProducts(state, ownProps.productId)
+    const _product = cloneProduct(product)
 
-  const _product = cloneProduct(product)
-
-  const isSaved = getIsSaved(state, ownProps)
-  if (!_product) return {}
-  return {
-    product: _product,
-    brand: state.brands.data[_product.brand],
-    isSaved,
-    isAuth: state.auth.isAuth,
+    const isSaved = getIsSaved(state, ownProps)
+    if (!_product) return {}
+    return {
+      product: _product,
+      brand: state.brands.data[_product.brand],
+      isSaved,
+      isAuth: state.auth.isAuth,
+    }
   }
 }
 

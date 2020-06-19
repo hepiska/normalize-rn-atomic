@@ -48,7 +48,7 @@ const addressReducer: Reducer<AddressState> = (
     case addressActionType.SET_DEFAULT:
       return newState
     default:
-      return newState
+      return state
   }
 }
 

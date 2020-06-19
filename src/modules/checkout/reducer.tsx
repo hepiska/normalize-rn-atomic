@@ -84,7 +84,7 @@ const checkoutReducer: Reducer<CheckoutState> = (
     case checkoutActionType.SET_DEFAULT:
       return newState
     default:
-      return newState
+      return state
   }
 }
 

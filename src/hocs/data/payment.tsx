@@ -1,12 +1,15 @@
 import { connect } from 'react-redux'
 import { makeGetTransaction } from '@modules/transaction/selector'
 
-const transactionListMap = (state, ownProps) => {
+const transactionListMap = () => {
   const getTransaction = makeGetTransaction()
-  const transaction = getTransaction(state, ownProps.transactionId)
 
-  return {
-    transaction,
+  return (state, ownProps) => {
+    const transaction = getTransaction(state, ownProps.transactionId)
+
+    return {
+      transaction,
+    }
   }
 }
 

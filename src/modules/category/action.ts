@@ -78,7 +78,7 @@ export const getCategory = id => {
       requestParams: { params },
       schema: schema.detailCategory,
       startNetwork: () => {
-        return setCategoryLoading(true)
+        return [setCategoryLoading(true), setCategoryError(null)]
       },
       endNetwork: (status, error) => {
         if (status === 'error') {

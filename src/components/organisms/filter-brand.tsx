@@ -1,4 +1,3 @@
-/* eslint-disable react/display-name */
 import React, {
   Component,
   useState,
@@ -103,14 +102,22 @@ const FilterBrandOrg = (props: any) => {
     [filter, _brands],
   )
 
-  const _renderItem = ({ item }) => (
-    <FilterBrandItem
-      key={'key-brand' + item.id}
-      fontStyle={fontStyle.helvetica}
-      onPress={brand => props.changeSelectedBrand(brand.id)}
-      isSelected={props.selectedBrand.includes(item.id)}
-      item={item}
-    />
+  const _renderItem = useMemo(
+    () => ({ item }) => {
+      const selectedBrand = props.selectedBrand
+        .split(',')
+        .map(value => parseInt(value))
+      return (
+        <FilterBrandItem
+          key={'key-brand' + item.id}
+          fontStyle={fontStyle.helvetica}
+          onPress={brand => props.changeSelectedBrand(brand.id)}
+          isSelected={selectedBrand.includes(item.id)}
+          item={item}
+        />
+      )
+    },
+    [props.selectedBrand],
   )
 
   return (
@@ -119,6 +126,7 @@ const FilterBrandOrg = (props: any) => {
       _flex="1"
       _height="100%"
       radius="0"
+      _background="white"
       justify="flex-start"
       align="flex-start">
       <Div _width="100%" _height="32px" _padding="0px 16px">

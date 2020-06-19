@@ -29,22 +29,27 @@ const initialState: any = {
 }
 
 const productReducer: Reducer<ProductState> = (
-  state: ProductState = { ...initialState },
+  state: ProductState = initialState,
   action: AnyAction,
 ) => {
-  const newState = { ...state }
+  let newState: any = {}
   switch (action.type) {
     case productActionType.SET_PRODUCT_DATA:
+      newState = { ...state }
       newState.data = Immutable.merge(newState.data, action.payload, {
         deep: true,
       })
       return newState
 
     case productActionType.CHANGE_VALUE:
+      newState = { ...state }
+
       newState[action.payload.key] = action.payload.value
       return newState
 
     case productActionType.SET_PRODUCT_ORDER:
+      newState = { ...state }
+
       if (
         action.payload.pagination.offset &&
         action.payload.pagination.total &&
@@ -57,6 +62,8 @@ const productReducer: Reducer<ProductState> = (
       newState.pagination = action.payload.pagination
       return newState
     case productActionType.SET_PRODUCT_SEARCH_ORDER:
+      newState = { ...state }
+
       if (
         action.payload.pagination.offset &&
         action.payload.pagination.total &&
@@ -72,16 +79,22 @@ const productReducer: Reducer<ProductState> = (
       return newState
 
     case productActionType.SET_PRODUCTS_LOADING:
+      newState = { ...state }
+
       newState.productsLoading = action.payload
       return newState
     case productActionType.ClEAR_PRODUCT:
       return initialState
 
     case productActionType.CLEAR_PRODUCT_SEARCH:
+      newState = { ...state }
+
       newState.search = Immutable([])
       return newState
 
     case productActionType.SET_TRENDING_ORDER:
+      newState = { ...state }
+
       const { type, order } = action.payload
       if (type === 'add') {
         newState.trendingOrder = newState.order.concat(Immutable(order))
@@ -90,9 +103,9 @@ const productReducer: Reducer<ProductState> = (
       }
       return newState
     case productActionType.SET_DEFAULT:
-      return newState
+      return state
     default:
-      return newState
+      return state
   }
 }
 

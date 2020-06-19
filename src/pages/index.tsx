@@ -60,7 +60,7 @@ class Pages extends React.Component<any, any> {
     return (
       <>
         <GlobalErrorAndWarning />
-        <Stack2.Navigator mode="modal">
+        <Stack2.Navigator initialRouteName={InitialPage.root} mode="modal">
           <Stack2.Screen
             name="RootScreens"
             options={{

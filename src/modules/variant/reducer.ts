@@ -38,7 +38,7 @@ const variantReducer: Reducer<VarianStateType> = (
       newState.loading = action.payload
       return newState
     default:
-      return newState
+      return state
   }
 }
 

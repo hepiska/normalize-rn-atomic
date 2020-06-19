@@ -38,7 +38,7 @@ const transactionPaymentReducer: Reducer<TransactionPaymentState> = (
     case transactionPaymentActionType.DEFAULT:
       return initialState
     default:
-      return newState
+      return state
   }
 }
 

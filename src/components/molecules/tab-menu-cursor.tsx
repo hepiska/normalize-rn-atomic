@@ -1,5 +1,11 @@
 import React from 'react'
-import { StyleSheet, View, Text, TouchableOpacity } from 'react-native'
+import {
+  StyleSheet,
+  View,
+  Text,
+  TouchableOpacity,
+  ScrollView,
+} from 'react-native'
 import { Div, Font, ScrollDiv, PressAbbleDiv } from '@components/atoms/basic'
 import Animated, { Extrapolate } from 'react-native-reanimated'
 import { colors } from '@utils/constants'
@@ -28,18 +34,17 @@ const TabMenuNavigator = ({
   descriptors,
   navigation,
   position,
-  rightAction,
 }: DiscoverTapType) => {
   return (
-    <View
-      style={{
-        flexDirection: 'row',
-        paddingVertical: 8,
-        paddingHorizontal: 16,
-        justifyContent: 'space-between',
-        alignItems: 'center',
-      }}>
-      <View style={{ flexDirection: 'row' }}>
+    <View>
+      <ScrollView
+        showsHorizontalScrollIndicator={false}
+        horizontal
+        style={{
+          flexDirection: 'row',
+          paddingVertical: 8,
+          paddingHorizontal: 8,
+        }}>
         {state.routes.map((route, index) => {
           const { options } = descriptors[route.key]
           const label =
@@ -76,6 +81,11 @@ const TabMenuNavigator = ({
             outputRange: inputRange.map(i => (i === index ? 1 : 0)),
             extrapolate: Extrapolate.CLAMP,
           })
+          const fontOpacity = Animated.interpolate(position, {
+            inputRange,
+            outputRange: inputRange.map(i => (i === index ? 1 : 0.8)),
+            extrapolate: Extrapolate.CLAMP,
+          })
 
           return (
             <TouchableOpacity
@@ -88,34 +98,38 @@ const TabMenuNavigator = ({
               onLongPress={onLongPress}>
               <View
                 style={{
-                  paddingHorizontal: 16,
-                  borderRadius: 40, // before: 16, real: 40
-                  paddingVertical: 8, // before: 4, real: 8
+                  marginRight: 16,
                 }}>
-                <Animated.View
-                  style={[
-                    StyleSheet.absoluteFillObject,
-                    {
-                      opacity,
-                      backgroundColor: colors.black100,
-                      borderRadius: 16,
-                    },
-                  ]}
-                />
-                <Text
+                <View
                   style={{
-                    color: isFocused ? colors.white : colors.black100,
-                    ...fontStyle.helveticaBold,
-                    fontSize: 14,
+                    borderRadius: 16,
+                    paddingHorizontal: 16,
+                    paddingVertical: 4,
                   }}>
-                  {label}
-                </Text>
+                  <Animated.Text
+                    style={{
+                      color: colors.black100,
+                      ...fontStyle.helveticaBold,
+                      fontSize: 14,
+                      opacity: fontOpacity,
+                    }}>
+                    {label}
+                  </Animated.Text>
+                </View>
+                <Animated.View
+                  style={{
+                    width: '100%',
+                    height: 2,
+                    opacity,
+                    backgroundColor: colors.black100,
+                    borderRadius: 16,
+                  }}
+                />
               </View>
             </TouchableOpacity>
           )
         })}
-      </View>
-      {rightAction && rightAction}
+      </ScrollView>
     </View>
   )
 }

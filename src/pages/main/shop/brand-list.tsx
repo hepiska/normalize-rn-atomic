@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Dimensions, FlatList } from 'react-native'
+import { Dimensions, FlatList, View } from 'react-native'
 import NavbarTop from '@components/molecules/navbar-top'
 import {
   helveticaBlackBold,
@@ -17,6 +17,7 @@ import {
   resetBrand,
 } from '@modules/brand/action'
 import { brandListData } from '@hocs/data/brand'
+import ThreeColumnListLoader from '@src/components/atoms/loaders/three-column-card-small'
 
 const { width } = Dimensions.get('window')
 
@@ -129,6 +130,15 @@ class BrandList extends Component<any, any> {
     )
   }
 
+  _renderFooter = () => {
+    const { loading } = this.props
+
+    return (
+      <View style={{ height: 200 }}>
+        {loading && this.skip !== 0 && <ThreeColumnListLoader />}
+      </View>
+    )
+  }
   render() {
     const { headerName } = this.state
     const { brands, search, pagination, loading } = this.props
@@ -166,6 +176,7 @@ class BrandList extends Component<any, any> {
             keyExtractor={this._keyExtractor}
             renderItem={this._renderItem}
             scrollIndicatorInsets={{ right: 1 }}
+            ListFooterComponent={this._renderFooter}
           />
         </Div>
       </>

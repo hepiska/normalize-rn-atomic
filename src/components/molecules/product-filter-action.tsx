@@ -1,5 +1,5 @@
 import React from 'react'
-import { Dimensions, StyleSheet } from 'react-native'
+import { Dimensions, StyleSheet, View } from 'react-native'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { Div } from '@components/atoms/basic'
@@ -29,7 +29,15 @@ const styles = StyleSheet.create({
   },
   absoluteBottom: {
     position: 'absolute',
+    borderTopWidth: 1,
+    borderStyle: 'solid',
+    borderColor: colors.black50,
     bottom: 0,
+    paddingHorizontal: 0,
+    paddingVertical: 16,
+    width,
+    flexDirection: 'row',
+    height: 72,
     left: 0,
   },
   tab: {
@@ -38,7 +46,9 @@ const styles = StyleSheet.create({
 })
 
 const ProductFilterAction = ({
-  countedProducts,
+  count,
+  style,
+  isLoading,
   clearFilter,
   applyFilter,
 }: any) => {
@@ -48,17 +58,9 @@ const ProductFilterAction = ({
     applyFilter()
     navigation.goBack()
   }
+
   return (
-    <Div
-      _height="72px"
-      zIndex="10000000"
-      _flex="1"
-      bg="white"
-      align="stretch"
-      _padding="18px 0px"
-      style={styles.absoluteBottom}
-      _width={width}
-      _direction="row">
+    <View style={[styles.absoluteBottom, style]}>
       <Button
         style={styles.buttonStyle}
         title="Clear All"
@@ -66,12 +68,8 @@ const ProductFilterAction = ({
         fontStyle={styles.redFont}
       />
       <GradientButton
-        title={
-          countedProducts.isLoading
-            ? '...'
-            : `Show ${formatCur(countedProducts.count)} Products`
-        }
-        disabled={!countedProducts.count}
+        title={isLoading ? '...' : `Show ${formatCur(count)} Products`}
+        disabled={isLoading || !count}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 0 }}
         style={{ ...styles.largeButton, ...styles.buttonStyle }}
@@ -79,7 +77,7 @@ const ProductFilterAction = ({
         fontStyle={styles.whiteFont}
         onPress={_applyFilter}
       />
-    </Div>
+    </View>
   )
 }
 
@@ -87,7 +85,8 @@ const mapDispatchToProps = dispatch =>
   bindActionCreators({ clearFilter, applyFilter }, dispatch)
 
 const mapStateToProps = state => ({
-  countedProducts: state.productFilter.countedProducts,
+  count: state.productFilter.countedProducts.count,
+  isLoading: state.productFilter.countedProducts.isLoading,
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(ProductFilterAction)

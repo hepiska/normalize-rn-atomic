@@ -146,7 +146,9 @@ class FollowList extends Component<any, any> {
     return (
       <View
         style={{ height: 100, width: '100%', backgroundColor: 'transparent' }}>
-        {userLoading && <FollowitemLoader style={{ margin: 16 }} />}
+        {userLoading && this.skip !== 0 && (
+          <FollowitemLoader style={{ margin: 16 }} />
+        )}
       </View>
     )
   }

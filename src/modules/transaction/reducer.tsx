@@ -59,7 +59,7 @@ const transactionReducer: Reducer<TransactionState> = (
     case transactionActionType.DEFAULT:
       return initialState
     default:
-      return newState
+      return state
   }
 }
 

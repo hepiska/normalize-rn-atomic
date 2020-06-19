@@ -1,4 +1,4 @@
-import React, { useState, memo } from 'react'
+import React, { useState, memo, useCallback } from 'react'
 import {
   ViewStyle,
   StyleSheet,
@@ -18,9 +18,11 @@ import { OutlineButton } from '@components/atoms/button'
 import RangePrice from '@components/molecules/range-price'
 import { setImage as chageImageUri } from '@utils/helpers'
 import ColorList from '@components/molecules/color-list'
+import isEqual from 'lodash/isEqual'
 import { navigate, push } from '@src/root-navigation'
 
 import HTML from 'react-native-render-html'
+import { product } from '@src/modules/normalize-schema'
 
 interface ProductCardType {
   product: any
@@ -131,12 +133,13 @@ const ProductCard = ({
       }
     }
   }
-  const onPress = () => {
+
+  const onPress = useCallback(() => {
     push('Screens', {
       screen: 'ProductDetail',
       params: { productId: product.id },
     })
-  }
+  }, [product.id])
 
   const selectedVariant =
     product.variants.find(variant => variant.id === selectedVariantId) ||
@@ -186,7 +189,7 @@ const ProductCard = ({
       onLayout={_onLayout}
     />
   ) : (
-    <ProductCardVertical
+    <MemVerticalCard
       composeStyle={composeStyle}
       isSaved={isProductSaved}
       thumbnailImage={thumbnailImage}
@@ -343,6 +346,7 @@ const ProductCardHorizontal = ({
   )
 }
 
+// eslint-disable-next-line react/display-name
 const ProductCardVertical = ({
   composeStyle,
   isSaved,
@@ -459,7 +463,7 @@ const ProductCardVertical = ({
             // eslint-disable-next-line react/display-name
             productname: (
               htmlAttribs,
-              children,
+              _children,
               convertedCSSStyles,
               passProps,
             ) => {
@@ -553,4 +557,15 @@ const ProductCardVertical = ({
   )
 }
 
-export default memo(ProductCard)
+const MemVerticalCard = memo(ProductCardVertical, (prev, nex) => {
+  if (prev.layout) {
+    return true
+  }
+  return false
+})
+
+const areEq = (a, b) => {
+  return true
+}
+
+export default memo(ProductCard, areEq)

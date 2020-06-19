@@ -9,6 +9,7 @@ import { getUserPosts } from '@modules/user-post/action'
 import PostListItem from '@src/components/molecules/post-card'
 import { postListData } from '@hocs/data/post'
 import EmtyState from '@components/molecules/order-empty-state'
+import PostLoader from '@components/atoms/loaders/post-card'
 
 const PostItem = postListData(PostListItem)
 
@@ -117,7 +118,7 @@ class MyPost extends React.Component<any, any> {
       <View style={{ backgroundColor: 'white' }}>
         <SearchFilter
           key="my-post-filter"
-          style={{ marginVertical: 8 }}
+          style={{ marginVertical: 8, marginLeft: 8 }}
           itemStyle={{ paddingVertical: 8, paddingHorizontal: 12 }}
           selectedFilter={displayedSelected}
           onfilterSelected={this._selectFilter}
@@ -146,6 +147,7 @@ class MyPost extends React.Component<any, any> {
           data={posts}
           key="my-post-list"
           y={y}
+          mansoryLoader={<PostLoader />}
           refreshing={loading}
           onRefresh={() => {}}
           style={{ paddingHorizontal: 8 }}

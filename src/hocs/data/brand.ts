@@ -3,13 +3,15 @@ import { navigate, navigationInf } from '@src/root-navigation'
 import { NavigationActions } from 'react-navigation'
 import { makeSelectedBrands } from '@modules/brand/selector'
 
-const brandListMap = (state, ownProps) => {
+const brandListMap = () => {
   const getBrands = makeSelectedBrands()
-  const brand = getBrands(state, ownProps.brandId)
+  return (state, ownProps) => {
+    const brand = getBrands(state, ownProps.brandId)
 
-  if (!brand) return null
-  return {
-    brand,
+    if (!brand) return null
+    return {
+      brand,
+    }
   }
 }
 export function brandListData(WrappedComponent) {

@@ -36,7 +36,7 @@ interface ImageAutoSchaleType {
 
 let imageSize: any = null
 
-class ImageAutoSchale extends React.PureComponent<ImageAutoSchaleType, any> {
+class ImageAutoSchale extends React.Component<ImageAutoSchaleType, any> {
   state: any = {
     isError: false,
     isLoading: false,
@@ -75,6 +75,16 @@ class ImageAutoSchale extends React.PureComponent<ImageAutoSchaleType, any> {
     return () => {
       imageSize = null
     }
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    if (this.state.isError !== nextState.isError) {
+      return true
+    }
+    if (this.state.isLoading !== nextState.isLoading) {
+      return true
+    }
+    return false
   }
 
   calculateSize = (newWidth, newHeight) => {
@@ -128,7 +138,7 @@ class ImageAutoSchale extends React.PureComponent<ImageAutoSchaleType, any> {
     this.setState({ isError: true, imageLoaded: true })
   }
   _loadStart = () => {
-    // this.setState({ isLoading: true })
+    this.setState({ isLoading: true })
   }
 
   render() {
@@ -180,6 +190,7 @@ class ImageAutoSchale extends React.PureComponent<ImageAutoSchaleType, any> {
             source={source}
             style={[imageStyles, { opacity: this.imageAnimated }]}
             onError={this.handleError}
+            onLoad={this._loadStart}
             onLoadEnd={this.onImageLoad}
             {...props}
           />

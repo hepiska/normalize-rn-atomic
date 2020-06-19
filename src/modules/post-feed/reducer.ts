@@ -44,7 +44,7 @@ const FeedReducer: Reducer<FeedState> = (
     case actionType.CLEAR_FEED:
       return initialState
     default:
-      return newState
+      return state
   }
 }
 

@@ -4,7 +4,8 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { getFeaturedCategories } from '@modules/category/action'
 import Pill from '@components/atoms/pill'
-import { nestedScreenMap } from '@utils/constants'
+import { nestedScreenMap, colors } from '@utils/constants'
+import { fontStyle } from '../commont-styles'
 
 const styles = StyleSheet.create({
   container: {
@@ -40,7 +41,20 @@ class FeaturedCategory extends React.Component<any, any> {
     return (
       <Pill
         title={item.title}
-        style={{ marginRight: 12, paddingVertical: 10 }}
+        style={{
+          borderRadius: 20,
+          borderWidth: 1,
+          borderColor: colors.black50,
+          backgroundColor: colors.black10,
+          marginRight: 12, // real: 22
+          paddingVertical: 10, // real: 13
+          // paddingHorizontal: 15, // real: 15
+        }}
+        item={
+          <Text style={{ ...fontStyle.helvetica, fontSize: 14 }}>
+            {item.title}
+          </Text>
+        }
         onPress={this._onItemPress(item.slug)}
       />
     )

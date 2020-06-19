@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, PureComponent } from 'react'
 import {
   Dimensions,
   ImageBackground,
@@ -29,8 +29,11 @@ import ProductEmpty from '@components/organisms/product-empty'
 import ProductListLoader from '@components/atoms/loaders/two-column-card'
 import ProductHeader from '@components/atoms/loaders/product-list-header'
 import ProductListPageLoader from '@components/atoms/loaders/product-list'
-import { makeDeepClone } from '@modules/selector-general'
-import { makeflatenFilter } from '@modules/product-filter/selector'
+import isEqual from 'lodash/isEqual'
+import {
+  makeflatenFilter,
+  makecloneAppliedFilter,
+} from '@modules/product-filter/selector'
 import TwoCollumnCardLoaderSmall from '@components/atoms/loaders/two-column-card-small'
 
 import {
@@ -84,7 +87,6 @@ class Productlist extends Component<any, any> {
   laspost = 0
   skip = 0
   lastskip = 0
-
   navListener = null
   unlisten
   componentDidMount() {
@@ -158,10 +160,7 @@ class Productlist extends Component<any, any> {
       return ''
     }
 
-    if (
-      JSON.stringify(this.props.appliedFilters) !==
-      JSON.stringify(prevProps.appliedFilters)
-    ) {
+    if (!isEqual(this.props.appliedFilters, prevProps.appliedFilters)) {
       if (!this.props.isCollectionLoading) this._freshfetch()
       return
     }
@@ -179,6 +178,55 @@ class Productlist extends Component<any, any> {
     }
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    const { props, state } = this
+    const headerLoading =
+      props.isCategoryLoading ||
+      props.isBrandLoading ||
+      props.isCollectionLoading
+
+    const nextheaderLoading =
+      nextProps.isCategoryLoading ||
+      nextProps.isBrandLoading ||
+      nextProps.isCollectionLoading
+
+    if (!isEqual(props.category, nextProps.category)) {
+      return true
+    }
+    if (!isEqual(props.brand, nextProps.brand)) {
+      return true
+    }
+    if (!isEqual(props.collection, nextProps.collection)) {
+      return true
+    }
+    if (!isEqual(props.collection, nextProps.collection)) {
+      return true
+    }
+    if (!isEqual(props.headerError, nextProps.headerError)) {
+      return true
+    }
+    if (headerLoading !== nextheaderLoading) {
+      return true
+    }
+
+    if (
+      !isEqual(props.appliedFilters, nextProps.appliedFilters) ||
+      !isEqual(nextProps.search, props.search) ||
+      !isEqual(nextProps.sort, props.sort)
+    ) {
+      return true
+    }
+
+    if (props.products.length !== nextProps.products.length) {
+      return true
+    }
+    if (props.loading !== nextProps.loading) {
+      return true
+    }
+    return false
+  }
+
+  countRender = 0
   _setInitialState() {
     const {
       collection,
@@ -476,7 +524,6 @@ class Productlist extends Component<any, any> {
       isBrandLoading,
       isCollectionLoading,
     } = this.props
-
     const headerData: any = {
       // image:
       // 'https://shonet.imgix.net/commerce/Loueve/#LJRING14-MAIN.jpg?q=75&auto=compress,format&w=350',
@@ -514,9 +561,9 @@ class Productlist extends Component<any, any> {
           leftContent={['back']}
           title={headerData.title || ''}
           subtitle={
-            brandLoading && loading && this.skip === 0
-              ? 'loading....'
-              : `${headerError ? 0 : pagination.total} Items`
+            (!brandLoading && !loading) || this.skip > 0
+              ? `${headerError ? 0 : pagination.total} Items`
+              : 'loading....'
           }
         />
 
@@ -530,7 +577,7 @@ class Productlist extends Component<any, any> {
               style={styles.sectionContainer}
               onEndReachedThreshold={0.97}
               onEndReached={this._fetchMore}
-              onViewableItemsChanged={this.onCheckViewableItems}
+              // onViewableItemsChanged={this.onCheckViewableItems}
               viewabilityConfig={{
                 itemVisiblePercentThreshold: 50, //means if 50% of the item is visible
               }}
@@ -574,86 +621,89 @@ const mapDispatchToProps = dispatch =>
     dispatch,
   )
 
-const mapStateToProps = (state, { route }) => {
-  const deepClone = makeDeepClone()
+const mapStateToProps = () => {
+  const deepClone = makecloneAppliedFilter()
   const flatenFilter = makeflatenFilter()
-  let appliedFilters = deepClone(state.productFilter.applied)
-  appliedFilters = flatenFilter(appliedFilters)
+  return (state, { route }) => {
+    let appliedFilters = deepClone(state)
+    appliedFilters = flatenFilter(appliedFilters)
 
-  const collectionId =
-    route.params.collectionId || state.collection.activeCollection
+    const collectionId =
+      route.params.collectionId || state.collection.activeCollection
 
-  const filterProps = {
-    sort: state.sort.selected,
-    search: state.productFilter.search,
-    appliedFilters,
-  }
+    const filterProps = {
+      sort: state.sort.selected,
+      search: state.productFilter.search,
+      appliedFilters,
+    }
 
-  if (
-    (route.params.from === 'collections' ||
-      route.params.from === 'collection') &&
-    (collectionId || route.params.collectionsSlug)
-  ) {
+    if (
+      (route.params.from === 'collections' ||
+        route.params.from === 'collection') &&
+      (collectionId || route.params.collectionsSlug)
+    ) {
+      return {
+        collection: collectionId && state.collection.data[collectionId],
+        headerError: state.collection.error,
+        products: collectionId ? state.products.order : [],
+        isCollectionLoading: state.collection.loading,
+        loading: state.products.productsLoading,
+        pagination: { total: state.products.pagination.total || 0 },
+        ...filterProps,
+      }
+    }
+
+    const brandId =
+      route.params.brandId || route.params.brandsId || state.brands.activeBrand
+
+    if (
+      (route.params.from === 'brands' || route.params.from === 'brand') &&
+      (brandId || route.params.brandsSlug)
+    ) {
+      return {
+        brand: state.brands.data[brandId] || { id: brandId },
+        headerError: state.brands.error,
+        loading: state.products.productsLoading,
+        isBrandLoading: state.brands.loading,
+        products: state.products.order,
+        pagination: {
+          total: state.products.pagination.total || 0,
+        },
+        ...filterProps,
+      }
+    }
+
+    const categoriesId =
+      route.params.categoriesId ||
+      route.params.categoryId ||
+      state.categories.activeCategory
+
+    if (
+      (route.params.from === 'categories' ||
+        route.params.from === 'category') &&
+      (categoriesId || route.params.categoriesSlug)
+    ) {
+      return {
+        category: state.categories.data[categoriesId] || { id: categoriesId },
+        headerError: state.categories.error,
+        loading: state.products.productsLoading,
+        isCategoryLoading: state.categories.loading,
+        products: state.products.order,
+        pagination: {
+          total: state.products.pagination.total || 0,
+        },
+        ...filterProps,
+      }
+    }
+
     return {
-      collection: collectionId && state.collection.data[collectionId],
+      globalError: state.global.error,
+      products: [],
+      loading: state.products.productsLoading,
       headerError: state.collection.error,
-      products: collectionId ? state.products.order : [],
-      isCollectionLoading: state.collection.loading,
-      loading: state.products.productsLoading,
-      pagination: { total: state.products.pagination.total || 0 },
+      Producterror: state.products.error,
       ...filterProps,
     }
-  }
-
-  const brandId =
-    route.params.brandId || route.params.brandsId || state.brands.activeBrand
-
-  if (
-    (route.params.from === 'brands' || route.params.from === 'brand') &&
-    (brandId || route.params.brandsSlug)
-  ) {
-    return {
-      brand: state.brands.data[brandId] || { id: brandId },
-      headerError: state.brands.error,
-      loading: state.products.productsLoading,
-      isBrandLoading: state.brands.loading,
-      products: state.products.order,
-      pagination: {
-        total: state.products.pagination.total || 0,
-      },
-      ...filterProps,
-    }
-  }
-
-  const categoriesId =
-    route.params.categoriesId ||
-    route.params.categoryId ||
-    state.categories.activeCategory
-
-  if (
-    (route.params.from === 'categories' || route.params.from === 'category') &&
-    (categoriesId || route.params.categoriesSlug)
-  ) {
-    return {
-      category: state.categories.data[categoriesId] || { id: categoriesId },
-      headerError: state.categories.error,
-      loading: state.products.productsLoading,
-      isCategoryLoading: state.categories.loading,
-      products: state.products.order,
-      pagination: {
-        total: state.products.pagination.total || 0,
-      },
-      ...filterProps,
-    }
-  }
-
-  return {
-    globalError: state.global.error,
-    products: [],
-    loading: state.products.productsLoading,
-    collectionError: state.collection.error,
-    Producterror: state.products.error,
-    ...filterProps,
   }
 }
 

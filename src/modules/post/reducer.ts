@@ -49,7 +49,7 @@ const postLikedReducer: Reducer<PostState> = (
     case postActionType.CLEAR_POST:
       return initialState
     default:
-      return newState
+      return state
   }
 }
 
