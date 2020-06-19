@@ -18,7 +18,9 @@ export const productActionType = {
   SET_PRODUCTS_LOADING: 'product/SET_PRODUCTS_LOADING',
   CHANGE_VALUE: 'product/CHANGE_VALUE',
   SET_DEFAULT: 'product/SET_DEFAULT',
+  SET_SPECIFIC_LOADING: 'product/SET_SPECIFIC_LOADING',
   SET_TRENDING_ORDER: 'product/SET_TRENDING_ORDER',
+  SET_SPECIFIC_ORDER: 'product/SET_SPECIFIC_ORDER',
   ERROR: 'product/ERROR',
 }
 
@@ -37,6 +39,20 @@ export const setProductData = (data: any) => {
 const setTrendingOrder = data => {
   return {
     type: productActionType.SET_TRENDING_ORDER,
+    payload: data,
+  }
+}
+
+const setSpecificLoading = data => {
+  return {
+    type: productActionType.SET_SPECIFIC_LOADING,
+    payload: data,
+  }
+}
+
+const setSepcificOrder = data => {
+  return {
+    type: productActionType.SET_SPECIFIC_ORDER,
     payload: data,
   }
 }
@@ -143,17 +159,20 @@ export const getTrendingProduct = params => {
       requestParams: { params },
       schema: [schema.product],
       startNetwork: () => {
-        return setProductsLoading(true)
+        return setSpecificLoading({ uri: 'trending', value: false })
       },
 
       success: (data, { pagination }) => {
         return data
           ? [
               ...dispatchProductEntities(data.entities),
-              setTrendingOrder({ type: 'replace', order: data.result }),
-              setProductsLoading(false),
+              setSepcificOrder({
+                uri: 'trending',
+                value: data.result,
+              }),
+              setSpecificLoading({ uri: 'trending', value: false }),
             ]
-          : [setProductsLoading(false)]
+          : [setSpecificLoading({ uri: 'trending', value: false })]
       },
     },
   }

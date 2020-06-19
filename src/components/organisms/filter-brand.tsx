@@ -165,6 +165,10 @@ const FilterBrandOrg = (props: any) => {
   )
 }
 
+const memoizeFilterOrg = memo(FilterBrandOrg, (currentProp, nextProp) => {
+  return currentProp.selectedBrand === nextProp.selectedBrand
+})
+
 const mapStateToProps = state => ({
   brands: state.productFilter.data.brands || [],
   selectedPrice: state.productFilter.selected.price,
@@ -180,4 +184,4 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch =>
   bindActionCreators({ changeSelectedBrand, fetchCountProduct }, dispatch)
 
-export default connect(mapStateToProps, mapDispatchToProps)(FilterBrandOrg)
+export default connect(mapStateToProps, mapDispatchToProps)(memoizeFilterOrg)

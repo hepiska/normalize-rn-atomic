@@ -91,16 +91,6 @@ class Productlist extends Component<any, any> {
   unlisten
   componentDidMount() {
     const { route, brand, category, getCategory } = this.props
-    this.unlisten = this.props.navigation.addListener('focus', () => {
-      if (this.scroll) {
-        this.scroll.scrollToLocation({
-          animated: false,
-          itemIndex: laspost,
-          sectionIndex: 0,
-        })
-      }
-      // this.scroll.scrollTo({ y: this.laspost, animated: false })
-    })
 
     InteractionManager.runAfterInteractions(() => {
       this.setState({ finishAnimation: true })
@@ -380,7 +370,6 @@ class Productlist extends Component<any, any> {
         items.push(
           <ProductWithCardHoc
             productId={section.data[i]}
-            // product={item}
             key={'' + section.data[i] + index}
             style={{
               maxWidth: width / 2 - 16,
@@ -577,7 +566,6 @@ class Productlist extends Component<any, any> {
               style={styles.sectionContainer}
               onEndReachedThreshold={0.97}
               onEndReached={this._fetchMore}
-              // onViewableItemsChanged={this.onCheckViewableItems}
               viewabilityConfig={{
                 itemVisiblePercentThreshold: 50, //means if 50% of the item is visible
               }}

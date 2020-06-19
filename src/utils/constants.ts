@@ -110,7 +110,7 @@ export const nestedScreenMap = (key, params?) => {
       screen: 'Screens',
       defaultScreen: 'ColectionList',
       params: {
-        screen: 'ProductList',
+        screen: 'CollectionProductList',
         params,
       },
     },
@@ -118,7 +118,7 @@ export const nestedScreenMap = (key, params?) => {
       screen: 'Screens',
       defaultScreen: 'ColectionList',
       params: {
-        screen: 'ProductList',
+        screen: 'CollectionProductList',
         params,
       },
     },
@@ -126,7 +126,7 @@ export const nestedScreenMap = (key, params?) => {
       screen: 'Screens',
       defaultScreen: 'CategoryList',
       params: {
-        screen: 'ProductList',
+        screen: 'CategoryProductList',
         params,
       },
     },
@@ -134,7 +134,7 @@ export const nestedScreenMap = (key, params?) => {
       screen: 'Screens',
       defaultScreen: 'BrandList',
       params: {
-        screen: 'ProductList',
+        screen: 'BrandProductList',
         params,
       },
     },

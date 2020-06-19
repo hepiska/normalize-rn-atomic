@@ -80,7 +80,7 @@ export const getBrand = id => {
       },
       endNetwork: (type, err) => {
         if (type === 'error') {
-          return setBrandError(err)
+          return [setBrandError(err), setBrandLoading(false)]
         }
         return setBrandLoading(false)
       },

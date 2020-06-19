@@ -8,7 +8,7 @@ import { OutlineButton } from '@src/components/atoms/button'
 import ProductCard from '@components/molecules/product-card-new'
 // import ProductCard from '@components/molecules/product-card'
 import { productListData } from '@hocs/data/product'
-import { productApi } from '@modules/product/action'
+import { getTrendingProduct } from '@modules/product/action'
 import { fontStyle } from '../commont-styles'
 import YouMightAlsoLikeLoader from '../atoms/loaders/you-might-also-like'
 
@@ -40,7 +40,7 @@ class ProductSimilar extends Component<any, any> {
 
   freshfetch = async () => {
     try {
-      await this.props.productApi({
+      await this.props.getTrendingProduct({
         limit: this.limit,
         offset: 0,
       })
@@ -99,16 +99,16 @@ class ProductSimilar extends Component<any, any> {
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
-      productApi,
+      getTrendingProduct,
     },
     dispatch,
   )
 
 const mapStateToProps = state => {
   return {
-    products: state.products.order,
+    products: state.products.specificQueryProduct['trending'] || [],
     pagination: state.products.pagination,
-    loading: state.products.productsLoading,
+    loading: state.products.specificLoading['trending'],
     error: state.products.error,
   }
 }

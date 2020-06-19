@@ -118,6 +118,7 @@ class HorizontalList extends React.Component<HorizontalListType, any> {
             item={item}
             navigation={this.props.navigation}
             style={{
+              width: 220,
               marginLeft: index === 0 ? 16 : 8,
             }}
           />

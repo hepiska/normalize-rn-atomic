@@ -8,6 +8,7 @@ import Field from '@components/atoms/field'
 import { colors } from '@utils/constants'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import { changeValue as changeValueUiIneraction } from '@modules/ui-interaction/action'
+import isEqual from 'lodash/isEqual'
 import MultiSlider from '@ptomasroos/react-native-multi-slider'
 import {
   setSelectedPrice,
@@ -114,43 +115,50 @@ const FilterPriceOrg = ({
     }, 500)
   }
 
-  return useMemo(
-    () => (
-      <Div
-        _width={width}
-        padd="0px 16px"
-        _height="100%"
-        radius="0"
-        _background={colors.white}
-        justify="flex-start"
-        align="flex-start">
-        <Div _direction="row">
-          <PriceComponent label="Minimum Price " value={minimum_price} />
-          <PriceComponent label="Maximum Price " value={maximum_price} />
-        </Div>
-        <Div _width="100%">
-          <MultiSlider
-            values={multiSlider}
-            isMarkersSeparated={true}
-            sliderLength={width * 0.8}
-            max={maxSlider}
-            trackStyle={{
-              height: 4,
-            }}
-            selectedStyle={{
-              backgroundColor: 'black',
-            }}
-            unselectedStyle={{
-              backgroundColor: 'silver',
-            }}
-            onValuesChange={_chageSlider}
-          />
-        </Div>
+  return (
+    <Div
+      _width={width}
+      padd="0px 16px"
+      _height="100%"
+      radius="0"
+      _background={colors.white}
+      justify="flex-start"
+      align="flex-start">
+      <Div _direction="row">
+        <PriceComponent label="Minimum Price " value={minimum_price} />
+        <PriceComponent label="Maximum Price " value={maximum_price} />
       </Div>
-    ),
-    [maximum_price, minimum_price],
+      <Div _width="100%">
+        <MultiSlider
+          values={multiSlider}
+          isMarkersSeparated={true}
+          sliderLength={width * 0.8}
+          max={maxSlider}
+          trackStyle={{
+            height: 4,
+          }}
+          selectedStyle={{
+            backgroundColor: 'black',
+          }}
+          unselectedStyle={{
+            backgroundColor: 'silver',
+          }}
+          onValuesChange={_chageSlider}
+        />
+      </Div>
+    </Div>
   )
 }
+
+const memoizeFilterOrg = memo(FilterPriceOrg, (prevProps, nextProp) => {
+  if (prevProps.minimum_price !== nextProp.minimum_price) {
+    return false
+  }
+  if (prevProps.maximum_price !== nextProp.maximum_price) {
+    return false
+  }
+  return true
+})
 
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
@@ -176,7 +184,4 @@ const mapStateToProps = state => ({
     '',
 })
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(memo(FilterPriceOrg))
+export default connect(mapStateToProps, mapDispatchToProps)(memoizeFilterOrg)

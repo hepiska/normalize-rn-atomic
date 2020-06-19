@@ -14,7 +14,7 @@ import InitialPage from '../page-initial.config'
 import LookbookDetail from './look-book'
 import Test from './test'
 import ProductDetail from './product-detail'
-import ProductList from './product-list'
+// import ProductList from './product-list-old'
 import PaymentMethod from './payment-method'
 import PaymentDetails from './payment-details'
 import PaymentList from './payment-list'
@@ -41,6 +41,10 @@ import FormChangePassword from './form-change-password'
 import TermsCondition from './term-and-condition'
 import PrivacyPolicy from './privacy-policy'
 import BeautyProfile from './beauty-profile'
+import CategoryProductList from './category-product-list'
+import CollectionProductList from './collection-product-list'
+import BrandProductList from './brand-product-list'
+
 import TopicInterest from './topic-interest'
 
 const Stack = createStackNavigator()
@@ -68,7 +72,7 @@ function InsiderStack() {
       <Stack.Screen name="ChooseAddress" component={ChooseAddress} />
       <Stack.Screen name="AddNewAddress" component={AddNewAddress} />
       <Stack.Screen name="ProductDetail" component={ProductDetail} />
-      <Stack.Screen name="ProductList" component={ProductList} />
+      {/* <Stack.Screen name="ProductList" component={ProductList} /> */}
       <Stack.Screen name="PaymentWaiting" component={PaymentWaiting} />
       <Stack.Screen name="Cart" component={Cart} />
       <Stack.Screen name="PaymentWebView" component={PaymentWebView} />
@@ -84,6 +88,15 @@ function InsiderStack() {
       <Stack.Screen name="Wishlist" component={Wishlist} />
       <Stack.Screen name="PostDetail" component={PostDetail} />
       <Stack.Screen name="Setting" component={Setting} />
+      <Stack.Screen
+        name="CategoryProductList"
+        component={CategoryProductList}
+      />
+      <Stack.Screen
+        name="CollectionProductList"
+        component={CollectionProductList}
+      />
+      <Stack.Screen name="BrandProductList" component={BrandProductList} />
       <Stack.Screen name="PasswordSecurity" component={PasswordSecurity} />
       <Stack.Screen name="FormChangePassword" component={FormChangePassword} />
       <Stack.Screen name="TermsCondition" component={TermsCondition} />

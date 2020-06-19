@@ -5,6 +5,7 @@ import {
   View,
   // TouchableWithoutFeedback,
   TouchableOpacity,
+  Dimensions,
   Text,
 } from 'react-native'
 import ImageAutoSchale from '@components/atoms/image-autoschale'
@@ -23,6 +24,8 @@ import { navigate, push } from '@src/root-navigation'
 
 import HTML from 'react-native-render-html'
 import { product } from '@src/modules/normalize-schema'
+
+const { width } = Dimensions.get('screen')
 
 interface ProductCardType {
   product: any
@@ -59,6 +62,8 @@ const triggerLogin = () => {
 
 // revisit : handle on save handle add to cart
 
+const cardWidth = width * 0.6 - 24
+
 const styles = StyleSheet.create({
   image: {
     borderRadius: 8,
@@ -72,6 +77,13 @@ const styles = StyleSheet.create({
     ...fontStyle.helveticaBold,
     color: colors.black80,
     marginLeft: 8,
+  },
+  defaultImage: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#e1e4e8',
+    width: cardWidth,
+    height: 1.5 * cardWidth,
   },
   defaultStyle: {
     // marginTop: 16,
@@ -162,8 +174,8 @@ const ProductCard = ({
     ? null
     : !!images[0] &&
       chageImageUri(images[0], {
-        width: (layout && layout.width / 20) || 0,
-        height: (layout && (layout.width / 20) * 1.5) || 0,
+        width: 24,
+        height: 32,
       })
 
   return horizontal ? (
@@ -421,7 +433,7 @@ const ProductCardVertical = ({
             color={isSaved ? colors.black100 : colors.black90}
           />
         </TouchableOpacity>
-        {layout && (
+        {layout ? (
           <TouchableWithoutFeedback onPress={onPress}>
             <ImageAutoSchale
               errorStyle={{ width: layout.width, height: 1.5 * layout.width }}
@@ -430,13 +442,15 @@ const ProductCardVertical = ({
                   ? { uri: thumbnailImage }
                   : thumbnailImage
               }
-              containerStyle={{ width: layout.width, height: 200 }}
+              containerStyle={{ width: layout.width, height: 232 }}
               source={typeof image === 'string' ? { uri: image } : image}
               width={layout.width}
               height={1.5 * layout.width}
               style={{ ...styles.image }}
             />
           </TouchableWithoutFeedback>
+        ) : (
+          <View style={styles.defaultImage} />
         )}
       </View>
 
