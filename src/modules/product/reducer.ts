@@ -12,6 +12,7 @@ interface ProductState {
   readonly order: Array<number>
   readonly search: Array<number>
   pagination: Object
+  specificQueryProduct: Object
   readonly trendingOrder: Array<number>
   productsLoading: boolean
   productLoading: Boolean
@@ -22,6 +23,8 @@ const initialState: any = {
   data: Immutable({}),
   order: Immutable([]),
   search: Immutable([]),
+  specificQueryProduct: {},
+  specificLoading: {},
   pagination: {},
   productsLoading: false,
   productLoading: false,
@@ -90,6 +93,16 @@ const productReducer: Reducer<ProductState> = (
       newState = { ...state }
 
       newState.search = Immutable([])
+      return newState
+
+    case productActionType.SET_SPECIFIC_LOADING:
+      newState = { ...state }
+      newState.specificLoading[action.payload.uri] = action.payload.value
+      return newState
+
+    case productActionType.SET_SPECIFIC_ORDER:
+      newState = { ...state }
+      newState.specificQueryProduct[action.payload.uri] = action.payload.value
       return newState
 
     case productActionType.SET_TRENDING_ORDER:

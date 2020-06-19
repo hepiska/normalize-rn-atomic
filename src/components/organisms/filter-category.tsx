@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react'
+import React, { Component } from 'react'
 import { Dimensions, StyleSheet, SectionList, View } from 'react-native'
 import { connect, batch } from 'react-redux'
 import { bindActionCreators } from 'redux'
@@ -49,7 +49,7 @@ const isAllChildernIncluded = (children, str) => {
 
 const CategoryListItem = categoryListData(SelectAbleItem)
 
-class FilterCategory extends PureComponent<any, any> {
+class FilterCategory extends Component<any, any> {
   shouldComponentUpdate(nextProps, nextState) {
     const { state, props } = this
 
