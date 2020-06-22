@@ -109,7 +109,7 @@ class TransactionHistoryCard extends React.Component<
             }
           }
         />
-        <View {...style} {...styles.container}>
+        <View style={{ ...styles.container, ...style }}>
           {type !== 'more' ? (
             <>
               <View

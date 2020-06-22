@@ -113,7 +113,7 @@ class PaymentMethodPage extends Component<any, any> {
         />
         {finishAnimation ? (
           <ScrollDiv>
-            <View {...styles.container}>
+            <View style={{ ...styles.container }}>
               {Object.keys(groupingPayment).map((value, key) => {
                 return (
                   <GroupPaymentMethod
