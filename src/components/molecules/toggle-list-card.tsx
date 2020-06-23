@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { Text, StyleSheet, View, ViewStyle, Switch } from 'react-native'
 import { colors } from '@utils/constants'
 import { fontStyle, borderStyle } from '@src/components/commont-styles'
+import ListItemCard from '@src/components/molecules/list-item-card'
 
 interface ActionListCartType {
   title: string
@@ -46,7 +47,7 @@ const ToggleListCard = ({
 }: ActionListCartType) => {
   const [isActive, setActive] = useState(isEnabled)
   return (
-    <View
+    <ListItemCard
       style={{
         ...style,
         flexDirection: 'row',
@@ -58,42 +59,46 @@ const ToggleListCard = ({
         paddingVertical: 24,
         backgroundColor,
         borderRadius,
-      }}>
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          flex: 0.9,
-        }}>
-        <View>
-          <Text style={{ ...styles.helveticaBold14, color: colors.black100 }}>
-            {title}
-          </Text>
-          {desc && (
-            <View style={{ marginTop: 8 }}>
-              <Text style={{ ...styles.helvetica12, color: colors.black70 }}>
-                {desc}
-              </Text>
-            </View>
-          )}
+      }}
+      leftContent={
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            flex: 0.9,
+          }}>
+          <View>
+            <Text style={{ ...styles.helveticaBold14, color: colors.black100 }}>
+              {title}
+            </Text>
+            {desc && (
+              <View style={{ marginTop: 8 }}>
+                <Text style={{ ...styles.helvetica12, color: colors.black70 }}>
+                  {desc}
+                </Text>
+              </View>
+            )}
+          </View>
         </View>
-      </View>
-      <Switch
-        trackColor={{ false: colors.black50, true: colors.blue50 }}
-        thumbColor={isActive ? colors.white : colors.black60}
-        style={{
-          borderColor: isActive ? colors.blue50 : colors.black50,
-          borderWidth: 2,
-          borderRadius: 16,
-          marginLeft: 18,
-        }}
-        onChange={() => {
-          onPress()
-          setActive(!isActive)
-        }}
-        value={isActive}
-      />
-    </View>
+      }
+      rightContent={
+        <Switch
+          trackColor={{ false: colors.black50, true: colors.blue50 }}
+          thumbColor={isActive ? colors.white : colors.black60}
+          style={{
+            borderColor: isActive ? colors.blue50 : colors.black50,
+            borderWidth: 2,
+            borderRadius: 16,
+            marginLeft: 18,
+          }}
+          onChange={() => {
+            onPress()
+            setActive(!isActive)
+          }}
+          value={isActive}
+        />
+      }
+    />
   )
 }
 

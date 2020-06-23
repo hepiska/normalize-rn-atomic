@@ -7,6 +7,7 @@ import ImageAutoSchale from '@components/atoms/image-autoschale'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import { setImage as changeImageUri } from '@utils/helpers'
 import { navigate } from '@src/root-navigation'
+import ListItemCard from '@src/components/molecules/list-item-card'
 
 const styles = StyleSheet.create({
   image: {
@@ -65,15 +66,17 @@ class PaymentMethodCart extends Component<any, any> {
     }
 
     return (
-      <TouchableWithoutFeedback onPress={this.paymentDetails}>
-        <View
-          {...style}
-          {...styles.container}
-          style={{
-            borderTopColor: index > 0 ? colors.black50 : colors.white,
-            borderTopWidth: index > 0 ? 1 : 0,
-            marginTop: index > 0 ? 0 : 32,
-          }}>
+      <ListItemCard
+        activeOpacity={1}
+        onPress={this.paymentDetails}
+        style={{
+          ...styles.container,
+          ...style,
+          borderTopColor: index > 0 ? colors.black50 : colors.white,
+          borderTopWidth: index > 0 ? 1 : 0,
+          marginTop: index > 0 ? 0 : 32,
+        }}
+        leftContent={
           <View style={{ flexDirection: 'row' }}>
             <ImageAutoSchale
               source={{ uri: image }}
@@ -82,20 +85,18 @@ class PaymentMethodCart extends Component<any, any> {
               }}
               style={styles.image}
             />
-            <View {...styles.information}>
+            <View style={{ ...styles.information }}>
               <Text
                 style={{ ...styles.helveticaBold14, color: colors.black80 }}>
                 {paymentName}
               </Text>
             </View>
           </View>
-          <View>
-            <View>
-              <Icon name="chevron-right" size={12} color={colors.black100} />
-            </View>
-          </View>
-        </View>
-      </TouchableWithoutFeedback>
+        }
+        rightContent={
+          <Icon name="chevron-right" size={12} color={colors.black100} />
+        }
+      />
     )
   }
 }

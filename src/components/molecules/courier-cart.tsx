@@ -12,6 +12,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { changeOptionShipment } from '@modules/shipment/action'
 import { addShippingMethodData } from '@modules/checkout/action'
+import ListItemCard from '@src/components/molecules/list-item-card'
 
 interface CourierCartType {
   style?: ViewStyle
@@ -126,13 +127,10 @@ class CourierCart extends React.PureComponent<CourierCartType, any> {
 
     if (type === 'choose-courier') {
       return (
-        <TouchableWithoutFeedback
-          onPress={courier.is_available ? this.changeCourier : () => {}}>
-          <View>
-            <View
-              {...style}
-              {...styles.containerChooseCourier}
-              accessibilityState={{ disabled: Boolean(courier.is_available) }}>
+        <View>
+          <ListItemCard
+            onPress={courier.is_available ? this.changeCourier : null}
+            leftContent={
               <View style={{ flexDirection: 'row' }}>
                 <ImageAutoSchale
                   source={typeof image === 'string' ? { uri: image } : image}
@@ -150,7 +148,10 @@ class CourierCart extends React.PureComponent<CourierCartType, any> {
               )} */}
                   <View style={{ marginTop: 8 }}>
                     <Text
-                      style={{ ...styles.helvetica12, color: colors.black60 }}>
+                      style={{
+                        ...styles.helvetica12,
+                        color: colors.black60,
+                      }}>
                       {courier.courier.name}
                     </Text>
                   </View>
@@ -163,42 +164,54 @@ class CourierCart extends React.PureComponent<CourierCartType, any> {
                   </Text>
                 </View>
               </View>
+            }
+            rightContent={
               <RadioButton
                 isSelected={isSelected}
                 onPress={courier.is_available ? this.changeCourier : () => {}}
               />
+            }
+            style={{
+              ...styles.containerChooseCourier,
+              ...style,
+            }}
+          />
+          {!courier.is_available && (
+            <View
+              style={[
+                StyleSheet.absoluteFillObject,
+                { backgroundColor: 'rgba(255,255,255, 0.5)' },
+              ]}
+            />
+          )}
+          {!courier.is_available && (
+            <View
+              style={{
+                marginTop: 16,
+                backgroundColor: 'rgba(26, 26, 26, 0.04)',
+                borderRadius: 8,
+                paddingTop: 8,
+                paddingBottom: 8,
+                paddingLeft: 16,
+                paddingRight: 16,
+              }}>
+              <Text style={{ ...styles.helvetica12, color: colors.black100 }}>
+                Courier doesn’t support delivery into your address
+              </Text>
             </View>
-            {!courier.is_available && (
-              <View
-                style={[
-                  StyleSheet.absoluteFillObject,
-                  { backgroundColor: 'rgba(255,255,255, 0.5)' },
-                ]}
-              />
-            )}
-            {!courier.is_available && (
-              <View
-                style={{
-                  marginTop: 16,
-                  backgroundColor: 'rgba(26, 26, 26, 0.04)',
-                  borderRadius: 8,
-                  paddingTop: 8,
-                  paddingBottom: 8,
-                  paddingLeft: 16,
-                  paddingRight: 16,
-                }}>
-                <Text style={{ ...styles.helvetica12, color: colors.black100 }}>
-                  Courier doesn’t support delivery into your address
-                </Text>
-              </View>
-            )}
-          </View>
-        </TouchableWithoutFeedback>
+          )}
+        </View>
       )
     }
+
     return (
-      <TouchableWithoutFeedback onPress={onPress}>
-        <View {...style} {...styles.container}>
+      <ListItemCard
+        onPress={onPress}
+        style={{
+          ...styles.container,
+          ...style,
+        }}
+        leftContent={
           <View style={{ flexDirection: 'row' }}>
             <ImageAutoSchale
               source={{ uri: image }}
@@ -230,13 +243,11 @@ class CourierCart extends React.PureComponent<CourierCartType, any> {
               </View>
             </View>
           </View>
-          <View>
-            <View>
-              <Icon name="chevron-right" size={12} color={colors.black100} />
-            </View>
-          </View>
-        </View>
-      </TouchableWithoutFeedback>
+        }
+        rightContent={
+          <Icon name="chevron-right" size={12} color={colors.black100} />
+        }
+      />
     )
   }
 }

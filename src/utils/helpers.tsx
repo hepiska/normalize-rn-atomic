@@ -214,7 +214,23 @@ export const removeHeaderWebviewScript = `(function() {
     footer[0].remove();
 
   }
-  
+})()
+true;
+`
+
+export const removeHeaderWebviewCreateJurnalScript = `(function() {
+  var header = document.getElementsByClassName("header-container");
+  header[0].remove();
+ 
+  header[0].style.paddingTop="16px"
+  if(mainWrapper[0]){
+    mainWrapper[0].style.paddingTop = "8px";
+  }
+  var footer = document.getElementsByClassName("footer-nav"); 
+  if( footer[0]){
+    footer[0].remove();
+
+  }
 })()
 true;
 `
@@ -226,25 +242,24 @@ export const urlScreenMap = url => {
 }
 
 export const injectTokenScript = (id_token, user) => {
-  if (!id_token) {
-    return '(function(){})()'
-  }
-
   const token: { exp: number } = jwtDecode(id_token)
   const expiresAt = JSON.stringify(token.exp * 1000)
   user = JSON.stringify(user)
+
+  if (!id_token) {
+    return '(function(){})()'
+  }
   return `
-  (function(){
-    document.cookie="tokenId=${id_token}"
-    localStorage.setItem("tokenId", "${id_token}")
-    localStorage.setItem("user", JSON.stringify(${user}))
-    localStorage.setItem("expiresAt","${expiresAt}")
+    (function(){
+      
+      window.document.cookie="tokenId=${id_token}"
+      window.localStorage.setItem("tokenId", "${id_token}")
+      window.localStorage.setItem("user", JSON.stringify(${user}))
+      window.localStorage.setItem("expiresAt","${expiresAt}")
 
-    window.ReactNativeWebView.postMessage(JSON.stringify(localStorage.getItem("user")))
-
-  })();
-  true;
-`
+    })();
+    true;
+  `
 }
 
 export const clearLocalStorageScript = () => {

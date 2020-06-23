@@ -70,6 +70,7 @@ const UserDetail = props => {
         onNavigationStateChange={_navChange}
         onLoadEnd={syntheticEvent => {
           const { nativeEvent } = syntheticEvent
+          injectTokenScript(id_token, user)
           if (!nativeEvent.loading) {
             mywebView.current.injectJavaScript(removeHeaderWebviewScript)
           }

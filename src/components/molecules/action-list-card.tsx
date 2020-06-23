@@ -11,6 +11,7 @@ import { colors } from '@utils/constants'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import IconMi from 'react-native-vector-icons/MaterialIcons'
 import { fontStyle, borderStyle } from '@src/components/commont-styles'
+import ListItemCard from '@src/components/molecules/list-item-card'
 
 interface ActionListCartType {
   source?: string
@@ -56,21 +57,9 @@ const ActionListCard = ({
 }: ActionListCartType) => {
   const IconComponent = source === 'material-icon' ? IconMi : Icon
   return (
-    <TouchableOpacity onPress={onPress}>
-      <View
-        style={{
-          ...style,
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          borderTopColor:
-            isFirst && index === 0 ? colors.black50 : colors.white,
-          borderTopWidth: 1,
-          ...borderStyle.bottom,
-          paddingVertical: 24,
-          backgroundColor,
-          borderRadius,
-        }}>
+    <ListItemCard
+      onPress={onPress}
+      leftContent={
         <View
           style={{
             flexDirection: 'row',
@@ -96,9 +85,23 @@ const ActionListCard = ({
             )}
           </View>
         </View>
+      }
+      rightContent={
         <Icon name="chevron-right" size={16} color={colors.black100} />
-      </View>
-    </TouchableOpacity>
+      }
+      style={{
+        ...style,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        borderTopColor: isFirst && index === 0 ? colors.black50 : colors.white,
+        borderTopWidth: 1,
+        ...borderStyle.bottom,
+        paddingVertical: 24,
+        backgroundColor,
+        borderRadius,
+      }}
+    />
   )
 }
 

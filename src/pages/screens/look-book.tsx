@@ -28,7 +28,6 @@ const LookBookDetail = props => {
     }
   }, [])
 
-  // console.log(`"${JSON.stringify(user)}"`)
   return (
     <>
       <NavbarTop title="Lookbook" leftContent={['back']} />
@@ -41,6 +40,7 @@ const LookBookDetail = props => {
         )}
         onLoadEnd={syntheticEvent => {
           const { nativeEvent } = syntheticEvent
+          injectTokenScript(id_token, user)
           if (!nativeEvent.loading) {
             mywebView.current.injectJavaScript(removeHeaderWebviewScript)
           }
