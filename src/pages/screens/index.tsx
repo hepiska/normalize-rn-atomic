@@ -25,6 +25,8 @@ import Cart from './cart'
 import PaymentWaiting from './payment-waiting'
 import PaymentResponse from './payment-status-response'
 import PaymentWebView from './payment-webview'
+import CreateCollection from './create-collection'
+import CreateJurnal from './create-jurnal'
 import Search from './search-list'
 import MyProfile from './my-other-profille'
 import SizeGuideWebView from './size-guide-webview'
@@ -75,6 +77,8 @@ function InsiderStack() {
       {/* <Stack.Screen name="ProductList" component={ProductList} /> */}
       <Stack.Screen name="PaymentWaiting" component={PaymentWaiting} />
       <Stack.Screen name="Cart" component={Cart} />
+      <Stack.Screen name="CreateCollection" component={CreateCollection} />
+      <Stack.Screen name="CreateJurnal" component={CreateJurnal} />
       <Stack.Screen name="PaymentWebView" component={PaymentWebView} />
       <Stack.Screen name="SizeGuideWebView" component={SizeGuideWebView} />
       <Stack.Screen name="PaymentResponse" component={PaymentResponse} />

@@ -68,7 +68,7 @@ class SectionGridList extends React.Component<SectionGridListType, any> {
             _flex={1}
             align="flex-start"
             style={{ flexWrap: 'wrap' }}>
-            {_data.map((item, key) => (
+            {_data?.map((item, key) => (
               <Div key={`section-grid-${key}`} _width="50%" _height={430}>
                 <ProductHoc
                   productId={item}
@@ -127,7 +127,7 @@ class SectionGridList extends React.Component<SectionGridListType, any> {
       case 'image':
         return (
           <Div align="flex-start" justify="center">
-            {_data.map((item, key) => (
+            {_data?.map((item, key) => (
               <ImageCard
                 navigation={navigation}
                 item={item}

@@ -48,6 +48,9 @@ const PostDetailPage = props => {
           onLoadStart={syntheticEvent => {
             const { nativeEvent } = syntheticEvent
             setTitle(nativeEvent.title)
+            mywebView.current.injectJavaScript(
+              injectTokenScript(id_token, user),
+            )
           }}
           onLoadEnd={syntheticEvent => {
             const { nativeEvent } = syntheticEvent
