@@ -5,8 +5,10 @@ import { followUser, unfollowUser } from '@modules/user/action'
 const userListMap = (state, ownProps) => {
   const { userId } = ownProps
   const user = state.user.data[userId]
-  const isFollowed = state.user.data[userId].is_followed
-
+  const isFollowed =
+    state.user.data[userId].is_followed !== undefined
+      ? state.user.data[userId].is_followed
+      : false
   return {
     user,
     isFollowed,

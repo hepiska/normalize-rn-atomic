@@ -18,6 +18,8 @@ import cartReducer from './cart/reducer'
 import addressReducer from './address/reducer'
 import shipmentReducer from './shipment/reducer'
 import shippingMethodsReducer from './shipping-methods/reducer'
+import searchPostReducer from './search-post/reducer'
+import searchBrandReducer from './search-brand/reducer'
 import orderReducer from './order/reducer'
 import productSavedActionType from './product-saved/reducer'
 import postLikedActionType from './post-liked/reducer'
@@ -65,6 +67,8 @@ const combinedReducer: Reducer<any> = combineReducers({
   products: productsReducer,
   productAttribute: productAttributeReducer,
 
+  searchPost: searchPostReducer,
+  searchBrand: searchBrandReducer,
   shipments: shipmentReducer,
   shippingMethods: shippingMethodsReducer,
   sort: sortReducer,

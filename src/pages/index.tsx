@@ -44,8 +44,14 @@ const MainScreens = () => (
 
 const Stack2 = createStackNavigator()
 const MainWithModal = () => (
-  <Drawer.Navigator drawerContent={props => <ConstumeDrawer {...props} />}>
-    <Drawer.Screen name="MainScreen" component={MainScreens} />
+  <Drawer.Navigator
+    // gestureEnabled={false}
+    drawerContent={props => <ConstumeDrawer {...props} />}>
+    <Drawer.Screen
+      name="MainScreen"
+      options={{ gestureEnabled: false }}
+      component={MainScreens}
+    />
   </Drawer.Navigator>
 )
 

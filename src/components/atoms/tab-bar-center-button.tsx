@@ -23,7 +23,7 @@ const { width, height } = Dimensions.get('screen')
 const styles = StyleSheet.create({
   actionContainer: {
     position: 'absolute',
-    top: 0,
+    top: 48,
     width: 165,
     height: 76,
     borderRadius: 8,
@@ -67,7 +67,7 @@ const AddButton = () => {
 
   const buttonPos = interpolate(animatedButtonVal, {
     inputRange: [0, 1],
-    outputRange: [0, -96],
+    outputRange: [0, -(96 + 48)],
   })
   const opacity = interpolate(animatedButtonVal, {
     inputRange: [0.7, 1],
