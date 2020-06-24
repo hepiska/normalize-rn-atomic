@@ -38,6 +38,7 @@ const searchReducer: Reducer<SearchState> = (
       return newState
     case searchActionType.SET_PAGINATION:
       newState.pagination = action.payload
+      return newState
     case searchActionType.SET_SEARCH_LOADING:
       newState.loading = action.payload
       return newState

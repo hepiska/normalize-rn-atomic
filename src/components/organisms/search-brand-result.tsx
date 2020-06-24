@@ -5,13 +5,14 @@ import { colors } from '@src/utils/constants'
 import { fontStyle } from '../commont-styles'
 import { ScrollView } from 'react-native-gesture-handler'
 import { connect } from 'react-redux'
-import { brandListData } from '@hocs/data/brand'
+import { searchBrandListData } from '@hocs/data/brand'
 import BrandHorizontalCard from '@components/molecules/brand-horizontal-card'
 import List from '@components/layouts/list-header'
 import EmtyState from '@components/molecules/order-empty-state'
 import FollowitemLoader from '@components/atoms/loaders/follow-item'
 
-const BrandHoc = brandListData(BrandHorizontalCard)
+const BrandHoc = searchBrandListData(BrandHorizontalCard)
+const brandCardHeight = 73
 
 const styles = StyleSheet.create({
   container: {
@@ -100,9 +101,13 @@ class SearchBrandResult extends Component<SearchBrandType, any> {
     const title = searchKey.length > 2 ? 'No Brand' : 'Please Fill keyword'
     const desc =
       searchKey.length > 2
-        ? 'You Dont Have Brand for this Keyword'
+        ? 'We Dont find any brand for this Keyword'
         : 'Please Fill keyword'
     return <EmtyState title={title} description={desc} />
+  }
+
+  _keyExtractor = (item, key) => {
+    return 'search-user-item' + item + key
   }
 
   render() {
@@ -120,6 +125,12 @@ class SearchBrandResult extends Component<SearchBrandType, any> {
           onEndReachedThreshold={0.9}
           onReachedEnd={this.onReachedEnd}
           ListEmptyComponent={this.emtyComponent}
+          keyExtractor={this._keyExtractor}
+          getItemLayout={(data, index) => ({
+            length: brandCardHeight,
+            offset: brandCardHeight * index,
+            index,
+          })}
           ListFooterComponent={this._renderFooterLoader}
           renderItem={this.renderItem}
           style={{ paddingHorizontal: 16 }}

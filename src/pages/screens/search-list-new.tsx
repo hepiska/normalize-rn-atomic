@@ -16,6 +16,7 @@ import SearchPostResult from '@src/components/organisms/search-post-result'
 import SearchListLoader from '@src/components/atoms/loaders/search-list'
 import { getSearchPost } from '@src/modules/search-post/action'
 import { getSearchBrand } from '@modules/search-brand/action'
+import { getSearchUser } from '@modules/search-user/action'
 
 const Tab = createMaterialTopTabNavigator()
 
@@ -96,6 +97,14 @@ class SearchList extends Component<any, any> {
     if (activeTab === 1) {
       this.props.getSearchBrand(params)
     }
+    if (activeTab === 2) {
+      this.props.getSearchUser(params)
+    }
+  }
+
+  fetchMore = () => {
+    const newSkip = this.skip[this.state.activeTab] + 1
+    this._fetchData(newSkip)
   }
 
   removeSearch = () => {
@@ -111,9 +120,21 @@ class SearchList extends Component<any, any> {
           <SearchProductResult searchKey={searchKey} skip={this.skip['0']} />
         )
       case 'brand':
-        return <SearchBrandResult searchKey={searchKey} skip={this.skip['1']} />
+        return (
+          <SearchBrandResult
+            searchKey={searchKey}
+            skip={this.skip['1']}
+            fetchMore={this.fetchMore}
+          />
+        )
       case 'user':
-        return <SearchUserResult searchKey={searchKey} skip={this.skip['2']} />
+        return (
+          <SearchUserResult
+            searchKey={searchKey}
+            skip={this.skip['2']}
+            fetchMore={this.fetchMore}
+          />
+        )
       case 'post':
         return <SearchPostResult searchKey={searchKey} skip={this.skip['3']} />
       default:
@@ -208,6 +229,7 @@ const mapDispatchToProps = dispatch =>
     {
       getSearchPost,
       getSearchBrand,
+      getSearchUser,
     },
     dispatch,
   )
