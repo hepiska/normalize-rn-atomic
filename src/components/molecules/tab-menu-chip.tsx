@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native'
 import { Div, Font, ScrollDiv, PressAbbleDiv } from '@components/atoms/basic'
 import Animated, { Extrapolate } from 'react-native-reanimated'
@@ -21,6 +21,7 @@ interface DiscoverTapType {
   navigation: any
   position: any
   rightAction?: any
+  onChangeTab?: (activeTab: any) => void
 }
 
 const TabMenuNavigator = ({
@@ -29,6 +30,7 @@ const TabMenuNavigator = ({
   navigation,
   position,
   rightAction,
+  onChangeTab,
 }: DiscoverTapType) => {
   return (
     <View
@@ -57,6 +59,8 @@ const TabMenuNavigator = ({
               target: route.key,
               canPreventDefault: true,
             })
+
+            onChangeTab(index)
 
             if (!isFocused && !event.defaultPrevented) {
               navigation.navigate(route.name)

@@ -10,7 +10,7 @@ import { Button, GradientButton } from '@components/atoms/button'
 import Gradient from 'react-native-linear-gradient'
 import { connect } from 'react-redux'
 
-const { width } = Dimensions.get('screen')
+// const { width } = Dimensions.get('screen')
 
 const Divider = ({ marginTop, paddingHorizontal }) => (
   <View
@@ -37,7 +37,8 @@ interface FollowCardType {
 
 const styles = StyleSheet.create({
   container: {
-    width: width,
+    // width: width,
+    flex: 1,
     paddingHorizontal: 16,
   },
   content: {
@@ -143,7 +144,7 @@ class FollowCard extends React.PureComponent<FollowCardType, any> {
                     </Text>
                   </View>
                   {/* if username available, show name. if username not avail, set name as username */}
-                  {user.username && (
+                  {user.username !== '' && (
                     <View
                       style={{
                         flexDirection: 'row',

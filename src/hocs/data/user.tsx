@@ -5,8 +5,23 @@ import { followUser, unfollowUser } from '@modules/user/action'
 const userListMap = (state, ownProps) => {
   const { userId } = ownProps
   const user = state.user.data[userId]
-  const isFollowed = state.user.data[userId].is_followed
+  const isFollowed =
+    state.user.data[userId].is_followed !== undefined
+      ? state.user.data[userId].is_followed
+      : false
+  return {
+    user,
+    isFollowed,
+  }
+}
 
+const searchUserListMap = (state, ownProps) => {
+  const { userId } = ownProps
+  const user = state.searchUser.data[userId]
+  const isFollowed =
+    state.searchUser.data[userId].is_followed !== undefined
+      ? state.searchUser.data[userId].is_followed
+      : false
   return {
     user,
     isFollowed,
@@ -33,4 +48,12 @@ const mergeProps = (stateProps, dispatchProps, ownProps) => {
 
 export function userListData(WrappedComponent) {
   return connect(userListMap, mapDispatchToProps, mergeProps)(WrappedComponent)
+}
+
+export function searchUserListData(WrappedComponent) {
+  return connect(
+    searchUserListMap,
+    mapDispatchToProps,
+    mergeProps,
+  )(WrappedComponent)
 }

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {
   StyleSheet,
   View,
@@ -27,6 +27,7 @@ interface DiscoverTapType {
   navigation: any
   position: any
   rightAction?: any
+  onChangeTab: (number) => void
 }
 
 const TabMenuNavigator = ({
@@ -34,7 +35,11 @@ const TabMenuNavigator = ({
   descriptors,
   navigation,
   position,
+  onChangeTab,
 }: DiscoverTapType) => {
+  useEffect(() => {
+    onChangeTab(state.index)
+  }, [state.index])
   return (
     <View>
       <ScrollView
@@ -55,6 +60,8 @@ const TabMenuNavigator = ({
               : route.name
 
           const isFocused = state.index === index
+
+          // onChangeTab(state.index)
 
           const onPress = () => {
             const event = navigation.emit({

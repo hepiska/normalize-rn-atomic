@@ -407,12 +407,15 @@ const VerticalCart = ({
             flexDirection: 'row',
             marginVertical: 4,
             marginHorizontal: 8,
+            alignItems: 'center',
           }}>
           <TouchableOpacity>
             <Image
-              source={{
-                uri: setImage(user.photo_url, { width: 24 }),
-              }}
+              source={
+                user.photo_url
+                  ? { uri: user.photo_url }
+                  : require('@src/assets/placeholder/placeholder2.jpg')
+              }
               style={{
                 width: 16,
                 height: 16,
