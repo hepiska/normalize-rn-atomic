@@ -49,25 +49,45 @@ class PaymentMethodPage extends Component<any, any> {
       getTransactionById,
       transactionLoading,
       transactionId,
+      transactionData,
     } = this.props
     if (!transactionLoading) {
       if (prevProps.transactionId !== this.props.transactionId) {
         getTransactionById(transactionId)
         getTransactionPaymentById(transactionId)
       }
+
+      if (transactionData && transactionData?.provider_payment_method) {
+        this.props.navigation.replace('Screens', {
+          screen: 'PaymentWaiting',
+          params: {
+            transactionId,
+            from: 'notification',
+          },
+        })
+      }
     }
   }
 
   _toPaymentList = () => {
-    this.props.navigation.dispatch(
-      CommonActions.reset({
-        index: 1,
-        routes: [
-          { name: 'Main', params: { screen: 'Shop' } },
-          { name: 'Screens', params: { screen: 'PaymentList' } },
-        ],
-      }),
-    )
+    if (this.props.route.params.from === 'notification') {
+      this.props.navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{ name: 'Main', params: { screen: 'Notifications' } }],
+        }),
+      )
+    } else {
+      this.props.navigation.dispatch(
+        CommonActions.reset({
+          index: 1,
+          routes: [
+            { name: 'Main', params: { screen: 'Shop' } },
+            { name: 'Screens', params: { screen: 'PaymentList' } },
+          ],
+        }),
+      )
+    }
   }
   render() {
     const {
@@ -148,12 +168,15 @@ const mapStateToProps = (state, ownProps) => {
   const transactionPaymentOrder = state.transactionsPayments.order
   const transactionPaymentData = state.transactionsPayments.data
   const transactionLoading = state.transaction.loading
+  const transactionData =
+    state.transaction.data[ownProps.route.params.transactionId]
 
   return {
     transactionId,
     transactionLoading,
     transactionPaymentOrder,
     transactionPaymentData,
+    transactionData,
   }
 }
 

@@ -202,6 +202,63 @@ export const calculateYear = year => {
   return min_dob.toISOString()
 }
 
+export const calculateDay = day => {
+  const now = dayjs()
+  const _day = dayjs(day)
+
+  let convertion = ''
+  let res = 0
+  let year = now.diff(_day, 'year')
+  let month = now.diff(_day, 'month')
+  let days = now.diff(_day, 'day')
+  let hour = now.diff(_day, 'hour')
+  let minute = now.diff(_day, 'minute')
+  let second = now.diff(_day, 'second')
+
+  if (year < 1) {
+    if (month < 1) {
+      if (days < 1) {
+        if (hour < 1) {
+          if (minute < 0) {
+            res = second
+            convertion = 'seconds'
+          } else {
+            res = minute
+            convertion = 'minutes'
+          }
+        } else {
+          res = hour
+          convertion = 'hours'
+        }
+      } else {
+        res = days
+        convertion = 'days'
+      }
+    } else {
+      res = month
+      convertion = 'months'
+    }
+  } else {
+    res = year
+    convertion = 'years'
+  }
+
+  return 'about ' + res + ' ' + convertion + ' ago'
+}
+
+export const calculateTimeDifference = date => {
+  const now = dayjs()
+  const _day = dayjs(date)
+
+  let year = now.diff(_day, 'year')
+  let month = now.diff(_day, 'month')
+  let week = now.diff(_day, 'week')
+  let days = now.diff(_day, 'day')
+  let hours = now.diff(_day, 'hour')
+
+  return { year, month, week, days, hours, now }
+}
+
 export const removeHeaderWebviewScript = `(function() {
   var header = document.getElementsByClassName("header-container");
   header[0].remove();

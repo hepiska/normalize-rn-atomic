@@ -401,7 +401,7 @@ class PaymentWaiting extends Component<any, any> {
               }}>
               <ImageAutoSchale
                 source={
-                  transaction.provider_payment_method.image
+                  transaction.provider_payment_method?.image
                     ? { uri: transaction.provider_payment_method.image }
                     : defaultImages
                 }
@@ -626,22 +626,31 @@ class PaymentWaiting extends Component<any, any> {
     this.setState({ isBottomSheetOpen: !this.state.isBottomSheetOpen })
   }
   _handleBack = () => {
-    const routes = [
-      { name: 'Main', params: { screen: 'Shop' } },
-      {
-        name: 'Screens',
-        params: {
-          screen: 'PaymentList',
-          params: { hideHeader: true, selectedFilter: ['unpaid', 'waiting'] },
+    if (this.props.route.params.from === 'notification') {
+      this.props.navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{ name: 'Main', params: { screen: 'Notifications' } }],
+        }),
+      )
+    } else {
+      const routes = [
+        { name: 'Main', params: { screen: 'Shop' } },
+        {
+          name: 'Screens',
+          params: {
+            screen: 'PaymentList',
+            params: { hideHeader: true, selectedFilter: ['unpaid', 'waiting'] },
+          },
         },
-      },
-    ]
-    this.props.navigation.dispatch(
-      CommonActions.reset({
-        index: 1,
-        routes,
-      }),
-    )
+      ]
+      this.props.navigation.dispatch(
+        CommonActions.reset({
+          index: 1,
+          routes,
+        }),
+      )
+    }
   }
 
   render() {

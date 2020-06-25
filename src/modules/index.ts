@@ -31,6 +31,7 @@ import productAttributeReducer from './product-attribute/reducer'
 import checkoutReducer from './checkout/reducer'
 import transactionReducer from './transaction/reducer'
 import userPostReducer from './user-post/reducer'
+import notificationReducer from './notification/reducer'
 import feedReducer from './post-feed/reducer'
 import discoverReducer from './post-discover/reducer'
 import insightReducer from './insights/reducer'
@@ -56,6 +57,8 @@ const combinedReducer: Reducer<any> = combineReducers({
   insights: insightReducer,
 
   lookbooks: lookbookReducer,
+
+  notifications: notificationReducer,
 
   orders: orderReducer,
 
