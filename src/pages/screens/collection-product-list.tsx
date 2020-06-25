@@ -14,7 +14,7 @@ import {
   resetSelectedCollection,
 } from '@modules/product-filter/action'
 import { productApi } from '@modules/product/action'
-import { getCollectionBySlug } from '@modules/collection/action'
+import { getCollectionBySlug, getSales } from '@modules/collection/action'
 
 import ProductListPageLoader from '@components/atoms/loaders/product-list'
 
@@ -39,10 +39,14 @@ class CollectionProductList extends Component<any, any> {
   }
 
   componentDidMount() {
-    const { route, getCollectionBySlug } = this.props
+    const { route, getCollectionBySlug, getSales } = this.props
 
     InteractionManager.runAfterInteractions(() => {
       this.setState({ finishAnimation: true })
+      if (route.params.collectionsSlug === 'sales') {
+        return getSales()
+      }
+
       return getCollectionBySlug(route.params.collectionsSlug)
     })
   }
@@ -81,6 +85,7 @@ class CollectionProductList extends Component<any, any> {
       this.props.clearFilter()
     })
   }
+
   shouldComponentUpdate(nextProps) {
     const { props } = this
 
@@ -111,6 +116,7 @@ class CollectionProductList extends Component<any, any> {
     }
     return false
   }
+
   _setInitialState() {
     const {
       collection,
@@ -151,7 +157,11 @@ class CollectionProductList extends Component<any, any> {
     }
 
     if (collection) {
-      params.collection_ids = collection.id
+      if (collection.id === 'sales') {
+        params.is_disc = true
+      } else {
+        params.collection_ids = collection.id
+      }
     }
 
     this.props.productApi(params)
@@ -250,6 +260,7 @@ const mapDispatchToProps = dispatch =>
       clearActivePage,
       setActivePage,
       setSelectedCollection,
+      getSales,
     },
     dispatch,
   )

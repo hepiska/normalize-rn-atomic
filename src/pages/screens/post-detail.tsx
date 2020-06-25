@@ -45,6 +45,9 @@ const PostDetailPage = props => {
             id_token,
             user,
           )}
+          onMessage={({ nativeEvent }) => {
+            console.log('nativee', nativeEvent.data)
+          }}
           onLoadStart={syntheticEvent => {
             const { nativeEvent } = syntheticEvent
             setTitle(nativeEvent.title)

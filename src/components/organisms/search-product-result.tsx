@@ -19,6 +19,7 @@ const styles = StyleSheet.create({
 
 interface SearchProductType {
   style?: any
+  skip?: number
   searchKey?: string
 }
 
