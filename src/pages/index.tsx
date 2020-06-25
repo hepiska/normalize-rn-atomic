@@ -28,6 +28,7 @@ const MainScreens = () => (
       options={{
         ...TransitionPresets.SlideFromRightIOS,
         headerShown: false,
+        gestureEnabled: true,
         animationEnabled: false,
       }}
     />
@@ -35,6 +36,7 @@ const MainScreens = () => (
       name="Screens"
       component={Screens}
       options={{
+        gestureEnabled: true,
         ...TransitionPresets.SlideFromRightIOS,
         headerShown: false,
       }}
@@ -49,7 +51,7 @@ const MainWithModal = () => (
     drawerContent={props => <ConstumeDrawer {...props} />}>
     <Drawer.Screen
       name="MainScreen"
-      options={{ gestureEnabled: false }}
+      options={{ swipeEnabled: false, gestureEnabled: true }}
       component={MainScreens}
     />
   </Drawer.Navigator>
@@ -80,6 +82,7 @@ class Pages extends React.Component<any, any> {
             component={ModalPages}
             options={{
               animationEnabled: false,
+
               headerShown: false,
               cardStyle: { backgroundColor: 'transparent' },
             }}

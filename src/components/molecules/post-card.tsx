@@ -1,4 +1,4 @@
-import React, { useState, memo } from 'react'
+import React, { useState, memo, PureComponent } from 'react'
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
 import {
   Div,
@@ -500,7 +500,7 @@ const VerticalCart = ({
 const MemVerticalCard = memo(VerticalCart)
 const MemFullSizeCard = memo(FullscreenCard)
 
-class PostListItem extends React.Component<PostListItemType, any> {
+class PostListItem extends React.PureComponent<PostListItemType, any> {
   state: any = {
     isPostLiked: this.props.isLiked,
     width: null,
@@ -624,7 +624,7 @@ class PostListItem extends React.Component<PostListItemType, any> {
       if (fullscreen) {
         return (
           <FullscreenCard
-            onPress={onPress}
+            onPress={this._onPress}
             onUserPress={this._goToUser}
             post={post}
             user={user}

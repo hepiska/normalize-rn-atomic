@@ -38,7 +38,9 @@ const TabMenuNavigator = ({
   onChangeTab,
 }: DiscoverTapType) => {
   useEffect(() => {
-    onChangeTab(state.index)
+    if (onChangeTab) {
+      onChangeTab(state.index)
+    }
   }, [state.index])
   return (
     <View>

@@ -51,7 +51,8 @@ class FeaturedCategory extends React.Component<any, any> {
           // paddingHorizontal: 15, // real: 15
         }}
         item={
-          <Text style={{ ...fontStyle.helvetica, fontSize: 14 }}>
+          <Text
+            style={{ ...fontStyle.helvetica, fontSize: 14, color: item.color }}>
             {item.title}
           </Text>
         }
@@ -68,6 +69,7 @@ class FeaturedCategory extends React.Component<any, any> {
     const { categories, style } = this.props
     const composeStyle = { ...styles.container, ...style }
     const data = [
+      { title: 'Sale', slug: 'collections/sales', color: colors.red1 },
       { title: 'New Arrival', slug: 'collections/new-arrival' },
       ...categories.map(category => ({
         title: category.name,

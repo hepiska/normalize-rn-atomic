@@ -15,7 +15,6 @@ export const navigationInf = () => navigationRef.current
 export function navigate(name, params) {
   if (isMountedRef.current && navigationRef.current) {
     // Perform navigation if the app has mounted
-    console.log(navigationRef.current)
 
     navigationRef.current.navigate(name, params)
   } else {

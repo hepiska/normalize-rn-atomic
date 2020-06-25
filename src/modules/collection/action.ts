@@ -2,6 +2,7 @@ import { QueryParams } from '@utils/globalInterface'
 import { setBrandData } from '@modules/brand/action'
 import { setCategoryData } from '@modules/category/action'
 import { setProductData } from '@modules/product/action'
+import { normalize } from 'normalizr'
 
 import { API } from '../action-types'
 
@@ -52,7 +53,11 @@ export const getCollectionBySlug = slug => ({
     },
     endNetwork: (status, error) => {
       if (status === 'error') {
-        return [setCollectionError(error), setActiveCollection(null)]
+        return [
+          setCollectionError(error),
+          setActiveCollection(null),
+          setCollectionLoading(false),
+        ]
       }
       return setCollectionLoading(false)
     },
@@ -63,6 +68,42 @@ export const getCollectionBySlug = slug => ({
         setCategoryData(data.entities.category),
         setProductData(data.entities.product),
         setCollectionData(data.entities.collection),
+      ]
+    },
+  },
+})
+
+export const getSales = () => ({
+  type: API,
+  payload: {
+    url: '/products/sales',
+    // schema: schema.collection,
+    startNetwork: () => {
+      return [setCollectionLoading(true), setCollectionError(null)]
+    },
+    endNetwork: (status, error) => {
+      if (status === 'error') {
+        return [
+          setCollectionError(error),
+          setActiveCollection(null),
+          setCollectionLoading(false),
+        ]
+      }
+      return setCollectionLoading(false)
+    },
+    success: data => {
+      // console.log('data', data)
+      data.id = 'sales'
+      data.title = 'SALE'
+      const normalizeCol = normalize(data, schema.collection)
+      // console.log(normalizeCol, 'normalizeCol')
+      // return [setCollectionLoading(false)]
+      return [
+        setActiveCollection(normalizeCol.result),
+        setBrandData(normalizeCol.entities.brand),
+        setCategoryData(normalizeCol.entities.category),
+        setProductData(normalizeCol.entities.product),
+        setCollectionData(normalizeCol.entities.collection),
       ]
     },
   },

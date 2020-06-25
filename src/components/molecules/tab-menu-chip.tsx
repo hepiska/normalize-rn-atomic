@@ -60,7 +60,9 @@ const TabMenuNavigator = ({
               canPreventDefault: true,
             })
 
-            onChangeTab(index)
+            if (onChangeTab) {
+              onChangeTab(index)
+            }
 
             if (!isFocused && !event.defaultPrevented) {
               navigation.navigate(route.name)
