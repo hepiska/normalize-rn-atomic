@@ -166,11 +166,11 @@ export const getTrendingProduct = params => {
         return data
           ? [
               ...dispatchProductEntities(data.entities),
+              setSpecificLoading({ uri: 'trending', value: false }),
               setSepcificOrder({
                 uri: 'trending',
                 value: data.result,
               }),
-              setSpecificLoading({ uri: 'trending', value: false }),
             ]
           : [setSpecificLoading({ uri: 'trending', value: false })]
       },

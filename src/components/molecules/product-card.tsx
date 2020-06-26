@@ -144,7 +144,6 @@ const ProductCard = ({
             attribute_value_id === attribute.id,
         )
       })
-      console.log('======oncallback')
       setSelectedVariantId(_filteredVariants[0].id)
       setAttributeSelected(attribute)
     },

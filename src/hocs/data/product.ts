@@ -7,6 +7,8 @@ import {
 import { makeCloneProduct } from '@modules/selector-general'
 
 import { makeSelectedProducts } from '@modules/product/selector'
+import { makeSelectedSearchProduct } from '@modules/search-product/selector'
+
 import { makeIsSaved } from '@modules/product-saved/selector'
 import { category } from '@src/modules/normalize-schema'
 
@@ -16,6 +18,9 @@ const productListMap = () => {
   const cloneProduct = makeCloneProduct()
   return (state, ownProps) => {
     const product = getSelectedProducts(state, ownProps.productId)
+    if (!product) {
+      return {}
+    }
 
     const _product = cloneProduct(product)
 
@@ -42,4 +47,28 @@ const mapDispatchToProps = dispatch => {
 
 export function productListData(WrappedComponent) {
   return connect(productListMap, mapDispatchToProps)(WrappedComponent)
+}
+
+const productSearchListMap = () => {
+  const getSelectedProducts = makeSelectedSearchProduct()
+  const getIsSaved = makeIsSaved()
+  const cloneProduct = makeCloneProduct()
+  return (state, ownProps) => {
+    const product = getSelectedProducts(state, ownProps.productId)
+    if (!product) {
+      return {}
+    }
+    const _product = cloneProduct(product || {})
+    const isSaved = getIsSaved(state, ownProps)
+    return {
+      product: _product,
+      isSaved: isSaved,
+      isAuth: state.auth.isAuth,
+      brand: _product.brand,
+    }
+  }
+}
+
+export function productSearchListData(WrappedComponent) {
+  return connect(productSearchListMap, mapDispatchToProps)(WrappedComponent)
 }

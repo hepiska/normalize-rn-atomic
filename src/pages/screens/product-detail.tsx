@@ -337,6 +337,10 @@ class ProductListPage extends React.Component<any, any> {
       filteredAttributes,
       isProductSaved,
     } = this.state as any
+    if (!product) {
+      return null
+    }
+
     let returnExchange = ''
     if (
       product.flags?.includes('returnable') &&
@@ -421,7 +425,7 @@ class ProductListPage extends React.Component<any, any> {
     })
     if (description.length > 0) {
       const newData = []
-      description.map((value, key) => (newData[key] = value))
+      description?.map((value, key) => (newData[key] = value))
       const newContent = {
         type: 'details',
         content: newData,
@@ -454,15 +458,20 @@ class ProductListPage extends React.Component<any, any> {
           <CoverImageAnimated
             y={y}
             width={width}
-            images={varianData.image_urls.map(url => ({
-              uri: url,
-            }))}
+            images={varianData.image_urls?.map(
+              url =>
+                ({
+                  uri: url,
+                } || []),
+            )}
             height={this.dimentionConstant.imageHeight}>
             <ImagesWithPreviews
               size={{ width, height: this.dimentionConstant.imageHeight }}
-              images={varianData.image_urls.map(url => ({
-                uri: setImage(url, { width: 400, height: 600 }),
-              }))}
+              images={
+                varianData.image_urls?.map(url => ({
+                  uri: setImage(url, { width: 400, height: 600 }),
+                })) || []
+              }
             />
           </CoverImageAnimated>
           <ImageCoverContentLayout
@@ -471,7 +480,7 @@ class ProductListPage extends React.Component<any, any> {
             <Div bg="white" _width="100%" padd="0px 16px 96px">
               <Div width="100%" align="flex-start" padd="16px 0px">
                 <View style={{ flexDirection: 'row', margin: 4 }}>
-                  {this._breadcrumb.map((val, key) => (
+                  {this._breadcrumb?.map((val, key) => (
                     <Font
                       style={{ ...styles.breadcrumb }}
                       key={`breadcrumb-${key}`}>
@@ -659,7 +668,7 @@ class ProductListPage extends React.Component<any, any> {
                 let newItem = null
                 if (typeof item.content !== 'string') {
                   newItem = item.content
-                    .map(value => {
+                    ?.map(value => {
                       return (
                         `<title>${capitalEachWord(value.type)
                           .replace(/\\\\r\\\\n/g, '')
@@ -808,26 +817,35 @@ class ProductListPage extends React.Component<any, any> {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
-  const productId = ownProps.route.params?.productId
+const mapStateToProps = () => {
   const getselectedProduct = makeSelectedProducts()
   const getselectedBrand = makeSelectedBrands()
   const deepClone = makeDeepClone()
+  return (state, ownProps) => {
+    const productId = ownProps.route.params?.productId
 
-  const selectedProduct = getselectedProduct(state, productId)
-  const _product = deepClone(selectedProduct)
+    const selectedProduct = getselectedProduct(state, productId)
 
-  _product.brand = getselectedBrand(state, _product.brand)
+    if (!selectedProduct) {
+      return {
+        isAuth: state.auth.isAuth,
+        loading: state.products.productLoading,
+      }
+    }
 
-  return {
-    product: _product,
-    isAuth: state.auth.isAuth,
-    isSaved: !!state.productsSaved.data[productId],
-    loading: state.products.productLoading,
-    categories: state.categories.data,
+    const _product = deepClone(selectedProduct)
+
+    _product.brand = getselectedBrand(state, _product.brand)
+
+    return {
+      product: _product,
+      isAuth: state.auth.isAuth,
+      isSaved: !!state.productsSaved.data[productId],
+      loading: state.products.productLoading,
+      categories: state.categories.data,
+    }
   }
 }
-
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     { getProductById, addCart, addProductSaved, deleteProductSaved },

@@ -500,7 +500,7 @@ const VerticalCart = ({
 const MemVerticalCard = memo(VerticalCart)
 const MemFullSizeCard = memo(FullscreenCard)
 
-class PostListItem extends React.PureComponent<PostListItemType, any> {
+class PostListItem extends React.Component<PostListItemType, any> {
   state: any = {
     isPostLiked: this.props.isLiked,
     width: null,
@@ -623,7 +623,7 @@ class PostListItem extends React.PureComponent<PostListItemType, any> {
     if (post) {
       if (fullscreen) {
         return (
-          <FullscreenCard
+          <MemFullSizeCard
             onPress={this._onPress}
             onUserPress={this._goToUser}
             post={post}
