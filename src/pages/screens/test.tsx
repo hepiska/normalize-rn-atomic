@@ -9,9 +9,10 @@ import { images } from '@utils/constants'
 import ProductLisyHeader from '@components/atoms/loaders/product-list-header'
 import SearchAndFilterLoader from '@components/atoms/loaders/search-filter-loader'
 import ShopLoader from '@components/atoms/loaders/shop'
-import ProductDetailLoader from '@components/atoms/loaders/product-detail'
+// import ProductDetailLoader from '@components/atoms/loaders/product-detail'
 // import ProductListLoadereLoader from '@components/atoms/loaders/product-list'
 import ProductListLoadereLoader from '@components/atoms/loaders/follow-list'
+import ProductDetailLoader from '@components/atoms/loaders/product-search'
 
 import ContentExpandable from '@components/molecules/content-expandable'
 
@@ -27,8 +28,8 @@ const TestPage = props => {
       <View ref={toolTipsTarget}>
         <Text>sas</Text>
       </View>
+      <ProductDetailLoader />
 
-      <ProductListLoadereLoader />
       <Text>asasssasasasss</Text>
       {/* <ShopLoader /> */}
       {/* <ScrollView>

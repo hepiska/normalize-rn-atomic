@@ -17,6 +17,7 @@ import SearchListLoader from '@src/components/atoms/loaders/search-list'
 import { getSearchPost } from '@src/modules/search-post/action'
 import { getSearchBrand } from '@modules/search-brand/action'
 import { getSearchUser } from '@modules/search-user/action'
+import { getSearchProduct } from '@modules/search-product/action'
 
 const Tab = createMaterialTopTabNavigator()
 
@@ -91,12 +92,17 @@ class SearchList extends Component<any, any> {
       offset: this.limit * skip,
     }
 
-    if (activeTab === 3) {
-      this.props.getSearchPost(params)
+    if (activeTab === 0) {
+      this.props.getSearchProduct(params)
     }
     if (activeTab === 1) {
       this.props.getSearchBrand(params)
     }
+
+    if (activeTab === 3) {
+      this.props.getSearchPost(params)
+    }
+
     if (activeTab === 2) {
       this.props.getSearchUser(params)
     }
@@ -229,6 +235,7 @@ const mapDispatchToProps = dispatch =>
     {
       getSearchPost,
       getSearchBrand,
+      getSearchProduct,
       getSearchUser,
     },
     dispatch,

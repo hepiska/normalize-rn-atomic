@@ -7,7 +7,6 @@ const { width } = Dimensions.get('screen')
 
 const styles = StyleSheet.create({
   container: {
-    width: '100%',
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
@@ -27,7 +26,7 @@ const SearchResultCard = ({
   onPress = null,
 }: SearchResultCardType) => {
   return (
-    <TouchableOpacity activeOpacity={onPress ? 0.2 : 1}>
+    <TouchableOpacity onPress={onPress} activeOpacity={onPress ? 0.2 : 1}>
       <View style={{ ...styles.container, ...style }}>
         {leftContent && leftContent}
         {rightContent && rightContent}

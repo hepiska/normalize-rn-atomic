@@ -111,6 +111,7 @@ class SearchUserResult extends Component<SearchUserType, any> {
         : 'Please Fill keyword'
     return <EmtyState title={title} description={desc} />
   }
+
   _keyExtractor = (item, key) => {
     return 'search-user-item' + item + key
   }

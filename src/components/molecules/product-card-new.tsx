@@ -36,6 +36,7 @@ interface ProductCardType {
   isAtributesShow: boolean
   deleteProductSaved: (productId) => void
   addProductSaved: (productId) => void
+  onPress: () => {}
   style?: ViewStyle
   horizontal?: boolean
   isAuth?: boolean
@@ -103,6 +104,7 @@ const ProductCard = ({
   addProductSaved,
   horizontal = false,
   isAtributesShow = true,
+  onPress,
   isShowRangePrice = true,
   isSaved,
   isAuth,
@@ -146,11 +148,15 @@ const ProductCard = ({
     }
   }
 
-  const onPress = useCallback(() => {
-    push('Screens', {
-      screen: 'ProductDetail',
-      params: { productId: product.id },
-    })
+  const _onPress = useCallback(() => {
+    if (onPress) {
+      onPress()
+    } else {
+      push('Screens', {
+        screen: 'ProductDetail',
+        params: { productId: product.id },
+      })
+    }
   }, [product.id])
 
   const selectedVariant =
@@ -187,7 +193,7 @@ const ProductCard = ({
       type={type}
       isShowRangePrice={isShowRangePrice}
       variantPrice={variantPrice}
-      onPress={onPress}
+      onPress={_onPress}
       brand={brand}
       onSave={_onSave}
       isAuth={isAuth}
@@ -205,7 +211,7 @@ const ProductCard = ({
       composeStyle={composeStyle}
       isSaved={isProductSaved}
       thumbnailImage={thumbnailImage}
-      onPress={onPress}
+      onPress={_onPress}
       image={image}
       isShowRangePrice={isShowRangePrice}
       isAtributesShow={isAtributesShow}
