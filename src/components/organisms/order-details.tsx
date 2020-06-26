@@ -69,9 +69,9 @@ const handleNavigate = (screen, screenName, params = {}) => () => {
   })
 }
 
-class OrderDetails extends Component<any, any> {
-  componentDidMount() {
-    this.props.getOrderById(this.props.order.id)
+class OrderDetails extends React.PureComponent<any, any> {
+  async componentDidMount() {
+    await this.props.getOrderById(this.props.orderId)
   }
 
   buttonAction = [
@@ -129,7 +129,7 @@ class OrderDetails extends Component<any, any> {
           height: 46,
           marginTop: 16,
         },
-        onPress: sendEmail(this.props.order.id),
+        onPress: sendEmail(this.props.orderId),
         showWhen: ['sent', 'shipping', 'delivered'],
       },
       text: {
@@ -168,52 +168,67 @@ class OrderDetails extends Component<any, any> {
   ]
 
   orderStatus = () => {
-    const {
-      order: { status },
-    } = this.props
-    switch (status.toLowerCase()) {
-      case 'waiting for payment':
-      case 'paid':
-      case 'waiting for confirmation':
-      case 'confirmed':
-      case 'in process':
-      case 'shipping':
-      case 'sent':
-        return {
-          textColor: '#FFA010',
-          backgroundColor: 'rgba(255, 160, 16, 0.05)',
-        }
-      case 'delivered':
-      case 'complete':
-      case 'completed':
-      case 'returned':
-        return {
-          textColor: colors.greenAccent,
-          backgroundColor: 'rgba(0, 184, 0, 0.1)',
-        }
-      default:
-        return {
-          textColor: colors.black100,
-          backgroundColor: 'rgba(26, 26, 26, 0.1)',
-        }
+    const { order } = this.props
+    if (!order) {
+      return {
+        textColor: colors.black100,
+        backgroundColor: 'rgba(26, 26, 26, 0.1)',
+      }
+    } else {
+      switch (order.status.toLowerCase()) {
+        case 'waiting for payment':
+        case 'paid':
+        case 'waiting for confirmation':
+        case 'confirmed':
+        case 'in process':
+        case 'shipping':
+        case 'sent':
+          return {
+            textColor: '#FFA010',
+            backgroundColor: 'rgba(255, 160, 16, 0.05)',
+          }
+        case 'delivered':
+        case 'complete':
+        case 'completed':
+        case 'returned':
+          return {
+            textColor: colors.greenAccent,
+            backgroundColor: 'rgba(0, 184, 0, 0.1)',
+          }
+        default:
+          return {
+            textColor: colors.black100,
+            backgroundColor: 'rgba(26, 26, 26, 0.1)',
+          }
+      }
     }
   }
 
   renderPaymentName = () => {
-    const {
-      order: {
-        provider_payment_method: { channel, name },
-      },
-    } = this.props
-    if (channel === name) {
-      return name
+    const { order } = this.props
+    if (!order) {
+      return ''
     } else {
-      return channel + ' ' + name
+      if (
+        order.provider_payment_method.channel ===
+        order.provider_payment_method.name
+      ) {
+        return name
+      }
+      return (
+        order.provider_payment_method.channel +
+        ' ' +
+        order.provider_payment_method.name
+      )
     }
   }
 
   renderButton = (item, key) => {
-    if (item.button.showWhen.includes(this.props.order.status.toLowerCase())) {
+    if (!this.props.order) {
+      return null
+    } else if (
+      item.button.showWhen.includes(this.props.order.status.toLowerCase())
+    ) {
       return (
         <OutlineButton
           key={`button-order-detail-${key}`}
@@ -230,10 +245,12 @@ class OrderDetails extends Component<any, any> {
     const { order, style, products, dataProducts } = this.props
 
     let productTotal = 0
-    productTotal = products.reduce((total, value) => {
-      total += dataProducts.data[value].variant.qty
-      return total
-    }, 0)
+    productTotal =
+      products &&
+      products.reduce((total, value) => {
+        total += dataProducts.data[value].variant.qty
+        return total
+      }, 0)
 
     const getColor = this.orderStatus()
     if (!order) {
@@ -655,10 +672,15 @@ const mapDispatchToProps = dispatch =>
 
 const mapStateToProps = (state, ownProps) => {
   const orderId = ownProps.orderId
-  const order = state.orders.data[orderId]
-  const products = order?.product
-  const user = order && state.user.data[order.user]
-  const dataProducts = state.products
+  const order = state.orders?.data[orderId] || null
+  let products = null
+  let user = null
+  let dataProducts = null
+  if (order !== null) {
+    products = order?.product
+    user = order && state.user?.data[order.user]
+    dataProducts = state.products
+  }
   return {
     order,
     products,

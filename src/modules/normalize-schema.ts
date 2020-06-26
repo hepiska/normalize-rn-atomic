@@ -118,3 +118,5 @@ export const order = new schema.Entity('order', {
   product: [product],
   user: user,
 })
+
+export const notification = new schema.Entity('notification')

@@ -20,6 +20,8 @@ import { productListData } from '@hocs/data/product'
 import { brandListData } from '@hocs/data/brand'
 import { navigate } from '@src/root-navigation'
 import ImageCard from '@components/molecules/image-card'
+import AnnouncementCard from '../molecules/announcement-card'
+import { announcementListData } from '@hocs/data/announcement'
 
 const { width } = Dimensions.get('window')
 
@@ -33,6 +35,7 @@ const PostHoc = postListData(PostCard)
 const CollectionHoc = collectionListData(CollectionCard)
 const ProductHoc = productListData(ProductCard)
 const BrandHoc = brandListData(BrandCard)
+const AnnouncementHoc = announcementListData(AnnouncementCard)
 
 const styles = StyleSheet.create({
   button: {
@@ -123,6 +126,8 @@ class HorizontalList extends React.Component<HorizontalListType, any> {
             }}
           />
         )
+      case 'announcement':
+        return <AnnouncementHoc key={index} announcementId={item} idx={index} />
       default:
         return null
     }
