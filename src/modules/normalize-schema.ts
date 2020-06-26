@@ -121,4 +121,6 @@ export const order = new schema.Entity('order', {
   user: user,
 })
 
+export const postTag = new schema.Entity('post_tag')
+
 export const notification = new schema.Entity('notification')

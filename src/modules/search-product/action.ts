@@ -116,7 +116,6 @@ export const getSearchProduct = (params, url) => ({
     success: (data, { pagination, meta }) => {
       const normalizeProduct = normalize(data.products, [schema.searchProduct])
       const normalizeCategory = normalize(data.categories, [schema.category])
-      console.log(meta)
       const dispacers = [
         setSearchProdutData(normalizeProduct.entities.product || {}),
         setSearchCategoryData(normalizeCategory.entities.category || {}),

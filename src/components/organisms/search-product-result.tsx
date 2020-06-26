@@ -1,5 +1,12 @@
 import React, { Component } from 'react'
-import { Dimensions, ViewStyle, View, Text, StyleSheet } from 'react-native'
+import {
+  Dimensions,
+  ViewStyle,
+  View,
+  Text,
+  StyleSheet,
+  InteractionManager,
+} from 'react-native'
 import { Div, Font } from '@components/atoms/basic'
 import ProductCard from '@components/molecules/product-card-new'
 import SearchResultCard from '../molecules/search-result-card'
@@ -26,12 +33,24 @@ interface SearchProductType {
   skip?: number
   loading?: boolean
   searchKey?: string
+  skip?: number
+  fetchMore?: () => void
+  loading?: boolean
+  total?: number
+  product?: any
 }
 
 class SearchProductResult extends Component<SearchProductType, any> {
   state = {
     isConfirmed: false,
     selectedCategory: [],
+    finishAnimation: false,
+  }
+
+  componentDidMount() {
+    InteractionManager.runAfterInteractions(() => {
+      this.setState({ finishAnimation: true })
+    })
   }
 
   setfilter = data => {
@@ -80,7 +99,12 @@ class SearchProductResult extends Component<SearchProductType, any> {
     const { searchKey, style } = this.props
     return (
       <View style={{ ...styles.container, ...style }}>
-        {searchKey !== '' ? this.renderComponent() : this.emtyComponent()}
+        {this.state.finishAnimation
+          ? searchKey !== ''
+            ? this.renderComponent()
+            : this.emtyComponent()
+          : null}
+        {}
       </View>
     )
   }

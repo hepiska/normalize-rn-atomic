@@ -171,7 +171,7 @@ const SearchProductResultPart1 = ({
   const emtyComponent = useMemo(() => {
     if (loading) return <ProductSearchLoader style={{ marginHorizontal: 16 }} />
 
-    const title = searchKey.length > 2 ? 'No User' : 'Please Fill keyword'
+    const title = searchKey.length > 2 ? 'No Product' : 'Please Fill keyword'
     const desc =
       searchKey.length > 2
         ? 'We Dont find any product for this Keyword'
@@ -203,7 +203,7 @@ const mapStateToProps = () => {
     categories: mapCategories(state),
     products: state.searchProduct.productOrder,
     context: state.searchProduct.context,
-    loading: state.searchProduct,
+    loading: state.searchProduct.loading,
   })
 }
 

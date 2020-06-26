@@ -1,5 +1,12 @@
-import React, { Component } from 'react'
-import { Dimensions, ViewStyle, View, Text, StyleSheet } from 'react-native'
+import React, { PureComponent } from 'react'
+import {
+  Dimensions,
+  ViewStyle,
+  View,
+  Text,
+  StyleSheet,
+  InteractionManager,
+} from 'react-native'
 import { Div, Font } from '@components/atoms/basic'
 import ProductCard from '@components/molecules/product-card-new'
 import SearchResultCard from '../molecules/search-result-card'
@@ -10,9 +17,11 @@ import { ScrollView } from 'react-native-gesture-handler'
 import { connect } from 'react-redux'
 import FollowCard from '@components/molecules/follow-card'
 import { searchUserListData } from '@hocs/data/user'
-import FollowitemLoader from '@components/atoms/loaders/follow-item'
+import FollowListLoader from '@components/atoms/loaders/follow-list'
 import EmtyState from '@components/molecules/order-empty-state'
 import List from '@components/layouts/list-header'
+import { dispatch } from '@src/root-navigation'
+import { StackActions } from '@react-navigation/native'
 
 const UserHoc = searchUserListData(FollowCard)
 
@@ -37,7 +46,17 @@ interface SearchUserType {
   user?: any
 }
 
-class SearchUserResult extends Component<SearchUserType, any> {
+class SearchUserResult extends PureComponent<SearchUserType, any> {
+  state = {
+    finishAnimation: false,
+  }
+
+  componentDidMount() {
+    InteractionManager.runAfterInteractions(() => {
+      this.setState({ finishAnimation: true })
+    })
+  }
+
   onReachedEnd = () => {
     const { loading, fetchMore } = this.props
     if (!loading) {
@@ -45,9 +64,20 @@ class SearchUserResult extends Component<SearchUserType, any> {
     }
   }
 
+  _handlePress = userId => () => {
+    dispatch(StackActions.replace('UserDetail', { userId }))
+  }
+
   renderItem = ({ item, index }) => {
     // return null
-    return <UserHoc userId={item} key={`search-user-${index}`} idx={index} />
+    return (
+      <UserHoc
+        userId={item}
+        key={`search-user-${index}`}
+        onPress={this._handlePress(item)}
+        idx={index}
+      />
+    )
   }
 
   renderHeader = () => {
@@ -93,8 +123,8 @@ class SearchUserResult extends Component<SearchUserType, any> {
 
     return (
       <View
-        style={{ height: 100, width: '100%', backgroundColor: 'transparent' }}>
-        {loading && <FollowitemLoader style={{ margin: 16 }} />}
+        style={{ height: 200, width: '100%', backgroundColor: 'transparent' }}>
+        {loading && <FollowListLoader style={{ margin: 16 }} />}
       </View>
     )
   }
@@ -122,21 +152,25 @@ class SearchUserResult extends Component<SearchUserType, any> {
 
     return (
       <View style={{ ...styles.container, ...style }}>
-        <List
-          data={data}
-          ListHeaderComponent={this.renderHeader}
-          onEndReachedThreshold={0.9}
-          onEndReached={this.onReachedEnd}
-          keyExtractor={this._keyExtractor}
-          ListEmptyComponent={this.emtyComponent}
-          ListFooterComponent={this._renderFooterLoader}
-          getItemLayout={(data, index) => ({
-            length: userCardHeight,
-            offset: userCardHeight * index,
-            index,
-          })}
-          renderItem={this.renderItem}
-        />
+        {this.state.finishAnimation ? (
+          <List
+            data={data}
+            ListHeaderComponent={this.renderHeader}
+            onEndReachedThreshold={0.9}
+            onEndReached={this.onReachedEnd}
+            keyExtractor={this._keyExtractor}
+            ListEmptyComponent={this.emtyComponent}
+            ListFooterComponent={this._renderFooterLoader}
+            getItemLayout={(data, index) => ({
+              length: userCardHeight,
+              offset: userCardHeight * index,
+              index,
+            })}
+            renderItem={this.renderItem}
+          />
+        ) : (
+          <FollowListLoader style={{ margin: 16 }} />
+        )}
       </View>
     )
   }

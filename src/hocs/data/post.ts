@@ -32,6 +32,28 @@ const postListMap = () => {
   }
 }
 
+const searchPostListMap = () => {
+  const getPost = makeGetPost()
+  const getUser = makeGetUser()
+  const getIsLiked = makePostLiked()
+
+  return (state, ownProps) => {
+    const { postId } = ownProps
+    const post = state.searchPost.data[postId]
+    const user = post.user
+    const isLiked = getIsLiked(state, postId)
+    const isBookmarked = !!state.postsBookmarked.data[postId]
+
+    return {
+      post,
+      user,
+      isLiked,
+      isBookmarked,
+      isAuth: state.auth.isAuth,
+    }
+  }
+}
+
 const mapDispatchToProps = dispatch => {
   return bindActionCreators(
     {
@@ -46,4 +68,8 @@ const mapDispatchToProps = dispatch => {
 
 export function postListData(WrappedComponent) {
   return connect(postListMap, mapDispatchToProps)(WrappedComponent)
+}
+
+export function searchPostListData(WrappedComponent) {
+  return connect(searchPostListMap, mapDispatchToProps)(WrappedComponent)
 }

@@ -35,6 +35,7 @@ const searchReducer: Reducer<SearchState> = (
       return newState
     case searchActionType.ADD_SEARCH_ORDER:
       newState.order = newState.order.concat(Immutable(action.payload))
+
       return newState
     case searchActionType.SET_PAGINATION:
       newState.pagination = action.payload
@@ -46,7 +47,7 @@ const searchReducer: Reducer<SearchState> = (
       newState.pagination = null
       return newState
     case searchActionType.SET_DEFAULT:
-      return newState
+      return state
     default:
       return state
   }

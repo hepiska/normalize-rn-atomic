@@ -84,12 +84,13 @@ class SearchList extends Component<any, any> {
   }
 
   _fetchData = skip => {
-    const { context } = this.props
+    const { context, searchKey } = this.props
     const { selectedCategory } = this.state
 
     const params: any = {
       limit: this.limit,
       offset: this.limit * skip,
+      query: searchKey,
       ...this.props.sort.value,
       // is_commerce: true,
     }
