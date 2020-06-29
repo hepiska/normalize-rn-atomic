@@ -25,7 +25,7 @@ const UserDetail = props => {
   const mywebView = useRef(null)
   useEffect(() => {
     return () => {
-      mywebView.current.injectJavaScript(clearLocalStorageScript())
+      // mywebView.current.injectJavaScript(clearLocalStorageScript())
     }
   }, [])
 
@@ -40,7 +40,10 @@ const UserDetail = props => {
         params.url = urlArr.join('/')
       }
       const screen = nestedScreenMap(urlArr[0], params)
-      props.navigation.push(screen.screen, screen.params)
+
+      if (screen) {
+        props.navigation.push(screen.screen, screen.params)
+      }
     }
   }
 
@@ -48,29 +51,33 @@ const UserDetail = props => {
     username,
     auth_data: { id_token, user },
   } = props
-  if (!username) {
-    return null
+  // if (!username) {
+  //   return null
+  // }
+  let uri =
+    Config.SHONET_URI + '/users/' + props.route.params.userId + '?initial=true'
+  if (username) {
+    uri = Config.SHONET_URI + '/users/' + username + '?initial=true'
   }
+
   return (
     <>
       <NavbarTop title={username} leftContent={['back']} />
       <WebView
         ref={mywebView}
         sharedCookiesEnabled
-        injectedJavaScriptBeforeContentLoaded={injectTokenScript(
-          id_token,
-          user,
-        )}
         source={{
-          uri: Config.SHONET_URI + '/users/' + username + '?initial=true',
+          uri: uri,
           headers: {
             Cookie: `tokenId=${id_token}`,
           },
         }}
         onNavigationStateChange={_navChange}
+        onLoadStart={syntheticEvent => {
+          mywebView.current.injectJavaScript(injectTokenScript(id_token, user))
+        }}
         onLoadEnd={syntheticEvent => {
           const { nativeEvent } = syntheticEvent
-          injectTokenScript(id_token, user)
           if (!nativeEvent.loading) {
             mywebView.current.injectJavaScript(removeHeaderWebviewScript)
           }
@@ -84,7 +91,9 @@ const mapStateToProps = (state, ownProps) => {
   const userId = ownProps.route.params.userId || null
   let username = null
   if (userId) {
-    username = state.user.data[userId]?.username
+    username =
+      state.user.data[userId]?.username ||
+      state.searchUser.data[userId]?.username
   }
   if (ownProps.route.params.username) {
     username = ownProps.route.params.username

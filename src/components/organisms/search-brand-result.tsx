@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Text, StyleSheet } from 'react-native'
+import { View, Text, StyleSheet, InteractionManager } from 'react-native'
 import SearchResultCard from '../molecules/search-result-card'
 import { colors } from '@src/utils/constants'
 import { fontStyle } from '../commont-styles'
@@ -9,7 +9,9 @@ import { searchBrandListData } from '@hocs/data/brand'
 import BrandHorizontalCard from '@components/molecules/brand-horizontal-card'
 import List from '@components/layouts/list-header'
 import EmtyState from '@components/molecules/order-empty-state'
-import FollowitemLoader from '@components/atoms/loaders/follow-item'
+import { dispatch } from '@src/root-navigation'
+import { StackActions } from '@react-navigation/native'
+import BrandListLoader from '@components/atoms/loaders/brand-list'
 
 const BrandHoc = searchBrandListData(BrandHorizontalCard)
 const brandCardHeight = 73
@@ -32,6 +34,16 @@ interface SearchBrandType {
 }
 
 class SearchBrandResult extends Component<SearchBrandType, any> {
+  state = {
+    finishAnimation: false,
+  }
+
+  componentDidMount() {
+    InteractionManager.runAfterInteractions(() => {
+      this.setState({ finishAnimation: true })
+    })
+  }
+
   renderHeader = () => {
     const { searchKey, total } = this.props
 
@@ -78,8 +90,19 @@ class SearchBrandResult extends Component<SearchBrandType, any> {
     }
   }
 
+  _handlePress = brandId => () => {
+    dispatch(StackActions.replace('BrandProductList', { brandId }))
+  }
+
   renderItem = ({ item, index }) => {
-    return <BrandHoc brandId={item} key={`search-brand-${index}`} idx={index} />
+    return (
+      <BrandHoc
+        brandId={item}
+        key={`search-brand-${index}`}
+        onPress={this._handlePress(item)}
+        idx={index}
+      />
+    )
   }
 
   _renderFooterLoader = () => {
@@ -87,8 +110,8 @@ class SearchBrandResult extends Component<SearchBrandType, any> {
 
     return (
       <View
-        style={{ height: 100, width: '100%', backgroundColor: 'transparent' }}>
-        {loading && <FollowitemLoader style={{ margin: 16 }} />}
+        style={{ height: 200, width: '100%', backgroundColor: 'transparent' }}>
+        {loading && <BrandListLoader style={{ marginTop: 16 }} />}
       </View>
     )
   }
@@ -119,22 +142,26 @@ class SearchBrandResult extends Component<SearchBrandType, any> {
     const data = searchKey.length > 2 ? brand : []
     return (
       <View style={{ ...styles.container, ...style }}>
-        <List
-          data={data}
-          ListHeaderComponent={this.renderHeader}
-          onEndReachedThreshold={0.9}
-          onReachedEnd={this.onReachedEnd}
-          ListEmptyComponent={this.emtyComponent}
-          keyExtractor={this._keyExtractor}
-          getItemLayout={(data, index) => ({
-            length: brandCardHeight,
-            offset: brandCardHeight * index,
-            index,
-          })}
-          ListFooterComponent={this._renderFooterLoader}
-          renderItem={this.renderItem}
-          style={{ paddingHorizontal: 16 }}
-        />
+        {this.state.finishAnimation ? (
+          <List
+            data={data}
+            ListHeaderComponent={this.renderHeader}
+            onEndReachedThreshold={0.9}
+            onReachedEnd={this.onReachedEnd}
+            ListEmptyComponent={this.emtyComponent}
+            keyExtractor={this._keyExtractor}
+            getItemLayout={(data, index) => ({
+              length: brandCardHeight,
+              offset: brandCardHeight * index,
+              index,
+            })}
+            ListFooterComponent={this._renderFooterLoader}
+            renderItem={this.renderItem}
+            style={{ paddingHorizontal: 16 }}
+          />
+        ) : (
+          <BrandListLoader style={{ margin: 16 }} />
+        )}
       </View>
     )
   }

@@ -14,7 +14,11 @@ import SearchBrandResult from '@src/components/organisms/search-brand-result'
 import SearchUserResult from '@src/components/organisms/search-user-result'
 import SearchPostResult from '@src/components/organisms/search-post-result'
 import SearchListLoader from '@src/components/atoms/loaders/search-list'
-import { getSearchPost } from '@src/modules/search-post/action'
+import {
+  getSearchPost,
+  getSearchTag,
+  getPostByTag,
+} from '@src/modules/search-post/action'
 import { getSearchBrand } from '@modules/search-brand/action'
 import { getSearchUser } from '@modules/search-user/action'
 import { getSearchProduct } from '@modules/search-product/action'
@@ -54,9 +58,9 @@ class SearchList extends Component<any, any> {
     )
   }
 
-  // componentWillUnmount() {
-  //   // hapus data search
-  // }
+  resetSkip = activeTab => {
+    this.skip[activeTab] = 0
+  }
 
   _onBack = async () => {
     const { navigation } = this.props
@@ -86,6 +90,7 @@ class SearchList extends Component<any, any> {
 
   _fetchData = skip => {
     const { searchKey, activeTab } = this.state
+    const { isTagSearch } = this.props
     const params = {
       query: searchKey,
       limit: this.limit,
@@ -98,9 +103,18 @@ class SearchList extends Component<any, any> {
     if (activeTab === 1) {
       this.props.getSearchBrand(params)
     }
-
     if (activeTab === 3) {
-      this.props.getSearchPost(params)
+      if (!isTagSearch) {
+        this.props.getSearchTag()
+        this.props.getSearchPost(params)
+      } else {
+        let _params = {
+          tag: searchKey.substr(1),
+          limit: this.limit,
+          offset: this.limit * skip,
+        }
+        this.props.getPostByTag(_params)
+      }
     }
 
     if (activeTab === 2) {
@@ -111,6 +125,7 @@ class SearchList extends Component<any, any> {
   fetchMore = () => {
     const newSkip = this.skip[this.state.activeTab] + 1
     this._fetchData(newSkip)
+    this.skip[this.state.activeTab] = newSkip
   }
 
   removeSearch = () => {
@@ -123,7 +138,11 @@ class SearchList extends Component<any, any> {
     switch (type) {
       case 'product':
         return (
-          <SearchProductResult searchKey={searchKey} skip={this.skip['0']} />
+          <SearchProductResult
+            searchKey={searchKey}
+            skip={this.skip['0']}
+            fetchMore={this.fetchMore}
+          />
         )
       case 'brand':
         return (
@@ -142,7 +161,15 @@ class SearchList extends Component<any, any> {
           />
         )
       case 'post':
-        return <SearchPostResult searchKey={searchKey} skip={this.skip['3']} />
+        return (
+          <SearchPostResult
+            searchKey={searchKey}
+            skip={this.skip['3']}
+            fetchMore={this.fetchMore}
+            onSearchChange={this.onSearchChange}
+            resetSkip={this.resetSkip}
+          />
+        )
       default:
         return null
     }
@@ -234,16 +261,17 @@ const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
       getSearchPost,
+      getSearchTag,
       getSearchBrand,
       getSearchProduct,
       getSearchUser,
+      getPostByTag,
     },
     dispatch,
   )
 const mapStateToProps = state => {
-  // console.log('state new ---', state)
   return {
-    post: 'a',
+    isTagSearch: state.searchPost.isTagSearch,
   }
 }
 

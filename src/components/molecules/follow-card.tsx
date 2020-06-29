@@ -5,6 +5,7 @@ import { fontStyle } from '@components/commont-styles'
 import { colors } from '@utils/constants'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 import ImageAutoSchale from '@components/atoms/image-autoschale'
+import { navigate } from '@src/root-navigation'
 import { setImage as changeImageUri } from '@utils/helpers'
 import { Button, GradientButton } from '@components/atoms/button'
 import Gradient from 'react-native-linear-gradient'
@@ -30,6 +31,7 @@ interface FollowCardType {
   user?: any
   isFollowed?: boolean
   onFollow: (userId) => void
+  onPress: (userId) => void
   disableDivider?: boolean
   isGradientButton?: boolean
   authId?: number
@@ -84,6 +86,19 @@ class FollowCard extends React.PureComponent<FollowCardType, any> {
     this.props.onFollow(this.props.user.id)
   }
 
+  _handlePress = () => {
+    if (this.props.onPress) {
+      this.props.onPress(this.props.user.id)
+    } else {
+      navigate('Screens', {
+        screen: 'UserDetail',
+        params: {
+          userId: this.props.user.id,
+        },
+      })
+    }
+  }
+
   render() {
     const {
       style,
@@ -109,7 +124,7 @@ class FollowCard extends React.PureComponent<FollowCardType, any> {
     }
     return (
       <>
-        <TouchableWithoutFeedback onPress={() => {}}>
+        <TouchableWithoutFeedback onPress={this._handlePress}>
           <View style={{ ...styles.container, ...style }}>
             <View style={{ ...styles.content }}>
               <View

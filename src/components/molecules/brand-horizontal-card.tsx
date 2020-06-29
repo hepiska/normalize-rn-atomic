@@ -1,5 +1,5 @@
 import React from 'react'
-import { Text, View } from 'react-native'
+import { Text, View, TouchableOpacity } from 'react-native'
 import { TouchableWithoutFeedback } from '@components/atoms/basic'
 import { fontStyle } from '@components/commont-styles'
 import { colors } from '@utils/constants'
@@ -11,6 +11,7 @@ import { setImage as changeImageUri } from '@utils/helpers'
 interface BrandHorizontalType {
   brand: any
   idx: any
+  onPress?: () => {}
   imageOnly: boolean
 }
 
@@ -30,14 +31,18 @@ class BrandHorizontal extends React.PureComponent<BrandHorizontalType, any> {
     defaultImage: null,
   }
   handleOnPress = () => {
-    const { brand } = this.props
-    navigate('Screens', {
-      screen: 'ProductList',
-      params: {
-        brandsId: brand.id,
-        from: 'brands',
-      },
-    })
+    const { brand, onPress } = this.props
+    if (onPress) {
+      onPress()
+    } else {
+      navigate('Screens', {
+        screen: 'BrandProductList',
+        params: {
+          brandsId: brand.id,
+          from: 'brands',
+        },
+      })
+    }
   }
   render() {
     const { brand, idx } = this.props
@@ -53,23 +58,26 @@ class BrandHorizontal extends React.PureComponent<BrandHorizontalType, any> {
         changeImageUri(brand.image_url, { width: 53, height: 40 })
 
     return brand ? (
-      <TouchableWithoutFeedback onPress={this.handleOnPress}>
+      <View>
         <>
           <SearchResultCard
             leftContent={
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <ImageAutoSchale
-                  errorStyle={{ width: 53, height: 40 }}
-                  thumbnailSource={
-                    typeof thumbnailImage === 'string'
-                      ? { uri: thumbnailImage }
-                      : thumbnailImage
-                  }
-                  source={typeof image === 'string' ? { uri: image } : image}
-                  width={53}
-                  height={40}
-                  style={{ borderRadius: 8 }}
-                />
+                <TouchableOpacity onPress={this.handleOnPress}>
+                  <ImageAutoSchale
+                    errorStyle={{ width: 53, height: 40 }}
+                    thumbnailSource={
+                      typeof thumbnailImage === 'string'
+                        ? { uri: thumbnailImage }
+                        : thumbnailImage
+                    }
+                    source={typeof image === 'string' ? { uri: image } : image}
+                    width={53}
+                    height={40}
+                    style={{ borderRadius: 8 }}
+                  />
+                </TouchableOpacity>
+
                 <Text
                   style={{
                     marginLeft: 16,
@@ -88,7 +96,7 @@ class BrandHorizontal extends React.PureComponent<BrandHorizontalType, any> {
           />
           <Divider />
         </>
-      </TouchableWithoutFeedback>
+      </View>
     ) : null
   }
 }

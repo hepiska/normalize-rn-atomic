@@ -2,6 +2,7 @@ import { API } from '../action-types'
 import { setPostData } from '@modules/post/action'
 import * as schema from '@modules/normalize-schema'
 import { setBrandData } from '@modules/brand/action'
+import { dispatch } from '@src/root-navigation'
 export const searchActionType = {
   FETCH: 'search-brand/FETCH',
   SET_SEARCH_DATA: 'search-brand/SET_SEARCH_DATA',
@@ -62,16 +63,20 @@ export const getSearchBrand = (params, url) => ({
     },
     success: (data, { pagination }) => {
       const dispacers = [
-        setSearchData(data.entities.brand),
+        setSearchData(data.entities.brand || {}),
         setSearchLoading(false),
       ]
+      if (params.offset > 0 && !data.result.length) {
+        return setSearchLoading(false)
+      }
+
       if (params.offset > 0) {
         dispacers.push(addSearchOrder(data.result))
         dispacers.push(setPagination(pagination))
       } else {
-        dispacers.push(setSearchOrder(data.result))
+        dispacers.push(setSearchOrder(data.result), setSearchLoading(false))
       }
-      return data ? dispacers : [setSearchLoading(false)]
+      return dispacers
     },
   },
 })
