@@ -75,7 +75,7 @@ class Follow extends Component<any, any> {
     return (
       <>
         <NavbarTop
-          title={route.params.name || 'Follow Page'}
+          title={'Connections' || route.params.name}
           leftContent={['back']}
         />
         {finishAnimation ? (

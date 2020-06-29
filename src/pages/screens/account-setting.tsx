@@ -6,6 +6,8 @@ import {
   TouchableOpacity,
   Image,
   InteractionManager,
+  TouchableWithoutFeedback,
+  Dimensions,
 } from 'react-native'
 import { fontStyle } from '@src/components/commont-styles'
 import { colors } from '@utils/constants'
@@ -17,6 +19,10 @@ import { bindActionCreators } from 'redux'
 import { setLogout } from '@modules/auth/action'
 import { connect } from 'react-redux'
 import AccountSettingPageLoader from '@components/atoms/loaders/account-setting'
+import { setImage as changeImageUri } from '@utils/helpers'
+import ModalPreviewImage from '@components/molecules/modal-preview-image'
+
+const { width } = Dimensions.get('screen')
 
 const styles = StyleSheet.create({
   image: {
@@ -83,6 +89,26 @@ const styles = StyleSheet.create({
   },
 })
 
+const StatsCard = ({ title, image, desc, style, onPress }) => (
+  <TouchableOpacity onPress={onPress}>
+    <View style={{ width: 106, height: 52, ...style }}>
+      <Text style={{ ...styles.helveticaBold14 }}>{title}</Text>
+      <View
+        style={{ marginTop: 6, flexDirection: 'row', alignItems: 'center' }}>
+        <Image style={{ width: 10, height: 10 }} source={image} />
+        <Text
+          style={{
+            ...styles.helvetica12,
+            color: colors.black70,
+            marginLeft: 6,
+          }}>
+          {desc}
+        </Text>
+      </View>
+    </View>
+  </TouchableOpacity>
+)
+
 const navigateTo = (screen, screenName, params = {}) => {
   return navigate(screen, {
     screen: screenName,
@@ -120,12 +146,28 @@ const myOrder = [
 class AccountSetting extends Component<any, any> {
   state = {
     finishAnimation: false,
+    isVisible: false,
   }
 
   componentDidMount() {
     InteractionManager.runAfterInteractions(() => {
       this.setState({ finishAnimation: true })
     })
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    if (nextProps.user !== this.props.user) {
+      return true
+    }
+
+    if (nextState.isVisible !== this.state.isVisible) {
+      return true
+    }
+
+    if (nextState.finishAnimation !== this.state.finishAnimation) {
+      return true
+    }
+    return false
   }
   myOrderList = [
     {
@@ -192,6 +234,13 @@ class AccountSetting extends Component<any, any> {
     },
   ]
 
+  gotoFollowPage = followType => () => {
+    navigateTo('Screens', 'Follow', {
+      followType,
+      name: this.props.user.name,
+    })
+  }
+
   onPressDetailOrder = () => {
     navigateTo('Screens', 'OrderList', {})
   }
@@ -201,8 +250,13 @@ class AccountSetting extends Component<any, any> {
       hideHeader: true,
     })
   }
+  _openModal = () => this.setState({ isVisible: true })
+
+  _closeModal = () => this.setState({ isVisible: false })
   render() {
-    const { finishAnimation } = this.state
+    const { finishAnimation, isVisible } = this.state
+    const { user } = this.props
+
     return (
       <View>
         <NavbarTop title="Account Settings" leftContent={['back']} />
@@ -212,7 +266,113 @@ class AccountSetting extends Component<any, any> {
               paddingHorizontal: 16,
               paddingVertical: 26,
             }}>
-            <View style={{ marginBottom: 86 }}>
+            <View
+              style={{
+                marginBottom: 86,
+              }}>
+              {/* user basic Profile */}
+              <View
+                style={{
+                  marginBottom: 26,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                }}>
+                <View>
+                  <TouchableWithoutFeedback
+                    onPress={user.photo_url ? this._openModal : null}>
+                    <Image
+                      source={
+                        user.photo_url
+                          ? { uri: user.photo_url }
+                          : require('@src/assets/placeholder/placeholder2.jpg')
+                      }
+                      style={{ ...styles.image }}
+                    />
+                  </TouchableWithoutFeedback>
+                  <ModalPreviewImage
+                    image={[
+                      user.photo_url
+                        ? {
+                            url: changeImageUri(user.photo_url, {
+                              width: width,
+                              height: width,
+                            }),
+                          }
+                        : {},
+                    ]}
+                    isVisible={isVisible}
+                    onCloseModal={this._closeModal}
+                  />
+                </View>
+                <View style={{ marginLeft: 16 }}>
+                  {user.name && (
+                    <Text style={{ ...fontStyle.playfairBold, fontSize: 18 }}>
+                      {user.name}
+                    </Text>
+                  )}
+                  {user.username && (
+                    <Text
+                      style={{
+                        ...fontStyle.helvetica,
+                        fontSize: 14,
+                        color: colors.black60,
+                        marginTop: 8,
+                      }}>
+                      {`@${user.username}`}
+                    </Text>
+                  )}
+                </View>
+              </View>
+
+              {/* user stats */}
+              <View style={{ marginBottom: 40 }}>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                  }}>
+                  <StatsCard
+                    desc="Follower"
+                    image={require('@assets/icons/follower-add.png')}
+                    title={user.follower_count || 0}
+                    style={{ marginRight: 4 }}
+                    onPress={this.gotoFollowPage('Follower')}
+                  />
+                  <StatsCard
+                    desc="Following"
+                    image={require('@assets/icons/follower.png')}
+                    title={user.following_count || 0}
+                    style={{ marginRight: 4 }}
+                    onPress={this.gotoFollowPage('Following')}
+                  />
+                  <StatsCard
+                    desc="Total Post"
+                    image={require('@assets/icons/post.png')}
+                    title={user.posts_count || 0}
+                    style={{ marginRight: 4 }}
+                    onPress={() => {}}
+                  />
+                </View>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    marginTop: 10,
+                  }}>
+                  <StatsCard
+                    desc="Total View"
+                    image={require('@assets/icons/viewer.png')}
+                    title={user.view_count || 0}
+                    style={{ marginRight: 4 }}
+                    onPress={() => {}}
+                  />
+                  <StatsCard
+                    desc="Total Like"
+                    image={require('@assets/icons/like.png')}
+                    title={user.like_count || 0}
+                    style={{ marginRight: 4 }}
+                    onPress={() => {}}
+                  />
+                </View>
+              </View>
               {/* my shopping */}
               <View>
                 <Text
@@ -376,8 +536,11 @@ class AccountSetting extends Component<any, any> {
     )
   }
 }
+const mapStateToProps = state => ({
+  user: state.user.data[state.auth.data.user.id] || state.auth.data.user,
+})
 
 const mapDispatchToProps = dispatch =>
   bindActionCreators({ setLogout }, dispatch)
 
-export default connect(null, mapDispatchToProps)(AccountSetting)
+export default connect(mapStateToProps, mapDispatchToProps)(AccountSetting)

@@ -1,0 +1,170 @@
+import React from 'react'
+import {
+  StyleSheet,
+  ViewStyle,
+  View,
+  TouchableOpacity,
+  Text,
+} from 'react-native'
+import { fontStyle } from '@components/commont-styles'
+import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux'
+import { colors } from '@src/utils/constants'
+import { navigate } from '@src/root-navigation'
+import UserPp from '@components/atoms/user-profile-picture'
+import { getFollowerFollowing, getUser } from '@modules/user/action'
+import { userListData } from '@src/hocs/data/user'
+
+const UserPpHoc = userListData(UserPp)
+
+const styles = StyleSheet.create({
+  container: {
+    width: '100%',
+    backgroundColor: colors.white,
+  },
+  image: {
+    width: 40,
+    height: 40,
+    borderRadius: 100,
+  },
+  buttonText: {
+    color: colors.white,
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
+  playfairBold28: {
+    ...fontStyle.playfairBold,
+    fontWeight: '700',
+    fontSize: 28,
+  },
+  playfairBold20: {
+    ...fontStyle.playfairBold,
+    fontWeight: '700',
+    fontSize: 20,
+  },
+  helvetica12: {
+    ...fontStyle.helvetica,
+    fontSize: 12,
+  },
+  helvetica14: {
+    ...fontStyle.helvetica,
+    fontSize: 14,
+  },
+  button: {
+    height: 36,
+    borderColor: colors.black50,
+  },
+  buttonBlack: {
+    height: 36,
+    backgroundColor: colors.black100,
+  },
+  photoCollections: {
+    flexDirection: 'row',
+    marginTop: 24,
+  },
+  morePhotoContainer: {
+    backgroundColor: colors.black100,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+})
+
+const navigateTo = (screen, screenName, params = {}) => {
+  return navigate(screen, {
+    screen: screenName,
+    params,
+  })
+}
+
+interface ConnectionCardType {
+  style?: ViewStyle
+  user?: any
+  type?: string
+  getFollowerFollowing?: (parameter: Object, type: string) => void
+  follows?: Array<number>
+  userLoading?: boolean
+}
+class ConnectionCard extends React.Component<ConnectionCardType, any> {
+  componentDidMount() {
+    const params = {
+      offset: 10,
+      limit: 5,
+    }
+    this.props.getFollowerFollowing(params, 'followings')
+  }
+
+  gotoFollowPage = followType => () => {
+    navigateTo('Screens', 'Follow', {
+      followType,
+      name: this.props.user.name,
+    })
+  }
+
+  render() {
+    const { user, style, follows } = this.props
+    if (!follows || !user) {
+      return null
+    }
+    return (
+      <View style={{ ...styles.container, ...style }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}>
+          <Text style={{ ...styles.playfairBold20 }}>Connections</Text>
+          {user?.following_count > 5 && (
+            <TouchableOpacity onPress={this.gotoFollowPage('Following')}>
+              <Text
+                style={{
+                  ...styles.helvetica12,
+                }}>
+                See All
+              </Text>
+            </TouchableOpacity>
+          )}
+        </View>
+        <View style={{ ...styles.photoCollections }}>
+          {follows?.map((value, key) => {
+            return key < 5 ? (
+              <UserPpHoc userId={value} key={`user-pp-${key}`} />
+            ) : null
+          })}
+          {user?.following_count > 5 && (
+            <View
+              style={{
+                ...styles.image,
+                ...styles.morePhotoContainer,
+              }}>
+              <Text
+                style={{
+                  ...styles.helvetica12,
+                  color: colors.white,
+                }}>{`${user.following_count - 5}+`}</Text>
+            </View>
+          )}
+        </View>
+      </View>
+    )
+  }
+}
+
+const mapStateToProps = (state: any) => {
+  const isAuth = state.auth.isAuth
+  let user
+  if (isAuth) {
+    user = state.user.data[state.auth.data.user.id] || state.auth.data.user
+  }
+
+  return {
+    follows: state.user.order,
+    userLoading: state.user.loading,
+    user,
+  }
+}
+
+const mapDispatchToProps = dispatch =>
+  bindActionCreators({ getFollowerFollowing, getUser }, dispatch)
+
+export default connect(mapStateToProps, mapDispatchToProps)(ConnectionCard)
