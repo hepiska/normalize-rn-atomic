@@ -299,13 +299,13 @@ export const urlScreenMap = url => {
 }
 
 export const injectTokenScript = (id_token, user) => {
+  if (!id_token) {
+    return '(function(){})()'
+  }
   const token: { exp: number } = jwtDecode(id_token)
   const expiresAt = JSON.stringify(token.exp * 1000)
   user = JSON.stringify(user)
 
-  if (!id_token) {
-    return '(function(){})()'
-  }
   return `
     (function(){
       

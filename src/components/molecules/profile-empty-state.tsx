@@ -27,10 +27,12 @@ const styles = StyleSheet.create({
 
 interface ProfileEmptyType {
   style?: ViewStyle
+  title?: string
+  subtitle?: string
   onPress?: () => void
 }
 
-const ProfileEmptyState = ({ onPress }: ProfileEmptyType) => {
+const ProfileEmptyState = ({ onPress, title, subtitle }: ProfileEmptyType) => {
   return (
     <Div
       _width="100%"
@@ -47,7 +49,7 @@ const ProfileEmptyState = ({ onPress }: ProfileEmptyType) => {
         size={16}
         color={colors.black100}
         _margin="12px 0 0 0">
-        Opss, no account found
+        {title || ' Opss, no account found'}
       </Font>
       <Font
         style={{ ...fontStyle.helvetica, lineHeight: 17 }}
@@ -55,8 +57,8 @@ const ProfileEmptyState = ({ onPress }: ProfileEmptyType) => {
         color={colors.black70}
         textAlign="center"
         _margin="16px 0 0 0">
-        When you share photo, journal and collection they will appear in your
-        profile
+        {subtitle ||
+          'When you share photo, journal and collection they will appear in yourprofile'}
       </Font>
       <GradientButton
         onPress={onPress}

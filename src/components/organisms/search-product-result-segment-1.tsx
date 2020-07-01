@@ -1,6 +1,5 @@
 import React, { Component, useMemo, useCallback } from 'react'
 import { Dimensions, ViewStyle, View, Text, StyleSheet } from 'react-native'
-import { Div, Font } from '@components/atoms/basic'
 import ProductCard from '@components/molecules/product-card-new'
 import SearchResultCard from '../molecules/search-result-card'
 import { connect } from 'react-redux'
@@ -9,7 +8,6 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 import { colors } from '@src/utils/constants'
 import { dispatch } from '@src/root-navigation'
 import { fontStyle } from '../commont-styles'
-import { ScrollView } from 'react-native-gesture-handler'
 import { makeMapCategories } from '@modules/search-product/selector'
 import ProductSearchLoader from '@components/atoms/loaders/product-search'
 import EmtyState from '@components/molecules/order-empty-state'
@@ -166,7 +164,7 @@ const SearchProductResultPart1 = ({
         </View>
       </>
     ) : null
-  }, [categories.length, searchKey, products.length])
+  }, [categories.length, searchKey, products.length, loading])
 
   const emtyComponent = useMemo(() => {
     if (loading) return <ProductSearchLoader style={{ marginHorizontal: 16 }} />
@@ -177,7 +175,7 @@ const SearchProductResultPart1 = ({
         ? 'We Dont find any product for this Keyword'
         : 'Please Fill keyword'
     return <EmtyState title={title} description={desc} />
-  }, [searchKey, loading])
+  }, [searchKey, loading, categories])
 
   return (
     <View style={{ ...styles.container, ...style }}>
@@ -196,15 +194,15 @@ const SearchProductResultPart1 = ({
     </View>
   )
 }
+const mapCategories = makeMapCategories()
 
-const mapStateToProps = () => {
-  const mapCategories = makeMapCategories()
-  return state => ({
+const mapStateToProps = state => {
+  return {
     categories: mapCategories(state),
     products: state.searchProduct.productOrder,
     context: state.searchProduct.context,
     loading: state.searchProduct.loading,
-  })
+  }
 }
 
 export default connect(mapStateToProps, null)(SearchProductResultPart1)

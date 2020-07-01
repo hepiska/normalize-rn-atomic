@@ -1,19 +1,10 @@
 import React from 'react'
 import { View, Text, TouchableOpacity, ScrollView } from 'react-native'
-import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
-import ImageAutoSchale from '@components/atoms/image-autoschale'
-import PostInsight from '@components/molecules/post-insight'
-import TwoColumnListLoader from '@components/atoms/loaders/two-column-card'
-import { images } from '@utils/constants'
-import ProductLisyHeader from '@components/atoms/loaders/product-list-header'
-import SearchAndFilterLoader from '@components/atoms/loaders/search-filter-loader'
-import ShopLoader from '@components/atoms/loaders/shop'
-// import ProductDetailLoader from '@components/atoms/loaders/product-detail'
-// import ProductListLoadereLoader from '@components/atoms/loaders/product-list'
-import ProductListLoadereLoader from '@components/atoms/loaders/follow-list'
-import ProductDetailLoader from '@components/atoms/loaders/product-search'
-
+import UserDetail from '@components/atoms/loaders/user-detail'
+import ProductSearch from '@components/atoms/loaders/product-search'
+import PostCardFulll from '@components/atoms/loaders/post-card'
+import PostDetail from '@components/atoms/loaders/post-detail'
+import SearchListLoader from '@src/components/atoms/loaders/search-list'
 import ContentExpandable from '@components/molecules/content-expandable'
 
 const TestPage = props => {
@@ -25,13 +16,18 @@ const TestPage = props => {
 
   return (
     <View style={{ flex: 1 }} ref={toolTipsParent}>
-      <View ref={toolTipsTarget}>
+      {/* <CircleLoader r={50} /> */}
+      <SearchListLoader />
+      {/* <HorizontalImageLoader /> */}
+      {/* <View ref={toolTipsTarget}>
         <Text>sas</Text>
       </View>
-      <ProductDetailLoader />
-
       <Text>asasssasasasss</Text>
-      {/* <ShopLoader /> */}
+      <FullImageLoader style={{ height: 140 }} />
+      <PillsLoader style={{ marginVertical: 16 }} />
+      <TitleLoader />
+      <ProductCardLoader style={{ marginHorizontal: 16 }} /> */}
+      {/* <ProductDetailLoader imageHeight={200} /> */}
       {/* <ScrollView>
         // <ProductDetailLoader />
       </ScrollView> */}

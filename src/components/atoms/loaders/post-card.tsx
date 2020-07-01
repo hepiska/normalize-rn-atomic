@@ -28,14 +28,7 @@ const PostCardLoader = (props: LoaderPropsType) => {
             height={316}
             width={layout.width}>
             <Circle cx="16" r="16" cy="16" />
-            <Rect
-              x={40}
-              width={layout.width - 40}
-              height="32"
-              y="0"
-              rx="8"
-              ry="8"
-            />
+            <Rect x={40} width={layout.width} height="24" y="4" rx="8" ry="8" />
 
             <Rect
               x="0"
@@ -47,12 +40,22 @@ const PostCardLoader = (props: LoaderPropsType) => {
             />
             <Rect
               x="0"
-              y="232"
+              y="226"
               rx="8"
               ry="8"
               width={layout.width}
-              height="32"
+              height="18"
             />
+            <Rect
+              x="0"
+              y="250"
+              rx="8"
+              ry="8"
+              width={layout.width}
+              height="18"
+            />
+            <Circle r="10" cx="10" cy="284" />
+            <Circle r="10" cx={layout.width - 18} cy="284" />
           </ContentLoader>
         </>
       )}

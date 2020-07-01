@@ -1,5 +1,12 @@
 import React from 'react'
-import { View, Text, Dimensions, StyleSheet } from 'react-native'
+import {
+  View,
+  Text,
+  Dimensions,
+  StyleSheet,
+  RefreshControl,
+  InteractionManager,
+} from 'react-native'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import List from '@components/layouts/list-header'
@@ -13,6 +20,7 @@ import ProductTrending from '@components/organisms/product-trending'
 import HorizontalListLookBook from '@components/organisms/horzontal-list-lookbook'
 import { colors } from '@utils/constants'
 import { Instagram } from 'react-content-loader/native'
+import PostCardFull from '@components/atoms/loaders/post-card-full'
 
 const PostItem = postListData(PostListItem)
 
@@ -28,6 +36,7 @@ const { width, height } = Dimensions.get('screen')
 class FeedOrg extends React.Component<any, any> {
   state = {
     selectedFilter: this.props.userPostStatus,
+    finishAnimation: false,
   }
 
   limit = 5
@@ -35,7 +44,10 @@ class FeedOrg extends React.Component<any, any> {
   lastskip = 0
 
   componentDidMount() {
-    this._freshfetch()
+    InteractionManager.runAfterInteractions(() => {
+      this.setState({ finishAnimation: true })
+      this._freshfetch()
+    })
   }
 
   _fetchData = (skip, next_token) => {
@@ -160,23 +172,42 @@ class FeedOrg extends React.Component<any, any> {
           height: 300,
           width: '100%',
         }}>
-        {loading && <Instagram />}
+        {loading && <PostCardFull />}
       </View>
+    )
+  }
+
+  _refreshControl = () => {
+    const { loading } = this.props
+    const firstLoading = loading && !this.skip
+    return (
+      <RefreshControl onRefresh={this._freshfetch} refreshing={firstLoading} />
     )
   }
 
   render() {
     const { posts, scrollEnabled, loading } = this.props
-    const firsLoading = loading && !this.skip
+    const firstLoading = loading && !this.skip
 
     return (
-      <View style={{ width, flex: 1, backgroundColor: colors.black10 }}>
-        {firsLoading ? (
-          <Instagram />
+      <View
+        style={{
+          width,
+          flex: 1,
+          backgroundColor: colors.black10,
+        }}>
+        {this.state.finishAnimation && firstLoading ? (
+          <PostCardFull />
         ) : (
           <List
             data={posts}
             loading={loading}
+            refreshControl={
+              <RefreshControl
+                onRefresh={this._freshfetch}
+                refreshing={firstLoading}
+              />
+            }
             onScroll={this._hanleScroll}
             onEndReached={this._fetchMore}
             scrollEnabled={scrollEnabled}

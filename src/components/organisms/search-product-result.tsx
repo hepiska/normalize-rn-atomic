@@ -33,9 +33,7 @@ interface SearchProductType {
   skip?: number
   loading?: boolean
   searchKey?: string
-  skip?: number
   fetchMore?: () => void
-  loading?: boolean
   total?: number
   product?: any
 }

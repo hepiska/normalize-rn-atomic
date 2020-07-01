@@ -11,9 +11,10 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome'
 import Animated, { Easing, cos } from 'react-native-reanimated'
 import { Div, PressAbbleDiv } from '@components/atoms/basic'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { navigate } from '@src/root-navigation'
-import Modal from 'react-native-modal'
 import { fontStyle } from '@components/commont-styles'
 import { colors } from '@src/utils/constants'
 
@@ -42,18 +43,22 @@ const styles = StyleSheet.create({
   },
 })
 
-const AddButton = () => {
+const AddButton = props => {
   const [isOpen, setIsOpen] = useState(false)
   const animatedButtonVal = useMemo(() => new Value(0), [])
 
   const changeButtonPos = () => {
-    setIsOpen(!isOpen)
-    const iconAnimation = timing(animatedButtonVal, {
-      duration: 300,
-      toValue: isOpen ? 0 : 1,
-      easing: Easing.inOut(Easing.ease),
-    })
-    iconAnimation.start()
+    if (props.isAuth) {
+      setIsOpen(!isOpen)
+      const iconAnimation = timing(animatedButtonVal, {
+        duration: 300,
+        toValue: isOpen ? 0 : 1,
+        easing: Easing.inOut(Easing.ease),
+      })
+      iconAnimation.start()
+    } else {
+      navigate('modals', { screen: 'LoginModal' })
+    }
   }
 
   const handleActionPress = action => () => {
@@ -152,4 +157,6 @@ const AddButton = () => {
   )
 }
 
-export default AddButton
+const mapStateToProps = state => ({ isAuth: state.auth.isAuth })
+
+export default connect(mapStateToProps, null)(AddButton)

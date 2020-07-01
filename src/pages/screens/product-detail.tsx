@@ -441,7 +441,9 @@ class ProductListPage extends React.Component<any, any> {
     }
 
     if (!this.state.finishAnimation || loading) {
-      return <ProductListLoader style={{ marginHorizontal: 16 }} />
+      return (
+        <ProductListLoader imageHeight={this.dimentionConstant.imageHeight} />
+      )
     }
 
     return (

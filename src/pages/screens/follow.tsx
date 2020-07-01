@@ -88,7 +88,7 @@ class Follow extends Component<any, any> {
             isLazyload
           />
         ) : (
-          <FollowListLoader style={{ margin: 16 }} />
+          <FollowListLoader showheader style={{ margin: 16 }} />
         )}
       </>
     )

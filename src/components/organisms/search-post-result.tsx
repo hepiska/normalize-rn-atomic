@@ -17,6 +17,7 @@ import {
 } from '@src/modules/search-post/action'
 import EmptyState from '@components/molecules/order-empty-state'
 import SearchPostLoader from '@components/atoms/loaders/search-post-loader'
+import PostListLoader from '@components/atoms/loaders/post-card-list'
 import PostLoader from '@components/atoms/loaders/post-card'
 import { dispatch } from '@src/root-navigation'
 import { StackActions } from '@react-navigation/native'
@@ -52,8 +53,8 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   containerFooterLoader: {
-    height: 100,
-    width: '100%',
+    height: 300,
+    marginTop: 80,
     backgroundColor: 'transparent',
   },
 })
@@ -191,18 +192,21 @@ class SearchPostResult extends Component<SearchPostType, any> {
   }
 
   _renderFooterLoader = () => {
+    const { searchKey, style, post, loading, skip } = this.props
+    const firsLoading = loading && skip < 3
     return (
       <View style={styles.containerFooterLoader}>
-        <SearchPostLoader
-          style={{ marginHorizontal: 16, marginVertical: 32 }}
-        />
+        {firsLoading && (
+          <PostListLoader style={{ marginTop: 16, marginHorizontal: 16 }} />
+        )}
       </View>
     )
   }
 
   render() {
-    const { searchKey, style, post, loading } = this.props
+    const { searchKey, style, post, loading, skip } = this.props
     const data = searchKey.length > 2 ? post : []
+
     return (
       <View style={{ ...styles.container, ...style }}>
         <List
@@ -210,11 +214,11 @@ class SearchPostResult extends Component<SearchPostType, any> {
           style={{ flex: 1 }}
           data={data}
           loading={loading}
-          header={this.renderHeader}
+          ListHeaderComponent={this.renderHeader}
+          ListFooterComponent={this._renderFooterLoader}
           onEndReachedThreshold={0.99}
           onEndReached={this.onReachEnd}
           ListEmptyComponent={this.emptyState}
-          ListFooterComponent={this._renderFooterLoader}
           mansoryLoader={<PostLoader />}
           rowStyle={{ paddingHorizontal: 8, flex: 1 }}
           layoutType="mansory"

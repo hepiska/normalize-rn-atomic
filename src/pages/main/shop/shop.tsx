@@ -97,11 +97,12 @@ class ShopPage extends React.Component<any, any> {
         return null
     }
   }
+
   render() {
     const { page, navigation, loading } = this.props
 
     if (!this.state.finishAnimation || loading) {
-      return <ShopLoader style={{ marginHorizontal: 16 }} />
+      return <ShopLoader />
     }
 
     return (

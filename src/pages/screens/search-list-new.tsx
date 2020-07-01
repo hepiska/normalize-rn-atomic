@@ -46,16 +46,12 @@ class SearchList extends Component<any, any> {
   onChangeTab = activeTab => {
     this.limit = 10
     this.skip[activeTab] = 0
-    this.setState(
-      {
-        activeTab: activeTab,
-      },
-      () => {
-        if (this.state.searchKey.length > 2) {
-          this._fetchData(this.skip[this.state.activeTab] || 0)
-        }
-      },
-    )
+    if (this.state.searchKey.length > 2) {
+      this._fetchData(this.skip[activeTab] || 0)
+    }
+    this.setState({
+      activeTab: activeTab,
+    })
   }
 
   resetSkip = activeTab => {

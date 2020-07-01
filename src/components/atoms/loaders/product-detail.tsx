@@ -1,67 +1,79 @@
 import React, { useState } from 'react'
-import { View, ViewStyle, Dimensions, Text, SafeAreaView } from 'react-native'
+import {
+  View,
+  ViewStyle,
+  Dimensions,
+  Text,
+  SafeAreaView,
+  StyleSheet,
+} from 'react-native'
 import ContentLoader from 'react-content-loader/native'
 import { Rect } from 'react-native-svg'
 import { shimmerLoader } from '@utils/constants'
+import FullSizeImageLoader from '@components/atoms/loaders/full-size-image'
+import ProductCardLoader from '@components/atoms/loaders/product-card'
+import PillsLoader from '@components/atoms/loaders/pills'
+import HorizontalImageLoader from '@components/atoms/loaders/horizontal-image'
+import LineLoader from '@components/atoms/loaders/line'
+import ColorLoader from '@components/atoms/loaders/colors'
+import { create } from 'react-test-renderer'
 
 interface LoaderPropsType {
   style?: ViewStyle
+  imageHeight: number
 }
 const { width, height } = Dimensions.get('screen')
 
+const styles = StyleSheet.create({
+  containermargin: {
+    marginHorizontal: 16,
+    marginVertical: 8,
+  },
+})
+
 const ProductDetailLoader = (props: LoaderPropsType) => {
-  const [layout, setLayout] = useState(null)
-
-  const _setLayout = ({ nativeEvent }) => {
-    setLayout(nativeEvent.layout)
-  }
-
   return (
-    <SafeAreaView
-      style={{ alignItems: 'center', ...props.style }}
-      onLayout={_setLayout}>
-      {layout && (
-        <>
-          <ContentLoader
-            {...shimmerLoader}
-            viewBox={`0 0 ${layout.width} 400`}
-            height={400}
-            width={layout.width}>
-            <Rect
-              x="0"
-              y="0"
-              rx="8"
-              ry="8"
-              width={layout.width}
-              height={`${400}`}
-            />
-          </ContentLoader>
-          <ContentLoader
-            {...shimmerLoader}
-            style={{ marginTop: 16 }}
-            viewBox={`0 0 ${layout.width} 48`}
-            height={48}
-            width={layout.width}>
-            <Rect x="0" y="0" rx="8" ry="8" width={180} height={48} />
-          </ContentLoader>
-          <ContentLoader
-            {...shimmerLoader}
-            style={{ marginTop: 16 }}
-            viewBox={`0 0 ${layout.width} 20`}
-            height={20}
-            width={layout.width}>
-            <Rect x="0" y="0" rx="8" ry="8" width={240} height={20} />
-          </ContentLoader>
-          <ContentLoader
-            {...shimmerLoader}
-            style={{ marginTop: 16 }}
-            viewBox={`0 0 ${layout.width} 20`}
-            height={20}
-            width={layout.width}>
-            <Rect x="0" y="0" rx="8" ry="8" width={240} height={20} />
-          </ContentLoader>
-        </>
-      )}
+    <SafeAreaView style={{ ...props.style }}>
+      <FullSizeImageLoader style={{ height: props.imageHeight }} />
+      <LineLoader
+        style={{
+          height: 25,
+          marginTop: 8,
+          ...styles.containermargin,
+        }}
+      />
+      <LineLoader
+        style={{
+          marginTop: 16,
+          height: 32,
+          width: 180,
+          ...styles.containermargin,
+        }}
+      />
+      <LineLoader
+        style={{
+          marginTop: 4,
+          height: 28,
+          width: 240,
+          ...styles.containermargin,
+        }}
+      />
+      <LineLoader
+        style={{
+          marginTop: 16,
+          height: 28,
+          width: 240,
+          ...styles.containermargin,
+        }}
+      />
+      <ColorLoader
+        style={{
+          marginTop: 32,
+          height: 28,
+          width: 240,
+          ...styles.containermargin,
+        }}
+      />
     </SafeAreaView>
   )
 }

@@ -22,7 +22,6 @@ import IconMC from 'react-native-vector-icons/MaterialCommunityIcons'
 import Config from 'react-native-config'
 import { navigate } from '@src/root-navigation'
 import Line from '@components/atoms/line'
-import { post } from '@src/modules/normalize-schema'
 
 interface PostListItemType {
   post: any
@@ -113,9 +112,6 @@ const FullscreenCard = ({
   return (
     <View
       style={{
-        // borderWidth: 1,
-        // overflow: 'hidden',
-
         backgroundColor: 'white',
         // borderColor: colors.black10,
         ...style,
@@ -373,6 +369,7 @@ const VerticalCart = ({
   onLayout,
   style,
   onPress,
+  onUserPress,
   onShare,
   onLike,
 }: any) => {
@@ -409,7 +406,7 @@ const VerticalCart = ({
             marginHorizontal: 8,
             alignItems: 'center',
           }}>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={onUserPress(user)}>
             <Image
               source={
                 user.photo_url
@@ -647,6 +644,7 @@ class PostListItem extends React.Component<PostListItemType, any> {
             onPress={this._onPress}
             post={post}
             user={user}
+            onUserPress={this._goToUser}
             onLike={this._onLike}
             width={width}
             style={style}

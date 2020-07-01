@@ -72,7 +72,7 @@ export const setContext = (data: any) => ({
 })
 
 export const setSearchLoading = (data: any) => ({
-  type: searchActionType.SET_SEARCH_CATEGORY_ORDER,
+  type: searchActionType.SET_SEARCH_LOADING,
   payload: data,
 })
 
@@ -126,12 +126,14 @@ export const getSearchProduct = (params, url) => ({
         dispacers.push(addSearchProductOrder(normalizeProduct.result))
         dispacers.push(addSearchCategoryOrder(normalizeCategory.result))
         dispacers.push(setPagination(pagination))
+        return dispacers
       } else {
         dispacers.push(setSearchProductOrder(normalizeProduct.result))
         dispacers.push(setSearchCategoryOrder(normalizeCategory.result))
         dispacers.push(setPagination(pagination))
+        return dispacers
       }
-      return data ? dispacers : [setSearchLoading(false)]
+      return [setSearchLoading(false)]
     },
   },
 })

@@ -20,6 +20,7 @@ import ProductHeader from '@components/atoms/loaders/product-list-header'
 import ErrorOrg from '@src/components/organisms/four-o-four'
 import { productListData } from '@hocs/data/product'
 import { setImage } from '@utils/helpers'
+import ProductCardLoader from '@components/atoms/loaders/product-card'
 import { images as defaultImages, colors } from '@utils/constants'
 import { OutlineButton } from '@components/atoms/button'
 import ProductEmpty from '@components/organisms/product-empty'
@@ -128,11 +129,13 @@ class ProductList extends Component<any, any> {
   _keyExtractor = (item, index) => 'product-list' + item + index
 
   renderFooter = () => {
-    const { loading } = this.props
-
+    const { loading, products } = this.props
+    if (!loading && products.length < 4) {
+      return null
+    }
     return (
-      <View style={{ height: 286 }}>
-        {loading && <TwoCollumnCardLoaderSmall style={{ margin: 16 }} />}
+      <View style={{ height: 400 }}>
+        {loading && <ProductCardLoader style={{ margin: 16 }} />}
       </View>
     )
   }

@@ -226,7 +226,6 @@ class ShareModal extends React.Component<any, any> {
   }
   snapPoints = [500, 250, 0]
   render() {
-    console.log('finish ---', this.state.finishAnimation)
     return (
       this.state.finishAnimation && (
         <View style={{ flex: 1, backgroundColor: 'rgba(0,0,0,0.7)' }}>

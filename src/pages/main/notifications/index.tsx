@@ -11,6 +11,7 @@ function NotificationStack() {
   return (
     <Stack.Navigator
       initialRouteName="MainShop"
+      headerMode="none"
       screenOptions={{ ...TransitionPresets.SlideFromRightIOS }}>
       <Stack.Screen name="Notifications" component={NotificationPage} />
     </Stack.Navigator>

@@ -1,5 +1,11 @@
 import React from 'react'
-import { View, Text, Dimensions } from 'react-native'
+import {
+  View,
+  Text,
+  Dimensions,
+  InteractionManager,
+  RefreshControl,
+} from 'react-native'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import List from '@components/layouts/list-header'
@@ -13,6 +19,7 @@ import { colors } from '@utils/constants'
 import SearchFilter from '@components/organisms/search-filter'
 import TwoColumnListLoader from '@components/atoms/loaders/two-column-card'
 import PostLoader from '@components/atoms/loaders/post-card'
+import PostListLoader from '@components/atoms/loaders/product-list'
 
 const PostItem = postListData(PostListItem)
 
@@ -20,6 +27,7 @@ const { width, height } = Dimensions.get('screen')
 
 class DiscoverOrg extends React.Component<any, any> {
   state = {
+    finishAnimation: false,
     selectedFilter: this.props.userPostStatus,
     isWaitfilter: false,
   }
@@ -29,7 +37,10 @@ class DiscoverOrg extends React.Component<any, any> {
   lastskip = 0
 
   componentDidMount() {
-    this._freshfetch()
+    InteractionManager.runAfterInteractions(() => {
+      this.setState({ finishAnimation: true })
+      this._freshfetch()
+    })
   }
 
   _fetchData = (skip, next_token) => {
@@ -144,8 +155,8 @@ class DiscoverOrg extends React.Component<any, any> {
 
   render() {
     const { posts, scrollEnabled, loading } = this.props
-    const { isWaitfilter } = this.state
-    const firsLoading = (loading || isWaitfilter) && !this.skip
+    const { isWaitfilter, finishAnimation } = this.state
+    const firstLoading = (loading || isWaitfilter) && !this.skip
     // const data = firsLoading && isWaitfilter ? [] : posts
     return (
       <View
@@ -155,7 +166,7 @@ class DiscoverOrg extends React.Component<any, any> {
           paddingTop: 4,
           backgroundColor: colors.white,
         }}>
-        {firsLoading && (
+        {firstLoading && finishAnimation ? (
           <View
             style={{
               width,
@@ -166,28 +177,34 @@ class DiscoverOrg extends React.Component<any, any> {
               backgroundColor: colors.white,
               zIndex: 200,
             }}>
-            <TwoColumnListLoader />
+            <PostListLoader style={{ paddingHorizontal: 16 }} />
           </View>
+        ) : (
+          <List
+            data={posts}
+            loading={loading}
+            refreshControl={
+              <RefreshControl
+                onRefresh={this._freshfetch}
+                refreshing={firstLoading}
+              />
+            }
+            style={{ paddingTop: 8 }}
+            onScroll={this._hanleScroll}
+            onEndReached={this._fetchMore}
+            mansoryLoader={<PostLoader />}
+            scrollEnabled={scrollEnabled}
+            rowStyle={{ paddingHorizontal: 8 }}
+            ListEmptyComponent={this._emptyState}
+            renderFooter={this._renderfooter}
+            layoutType="mansory"
+            ListHeaderComponent={this._header}
+            columnStyle={{ flex: 1, marginHorizontal: 8 }}
+            numColumns={2}
+            ListFooterComponent={<View style={{ height: 200 }} />}
+            renderItem={this._renderItem}
+          />
         )}
-
-        <List
-          data={posts}
-          loading={loading}
-          style={{ paddingTop: 8 }}
-          onScroll={this._hanleScroll}
-          onEndReached={this._fetchMore}
-          mansoryLoader={<PostLoader />}
-          scrollEnabled={scrollEnabled}
-          rowStyle={{ paddingHorizontal: 8 }}
-          ListEmptyComponent={this._emptyState}
-          renderFooter={this._renderfooter}
-          layoutType="mansory"
-          ListHeaderComponent={this._header}
-          columnStyle={{ flex: 1, marginHorizontal: 8 }}
-          numColumns={2}
-          ListFooterComponent={<View style={{ height: 200 }} />}
-          renderItem={this._renderItem}
-        />
       </View>
     )
   }

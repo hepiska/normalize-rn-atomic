@@ -4,7 +4,7 @@ import WebView from 'react-native-webview'
 import Config from 'react-native-config'
 import { connect } from 'react-redux'
 import { urlScreenMap } from '@utils/helpers'
-
+import UserDetailLoader from '@components/atoms/loaders/user-detail'
 import NavbarTop from '@src/components/molecules/navbar-top'
 import { colors, nestedScreenMap } from '@utils/constants'
 import {
@@ -65,6 +65,8 @@ const UserDetail = props => {
       <NavbarTop title={username} leftContent={['back']} />
       <WebView
         ref={mywebView}
+        startInLoadingState={true}
+        renderLoading={() => <UserDetailLoader />}
         sharedCookiesEnabled
         source={{
           uri: uri,

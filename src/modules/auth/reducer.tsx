@@ -7,12 +7,12 @@ import AsyncStorage from '@react-native-community/async-storage'
 import CONFIG from 'react-native-config'
 
 interface RegisterState {
-  readonly loading: Boolean
-  readonly error?: ErrorType
-  readonly called: Boolean
+  loading: Boolean
+  error?: ErrorType
+  called: Boolean
   readonly data: any
-  readonly isAuth: Boolean
-  readonly usernameAvalaible: any
+  isAuth: Boolean
+  usernameAvalaible: any
 }
 const initialState: RegisterState = {
   loading: false,
@@ -31,13 +31,13 @@ const registerReducer: Reducer<RegisterState> = (
 
   switch (action.type) {
     case authActionType.FETCHNG:
-      newState.called = false
-      newState.loading = action.payload.loading
-      return newState
+      state.called = false
+      state.loading = action.payload.loading
+      return state
     case authActionType.ERROR:
-      newState.called = action.payload === null ? false : true
-      newState.error = action.payload
-      return newState
+      state.called = action.payload === null ? false : true
+      state.error = action.payload
+      return state
     case authActionType.SET_LOGIN_SUCCESS:
       newState.called = true
       newState.data = Immutable.merge(newState.data, action.payload.data)
@@ -51,7 +51,6 @@ const registerReducer: Reducer<RegisterState> = (
     case authActionType.SET_REGISTER_SUCCESS:
       newState.called = true
       newState.data.user = Immutable.merge(newState.data, action.payload)
-
       return newState
     case authActionType.SET_USERNAME_AVAILABLE:
       newState.usernameAvalaible = action.payload

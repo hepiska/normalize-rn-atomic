@@ -7,13 +7,10 @@ import {
   StyleSheet,
   InteractionManager,
 } from 'react-native'
-import { Div, Font } from '@components/atoms/basic'
-import ProductCard from '@components/molecules/product-card-new'
+
 import SearchResultCard from '../molecules/search-result-card'
-import Icon from 'react-native-vector-icons/FontAwesome'
 import { colors } from '@src/utils/constants'
 import { fontStyle } from '../commont-styles'
-import { ScrollView } from 'react-native-gesture-handler'
 import { connect } from 'react-redux'
 import FollowCard from '@components/molecules/follow-card'
 import { searchUserListData } from '@hocs/data/user'
@@ -24,8 +21,6 @@ import { dispatch } from '@src/root-navigation'
 import { StackActions } from '@react-navigation/native'
 
 const UserHoc = searchUserListData(FollowCard)
-
-const { width } = Dimensions.get('screen')
 
 const userCardHeight = 73
 
@@ -152,25 +147,21 @@ class SearchUserResult extends PureComponent<SearchUserType, any> {
 
     return (
       <View style={{ ...styles.container, ...style }}>
-        {this.state.finishAnimation ? (
-          <List
-            data={data}
-            ListHeaderComponent={this.renderHeader}
-            onEndReachedThreshold={0.9}
-            onEndReached={this.onReachedEnd}
-            keyExtractor={this._keyExtractor}
-            ListEmptyComponent={this.emtyComponent}
-            ListFooterComponent={this._renderFooterLoader}
-            getItemLayout={(data, index) => ({
-              length: userCardHeight,
-              offset: userCardHeight * index,
-              index,
-            })}
-            renderItem={this.renderItem}
-          />
-        ) : (
-          <FollowListLoader style={{ margin: 16 }} />
-        )}
+        <List
+          data={data}
+          ListHeaderComponent={this.renderHeader}
+          onEndReachedThreshold={0.9}
+          onEndReached={this.onReachedEnd}
+          keyExtractor={this._keyExtractor}
+          ListEmptyComponent={this.emtyComponent}
+          ListFooterComponent={this._renderFooterLoader}
+          getItemLayout={(data, index) => ({
+            length: userCardHeight,
+            offset: userCardHeight * index,
+            index,
+          })}
+          renderItem={this.renderItem}
+        />
       </View>
     )
   }

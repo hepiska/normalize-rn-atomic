@@ -3,6 +3,7 @@ import WebView from 'react-native-webview'
 import Config from 'react-native-config'
 import { connect } from 'react-redux'
 import NavbarTop from '@src/components/molecules/navbar-top'
+import PostDetailLoader from '@components/atoms/loaders/post-detail'
 import { colors } from '@utils/constants'
 import {
   removeHeaderWebviewScript,
@@ -39,12 +40,10 @@ const PostDetailPage = props => {
       <>
         <NavbarTop title={post?.title || title} leftContent={['back']} />
         <WebView
+          renderLoading={() => <PostDetailLoader style={{ marginTop: 16 }} />}
           ref={mywebView}
+          startInLoadingState={true}
           sharedCookiesEnabled
-          injectedJavaScriptBeforeContentLoaded={injectTokenScript(
-            id_token,
-            user,
-          )}
           onMessage={({ nativeEvent }) => {
             console.log('nativee', nativeEvent.data)
           }}

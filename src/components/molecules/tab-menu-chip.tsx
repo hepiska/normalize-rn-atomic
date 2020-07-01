@@ -77,6 +77,14 @@ const TabMenuNavigator = ({
           }
 
           const inputRange = state.routes.map((_, i) => i)
+          if (inputRange.length < 2) {
+            inputRange.push(1)
+          }
+          // console.log(
+          //   '====',
+          //   inputRange,
+          //   inputRange.map(i => (i === index ? 1 : 0)),
+          // )
           const opacity = Animated.interpolate(position, {
             inputRange,
             outputRange: inputRange.map(i => (i === index ? 1 : 0)),
