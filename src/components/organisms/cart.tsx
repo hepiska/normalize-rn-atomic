@@ -293,7 +293,7 @@ class Cart extends Component<any, any> {
     }, true)
 
     if (cartsLoading && this.skip === 0) {
-      return <CartListLoader />
+      return <CartListLoader style={{ marginHorizontal: 16 }} />
     }
     return (
       <>

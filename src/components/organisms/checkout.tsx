@@ -2,11 +2,7 @@ import React, { Component } from 'react'
 import { View, StyleSheet, Text } from 'react-native'
 import { Font, ScrollDiv } from '@components/atoms/basic'
 import { colors } from '@src/utils/constants'
-import {
-  futuraBlackFont24,
-  helveticaBlackFont14,
-  fontStyle,
-} from '@components/commont-styles'
+import { fontStyle } from '@components/commont-styles'
 import { connect } from 'react-redux'
 import { addressListData } from '@hocs/data/address'
 import AddressCart from '../molecules/address-cart'
@@ -105,7 +101,7 @@ class Checkout extends Component<any, any> {
               <AddressHoc
                 style={{ ...styles.checkoutAddress }}
                 type="checkout"
-                addressId={userCheckoutAddress ? userCheckoutAddress.id : null}
+                addressId={userCheckoutAddress?.id || null}
                 onPress={this.onChooseAddress}
               />
             </View>

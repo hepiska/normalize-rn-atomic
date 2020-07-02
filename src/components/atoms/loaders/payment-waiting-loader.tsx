@@ -1,8 +1,6 @@
 import React, { useState } from 'react'
-import { ViewStyle, SafeAreaView } from 'react-native'
-import ContentLoader from 'react-content-loader/native'
-import { Rect } from 'react-native-svg'
-import { shimmerLoader } from '@utils/constants'
+import { ViewStyle, SafeAreaView, View } from 'react-native'
+import LineLoader from './line'
 
 interface LoaderPropsType {
   style?: ViewStyle
@@ -17,80 +15,138 @@ const PaymentWaitingLoader = (props: LoaderPropsType) => {
   }
 
   return (
-    <SafeAreaView
-      style={{ alignItems: 'center', ...props.style }}
-      onLayout={_setLayout}>
+    <SafeAreaView style={{ ...props.style }} onLayout={_setLayout}>
       {layout && (
         <>
-          <ContentLoader
-            {...shimmerLoader}
-            viewBox={`0 0 ${layout.width} 200`}
-            height={200}
-            width={layout.width}>
-            <Rect x="0" y="0" rx="8" ry="8" width={160} height={20} />
-            <Rect
-              x={layout.width - 80}
-              y="0"
-              rx="8"
-              ry="8"
-              width={80}
-              height={20}
+          <View
+            style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+            <LineLoader style={{ width: 90, height: 18 }} />
+            <LineLoader style={{ width: 32, height: 18 }} />
+          </View>
+          <LineLoader
+            style={{
+              width: layout.width,
+              height: 37,
+              marginTop: 24,
+              marginBottom: 16,
+            }}
+          />
+          <View style={{ paddingHorizontal: 16, marginTop: 16 }}>
+            <LineLoader
+              style={{ width: 200, height: 15, paddingHorizontal: 16 }}
             />
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                marginTop: 16,
+              }}>
+              <LineLoader
+                style={{
+                  width: layout.width / 3 - 16,
+                  height: 24,
+                  marginRight: 16,
+                }}
+              />
+              <LineLoader
+                style={{
+                  width: layout.width / 3 - 16,
+                  height: 24,
+                  marginRight: 16,
+                }}
+              />
+              <LineLoader
+                style={{
+                  width: layout.width / 3 - 16,
+                  height: 24,
+                  marginRight: 16,
+                }}
+              />
+            </View>
+            <LineLoader style={{ width: 300, height: 12, marginTop: 36 }} />
+          </View>
+          <LineLoader style={{ width: 272, height: 18, marginTop: 40 }} />
+          <View
+            style={{
+              marginTop: 24,
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <LineLoader style={{ width: 50, height: 42 }} />
+              <LineLoader style={{ width: 135, height: 16, marginLeft: 16 }} />
+            </View>
+            <LineLoader style={{ width: 85, height: 28 }} />
+          </View>
+          <View
+            style={{
+              marginTop: 48,
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}>
+            <LineLoader style={{ width: 95, height: 14 }} />
+            <LineLoader style={{ width: 85, height: 14 }} />
+          </View>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              width: layout.width,
+              marginTop: 28,
+            }}>
+            <LineLoader style={{ width: 142, height: 14 }} />
+            <LineLoader style={{ width: 85, height: 14 }} />
+          </View>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              width: layout.width,
+              marginTop: 28,
+            }}>
+            <LineLoader style={{ width: 89, height: 14 }} />
+            <LineLoader style={{ width: 65, height: 14 }} />
+          </View>
 
-            <Rect x="0" y="40" rx="8" ry="8" width={160} height={20} />
-            <Rect
-              x={layout.width - 80}
-              y="40"
-              rx="8"
-              ry="8"
-              width={80}
-              height={20}
-            />
-            <Rect x="0" y="70" rx="8" ry="8" width={160} height={20} />
-            <Rect
-              x={layout.width - 80}
-              y="70"
-              rx="8"
-              ry="8"
-              width={80}
-              height={20}
-            />
-            <Rect x="0" y="100" rx="8" ry="8" width={160} height={20} />
-            <Rect
-              x={layout.width - 80}
-              y="100"
-              rx="8"
-              ry="8"
-              width={80}
-              height={20}
-            />
-            <Rect x="0" y="130" rx="8" ry="8" width={160} height={20} />
-            <Rect
-              x={layout.width - 80}
-              y="130"
-              rx="8"
-              ry="8"
-              width={80}
-              height={20}
-            />
-          </ContentLoader>
-          <ContentLoader
-            {...shimmerLoader}
-            viewBox={`0 0 ${layout.width} 400`}
-            height={400}
-            width={layout.width}>
-            <Rect x="0" y="0" rx="8" ry="8" width={80} height={60} />
-            <Rect
-              x={layout.width - 80}
-              y="0"
-              rx="8"
-              ry="8"
-              width={80}
-              height={60}
-            />
-            <Rect x="0" y="100" rx="8" ry="8" width={240} height={20} />
-            <Rect x="0" y="130" rx="8" ry="8" width={180} height={20} />
-          </ContentLoader>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              width: layout.width,
+              marginTop: 28,
+            }}>
+            <LineLoader style={{ width: 118, height: 14 }} />
+            <LineLoader style={{ width: 46, height: 14 }} />
+          </View>
+
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              width: layout.width,
+              marginTop: 28,
+            }}>
+            <LineLoader style={{ width: 118, height: 14 }} />
+            <LineLoader style={{ width: 83, height: 14 }} />
+          </View>
+
+          <View
+            style={{
+              width: layout.width,
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              marginTop: 48,
+            }}>
+            <LineLoader style={{ width: 90, height: 16 }} />
+            <LineLoader style={{ width: 47, height: 16 }} />
+          </View>
+          <LineLoader style={{ width: 170, height: 14, marginTop: 24 }} />
+          <LineLoader style={{ width: 290, height: 14, marginTop: 8 }} />
+          <LineLoader style={{ width: 230, height: 14, marginTop: 8 }} />
+          <LineLoader style={{ width: 250, height: 14, marginTop: 8 }} />
+          <LineLoader style={{ width: 120, height: 14, marginTop: 8 }} />
         </>
       )}
     </SafeAreaView>

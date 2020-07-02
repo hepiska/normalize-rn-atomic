@@ -40,7 +40,7 @@ class TermConditionWebView extends Component<any, any> {
             originWhitelist={['https://*']}
           />
         ) : (
-          <ArticleLoader style={{ margin: 16 }} />
+          <ArticleLoader style={{ marginHorizontal: 16 }} />
         )}
       </>
     )

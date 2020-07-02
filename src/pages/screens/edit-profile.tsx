@@ -26,7 +26,7 @@ import Camera from '@src/pages/modals/camera'
 import { request } from '@utils/services'
 import RNFS from 'react-native-fs'
 import { calculateYear } from '@utils/helpers'
-import FormLoader from '@src/components/atoms/loaders/form'
+import EditProfileLoader from '@src/components/atoms/loaders/edit-profile-loader'
 
 const options = {
   gender: [
@@ -353,7 +353,10 @@ const EditProfile = props => {
             </View>
           </>
         ) : (
-          <FormLoader style={{ margin: 16 }} />
+          <EditProfileLoader
+            style={{ marginHorizontal: 16, marginVertical: 24 }}
+            hasProfilePicture
+          />
         )}
       </>
     ),

@@ -39,7 +39,7 @@ class CartPage extends Component<any, any> {
             }
           />
         ) : (
-          <CartListLoader />
+          <CartListLoader style={{ marginHorizontal: 16 }} />
         )}
       </>
     )

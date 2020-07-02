@@ -367,8 +367,9 @@ const AddAddressManual = props => {
               closeModal={_closeModal}
               onLocationApplied={_locationApplied}
             />
-            <ScrollView style={{ flex: 1, paddingHorizontal: 16 }}>
-              <Text style={formStyles.title}>Recepient Information</Text>
+            <ScrollView
+              style={{ flex: 1, paddingHorizontal: 16, marginTop: 12 }}>
+              <Text style={formStyles.title}>Recipient Information</Text>
               <TextInputOutline
                 label="Recepient Name"
                 style={formStyles.field}
@@ -394,7 +395,9 @@ const AddAddressManual = props => {
                 error={state.phone_number.error}
                 autoCapitalize="none"
               />
-              <Text style={formStyles.title}>Shipping Address</Text>
+              <Text style={{ ...formStyles.title, marginTop: 28 }}>
+                Shipping Address
+              </Text>
               <TouchableOpacity
                 style={{ width: '100%' }}
                 onPress={() => {
@@ -590,7 +593,7 @@ const AddAddressManual = props => {
             </ScrollView>
           </>
         ) : (
-          <FormLoader style={{ margin: 16 }} />
+          <FormLoader style={{ marginHorizontal: 16 }} />
         )}
       </>
     ),

@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
-import { ViewStyle, SafeAreaView } from 'react-native'
-import ContentLoader from 'react-content-loader/native'
-import { Rect } from 'react-native-svg'
-import { shimmerLoader } from '@utils/constants'
+import { ViewStyle, SafeAreaView, View } from 'react-native'
+import LineLoader from './line'
+import AddressCardLoader from '@components/atoms/loaders/address-card-loader'
+import ItemCheckoutCardLoader from './item-checkout-card-loader'
 
 interface LoaderPropsType {
   style?: ViewStyle
@@ -16,47 +16,29 @@ const CheckoutLoader = (props: LoaderPropsType) => {
   }
 
   return (
-    <SafeAreaView
-      style={{ alignItems: 'center', ...props.style }}
-      onLayout={_setLayout}>
+    <SafeAreaView style={{ ...props.style }} onLayout={_setLayout}>
       {layout && (
         <>
-          <ContentLoader
-            {...shimmerLoader}
-            viewBox={`0 0 ${layout.width} 150`}
-            height={150}
-            width={layout.width}>
-            <Rect x="0" y="0" rx="8" ry="8" width={180} height={20} />
-            <Rect x="0" y="38" rx="8" ry="8" width={180} height={20} />
-            <Rect
-              x="0"
-              y="64"
-              rx="8"
-              ry="8"
-              width={layout.width * 0.8}
-              height={14}
-            />
-            <Rect
-              x="0"
-              y="86"
-              rx="8"
-              ry="8"
-              width={layout.width * 0.8}
-              height={14}
-            />
-            <Rect x="0" y="112" rx="8" ry="8" width={180} height={14} />
-          </ContentLoader>
-          <ContentLoader
-            {...shimmerLoader}
-            viewBox={`0 0 ${layout.width} 250`}
-            height={250}
-            width={layout.width}>
-            <Rect x="0" y="0" rx="8" ry="8" width={120} height={150} />
-            <Rect x="140" y="0" rx="8" ry="8" width={180} height={20} />
-            <Rect x="140" y="40" rx="8" ry="8" width={180} height={10} />
-            <Rect x="140" y="60" rx="8" ry="8" width={180} height={10} />
-            <Rect x="140" y="100" rx="8" ry="8" width={100} height={10} />
-          </ContentLoader>
+          <LineLoader style={{ width: 185, height: 24, marginTop: 12 }} />
+          <AddressCardLoader style={{ marginTop: 24 }} disableTooltip />
+          <ItemCheckoutCardLoader style={{ marginTop: 40 }} />
+          <LineLoader style={{ width: 134, height: 16, marginTop: 60 }} />
+          <LineLoader
+            style={{ width: layout.width, height: 45, marginTop: 24 }}
+          />
+          <LineLoader
+            style={{ width: layout.width, height: 40, marginTop: 16 }}
+          />
+
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              marginTop: 42,
+            }}>
+            <LineLoader style={{ width: 71, height: 16 }} />
+            <LineLoader style={{ width: 97, height: 16 }} />
+          </View>
         </>
       )}
     </SafeAreaView>

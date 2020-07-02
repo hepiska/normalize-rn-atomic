@@ -32,7 +32,7 @@ import { navigate, goBack } from '@src/root-navigation'
 import BottomSheetModal from '@src/components/layouts/bottom-sheet-modal'
 import ActionListCard from '@components/molecules/action-list-card'
 import { sendEmail } from '@utils/helpers'
-import PaymentDetailLoader from '@src/components/atoms/loaders/payment-detail-loader'
+import PaymentWaitingLoader from '@src/components/atoms/loaders/payment-waiting-loader'
 
 const Divider = ({ marginTop }) => (
   <View
@@ -738,7 +738,7 @@ class PaymentWaiting extends Component<any, any> {
             {transaction.provider_payment_method && this.renderFooterButton()}
           </>
         ) : (
-          <PaymentDetailLoader style={{ margin: 16 }} />
+          <PaymentWaitingLoader style={{ margin: 16 }} />
         )}
       </>
     )

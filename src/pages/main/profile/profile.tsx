@@ -10,7 +10,7 @@ import { navigate } from '@src/root-navigation'
 import { setLogout } from '@modules/auth/action'
 import ProfileEmptyState from '@components/molecules/profile-empty-state'
 import ProfileCard from '@components/molecules/profile-card'
-import ProfileLoader from '@components/atoms/loaders/profile'
+import ProfileLoader from '@src/components/atoms/loaders/profile-loader'
 // import MyPost from '@components/organisms/my-post'
 import MyPost from '@components/organisms/my-post-new'
 import ConnectionCard from '@src/components/molecules/connection-card'
@@ -112,7 +112,12 @@ class ProfilPage extends React.PureComponent<any, any> {
             }
           />
         ) : (
-          <ProfileLoader style={{ marginVertical: 8, marginHorizontal: 16 }} />
+          <ProfileLoader
+            style={{
+              marginVertical: 8,
+              marginHorizontal: 16,
+            }}
+          />
         )}
       </View>
     )

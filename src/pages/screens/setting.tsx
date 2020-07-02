@@ -5,7 +5,7 @@ import { colors } from '@utils/constants'
 import { ScrollView } from 'react-native-gesture-handler'
 import ActionListCard from '@components/molecules/action-list-card'
 import { navigate } from '@src/root-navigation'
-import ActionListLoader from '@components/atoms/loaders/action-list-loader'
+import SettingLoader from '@components/atoms/loaders/setting-loader'
 
 const settingMenu = [
   {
@@ -57,7 +57,7 @@ class Settings extends Component<any, any> {
             </View>
           </ScrollView>
         ) : (
-          <ActionListLoader style={{ margin: 16 }} />
+          <SettingLoader style={{ marginHorizontal: 8 }} />
         )}
       </>
     )

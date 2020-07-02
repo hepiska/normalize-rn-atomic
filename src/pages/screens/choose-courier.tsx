@@ -79,29 +79,6 @@ class ChooseCourierPage extends Component<any, any> {
                 </View>
               </View>
 
-              <View
-                {...styles.shipmentCourier}
-                style={{
-                  backgroundColor: 'rgba(0, 184, 0, 0.05)',
-                  marginTop: 8,
-                }}>
-                <Icon
-                  name="star-and-crescent"
-                  size={16}
-                  color={colors.greenAccent}
-                />
-                <View style={{ marginLeft: 16 }}>
-                  <Text
-                    style={{
-                      ...styles.helvetica12,
-                      color: colors.greenAccent,
-                    }}>
-                    Ramadhan content courier will be write here so let’s make
-                    space
-                  </Text>
-                </View>
-              </View>
-
               {shipments[warehouseId]?.map((value, key) => {
                 return (
                   <ShipmentHoc
@@ -118,7 +95,7 @@ class ChooseCourierPage extends Component<any, any> {
             </View>
           </ScrollDiv>
         ) : (
-          <CourierLoader style={{ margin: 16 }} />
+          <CourierLoader style={{ marginHorizontal: 16 }} />
         )}
       </>
     )

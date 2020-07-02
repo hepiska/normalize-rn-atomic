@@ -4,21 +4,14 @@ import { View, Text, FlatList, InteractionManager } from 'react-native'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import Field from '@components/atoms/field'
-import {
-  changeFilter,
-  changeSearchKey,
-  getAllOrder,
-} from '@modules/order/action'
+import { getAllOrder } from '@modules/order/action'
 import { capitalEachWord } from '@utils/helpers'
-import { colors } from '@utils/constants'
-import Icon from 'react-native-vector-icons/FontAwesome'
 import SearchFilter from '@components/organisms/search-filter'
 import { orderListData } from '@hocs/data/order'
 import OrderCard from '@components/molecules/order-card'
-import OrderListLoader from '@components/atoms/loaders/one-column-card'
-import OrderListPageLoader from '@components/atoms/loaders/order-list'
+import OrderCardLoader from '@src/components/atoms/loaders/order-card-loader'
+import OrderListLoader from '@components/atoms/loaders/order-list'
 import OrderEmptyState from '@src/components/molecules/order-empty-state'
-import OneColumnListLoader from '@components/atoms/loaders/one-column-card'
 
 const OrderHoc = orderListData(OrderCard)
 
@@ -166,7 +159,7 @@ class OrderList extends Component<any, any> {
 
     return (
       <View style={{ height: 360, marginVertical: 32 }}>
-        {loading && this.skip !== 0 && <OneColumnListLoader />}
+        {loading && this.skip !== 0 && <OrderCardLoader />}
       </View>
     )
   }
@@ -202,7 +195,7 @@ class OrderList extends Component<any, any> {
             />
           </View>
         ) : (
-          <OrderListPageLoader style={{ margin: 16 }} />
+          <OrderListLoader style={{ marginHorizontal: 16 }} />
         )}
       </>
     )

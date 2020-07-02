@@ -1,8 +1,8 @@
-import React, { Component, useMemo, useEffect, useState } from 'react'
-import { View, Text, Alert, InteractionManager } from 'react-native'
+import React, { useMemo, useEffect, useState } from 'react'
+import { View, Text, InteractionManager } from 'react-native'
 import { connect } from 'react-redux'
 import NavbarTop from '@src/components/molecules/navbar-top'
-import { colors, regex } from '@utils/constants'
+import { regex } from '@utils/constants'
 import { ScrollView } from 'react-native-gesture-handler'
 import TextInputOutline from '@src/components/atoms/field-floating'
 import { formStyles } from '@src/components/commont-styles'
@@ -12,7 +12,7 @@ import { fontStyle } from '@src/components/commont-styles'
 import { changePassword } from '@modules/user/action'
 
 import { bindActionCreators } from 'redux'
-import FormLoader from '@src/components/atoms/loaders/form'
+import EditPasswordLoader from '@src/components/atoms/loaders/edit-password-loader'
 
 const ChangePassword = props => {
   const [finishAnimation, setFinishAnimation] = useState(false)
@@ -118,7 +118,7 @@ const ChangePassword = props => {
             </View>
           </>
         ) : (
-          <FormLoader style={{ margin: 16 }} />
+          <EditPasswordLoader style={{ marginHorizontal: 16 }} />
         )}
       </>
     ),

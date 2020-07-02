@@ -1,33 +1,46 @@
-import React from 'react'
-import { View, StyleSheet, Text } from 'react-native'
-import LottieView from 'lottie-react-native'
+import React, { useState } from 'react'
+import { ViewStyle, SafeAreaView, View } from 'react-native'
+import LineLoader from './line'
+import CartCardLoader from './cart-card-loader'
 
-const styles = StyleSheet.create({
-  container: {
-    width: '100%',
-    height: 195,
-  },
-})
-
-export default class CartListLoader extends React.Component<any, any> {
-  render() {
-    return (
-      <>
-        <View style={{ ...styles.container, ...this.props.style }}>
-          <LottieView
-            source={require('./cart-list-loader.json')}
-            autoPlay
-            loop
-          />
-        </View>
-        <View style={{ ...styles.container, ...this.props.style }}>
-          <LottieView
-            source={require('./cart-list-loader.json')}
-            autoPlay
-            loop
-          />
-        </View>
-      </>
-    )
-  }
+interface LoaderPropsType {
+  style?: ViewStyle
+  type?: string
 }
+
+const CartListLoader = (props: LoaderPropsType) => {
+  const [layout, setLayout] = useState(null)
+
+  const _setLayout = ({ nativeEvent }) => {
+    setLayout(nativeEvent.layout)
+  }
+
+  return (
+    <SafeAreaView style={{ ...props.style }} onLayout={_setLayout}>
+      {layout && (
+        <>
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              width: layout.width,
+              marginTop: 28,
+            }}>
+            <View
+              style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+              <LineLoader style={{ width: 14, height: 14, marginRight: 16 }} />
+              <LineLoader style={{ width: 67, height: 14 }} />
+            </View>
+            <LineLoader style={{ width: 55, height: 16 }} />
+          </View>
+          <CartCardLoader style={{ width: layout.width }} />
+          <CartCardLoader style={{ width: layout.width }} />
+          <CartCardLoader style={{ width: layout.width }} />
+          <CartCardLoader style={{ width: layout.width }} />
+          <CartCardLoader style={{ width: layout.width }} />
+        </>
+      )}
+    </SafeAreaView>
+  )
+}
+export default CartListLoader

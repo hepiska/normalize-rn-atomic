@@ -3,6 +3,8 @@ import { ViewStyle, SafeAreaView } from 'react-native'
 import ContentLoader from 'react-content-loader/native'
 import { Rect } from 'react-native-svg'
 import { shimmerLoader } from '@utils/constants'
+import LineLoader from '@components/atoms/loaders/line'
+import CourierCardLoader from '@components/atoms/loaders/courier-card-loader'
 
 interface LoaderPropsType {
   style?: ViewStyle
@@ -17,27 +19,16 @@ const AddressDetailLoader = (props: LoaderPropsType) => {
   }
 
   return (
-    <SafeAreaView
-      style={{ alignItems: 'center', ...props.style }}
-      onLayout={_setLayout}>
+    <SafeAreaView style={{ ...props.style }} onLayout={_setLayout}>
       {layout && (
         <>
-          <ContentLoader
-            {...shimmerLoader}
-            viewBox={`0 0 ${layout.width} 400`}
-            height={400}
-            width={layout.width}>
-            <Rect x="90" y="0" rx="8" ry="8" width={180} height={30} />
-            <Rect x="90" y="40" rx="8" ry="8" width={180} height={10} />
-            <Rect x="90" y="70" rx="8" ry="8" width={180} height={30} />
-            <Rect x="90" y="110" rx="8" ry="8" width={180} height={10} />
-            <Rect x="90" y="140" rx="8" ry="8" width={180} height={30} />
-            <Rect x="90" y="180" rx="8" ry="8" width={180} height={10} />
-
-            <Rect x="0" y="0" rx="8" ry="8" width={70} height={50} />
-            <Rect x="0" y="70" rx="8" ry="8" width={70} height={50} />
-            <Rect x="0" y="140" rx="8" ry="8" width={70} height={50} />
-          </ContentLoader>
+          <LineLoader
+            style={{ marginTop: 24, height: 45, width: layout.width }}
+          />
+          <LineLoader style={{ marginTop: 16, height: 24, width: 82 }} />
+          <CourierCardLoader style={{ marginTop: 4 }} />
+          <CourierCardLoader style={{ marginTop: 16 }} />
+          <CourierCardLoader style={{ marginTop: 16 }} />
         </>
       )}
     </SafeAreaView>

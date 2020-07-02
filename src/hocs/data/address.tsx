@@ -12,9 +12,12 @@ const addressListMap = () => {
   const getSelectedAddresses = makeSelectedAddresses()
 
   return (state, ownProps) => {
-    const address = getSelectedAddresses(state, ownProps)
+    let address = null
+    if (ownProps.addressId) {
+      address = getSelectedAddresses(state, ownProps)
+    }
 
-    if (!address) return null
+    // if (!address) return null
     return {
       address,
     }

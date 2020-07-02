@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet } from 'react-native'
+import { StyleSheet, InteractionManager } from 'react-native'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
@@ -13,6 +13,7 @@ import { getProductById } from '@modules/product/action'
 import { addCart, changeVariant } from '@modules/cart/action'
 import { images, colors } from '@utils/constants'
 import { formatRupiah, deepClone } from '@utils/helpers'
+import CartModalLoader from '@components/atoms/loaders/cart-modal-loader'
 // import CircleLoader from '@components/atoms/loaders/cirle'
 
 const AbsDiv = styled(Div)`
@@ -54,10 +55,14 @@ class CartModal extends React.Component<any, any> {
   state = {
     selectedVariant: null,
     isUserSelectVariant: false,
+    finishAnimation: false,
   }
 
   componentDidMount() {
-    this.props.getProductById(this.props.route.params?.product)
+    InteractionManager.runAfterInteractions(() => {
+      this.setState({ finishAnimation: true })
+      this.props.getProductById(this.props.route.params?.product)
+    })
   }
 
   componentDidUpdate(prevProps) {
@@ -148,7 +153,8 @@ class CartModal extends React.Component<any, any> {
   }
 
   render() {
-    const { selectedVariant, filteredAttributes } = this.state as any
+    const { selectedVariant, filteredAttributes, finishAnimation } = this
+      .state as any
     const { product, brand, route, loading } = this.props
     const varianData = this.getVariantData(selectedVariant || 1)
     const { fixAttributes, type, changeAttribute } = route.params
@@ -172,60 +178,64 @@ class CartModal extends React.Component<any, any> {
     return (
       <>
         <NavbarTop title={headerTitle} leftContent={['close']} />
-        <Div
-          _width="100%"
-          _flex="1"
-          align="flex-start"
-          justify="flex-start"
-          _padding="24px 16px"
-          style={styles.content}>
-          <ProductOverviewCart
-            image={
-              varianData ? { uri: varianData.image_urls[0] } : images.product
-            }
-            brand={brand.name.toUpperCase()}
-            name={product.name}
-            sale // revisi: diubah data dari BE
-          />
-          <ProductAttributes
-            filteredAttributes={filteredAttributes}
-            onAttributesChanged={this._filterVariants}
-            fixAttributesIds={fixAttributesIds}
-            selectedAttributes={selectedAttributes}
-            attributes={product.attributes || []}
-            onAllAttributesSelected={this._selectVariant}
-          />
-          <AbsDiv
-            _direction="row"
-            justify="space-between"
-            _background={colors.white}
-            style={styles.bottomSheet}>
-            <Div _flex={0.5} align="flex-start">
-              <Font
-                type="title"
-                color={colors.black100}
-                size={12}
-                _margin="0px 0px 8px">
-                Product Price
-              </Font>
-              <Font type="title" color={colors.red2} size={18}>
-                {formatRupiah(product.max_price)}
-              </Font>
-            </Div>
-            <Div _flex={0.5} align="flex-end">
-              <GradientButton
-                onPress={this._addToCart}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 0 }}
-                colors={['#3067E4', '#8131E2']}
-                title={buttonText}
-                fontStyle={styles.buttonText}
-                style={styles.button}
-                disabled={!selectedVariant || loading || !product.is_commerce}
-              />
-            </Div>
-          </AbsDiv>
-        </Div>
+        {finishAnimation ? (
+          <Div
+            _width="100%"
+            _flex="1"
+            align="flex-start"
+            justify="flex-start"
+            _padding="24px 16px"
+            style={styles.content}>
+            <ProductOverviewCart
+              image={
+                varianData ? { uri: varianData.image_urls[0] } : images.product
+              }
+              brand={brand.name.toUpperCase()}
+              name={product.name}
+              sale // revisi: diubah data dari BE
+            />
+            <ProductAttributes
+              filteredAttributes={filteredAttributes}
+              onAttributesChanged={this._filterVariants}
+              fixAttributesIds={fixAttributesIds}
+              selectedAttributes={selectedAttributes}
+              attributes={product.attributes || []}
+              onAllAttributesSelected={this._selectVariant}
+            />
+            <AbsDiv
+              _direction="row"
+              justify="space-between"
+              _background={colors.white}
+              style={styles.bottomSheet}>
+              <Div _flex={0.5} align="flex-start">
+                <Font
+                  type="title"
+                  color={colors.black100}
+                  size={12}
+                  _margin="0px 0px 8px">
+                  Product Price
+                </Font>
+                <Font type="title" color={colors.red2} size={18}>
+                  {formatRupiah(product.max_price)}
+                </Font>
+              </Div>
+              <Div _flex={0.5} align="flex-end">
+                <GradientButton
+                  onPress={this._addToCart}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 0 }}
+                  colors={['#3067E4', '#8131E2']}
+                  title={buttonText}
+                  fontStyle={styles.buttonText}
+                  style={styles.button}
+                  disabled={!selectedVariant || loading || !product.is_commerce}
+                />
+              </Div>
+            </AbsDiv>
+          </Div>
+        ) : (
+          <CartModalLoader style={{ marginHorizontal: 16 }} />
+        )}
       </>
     )
   }

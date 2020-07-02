@@ -358,7 +358,7 @@ class AccountSetting extends Component<any, any> {
                   My Shopping
                 </Text>
 
-                <View
+                {/* <View
                   style={{
                     marginTop: 24,
                     flexDirection: 'row',
@@ -380,7 +380,7 @@ class AccountSetting extends Component<any, any> {
                       Details
                     </Text>
                   </TouchableOpacity>
-                </View>
+                </View> */}
                 <View style={{ marginTop: 17 }}>
                   <TransactionOrderAction />
                 </View>
@@ -462,7 +462,7 @@ class AccountSetting extends Component<any, any> {
             </View>
           </ScrollView>
         ) : (
-          <AccountSettingPageLoader style={{ margin: 16 }} />
+          <AccountSettingPageLoader style={{ marginHorizontal: 16 }} />
         )}
       </View>
     )

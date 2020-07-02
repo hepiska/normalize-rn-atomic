@@ -12,7 +12,7 @@ import {
 } from '@modules/user/action'
 import { bindActionCreators } from 'redux'
 import { deepClone } from '@src/utils/helpers'
-import ActionListLoader from '@components/atoms/loaders/action-list-loader'
+import NotifPreferenceLoader from '@components/atoms/loaders/notification-preference-loader'
 
 const styles = StyleSheet.create({
   playfair24: {
@@ -140,7 +140,7 @@ class NotificationPreferene extends Component<any, any> {
             </View>
           </ScrollView>
         ) : (
-          <ActionListLoader style={{ margin: 16 }} />
+          <NotifPreferenceLoader style={{ marginHorizontal: 8 }} />
         )}
       </>
     )

@@ -1,17 +1,28 @@
 import React, { useState } from 'react'
-import { View, ViewStyle, SafeAreaView } from 'react-native'
-import SearchFilterLoader from './search-filter-loader'
-import OneColumnListLoader from './one-column-card'
+import { ViewStyle, SafeAreaView, Dimensions } from 'react-native'
+import OrderCardLoader from './order-card-loader'
+import PillsLoader from './pills'
+import LineLoader from './line'
 
 interface LoaderPropsType {
   style?: ViewStyle
 }
+const { width } = Dimensions.get('screen')
 
 const OrderListLoader = (props: LoaderPropsType) => {
   return (
     <SafeAreaView style={{ ...props.style }}>
-      <SearchFilterLoader style={{ marginTop: 16 }} />
-      <OneColumnListLoader />
+      <LineLoader
+        style={{
+          marginTop: 12,
+          width: width - Number(props.style.marginHorizontal) * 2,
+          height: 33,
+        }}
+      />
+      <PillsLoader style={{ marginVertical: 12 }} />
+      <OrderCardLoader style={{ margin: 16 }} />
+      <OrderCardLoader style={{ margin: 16 }} />
+      <OrderCardLoader style={{ margin: 16 }} />
     </SafeAreaView>
   )
 }

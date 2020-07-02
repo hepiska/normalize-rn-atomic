@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
-import { View, ViewStyle, SafeAreaView } from 'react-native'
-import OneColumnListLoader from './one-column-card'
-
+import { ViewStyle, SafeAreaView } from 'react-native'
+import PaymentCardLoader from './payment-card-loader'
 interface LoaderPropsType {
   style?: ViewStyle
 }
@@ -9,7 +8,9 @@ interface LoaderPropsType {
 const PaymentListLoader = (props: LoaderPropsType) => {
   return (
     <SafeAreaView style={{ ...props.style }}>
-      <OneColumnListLoader />
+      <PaymentCardLoader style={{ margin: 16, marginTop: 28 }} />
+      <PaymentCardLoader style={{ margin: 16 }} />
+      <PaymentCardLoader style={{ margin: 16 }} />
     </SafeAreaView>
   )
 }

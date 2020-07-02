@@ -3,9 +3,8 @@ import { ScrollView, InteractionManager } from 'react-native'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import NavbarTop from '@src/components/molecules/navbar-top'
-import { colors } from '@src/utils/constants'
 import OrderDetails from '@components/organisms/order-details'
-import OrderDetailLoader from '@src/components/atoms/loaders/checkout'
+import OrderDetailLoader from '@src/components/atoms/loaders/order-detail-loader'
 
 class OrderDetailPage extends Component<any, any> {
   state = {

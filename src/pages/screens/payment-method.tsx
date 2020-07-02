@@ -10,7 +10,7 @@ import { colors } from '@src/utils/constants'
 import { getTransactionById } from '@modules/transaction/action'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { CommonActions } from '@react-navigation/native'
-import PaymentLoader from '@src/components/atoms/loaders/courier-loader'
+import PaymentLoader from '@src/components/atoms/loaders/payment-method-loader'
 
 const styles = StyleSheet.create({
   container: {

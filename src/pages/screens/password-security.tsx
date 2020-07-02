@@ -7,7 +7,7 @@ import { ScrollView } from 'react-native-gesture-handler'
 import { fontStyle } from '@src/components/commont-styles'
 import ActionListCard from '@components/molecules/action-list-card'
 import { navigate } from '@src/root-navigation'
-import ActionListLoader from '@components/atoms/loaders/action-list-loader'
+import PasswordLoader from '@components/atoms/loaders/password-loader'
 
 const securityMenu = [
   {
@@ -51,7 +51,7 @@ class PasswordSecurity extends Component<any, any> {
             </View>
           </ScrollView>
         ) : (
-          <ActionListLoader style={{ margin: 16 }} />
+          <PasswordLoader style={{ marginHorizontal: 16 }} />
         )}
       </>
     )

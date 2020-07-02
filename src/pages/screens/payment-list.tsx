@@ -1,15 +1,8 @@
 import React, { Component } from 'react'
 import NavbarTop from '@components/molecules/navbar-top'
-import {
-  View,
-  Text,
-  FlatList,
-  ScrollView,
-  InteractionManager,
-} from 'react-native'
+import { View, FlatList, InteractionManager } from 'react-native'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import Field from '@components/atoms/field'
 import { getAllTransaction } from '@modules/transaction/action'
 import PaymentCard from '@components/molecules/payment-card'
 import { capitalEachWord } from '@utils/helpers'
@@ -20,7 +13,7 @@ import OrderEmptyState from '@src/components/molecules/order-empty-state'
 import { OutlineButton } from '@src/components/atoms/button'
 import { fontStyle } from '@src/components/commont-styles'
 import { navigate } from '@src/root-navigation'
-import PaymentListLoader from '@components/atoms/loaders/one-column-card'
+import PaymentCardLoader from '@src/components/atoms/loaders/payment-card-loader'
 import PaymentListPageLoader from '@components/atoms/loaders/payment-list'
 
 const PayMentCardWithData = transactionListData(PaymentCard)
@@ -29,7 +22,7 @@ class PaymentList extends Component<any, any> {
   state = {
     searchKey: '',
     selectedFilter: this.props.filterOptions,
-    finishAnimation: true,
+    finishAnimation: false,
   }
   timeout = null
   limit = 30
@@ -118,7 +111,7 @@ class PaymentList extends Component<any, any> {
     const { transactionLoading } = this.props
 
     if (transactionLoading && this.skip === 0) {
-      return <PaymentListLoader style={{ marginLeft: 16 }} />
+      return <PaymentCardLoader style={{ marginVertical: 16 }} />
     }
     return <PayMentCardWithData transactionId={item} />
   }
@@ -184,7 +177,7 @@ class PaymentList extends Component<any, any> {
     return (
       <View style={{ height: 360 }}>
         {transactionLoading && this.skip !== 0 && (
-          <PaymentListPageLoader style={{ margin: 16 }} />
+          <PaymentListPageLoader style={{ marginHorizontal: 16 }} />
         )}
       </View>
     )
@@ -215,7 +208,7 @@ class PaymentList extends Component<any, any> {
             />
           </View>
         ) : (
-          <PaymentListPageLoader style={{ margin: 16 }} />
+          <PaymentListPageLoader style={{ marginHorizontal: 16 }} />
         )}
       </>
     )

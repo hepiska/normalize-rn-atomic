@@ -10,7 +10,7 @@ import AddressCart from '@components/molecules/address-cart'
 import { colors } from '@src/utils/constants'
 import { getUserAddressById } from '@modules/address/action'
 import { getOptionShipment } from '@modules/shipment/action'
-import AddressDetail from '@components/atoms/loaders/address-detail'
+import AddressDetailLoader from '@components/atoms/loaders/address-detail'
 
 import Icon from 'react-native-vector-icons/FontAwesome'
 import {
@@ -171,7 +171,7 @@ class ChooseAddressPage extends Component<any, any> {
             )}
           </>
         ) : (
-          <AddressDetail style={{ margin: 16 }} />
+          <AddressDetailLoader style={{ margin: 16 }} />
         )}
       </>
     )
