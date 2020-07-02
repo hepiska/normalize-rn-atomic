@@ -2,7 +2,7 @@ import React from 'react'
 import { View, ViewStyle, SafeAreaView, StyleSheet } from 'react-native'
 
 import LineLoader from '@components/atoms/loaders/line'
-import CircleLoader from '@components/atoms/loaders/cirle'
+import CircleLoader from '@src/components/atoms/loaders/cirle-loader'
 
 interface LoaderPropsType {
   style?: ViewStyle

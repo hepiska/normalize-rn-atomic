@@ -18,7 +18,6 @@ import {
   ButtonFacebookSignin,
   ButtonGoogleSignIn,
 } from '@components/atoms/button-social-auth'
-import { connect } from 'react-redux'
 
 const styles = StyleSheet.create({
   width100: {
@@ -63,9 +62,9 @@ interface FormLogin {
   loading: boolean
 }
 
-const FormLogin: React.FC<FormLogin> = ({ navigation, loading }) => {
+const FormLogin: React.FC<FormLogin> = ({ navigation }) => {
   const dispatch = useDispatch()
-  const { data, error, called } = useSelector(_authSelector)
+  const { data, error, called, loading } = useSelector(_authSelector)
 
   const [showPassword, setShowPassword] = useState(false)
 
@@ -261,8 +260,4 @@ const FormLogin: React.FC<FormLogin> = ({ navigation, loading }) => {
   )
 }
 
-const mapStateToProps = state => ({
-  loading: state.auth.loading,
-})
-
-export default withNavigation(connect(mapStateToProps, null)(FormLogin))
+export default withNavigation(FormLogin)

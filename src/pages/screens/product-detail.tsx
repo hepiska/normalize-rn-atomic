@@ -45,7 +45,6 @@ import {
   addProductSaved,
   deleteProductSaved,
 } from '@modules/product-saved/action'
-import CircleLoader from '@components/atoms/loaders/cirle'
 import { capitalEachWord } from '@utils/helpers'
 import ProductSimilarList from '@src/components/organisms/product-similar-list'
 import { navigate } from '@src/root-navigation'

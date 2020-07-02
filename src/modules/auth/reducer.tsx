@@ -33,11 +33,11 @@ const registerReducer: Reducer<RegisterState> = (
     case authActionType.FETCHNG:
       state.called = false
       state.loading = action.payload.loading
-      return state
+      return { ...state }
     case authActionType.ERROR:
       state.called = action.payload === null ? false : true
       state.error = action.payload
-      return state
+      return { ...state }
     case authActionType.SET_LOGIN_SUCCESS:
       newState.called = true
       newState.data = Immutable.merge(newState.data, action.payload.data)

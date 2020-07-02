@@ -3,7 +3,7 @@ import { ViewStyle, TextStyle, StyleSheet } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import { Font, PressAbbleDiv } from '@components/atoms/basic'
 import Icon from 'react-native-vector-icons/FontAwesome5'
-import CirleLoader from '@src/components/atoms/loaders/cirle'
+import CirleLoader from '@src/components/atoms/loaders/circle'
 import { colors as constantsColors } from '@src/utils/constants'
 
 interface ButtonType {

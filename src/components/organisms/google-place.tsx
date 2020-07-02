@@ -21,7 +21,7 @@ import Animated, { Easing } from 'react-native-reanimated'
 import { OutlineButton } from '@components/atoms/button'
 import Field from '@components/atoms/field'
 import { googeMapsReq } from '@utils/services'
-import CirleLoader from '@src/components/atoms/loaders/cirle'
+import CirleLoader from '@src/components/atoms/loaders/circle'
 
 const { Value, timing } = Animated
 
