@@ -6,3 +6,5 @@ export const makeSelectedOrder = () =>
   createSelector([getOrders], order => {
     return order
   })
+
+export const selectOrderCount = state => ({ count: state.orders.count })

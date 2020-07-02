@@ -116,7 +116,6 @@ const ProductCard = ({
     setLayout(e.nativeEvent.layout)
   }
   const [isProductSaved, setProductSaved] = useState(isSaved)
-
   const [defaultImage, setImage] = useState(null)
   const [attributeSelected, setAttributeSelected] = useState(null)
   const [selectedVariantId, setSelectedVariantId] = useState(null)
@@ -578,10 +577,13 @@ const ProductCardVertical = ({
 }
 
 const MemVerticalCard = memo(ProductCardVertical, (prev, nex) => {
-  if (prev.layout) {
-    return true
+  if (!isEqual(prev.layout, nex.layout)) {
+    return false
   }
-  return false
+  if (prev.isSaved !== nex.isSaved) {
+    return false
+  }
+  return true
 })
 
 const areEq = (a, b) => {

@@ -74,6 +74,7 @@ const FormLogin: React.FC<FormLogin> = ({ navigation }) => {
   )
 
   const _onSubmit = async ({ isValid, state }) => {
+    console.log('==========')
     if (isValid) {
       await dispatch(
         loginApi({

@@ -11,7 +11,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import TextInputOutline from '@src/components/atoms/field-floating'
 import { GradientButton } from '@components/atoms/button'
-import CirleLoader from '@src/components/atoms/loaders/circle'
+import CirleLoader from '@src/components/atoms/loaders/circle-loader'
 import { addNewAddress } from '@modules/address/action'
 
 import { colors } from '@utils/constants'

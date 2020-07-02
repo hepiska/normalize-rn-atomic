@@ -12,6 +12,7 @@ export const transactionActionType = {
   CLEAR_TRANSACTION: 'transaction/CLEAR_TRANSACTION',
   SET_TRANSACTION_ORDER_PAGINATION:
     'transaction/SET_TRANSACTION_ORDER_PAGINATION',
+  SET_COUNT_TRANSACTION: 'transaction/SET_COUNT_TRANSACTION',
   SET_ACTIVE_TRANSACTION: 'transaction/SET_ACTIVE_TRANSACTION',
   ERROR: 'transaction/ERROR',
   DEFAULT: 'transaction/DEFAULT',
@@ -20,6 +21,11 @@ export const transactionActionType = {
 export const fetTransactionPayment = (params: QueryParams) => ({
   type: transactionActionType.FETCH,
   payload: params,
+})
+
+const setTransactionCount = data => ({
+  type: transactionActionType.SET_COUNT_TRANSACTION,
+  payload: data,
 })
 
 export const setTransactionData = (data: any) => {
@@ -82,6 +88,28 @@ export const getAllTransaction = params => {
       },
       error: err => {
         return [setTransactionLoading(false)]
+      },
+    },
+  }
+}
+
+export const getAllTransactionCount = params => {
+  return {
+    type: API,
+    payload: {
+      url: `/users/` + getMe().id + `/transactions`,
+      requestParams: { params: { ...params, limit: 100 } },
+      success: data => {
+        const count = {}
+        data.forEach(dat => {
+          const status = dat.status.toLowerCase()
+          if (count[status]) {
+            count[status] = count[status] + 1
+          } else {
+            count[status] = 1
+          }
+        })
+        return setTransactionCount({ ...count })
       },
     },
   }

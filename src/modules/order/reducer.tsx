@@ -11,6 +11,7 @@ interface OrderState {
   readonly order: Object
   pagination: Object
   active: number
+  count: Object
   orderStatuses: Array<string>
   readonly loading: Boolean
   readonly error?: ErrorType
@@ -21,6 +22,7 @@ const initialState: any = {
   order: Immutable([]),
   pagination: {},
   active: null,
+  count: {},
   orderStatuses: [
     'paid',
     'confirmed',
@@ -42,6 +44,9 @@ const orderReducer: Reducer<OrderState> = (
   switch (action.type) {
     case orderActionType.SET_ORDER_DATA:
       newState.data = Immutable.merge(newState.data, action.payload)
+      return newState
+    case orderActionType.SET_ORDER_COUNT:
+      newState.count = { ...newState.count, ...action.payload }
       return newState
     case orderActionType.SET_ORDER_ORDER:
       newState.order = Immutable(action.payload)

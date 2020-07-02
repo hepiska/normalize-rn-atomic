@@ -19,6 +19,7 @@ import { bindActionCreators } from 'redux'
 import { setLogout } from '@modules/auth/action'
 import { connect } from 'react-redux'
 import AccountSettingPageLoader from '@components/atoms/loaders/account-setting'
+import TransactionOrderAction from '@components/organisms/transaction-order-action'
 import { setImage as changeImageUri } from '@utils/helpers'
 import ModalPreviewImage from '@components/molecules/modal-preview-image'
 
@@ -115,33 +116,6 @@ const navigateTo = (screen, screenName, params = {}) => {
     params,
   })
 }
-
-const myOrder = [
-  {
-    label: 'Waiting for Payment',
-    image: require('@src/assets/icons/waiting-for-payment.png'),
-    filterTransaction: ['unpaid', 'waiting'],
-    screenName: 'PaymentList',
-  },
-  {
-    label: 'In Process',
-    image: require('@src/assets/icons/in-process.png'),
-    filterTransaction: 'confirmed',
-    screenName: 'OrderList',
-  },
-  {
-    label: 'Sent',
-    image: require('@src/assets/icons/sent.png'),
-    filterTransaction: 'shipping',
-    screenName: 'OrderList',
-  },
-  {
-    label: 'Done',
-    image: require('@src/assets/icons/done.png'),
-    filterTransaction: 'completed',
-    screenName: 'OrderList',
-  },
-]
 
 class AccountSetting extends Component<any, any> {
   state = {
@@ -408,49 +382,7 @@ class AccountSetting extends Component<any, any> {
                   </TouchableOpacity>
                 </View>
                 <View style={{ marginTop: 17 }}>
-                  <View
-                    style={{
-                      marginTop: 17,
-                      justifyContent: 'space-around',
-                      flexDirection: 'row',
-                      width: '100%',
-                    }}>
-                    {myOrder.map((value, key) => {
-                      return (
-                        <TouchableOpacity
-                          key={`myorder-${key}`}
-                          onPress={this.onPressStatusOrder(
-                            value.filterTransaction,
-                            value.screenName,
-                          )}>
-                          <View
-                            style={{
-                              justifyContent: 'center',
-                              alignItems: 'center',
-                              maxWidth: 82,
-                            }}>
-                            <View
-                              style={{
-                                marginBottom: 8,
-                              }}>
-                              <Image
-                                style={{ width: 40, height: 40 }}
-                                source={value.image}
-                              />
-                            </View>
-                            <Text
-                              style={{
-                                ...styles.helvetica10,
-                                color: colors.black100,
-                                textAlign: 'center',
-                              }}>
-                              {value.label}
-                            </Text>
-                          </View>
-                        </TouchableOpacity>
-                      )
-                    })}
-                  </View>
+                  <TransactionOrderAction />
                 </View>
                 <View style={{ marginTop: 16 }}>
                   {this.myOrderList.map((value, key) => {

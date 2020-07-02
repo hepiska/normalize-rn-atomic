@@ -3,7 +3,7 @@ import { View, ViewStyle, SafeAreaView, StyleSheet } from 'react-native'
 import SearchFilterLoader from './search-filter-loader'
 import ProductCardLoader from './product-card'
 import Line from './line'
-import Circle from './cirle-loader'
+import Circle from './circle-loader'
 
 interface LoaderPropsType {
   style?: ViewStyle

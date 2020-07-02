@@ -1,12 +1,5 @@
 import React, { PureComponent } from 'react'
-import {
-  Dimensions,
-  ViewStyle,
-  View,
-  Text,
-  StyleSheet,
-  InteractionManager,
-} from 'react-native'
+import { View, Text, StyleSheet, InteractionManager } from 'react-native'
 
 import SearchResultCard from '../molecules/search-result-card'
 import { colors } from '@src/utils/constants'
@@ -114,7 +107,10 @@ class SearchUserResult extends PureComponent<SearchUserType, any> {
     )
   }
   _renderFooterLoader = () => {
-    const { loading } = this.props
+    const { loading, user } = this.props
+    if (user.length < 10) {
+      return null
+    }
 
     return (
       <View

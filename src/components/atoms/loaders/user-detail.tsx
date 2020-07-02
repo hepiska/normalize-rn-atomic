@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, ViewStyle, StyleSheet } from 'react-native'
 import LineLoader from '@components/atoms/loaders/line'
-import CircleLoader from '@src/components/atoms/loaders/cirle-loader'
+import CircleLoader from '@src/components/atoms/loaders/circle-loader'
 import PostDetailLoader from './post-card-full'
 
 interface LoaderPropsType {

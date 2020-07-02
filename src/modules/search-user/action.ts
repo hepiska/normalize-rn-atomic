@@ -61,7 +61,14 @@ export const getSearchUser = (params, url) => ({
       return setSearchLoading(true)
     },
     success: (data, { pagination }) => {
+      if (!data.users) {
+        return setSearchLoading(false)
+      }
       const normalizedUser = normalize(data.users, [schema.user])
+      if (!normalizedUser.result.length) {
+        return setSearchLoading(false)
+      }
+
       const dispacers = [
         setSearchData(normalizedUser.entities.user),
         setSearchLoading(false),
@@ -69,11 +76,12 @@ export const getSearchUser = (params, url) => ({
       if (params.offset > 0) {
         dispacers.push(addSearchOrder(normalizedUser.result))
         dispacers.push(setPagination(pagination.users))
+        return dispacers
       } else {
         dispacers.push(setSearchOrder(normalizedUser.result))
         dispacers.push(setPagination(pagination.users))
+        return dispacers
       }
-      return data ? dispacers : [setSearchLoading(false)]
     },
   },
 })

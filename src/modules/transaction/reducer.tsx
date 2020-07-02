@@ -10,6 +10,7 @@ interface TransactionState {
   readonly data: Object
   active: number
   transactionStatus: Array<string>
+  count: Object
   readonly order: Object
   readonly loading: Boolean
   readonly error?: ErrorType
@@ -18,6 +19,7 @@ interface TransactionState {
 const initialState: any = {
   data: Immutable({}),
   active: null,
+  count: {},
   transactionStatus: ['unpaid', 'waiting'],
   order: Immutable([]),
   loading: false,
@@ -40,6 +42,9 @@ const transactionReducer: Reducer<TransactionState> = (
       return newState
     case transactionActionType.SET_ACTIVE_TRANSACTION:
       newState.active = action.payload
+      return newState
+    case transactionActionType.SET_COUNT_TRANSACTION:
+      newState.count = { ...newState.count, ...action.payload }
       return newState
     case transactionActionType.SET_TRANSACTION_ORDER_PAGINATION:
       if (

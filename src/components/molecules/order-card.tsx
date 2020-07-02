@@ -58,6 +58,7 @@ class OrderCard extends Component<any, any> {
   state = {
     defaultImage: null,
   }
+
   orderDetail = () => {
     navigate('Screens', {
       screen: 'OrderDetails',
@@ -117,7 +118,7 @@ class OrderCard extends Component<any, any> {
 
     return (
       <TouchableWithoutFeedback onPress={this.orderDetail}>
-        <View style={{ ...styles.container, ...style }}>
+        <View style={{ ...styles.container }}>
           <StatusAlert
             status={order.status}
             text={order.status}
@@ -135,7 +136,6 @@ class OrderCard extends Component<any, any> {
               {order.invoice_no}
             </Text>
           </View>
-
           {/* card */}
           <View style={{ marginTop: 16, flexDirection: 'row' }}>
             {/* left side */}
@@ -145,9 +145,6 @@ class OrderCard extends Component<any, any> {
                   ? { uri: image }
                   : require('@src/assets/placeholder/placeholder2.jpg')
               }
-              onError={() => {
-                this.setState({ defaultImage: defaultImages.product })
-              }}
               width={60}
               height={80}
               style={styles.image}
@@ -176,7 +173,6 @@ class OrderCard extends Component<any, any> {
               </View>
             </View>
           </View>
-
           {/* divider */}
           <View
             style={{
@@ -187,7 +183,6 @@ class OrderCard extends Component<any, any> {
               marginTop: 16,
             }}
           />
-
           {/* payment total */}
           <View
             style={{

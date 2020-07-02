@@ -1,5 +1,18 @@
-import React, { Component, useState, memo, useEffect, useMemo } from 'react'
-import { Dimensions, FlatList, Modal, StyleSheet } from 'react-native'
+import React, {
+  Component,
+  useState,
+  memo,
+  useEffect,
+  useMemo,
+  useCallback,
+} from 'react'
+import {
+  Dimensions,
+  FlatList,
+  Modal,
+  StyleSheet,
+  TextInput,
+} from 'react-native'
 import { connect, batch } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { Div, Font } from '@components/atoms/basic'
@@ -19,11 +32,11 @@ import Slider from '@components/atoms/slider-2-pin'
 
 const { width } = Dimensions.get('screen')
 
-const PriceComponent = ({ label, curency = 'Rp', value }: any) => {
+const PriceComponent = ({ label, curency = 'Rp', value, onChange }: any) => {
   return (
     <Div _flex="1" align="flex-start">
       <Font>{label}</Font>
-      <Div _direction="row">
+      <Div _direction="row" _margin="4px 0px 0px 0px">
         <Div
           _border={`1px solid ${colors.black90}`}
           style={{
@@ -41,9 +54,16 @@ const PriceComponent = ({ label, curency = 'Rp', value }: any) => {
             borderBottomLeftRadius: 0,
             transform: [{ translateX: -1 }],
           }}
+          _height="32px"
+          _width="96px"
           radius="8px"
-          padd="8px 16px">
-          <Font>{value}</Font>
+          padd="8px 8px">
+          <TextInput
+            keyboardType="numeric"
+            value={String(value)}
+            onChangeText={onChange}
+            style={{ width: '100%', height: '100%' }}
+          />
         </Div>
       </Div>
     </Div>
@@ -65,6 +85,10 @@ const FilterPriceOrg = ({
   selectedBrand,
 }: any) => {
   const delta = colectionPrices.maximum_price - colectionPrices.minimum_price
+  const [locPrice, setLocPrice] = useState({
+    max: maximum_price,
+    min: minimum_price,
+  })
 
   const [multiSlider, changeMultiSlider] = useState([0, maxSlider])
   let timeout = null
@@ -74,7 +98,7 @@ const FilterPriceOrg = ({
       ((minimum_price - colectionPrices.minimum_price) / delta) * maxSlider,
     )
     const initialCursorMax = Math.round(
-      ((colectionPrices.maximum_price - minimum_price) / delta) * maxSlider,
+      ((maximum_price - colectionPrices.minimum_price) / delta) * maxSlider,
     )
     changeMultiSlider([initialCursorMin, initialCursorMax])
     return () => {
@@ -82,38 +106,64 @@ const FilterPriceOrg = ({
     }
   }, [])
 
-  const _chageSlider = pos => {
-    changeMultiSlider(pos)
+  useEffect(() => {
     if (timeout) {
       timeout = null
     }
-
     timeout = setTimeout(() => {
-      const minPrice = Math.floor(
-        colectionPrices.minimum_price + (pos[0] / maxSlider) * delta,
-      )
-      const maxPrice = Math.floor(
-        colectionPrices.minimum_price + (pos[1] / maxSlider) * delta,
-      )
       batch(() => {
         setSelectedPrice({
           type: 'minimum_price',
-          value: minPrice,
+          value: locPrice['min'],
         })
         setSelectedPrice({
           type: 'maximum_price',
-          value: maxPrice,
+          value: locPrice.max,
         })
         fetchCountProduct({
           collection_ids: activeCollection,
-          maximum_price: maxPrice,
-          minimum_price: minPrice,
+          maximum_price: locPrice.max,
+          minimum_price: locPrice.min,
           brand_ids: selectedBrand,
           category_ids: selectedCategory,
         })
       })
     }, 500)
+  }, [locPrice])
+
+  const _ontextChanged = type => val => {
+    const newLocPrice = { ...locPrice }
+    const newpos = [...multiSlider]
+    if (
+      val >= colectionPrices.minimum_price &&
+      val <= colectionPrices.maximum_price
+    ) {
+      newLocPrice[type] = Number(val)
+      const initialCursorMin = Math.round(
+        ((newLocPrice[type] - colectionPrices.minimum_price) / delta) *
+          maxSlider,
+      )
+      if (type === 'max') {
+        newpos[1] = initialCursorMin
+      } else {
+        newpos[0] = initialCursorMin
+      }
+    }
+    setLocPrice(newLocPrice)
+    changeMultiSlider(newpos)
   }
+
+  const _chageSlider = useCallback(pos => {
+    changeMultiSlider(pos)
+    const minPrice = Math.floor(
+      colectionPrices.minimum_price + (pos[0] / maxSlider) * delta,
+    )
+    const maxPrice = Math.floor(
+      colectionPrices.minimum_price + (pos[1] / maxSlider) * delta,
+    )
+
+    setLocPrice({ max: maxPrice, min: minPrice })
+  }, [])
 
   return (
     <Div
@@ -125,8 +175,16 @@ const FilterPriceOrg = ({
       justify="flex-start"
       align="flex-start">
       <Div _direction="row">
-        <PriceComponent label="Minimum Price " value={minimum_price} />
-        <PriceComponent label="Maximum Price " value={maximum_price} />
+        <PriceComponent
+          label="Minimum Price "
+          value={locPrice.min}
+          onChange={_ontextChanged('min')}
+        />
+        <PriceComponent
+          label="Maximum Price "
+          value={locPrice.max}
+          onChange={_ontextChanged('max')}
+        />
       </Div>
       <Div _width="100%">
         <MultiSlider
@@ -170,7 +228,7 @@ const mapDispatchToProps = dispatch =>
   )
 
 const mapStateToProps = state => ({
-  colectionPrices: state.productFilter.data.prices || {},
+  colectionPrices: { ...state.productFilter.data.prices } || {},
   minimum_price: state.productFilter.selected.prices.minimum_price,
   maximum_price: state.productFilter.selected.prices.maximum_price,
   activeCollection: state.productFilter.activePage.collection_ids || '',

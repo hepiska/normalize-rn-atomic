@@ -32,7 +32,7 @@ class PaymentList extends Component<any, any> {
     finishAnimation: true,
   }
   timeout = null
-  limit = 5
+  limit = 30
   skip = 0
   lastskip = 0
 
@@ -71,9 +71,9 @@ class PaymentList extends Component<any, any> {
   _fetchData = skip => {
     const { searchKey, selectedFilter } = this.state
     const { route } = this.props
-    let selectesStatus = selectedFilter.join(',')
+    let selectedStatus = selectedFilter.join(',')
     if (route.params?.hideHeader) {
-      selectesStatus = route.params?.selectedFilter
+      selectedStatus = route.params?.selectedFilter
     }
 
     this.props.getAllTransaction({
@@ -81,7 +81,7 @@ class PaymentList extends Component<any, any> {
       offset: this.limit * skip,
       sort_by: 'date',
       sort_direction: 'desc',
-      status: selectesStatus,
+      status: selectedStatus.join(),
     })
   }
 
@@ -207,7 +207,7 @@ class PaymentList extends Component<any, any> {
               ListEmptyComponent={this._emptyComponent}
               ListFooterComponent={this._renderFooter}
               data={transactions}
-              onEndReached={this._fetchMore}
+              // onEndReached={this._fetchMore}
               onEndReachedThreshold={0.99}
               keyExtractor={this._keyExtractor}
               renderItem={this._renderItem}

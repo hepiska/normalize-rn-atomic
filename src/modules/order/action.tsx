@@ -16,6 +16,7 @@ export const orderActionType = {
   SET_ORDER_ORDER_PAGINATION: 'order/SET_ORDER_ORDER_PAGINATION',
   SET_ACTIVE_ORDER: 'order/SET_ACTIVE_ORDER',
   FETCH_START: 'order/FETCH_START',
+  SET_ORDER_COUNT: 'order/SET_ORDER_COUNT',
   CHANGE_SEARCH_KEY: 'order/CHANGE_SEARCH_KEY',
   CHANGE_SELECTED_FILTER: 'order/CHANGE_SELECTED_FILTER',
   SET_ORDER_LOADING: 'order/SET_ORDER_LOADING',
@@ -32,6 +33,11 @@ export const changeSearchKey = key => ({
 export const changeFilter = filter => ({
   type: orderActionType.CHANGE_SELECTED_FILTER,
   payload: filter,
+})
+
+const setOrderCount = data => ({
+  type: orderActionType.SET_ORDER_COUNT,
+  payload: data,
 })
 
 export const fetchOrder = (params: QueryParams) => ({
@@ -109,6 +115,25 @@ export const getAllOrder = params => {
       },
       error: err => {
         return [setOrderLoading(false)]
+      },
+    },
+  }
+}
+
+export const getOrderCount = status => {
+  const params = {
+    status: status,
+    limit: 1,
+  }
+  return {
+    type: API,
+    payload: {
+      url: 'users/' + getMe().id + '/orders/',
+      requestParams: { params },
+      success: (data, { pagination }) => {
+        const res = {}
+        res[status] = pagination.total
+        return setOrderCount(res)
       },
     },
   }

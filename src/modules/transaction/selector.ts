@@ -7,3 +7,7 @@ export const makeGetTransaction = () =>
   createSelector([getTransaction], transaction => {
     return transaction
   })
+
+export const getTransactionCountSelector = state => ({
+  count: state.transaction.count,
+})

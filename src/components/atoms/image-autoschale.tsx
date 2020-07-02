@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Image, ViewStyle, View, StyleSheet, Animated } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { colors } from '@src/utils/constants'
+import isEqual from 'lodash/isEqual'
 
 const styles = StyleSheet.create({
   imageOverlay: {
@@ -82,6 +83,10 @@ class ImageAutoSchale extends React.Component<ImageAutoSchaleType, any> {
       return true
     }
     if (this.state.isLoading !== nextState.isLoading) {
+      return true
+    }
+
+    if (!isEqual(this.state.size, nextState.size)) {
       return true
     }
     return false

@@ -61,9 +61,10 @@ export const colors = {
 }
 
 export const shimmerLoader = {
-  backgroundColor: '#f5f6f7',
-  foregroundColor: '#D3D3D3',
-  speed: 1,
+  backgroundColor: '#f5f5f5',
+  foregroundColor: '#f1f1f1',
+  animate: true,
+  speed: 2,
 }
 
 export const regex: any = {

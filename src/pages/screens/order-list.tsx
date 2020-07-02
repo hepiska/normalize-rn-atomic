@@ -141,20 +141,13 @@ class OrderList extends Component<any, any> {
     )
   }
   _renderItem = ({ item, index }) => {
-    const { loading } = this.props
+    const style: any = {}
 
-    if (loading && this.skip === 0) {
-      return <OrderListLoader style={{ marginLeft: 16 }} />
+    if (index === 0) {
+      style.marginTop = 0
     }
-    return (
-      <OrderHoc
-        orderId={item}
-        style={{
-          marginTop: index === 0 && 0,
-          width: '100%',
-        }}
-      />
-    )
+
+    return <OrderHoc orderId={item} style={style} />
   }
 
   _emptyComponent = () => {
@@ -166,7 +159,10 @@ class OrderList extends Component<any, any> {
     )
   }
   _renderFooter = () => {
-    const { loading } = this.props
+    const { loading, orders } = this.props
+    if (orders.length < 6) {
+      return null
+    }
 
     return (
       <View style={{ height: 360, marginVertical: 32 }}>
@@ -182,7 +178,11 @@ class OrderList extends Component<any, any> {
 
     return (
       <>
-        <NavbarTop leftContent={['back']} title="Order List" />
+        <NavbarTop
+          leftContent={['back']}
+          title="Order List"
+          saveAreaStyle={{ backgroundColor: 'white' }}
+        />
         {finishAnimation ? (
           <View
             style={{

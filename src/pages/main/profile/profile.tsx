@@ -94,7 +94,11 @@ class ProfilPage extends React.PureComponent<any, any> {
 
     return (
       <View style={{ ...styles.container }}>
-        <NavbarTop title={'My profile'} style={{ zIndex: 2 }} />
+        <NavbarTop
+          title={'My profile'}
+          style={{ zIndex: 2 }}
+          saveAreaStyle={{ backgroundColor: 'white' }}
+        />
         {finishAnimation ? (
           <MyPost
             header={

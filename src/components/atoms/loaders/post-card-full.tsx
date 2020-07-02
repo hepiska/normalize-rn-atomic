@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { View, Text, Dimensions, ViewStyle } from 'react-native'
 import ContentLoader from 'react-content-loader/native'
-import CircleLoader from './cirle-loader'
+import CircleLoader from './circle-loader'
 import LineLoader from './line'
 import FullImageLoader from './full-size-image'
 import { Rect, Circle } from 'react-native-svg'

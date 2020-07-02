@@ -75,7 +75,7 @@ const Header = props => {
   )
 }
 
-const snapPoints = [height * 0.98, Math.max(360, height * 0.5), 3]
+const snapPoints = [Math.ceil(height * 0.92), Math.max(360, height * 0.5), 0]
 const totalheaderheight = 140
 
 class ProductFilterBottomSheet extends React.Component<any, any> {
@@ -83,11 +83,21 @@ class ProductFilterBottomSheet extends React.Component<any, any> {
     finishAnimation: false,
   }
   bottomSheet = null
+  timeOut = null
 
   componentDidMount() {
     InteractionManager.runAfterInteractions(() => {
       this.setState({ finishAnimation: true })
     })
+    setTimeout(() => {
+      this.bottomSheet.snapTo(0)
+    }, 300)
+  }
+
+  componentWillUnmount() {
+    if (this.timeOut) {
+      clearTimeout(this.timeOut)
+    }
   }
 
   _onBack = () => {
@@ -97,6 +107,10 @@ class ProductFilterBottomSheet extends React.Component<any, any> {
 
   renderContentBottomSheet = () => {
     const { route } = this.props
+    const { finishAnimation } = this.state
+    if (!finishAnimation) {
+      return null
+    }
 
     return (
       <View
@@ -120,28 +134,33 @@ class ProductFilterBottomSheet extends React.Component<any, any> {
   }
 
   render() {
-    const { finishAnimation } = this.state
-
     return (
-      <SafeAreaView>
-        {finishAnimation ? (
-          <BottomSheet
-            onCloseEnd={this._onBack}
-            ref={ref => (this.bottomSheet = ref)}
-            enabledBottomInitialAnimation={true}
-            initialSnap={0}
-            enabledBottomClamp={true}
-            enabledContentGestureInteraction={false}
-            renderHeader={() => <Header onBack={this._onBack} />}
-            snapPoints={snapPoints}
-            renderContent={this.renderContentBottomSheet}
-          />
-        ) : null}
+      <View style={{ flex: 1 }}>
+        <BottomSheet
+          onCloseEnd={this._onBack}
+          ref={ref => {
+            this.bottomSheet = ref
+          }}
+          initialSnap={2}
+          springConfig={{
+            stiffness: 500,
+            damping: 500,
+            mass: 3,
+            restDisplacementThreshold: 0.01,
+            restSpeedThreshold: 0.1,
+          }}
+          enabledBottomInitialAnimation={true}
+          enabledBottomClamp={true}
+          enabledContentGestureInteraction={false}
+          renderHeader={() => <Header onBack={this._onBack} />}
+          snapPoints={snapPoints}
+          renderContent={this.renderContentBottomSheet}
+        />
 
         <TouchableWithoutFeedback onPress={this._onBack}>
           <Div bg="rgba(0,0,0,0.7)" _height={height} _width="100%" />
         </TouchableWithoutFeedback>
-      </SafeAreaView>
+      </View>
     )
   }
 }

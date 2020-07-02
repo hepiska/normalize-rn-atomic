@@ -128,7 +128,6 @@ class FilterCategory extends Component<any, any> {
 
   render() {
     const { categories, selectedCategory } = this.props
-    console.log('rerender cat')
     return (
       <View style={{ flex: 1, width, backgroundColor: 'white' }}>
         <SectionList

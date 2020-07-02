@@ -1,5 +1,12 @@
 import React from 'react'
-import { StyleSheet, Dimensions, ViewStyle, View, Text } from 'react-native'
+import {
+  StyleSheet,
+  Dimensions,
+  ViewStyle,
+  View,
+  Text,
+  Image,
+} from 'react-native'
 import { TouchableWithoutFeedback } from '@components/atoms/basic'
 import { fontStyle } from '@components/commont-styles'
 import { colors } from '@utils/constants'
@@ -50,6 +57,8 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
   },
   image: {
+    width: 40,
+    height: 40,
     borderRadius: 100,
   },
   information: {
@@ -61,6 +70,12 @@ const styles = StyleSheet.create({
     fontSize: 12,
     lineHeight: 17,
     marginLeft: 0,
+  },
+  userPhotoPlaceholder: {
+    width: 40,
+    height: 40,
+    backgroundColor: colors.gray6,
+    borderRadius: 20,
   },
   button: {
     backgroundColor: colors.black100,
@@ -109,15 +124,12 @@ class FollowCard extends React.PureComponent<FollowCardType, any> {
       authId,
     } = this.props
 
-    const image =
-      this.state.defaultImage ||
-      (!!user.photo_url &&
-        changeImageUri(user.photo_url, { width: 40, height: 40 }))
+    // const image = changeImageUri(user.photo_url, { width: 40, height: 40 })
 
-    const thumbnailImage = this.state.defaultImage
-      ? null
-      : !!user.photo_url &&
-        changeImageUri(user.photo_url, { width: 8, height: 8 })
+    // const thumbnailImage = changeImageUri(user.photo_url, {
+    //   width: 8,
+    //   height: 8,
+    // })
 
     if (!user) {
       return null
@@ -133,18 +145,19 @@ class FollowCard extends React.PureComponent<FollowCardType, any> {
                   alignItems: 'center',
                   flex: 0.7,
                 }}>
-                <ImageAutoSchale
-                  errorStyle={{ width: 40, height: 40 }}
-                  showErrorIcon={false}
-                  thumbnailSource={
-                    typeof thumbnailImage === 'string'
-                      ? { uri: thumbnailImage }
-                      : thumbnailImage
-                  }
-                  source={typeof image === 'string' ? { uri: image } : image}
-                  width={40}
-                  style={styles.image}
-                />
+                {user.photo_url && user.photo_url !== '' ? (
+                  <Image
+                    source={{
+                      uri: changeImageUri(user.photo_url, {
+                        width: 40,
+                        height: 40,
+                      }),
+                    }}
+                    style={styles.image}
+                  />
+                ) : (
+                  <View style={styles.userPhotoPlaceholder} />
+                )}
                 <View style={{ ...styles.information, flex: 0.8 }}>
                   <View style={{}}>
                     <Text

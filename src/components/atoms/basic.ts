@@ -16,6 +16,8 @@ export const Div = styled.View`
     brdr || _border ? `border:${brdr || _border};` : ''}
   ${({ _height }) => (_height ? `height:${_height};` : '')}
   ${({ maxHeight }) => (maxHeight ? `max-height:${maxHeight};` : '')}
+  ${({ minWidth }) => (minWidth ? `min-width:${minWidth};` : '')}
+
   ${({ _width, wdth }) =>
     _width ? `width:${_width};` : wdth ? `width:${wdth};` : ''}
   flex-wrap: ${({ wrap }) => wrap || 'nowrap'};

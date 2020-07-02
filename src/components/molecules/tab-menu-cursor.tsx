@@ -27,7 +27,7 @@ interface DiscoverTapType {
   navigation: any
   position: any
   rightAction?: any
-  onChangeTab: (number) => void
+  onChangeTab?: (number) => void
 }
 
 const TabMenuNavigator = ({
