@@ -20,7 +20,7 @@ const Tab = createMaterialTopTabNavigator()
 const DiscoverSearchComponent = ({ onPress }) => {
   return (
     <View>
-      <Icon name="search" onPress={onPress} size={16} />
+      <Icon name="search" onPress={onPress} size={20} />
     </View>
   )
 }

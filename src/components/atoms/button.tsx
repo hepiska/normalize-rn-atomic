@@ -55,6 +55,7 @@ interface GradienButtonType extends ButtonType {
   start: KartesiusKoorType
   end: KartesiusKoorType
   colors: Array<string>
+  colorsDisabled?: Array<string>
 }
 export const GradientButton = ({
   start,
@@ -67,6 +68,7 @@ export const GradientButton = ({
   disabled = false,
   title,
   leftIcon,
+  colorsDisabled,
 }: GradienButtonType) => {
   return (
     <PressAbbleDiv
@@ -80,7 +82,10 @@ export const GradientButton = ({
         colors={
           !disabled
             ? colors
-            : [constantsColors.black60, constantsColors.black60]
+            : colorsDisabled || [
+                constantsColors.black60,
+                constantsColors.black60,
+              ]
         }
         style={[styles.linearGradient, StyleSheet.absoluteFill]}>
         {leftIcon && typeof leftIcon === 'string' ? (

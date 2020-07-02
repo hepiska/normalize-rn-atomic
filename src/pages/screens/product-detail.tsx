@@ -83,11 +83,23 @@ const styles = StyleSheet.create({
   },
   stockWarning: {
     width: '100%',
-    backgroundColor: 'rgba(26,26,26,.04)',
+    backgroundColor: colors.gray1,
     paddingVertical: 8,
     paddingHorizontal: 16,
-    borderRadius: 8,
-    marginVertical: 12,
+    borderBottomEndRadius: 8,
+    borderBottomStartRadius: 8,
+    marginTop: -5,
+    // marginVertical: 12,
+  },
+  warningLabelText: {
+    ...fontStyle.helvetica,
+    fontSize: 14,
+    color: '#CCC',
+  },
+  returnExchangeText: {
+    ...fontStyle.helvetica,
+    fontSize: 12,
+    color: colors.black80,
   },
 })
 
@@ -136,7 +148,7 @@ const WarningLabel = ({ text }) => {
       style={{
         ...styles.stockWarning,
       }}>
-      <Text style={{ ...fontStyle.helvetica, fontSize: 14 }}>{text}</Text>
+      <Text style={{ ...styles.warningLabelText }}>{text}</Text>
     </View>
   )
 }
@@ -260,7 +272,6 @@ class ProductListPage extends React.Component<any, any> {
         icon: 'bookmark',
         iconColor: isSaved ? '#8131e2' : colors.black100,
         onPress: this.onSaveProduct,
-        apasih: isSaved,
       },
       {
         name: 'Share',
@@ -365,6 +376,12 @@ class ProductListPage extends React.Component<any, any> {
       price.exTo = product.max_price
       price.withDiscount = true
     }
+
+    const isButtonDisabled =
+      loading ||
+      !product.is_commerce ||
+      !varianData.is_available ||
+      !product.is_purchaseable
 
     const productType = product.is_commerce ? 'cart' : 'collection'
     const actionButton = {
@@ -567,6 +584,62 @@ class ProductListPage extends React.Component<any, any> {
                 />
               )}
 
+              {returnExchange !== '' && (
+                <View
+                  style={{
+                    width: '100%',
+                    marginVertical: 8, // should be 12
+                    justifyContent: 'flex-start',
+                    alignItems: 'center',
+                    height: 32,
+                    backgroundColor: 'rgba(49,226,56,.102)',
+                    flexDirection: 'row',
+                    paddingHorizontal: 16,
+                    paddingVertical: 8,
+                  }}>
+                  <Image
+                    source={require('@assets/icons/shipment.png')}
+                    style={{ width: 16, height: 16 }}
+                  />
+                  <View style={{ marginLeft: 8 }}>
+                    <Text
+                      style={{
+                        ...styles.returnExchangeText,
+                      }}>
+                      Available for {returnExchange}
+                    </Text>
+                  </View>
+                </View>
+              )}
+              <GradientButton
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                disabled={isButtonDisabled}
+                colors={['#3067E4', '#8131E2']}
+                colorsDisabled={[colors.black50, colors.black50]}
+                title={actionButton[productType].buttonText}
+                onPress={actionButton[productType].action}
+                fontStyle={
+                  isButtonDisabled
+                    ? {
+                        color: colors.black80,
+                        ...fontStyle.helveticaBold,
+                        fontSize: 14,
+                      }
+                    : {
+                        color: colors.white,
+                        ...fontStyle.helveticaBold,
+                        fontSize: 14,
+                      }
+                }
+                style={{
+                  width: '100%',
+                  height: 46,
+                  marginTop: 12,
+                  backgroundColor: '#8131E2',
+                }}
+              />
+
               {!varianData.is_available &&
                 selectedVariant === varianData.id &&
                 product.is_purchaseable && (
@@ -576,49 +649,6 @@ class ProductListPage extends React.Component<any, any> {
               {!product.is_purchaseable && (
                 <WarningLabel text="Sorry, this product is currently unavailable" />
               )}
-              {returnExchange !== '' && (
-                <View
-                  style={{
-                    width: '100%',
-                    marginVertical: 12,
-                    justifyContent: 'flex-start',
-                    alignItems: 'center',
-                    height: 32,
-                    backgroundColor: 'rgba(26, 26, 26, 0.04)',
-                    flexDirection: 'row',
-                    paddingHorizontal: 16,
-                    paddingVertical: 8,
-                  }}>
-                  <Icon name="save" size={16} color={colors.black100} />
-                  <View style={{ marginLeft: 8 }}>
-                    <Text>Available for {returnExchange}</Text>
-                  </View>
-                </View>
-              )}
-              <GradientButton
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 1 }}
-                disabled={
-                  loading ||
-                  !product.is_commerce ||
-                  !varianData.is_available ||
-                  !product.is_purchaseable
-                }
-                colors={['#3067E4', '#8131E2']}
-                title={actionButton[productType].buttonText}
-                onPress={actionButton[productType].action}
-                fontStyle={{
-                  color: colors.white,
-                  ...fontStyle.helveticaBold,
-                  fontSize: 14,
-                }}
-                style={{
-                  width: '100%',
-                  height: 46,
-                  marginVertical: 12,
-                  backgroundColor: '#8131E2',
-                }}
-              />
 
               <ButtonGroup items={this.groupButton(isProductSaved)} />
 
@@ -710,6 +740,7 @@ class ProductListPage extends React.Component<any, any> {
                 }
                 return (
                   <ContentExpandable
+                    paddingTitleVertical={12}
                     title={
                       <Text
                         style={{
@@ -794,7 +825,7 @@ class ProductListPage extends React.Component<any, any> {
                     }
                     key={`product-detail-${idx}`}
                     id={'expanable' + idx}
-                    isFirst={idx === 0}
+                    isDisabledBorder
                   />
                 )
               })}

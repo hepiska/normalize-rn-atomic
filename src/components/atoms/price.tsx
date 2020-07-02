@@ -20,7 +20,11 @@ const Price = ({ prev, current, style, stylePrev }: Price) => {
   const disc = Math.ceil(((prev - current) / prev) * 100)
 
   return (
-    <Div _direction="row" justify="flex-start" style={{ flexWrap: 'wrap' }}>
+    <Div
+      _direction="row"
+      justify="flex-start"
+      style={{ flexWrap: 'wrap' }}
+      _margin="8px 0px 0px 0px">
       {Boolean(prev) && (
         <Font
           size={11}

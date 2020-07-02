@@ -4,14 +4,7 @@ import { Div, Font } from '@components/atoms/basic'
 import { setImage as changeImageUri, formatRupiah } from '@utils/helpers'
 import { images as defaultImages } from '@utils/constants'
 import ImageAutoSchale from '@components/atoms/image-autoschale'
-import {
-  helveticaBlackBold,
-  helveticaBlackBoldFont12,
-  helveticaBlackFont12,
-  futuraNormalFont12,
-  helveticaNormalFont10,
-  fontStyle,
-} from '@components/commont-styles'
+import { helveticaBlackBold, fontStyle } from '@components/commont-styles'
 import { colors } from '@utils/constants'
 
 interface ProductSummaryCartType {
@@ -35,8 +28,8 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
   },
   image: {
-    width: 60,
-    height: 80,
+    // width: 60,
+    // height: 80,
     borderRadius: 8,
   },
   helvetica10: {
@@ -65,10 +58,20 @@ class ProductSummaryCart extends React.PureComponent<
   state = {
     defaultImage: null,
   }
+
+  renderProductName = variant => {
+    if (variant.prduct) {
+      return variant.product.product_name.replace(/(\r\n|\n|\r)/gm, '')
+    } else if (variant.name) {
+      return variant.name
+    }
+    return 'UNKNOWN'
+  }
   render() {
     const { style, cart, brand, variant, index } = this.props
 
     let image
+    let thumbnailImage
     if (variant.image_urls) {
       const images = variant.image_urls
       const random = Math.floor(Math.random() * images.length)
@@ -76,15 +79,34 @@ class ProductSummaryCart extends React.PureComponent<
       image =
         this.state.defaultImage ||
         (!!variant.image_urls[random]
-          ? changeImageUri(images[random], { ...styles.image })
+          ? changeImageUri(images[random], { width: 60, height: 80 })
           : defaultImages.product)
+      thumbnailImage = this.state.defaultImage
+        ? null
+        : !!images[random] &&
+          changeImageUri(images[random], { width: 60, height: 80 })
     }
     if (variant.image_url) {
       image =
         this.state.defaultImage ||
         (!!variant.image_url
-          ? changeImageUri(variant.image_url, { ...styles.image })
+          ? changeImageUri(variant.image_url, { width: 60, height: 80 })
           : defaultImages.product)
+      thumbnailImage = this.state.defaultImage
+        ? null
+        : !!variant.image_url &&
+          changeImageUri(variant.image_url, { width: 60, height: 80 })
+    }
+    if (variant.variant.image_url) {
+      image =
+        this.state.defaultImage ||
+        (!!variant.variant.image_url
+          ? changeImageUri(variant.variant.image_url, { width: 60, height: 80 })
+          : defaultImages.product)
+      thumbnailImage = this.state.defaultImage
+        ? null
+        : !!variant.variant.image_url &&
+          changeImageUri(variant.variant.image_url, { width: 60, height: 80 })
     }
     return (
       <>
@@ -101,12 +123,22 @@ class ProductSummaryCart extends React.PureComponent<
         <View {...style} {...styles.container}>
           <Div flexDirection="row" alignItems="center">
             <ImageAutoSchale
-              source={{
-                uri: image,
-              }}
-              onError={() => {
-                this.setState({ defaultImage: defaultImages.product })
-              }}
+              errorStyle={{ width: 60, height: 80 }}
+              thumbnailSource={
+                typeof thumbnailImage === 'string'
+                  ? { uri: thumbnailImage }
+                  : thumbnailImage
+              }
+              showErrorIcon={false}
+              source={
+                typeof image === 'string'
+                  ? {
+                      uri: image,
+                    }
+                  : image
+              }
+              width={60}
+              // height={80}
               style={styles.image}
             />
             <Div
@@ -125,9 +157,7 @@ class ProductSummaryCart extends React.PureComponent<
                   ellipsizeMode="tail"
                   numberOfLines={1}
                   style={{ ...styles.helvetica12, color: colors.black70 }}>
-                  {variant.product
-                    ? variant.product.product_name.replace(/(\r\n|\n|\r)/gm, '')
-                    : 'UNKNOWN'}
+                  {this.renderProductName(variant)}
                 </Text>
               </View>
               <Div flexDirection="row" _margin="8px 0 0 0">
@@ -182,7 +212,9 @@ class ProductSummaryCart extends React.PureComponent<
                 })}
               </Div>
               <Font {...helveticaBlackBold} _margin="16px 0 0 0">
-                {formatRupiah(variant.price * cart.qty) || '0'}
+                {formatRupiah(
+                  (variant.price || variant.variant.price) * cart.qty,
+                ) || '0'}
               </Font>
             </Div>
           </Div>

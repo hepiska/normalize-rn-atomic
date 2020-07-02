@@ -110,16 +110,14 @@ class UserProfilePict extends React.Component<UserProfilePictType, any> {
 
     return (
       <TouchableOpacity onPress={this.onPressUser}>
-        <View style={{ marginRight: 14 }}>
-          <Image
-            source={
-              user?.photo_url
-                ? { uri: user.photo_url }
-                : require('@src/assets/placeholder/placeholder2.jpg')
-            }
-            style={{ ...styles.image }}
-          />
-        </View>
+        <Image
+          source={
+            user?.photo_url
+              ? { uri: user.photo_url }
+              : require('@src/assets/placeholder/placeholder2.jpg')
+          }
+          style={{ ...styles.image }}
+        />
       </TouchableOpacity>
     )
   }

@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, View, Image, Text } from 'react-native'
+import { StyleSheet, View, Image, Text, TouchableOpacity } from 'react-native'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import ContentExpandable from '@components/molecules/content-expandable'
@@ -307,6 +307,13 @@ class PaymentDetail extends React.PureComponent<any, any> {
     })
   }
 
+  handlePressTnc = () => {
+    navigate('Screens', { screen: 'TermsCondition' })
+  }
+  handlePressPrivacyPolicy = () => {
+    navigate('Screens', { screen: 'PrivacyPolicy' })
+  }
+
   handlePayment = async () => {
     const { payTransaction, transaction, details } = this.props
     const { dataCreditCard } = this.state
@@ -401,11 +408,12 @@ class PaymentDetail extends React.PureComponent<any, any> {
               isChecked={isChecked}
               onPress={this.handleCheckPolicy}
             />
-            <View style={{ width: '95%' }}>
-              <View style={{ marginLeft: 8 }}>
+            <TouchableOpacity onPress={this.handleCheckPolicy}>
+              <View style={{ width: '95%', marginLeft: 8 }}>
                 <Text style={{ ...styles.helvetica12, color: colors.black70 }}>
                   By Continue to payment you agree to The Shonet{' '}
                   <Text
+                    onPress={this.handlePressTnc}
                     style={{
                       textDecorationLine: 'underline',
                       fontWeight: 'bold',
@@ -414,6 +422,7 @@ class PaymentDetail extends React.PureComponent<any, any> {
                   </Text>
                   {` `}and {` `}
                   <Text
+                    onPress={this.handlePressPrivacyPolicy}
                     style={{
                       textDecorationLine: 'underline',
                       fontWeight: 'bold',
@@ -422,7 +431,7 @@ class PaymentDetail extends React.PureComponent<any, any> {
                   </Text>
                 </Text>
               </View>
-            </View>
+            </TouchableOpacity>
           </View>
           <GradientButton
             leftIcon={

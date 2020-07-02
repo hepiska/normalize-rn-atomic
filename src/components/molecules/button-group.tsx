@@ -28,33 +28,27 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'stretch',
     flexDirection: 'row',
-    marginVertical: 12,
-    borderStyle: 'solid',
-    borderColor: colors.black50,
-    borderBottomWidth: 1,
-    borderTopWidth: 1,
+    paddingVertical: 12,
+    marginBottom: 20,
   },
   button: {
     flexDirection: 'row',
     flex: 1,
-    padding: 16,
     borderRightWidth: 1,
     alignItems: 'center',
     justifyContent: 'center',
     borderStyle: 'solid',
-    borderColor: colors.black50,
+    borderColor: '#BBB',
   },
   lastButton: {
     alignItems: 'center',
     justifyContent: 'center',
     flex: 1,
     flexDirection: 'row',
-    padding: 16,
   },
   fontStyle: {
     fontFamily: 'HelveticaNeue',
-    fontWeight: '500',
-    fontSize: 12,
+    fontSize: 14,
     marginLeft: 10,
     color: colors.black100,
   },
@@ -79,7 +73,7 @@ const ButtonGroup = ({ items, style }: ButtonGroupProps) => {
           <Text
             style={{
               ...styles.fontStyle,
-              ...fontStyle.helveticaBold,
+              ...fontStyle.helvetica,
               color: item.color,
             }}>
             {item.name}

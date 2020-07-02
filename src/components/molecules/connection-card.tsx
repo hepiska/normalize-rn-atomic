@@ -61,6 +61,7 @@ const styles = StyleSheet.create({
   photoCollections: {
     flexDirection: 'row',
     marginTop: 24,
+    justifyContent: 'space-between',
   },
   morePhotoContainer: {
     backgroundColor: colors.black100,
@@ -84,7 +85,9 @@ interface ConnectionCardType {
   follows?: Array<number>
   userLoading?: boolean
 }
+
 class ConnectionCard extends React.Component<ConnectionCardType, any> {
+  connectionLimit = 7
   componentDidMount() {
     const params = {
       offset: 10,
@@ -114,7 +117,7 @@ class ConnectionCard extends React.Component<ConnectionCardType, any> {
             alignItems: 'center',
           }}>
           <Text style={{ ...styles.playfairBold20 }}>Connections</Text>
-          {user?.following_count > 5 && (
+          {user?.following_count > this.connectionLimit && (
             <TouchableOpacity onPress={this.gotoFollowPage('Following')}>
               <Text
                 style={{
@@ -127,11 +130,11 @@ class ConnectionCard extends React.Component<ConnectionCardType, any> {
         </View>
         <View style={{ ...styles.photoCollections }}>
           {follows?.map((value, key) => {
-            return key < 5 ? (
+            return key < this.connectionLimit ? (
               <UserPpHoc userId={value} key={`user-pp-${key}`} />
             ) : null
           })}
-          {user?.following_count > 5 && (
+          {user?.following_count > this.connectionLimit && (
             <View
               style={{
                 ...styles.image,
@@ -141,7 +144,7 @@ class ConnectionCard extends React.Component<ConnectionCardType, any> {
                 style={{
                   ...styles.helvetica12,
                   color: colors.white,
-                }}>{`${user.following_count - 5}+`}</Text>
+                }}>{`${user.following_count - this.connectionLimit}+`}</Text>
             </View>
           )}
         </View>

@@ -15,23 +15,11 @@ interface ContentExpandableType {
   title: any
   rightTitle?: any
   content?: any
-  isFirst?: boolean
+  isDisabledBorder?: boolean
   style?: ViewStyle
   divider?: any
   paddingTitleVertical?: number
   paddingTitleHorizontal?: number
-}
-
-const getborderStyle = isFirst => {
-  const style: any = {
-    borderColor: colors.black50,
-    borderBottomWidth: 1,
-    borderBottomStyle: 'solid',
-  }
-  if (isFirst) {
-    style.borderTopWidth = 1
-  }
-  return style
 }
 
 class ContentExpandable extends React.Component<ContentExpandableType, any> {
@@ -64,7 +52,7 @@ class ContentExpandable extends React.Component<ContentExpandableType, any> {
       title,
       rightTitle,
       content,
-      isFirst,
+      isDisabledBorder,
       style,
       divider,
       paddingTitleVertical,
@@ -90,7 +78,9 @@ class ContentExpandable extends React.Component<ContentExpandableType, any> {
       <View
         style={{
           width: '100%',
-          ...(style || getborderStyle(isFirst)),
+          borderColor: isDisabledBorder ? 'transparent' : colors.black50,
+          borderBottomWidth: isDisabledBorder ? 0 : 1,
+          ...style,
         }}>
         <TouchableWithoutFeedback onPress={this.onExpandChange}>
           <View

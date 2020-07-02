@@ -493,6 +493,7 @@ const ProductCardVertical = ({
                     fontWeight: '300',
                     fontSize: typeDict[type].sub,
                     margin: 4,
+                    marginBottom: 0,
                     color: colors.black80,
                   }}
                   numberOfLines={2}

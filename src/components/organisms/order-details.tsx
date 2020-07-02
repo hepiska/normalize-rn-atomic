@@ -7,7 +7,12 @@ import { bindActionCreators } from 'redux'
 import { colors } from '@src/utils/constants'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import IconMi from 'react-native-vector-icons/MaterialIcons'
-import { formatRupiah, capitalEachWord, sendEmail } from '@src/utils/helpers'
+import {
+  formatRupiah,
+  capitalEachWord,
+  sendEmail,
+  setImage as changeImageUri,
+} from '@src/utils/helpers'
 import { OutlineButton } from '../atoms/button'
 import dayjs from 'dayjs'
 import { cartListData } from '@hocs/data/cart'
@@ -15,8 +20,20 @@ import ProductSummaryCart from '@components/molecules/product-summary-cart'
 import { getOrderById } from '@modules/order/action'
 import { fontStyle } from '../commont-styles'
 import { navigate } from '@src/root-navigation'
+import { images as defaultImages } from '@utils/constants'
+import FocusContainer from '@components/molecules/focus-container'
 
 const CartHoc = cartListData(ProductSummaryCart)
+
+const Divider = () => (
+  <View
+    style={{
+      width: '100%',
+      borderBottomWidth: 1,
+      borderBottomColor: 'rgb(239, 239, 239)',
+    }}
+  />
+)
 
 const styles = StyleSheet.create({
   container: {
@@ -47,6 +64,10 @@ const styles = StyleSheet.create({
   helvetica14: {
     ...fontStyle.helvetica,
     fontSize: 14,
+  },
+  helveticaLight14: {
+    ...fontStyle.helveticaThin,
+    fontSize: 13,
   },
   helveticaBold12: {
     ...fontStyle.helveticaBold,
@@ -86,7 +107,7 @@ class OrderDetails extends React.PureComponent<any, any> {
         onPress: handleNavigate('Screens', 'TrackShipment', {
           order: this.props.order,
         }),
-        showWhen: ['sent', 'shipping', 'delivered', 'completed'],
+        showWhen: ['shipping', 'delivered'],
       },
       text: {
         style: {
@@ -130,7 +151,7 @@ class OrderDetails extends React.PureComponent<any, any> {
           marginTop: 16,
         },
         onPress: sendEmail(this.props.orderId),
-        showWhen: ['sent', 'shipping', 'delivered'],
+        showWhen: ['shipping', 'delivered'],
       },
       text: {
         style: {
@@ -241,6 +262,44 @@ class OrderDetails extends React.PureComponent<any, any> {
     }
     return null
   }
+
+  renderOrderStatus = status => {
+    let statusString = ''
+    let statusColor = ''
+    if (status === 'BOOKED') {
+      statusString = 'Waiting For Payment'
+      statusColor = colors.orange
+    } else if (status === 'PAID') {
+      statusString = 'Paid'
+      statusColor = colors.orange
+    } else if (status === 'CONFIRMED') {
+      statusString = 'Confirmed'
+      statusColor = colors.orange
+    } else if (status === 'READY_FOR_DELIVERY') {
+      statusString = 'Confirmed'
+      statusColor = colors.orange
+    } else if (status === 'SHIPPING') {
+      statusString = 'Shipping'
+      statusColor = colors.orange
+    } else if (status === 'DISPUTE') {
+      statusString = 'In Complain'
+      statusColor = colors.orange
+    } else if (status === 'CANCELLED') {
+      statusString = 'Cancelled'
+      statusColor = colors.orange
+    } else if (status === 'DELIVERED') {
+      statusString = 'Delivered'
+      statusColor = colors.greenAccent
+    } else if (status === 'COMPLETED') {
+      statusString = 'Completed'
+      statusColor = colors.greenAccent
+    } else if (status === 'REFUND') {
+      statusString = 'Refunded'
+      statusColor = colors.greenAccent
+    }
+    return { statusString, statusColor }
+  }
+
   render() {
     const { order, style, products, dataProducts } = this.props
 
@@ -252,6 +311,12 @@ class OrderDetails extends React.PureComponent<any, any> {
         return total
       }, 0)
 
+    const image =
+      null ||
+      (!!order.courier.image_url
+        ? changeImageUri(order.courier.image_url, { width: 54, height: 54 })
+        : defaultImages.product)
+
     const getColor = this.orderStatus()
     if (!order) {
       return null
@@ -260,60 +325,87 @@ class OrderDetails extends React.PureComponent<any, any> {
       <View {...style} {...styles.container}>
         {/* order summary */}
         <View>
-          <Text style={{ ...styles.futuraBold24, color: colors.black100 }}>
-            Order Summary
-          </Text>
-
-          {/* order Status */}
-          <View {...styles.row} style={{ marginTop: 24 }}>
-            <Text style={{ ...styles.helvetica14, color: colors.black70 }}>
-              Order Status
-            </Text>
+          <View
+            style={{
+              ...styles.row,
+              justifyContent: 'flex-start',
+              alignItems: 'center',
+            }}>
             <Text
               style={{
-                ...styles.helveticaBold14,
-                color: getColor.textColor,
+                ...styles.futuraBold24,
+                fontSize: 23,
+                color: colors.gray1,
               }}>
-              {capitalEachWord(order.status.toLowerCase())}
-            </Text>
-          </View>
-
-          <View {...styles.row} style={{ marginTop: 16 }}>
-            <Text style={{ ...styles.helvetica14, color: colors.black70 }}>
-              Purchase Date
-            </Text>
-            <Text style={{ ...styles.helveticaBold14, color: colors.black80 }}>
-              {dayjs(order.created_at).format('DD MMMM YYYY')}
-            </Text>
-          </View>
-
-          <View {...styles.row} style={{ marginTop: 16 }}>
-            <Text style={{ ...styles.helvetica14, color: colors.black70 }}>
-              Invoice
+              {`Invoice No: `}
             </Text>
             <Text
               style={{
-                ...styles.helveticaBold14,
+                ...styles.helvetica14,
+                fontSize: 15,
+                fontWeight: '400',
                 color: colors.black80,
                 lineHeight: 14,
               }}>
               {order.invoice_no}
             </Text>
           </View>
+
+          <View style={{ ...styles.row, marginTop: 10 }}>
+            <Text
+              style={{
+                ...styles.helvetica14,
+                fontWeight: '300',
+                color: colors.black80,
+              }}>
+              Order Status
+            </Text>
+            <Text
+              style={{
+                ...styles.helvetica14,
+                fontWeight: '300',
+                color: this.renderOrderStatus(order.status).statusColor,
+              }}>
+              {this.renderOrderStatus(order.status).statusString}
+            </Text>
+          </View>
+
+          <View style={{ ...styles.row, marginTop: 16, marginBottom: 26 }}>
+            <Text
+              style={{
+                ...styles.helvetica14,
+                fontWeight: '300',
+                color: colors.black80,
+              }}>
+              Purchase Date
+            </Text>
+            <Text style={{ ...styles.helveticaBold14, color: colors.black80 }}>
+              {dayjs(order.created_at).format('MMMM DD, HH:mm [WIB]')}
+            </Text>
+          </View>
         </View>
+        <Divider />
 
         {/* item summary */}
-        <View style={{ marginTop: 40 }}>
-          <Text style={{ ...styles.futuraBold24, color: colors.black100 }}>
+        <View style={{ marginTop: 26 }}>
+          <Text
+            style={{
+              ...styles.helvetica14,
+              fontSize: 15,
+              fontWeight: '500',
+              color: colors.black80,
+            }}>
             Item Summary
           </Text>
-          <View {...styles.warehouse}>
+          <View style={{ ...styles.warehouse, marginTop: 12 }}>
             <Icon name="warehouse" size={14} color={colors.black80} />
             <View style={{ marginLeft: 8 }}>
               <Text
                 style={{
                   ...styles.helvetica14,
-                  color: colors.black80,
+                  fontWeight: '300',
+                  fontSize: 13,
+                  color: colors.black70,
                   lineHeight: 14,
                 }}>
                 {`${order.origin.label} - ${order.origin.city}`}
@@ -331,30 +423,34 @@ class OrderDetails extends React.PureComponent<any, any> {
               )
             })}
         </View>
+        <Divider />
 
         {/* shipment detail */}
-        <View style={{ marginTop: 40 }}>
-          <Text style={{ ...styles.futuraBold24, color: colors.black100 }}>
+        <View style={{ marginTop: 26 }}>
+          <Text
+            style={{
+              ...styles.helvetica14,
+              fontSize: 15,
+              fontWeight: '500',
+              color: colors.black80,
+            }}>
             Shipment Detail
           </Text>
 
           {/* shipment package */}
-          <View style={{ marginTop: 24 }}>
-            <Text style={{ ...styles.helveticaBold16, color: colors.black100 }}>
-              Shipment Package
-            </Text>
+          <View style={{ marginTop: 7 }}>
             {/* card 1 */}
             <View
               style={{
                 flexDirection: 'row',
                 alignItems: 'center',
-                marginTop: 16,
+                marginTop: 5,
               }}>
               <View>
                 <View
                   style={{
-                    backgroundColor: colors.black60,
-                    opacity: 0.2,
+                    backgroundColor: colors.black80,
+                    opacity: 0.5,
                     width: 20,
                     height: 20,
                     borderRadius: 100,
@@ -362,7 +458,7 @@ class OrderDetails extends React.PureComponent<any, any> {
                 />
                 <View
                   style={{
-                    backgroundColor: colors.black60,
+                    backgroundColor: colors.black80,
                     opacity: 1,
                     width: 10,
                     height: 10,
@@ -383,17 +479,18 @@ class OrderDetails extends React.PureComponent<any, any> {
                 <Text
                   style={{
                     ...styles.helveticaBold14,
+                    fontWeight: '700',
                     color: colors.black80,
                   }}>
                   Official The Shonet
                 </Text>
-                <View {...styles.warehouse}>
+                <View style={{ ...styles.warehouse }}>
                   <Icon name="warehouse" size={12} color={colors.black60} />
                   <View style={{ marginLeft: 8 }}>
                     <Text
                       style={{
                         ...styles.helvetica12,
-                        color: colors.black60,
+                        color: colors.black70,
                       }}>
                       {`${order.origin.label} - ${order.origin.city}`}
                     </Text>
@@ -407,7 +504,7 @@ class OrderDetails extends React.PureComponent<any, any> {
               style={{
                 borderWidth: 1,
                 borderStyle: 'dashed',
-                borderColor: colors.black50,
+                borderColor: '#ccc',
                 width: 1,
                 height: 30,
                 left: 9.5,
@@ -423,8 +520,8 @@ class OrderDetails extends React.PureComponent<any, any> {
               <View>
                 <View
                   style={{
-                    backgroundColor: colors.black60,
-                    opacity: 0.2,
+                    backgroundColor: colors.black80,
+                    opacity: 0.5,
                     width: 20,
                     height: 20,
                     borderRadius: 100,
@@ -432,7 +529,7 @@ class OrderDetails extends React.PureComponent<any, any> {
                 />
                 <View
                   style={{
-                    backgroundColor: colors.black60,
+                    backgroundColor: colors.black80,
                     opacity: 1,
                     width: 10,
                     height: 10,
@@ -444,8 +541,26 @@ class OrderDetails extends React.PureComponent<any, any> {
                   }}
                 />
               </View>
-              <ImageAutoSchale
+              {/* <ImageAutoSchale
                 source={{ uri: order.courier.image_url }}
+                width={54}
+                style={{ borderRadius: 8, marginLeft: 16 }}
+              /> */}
+              <ImageAutoSchale
+                errorStyle={{ width: 54, height: 54 }}
+                // thumbnailSource={
+                //   typeof thumbnailImage === 'string'
+                //     ? { uri: thumbnailImage }
+                //     : thumbnailImage
+                // }
+                showErrorIcon={false}
+                source={
+                  typeof image === 'string'
+                    ? {
+                        uri: image,
+                      }
+                    : image
+                }
                 width={54}
                 style={{ borderRadius: 8, marginLeft: 16 }}
               />
@@ -453,6 +568,7 @@ class OrderDetails extends React.PureComponent<any, any> {
                 <Text
                   style={{
                     ...styles.helveticaBold14,
+                    fontWeight: '700',
                     color: colors.black80,
                   }}>
                   {order.courier.name}
@@ -463,7 +579,7 @@ class OrderDetails extends React.PureComponent<any, any> {
                     <Text
                       style={{
                         ...styles.helvetica12,
-                        color: colors.black60,
+                        color: colors.black70,
                       }}>
                       {order.courier.shipping_method.category.name}
                     </Text>
@@ -475,38 +591,55 @@ class OrderDetails extends React.PureComponent<any, any> {
 
           {/* shipment address */}
           <View style={{ marginTop: 24 }}>
-            <Text style={{ ...styles.helveticaBold14, color: colors.black80 }}>
+            <Text style={{ ...styles.helvetica14, color: colors.black80 }}>
               Shipment Address
             </Text>
-            <View style={{ marginTop: 16 }}>
-              <Text
-                style={{
-                  ...styles.helveticaBold12,
-                  color: colors.black80,
-                }}>
-                {order.destination.name}
-              </Text>
-            </View>
-            <View style={{ marginTop: 8 }}>
-              <Text
-                style={{
-                  ...styles.helvetica12,
-                  color: colors.black70,
-                  lineHeight: 19,
-                }}>
-                {`${order.destination.address}, ${order.destination.district}, ${order.destination.city}, ${order.destination.region}, ${order.destination.zip_code}`}
-              </Text>
-            </View>
-            <View style={{ marginTop: 8 }}>
-              <Text style={{ ...styles.helvetica12, color: colors.black80 }}>
-                {order.destination.phone}
-              </Text>
-            </View>
+            <FocusContainer
+              style={{
+                marginTop: 16,
+                padding: 10,
+                shadowColor: 'transparent',
+                backgroundColor: '#FAFAFA',
+              }}>
+              <>
+                <View>
+                  <Text
+                    style={{
+                      ...styles.helvetica14,
+                      color: colors.gray1,
+                      lineHeight: 21,
+                    }}>
+                    {order.destination.label}
+                  </Text>
+                </View>
+                <View>
+                  <Text
+                    style={{
+                      ...styles.helveticaBold12,
+                      fontWeight: '500',
+                      color: colors.black80,
+                      lineHeight: 18,
+                    }}>
+                    {`${order.destination.name} - ${order.destination.phone}`}
+                  </Text>
+                </View>
+                <View>
+                  <Text
+                    style={{
+                      ...styles.helvetica12,
+                      color: colors.black70,
+                      lineHeight: 18,
+                    }}>
+                    {`${order.destination.address}, ${order.destination.district}, ${order.destination.city}, ${order.destination.region}, ${order.destination.zip_code}`}
+                  </Text>
+                </View>
+              </>
+            </FocusContainer>
           </View>
         </View>
 
         {/* payment information */}
-        <View style={{ marginTop: 40 }}>
+        <View style={{ marginTop: 26 }}>
           <Text style={{ ...styles.futuraBold24, color: colors.black100 }}>
             Payment Information
           </Text>
@@ -515,17 +648,9 @@ class OrderDetails extends React.PureComponent<any, any> {
           <View style={{ marginTop: 24 }}>
             {order.provider_payment_method && (
               <>
-                <Text
-                  style={{
-                    ...styles.helveticaBold16,
-                    color: colors.black80,
-                  }}>
-                  Payment Method
-                </Text>
-
                 <View
                   style={{
-                    marginTop: 8,
+                    marginTop: 12,
                     flexDirection: 'row',
                     alignItems: 'center',
                   }}>
@@ -538,6 +663,7 @@ class OrderDetails extends React.PureComponent<any, any> {
                     <Text
                       style={{
                         ...styles.helveticaBold14,
+                        fontWeight: '700',
                         color: colors.black80,
                       }}>
                       {this.renderPaymentName()}
@@ -554,59 +680,64 @@ class OrderDetails extends React.PureComponent<any, any> {
                 borderStyle: 'dashed',
                 borderWidth: 1,
                 width: '100%',
-                marginTop: 8,
+                marginTop: 12,
               }}
             />
 
             {/* product total, shipping, delivery insurance */}
             <View>
-              <View {...styles.row} style={{ marginTop: 24 }}>
+              <View style={{ ...styles.row, marginBottom: 2, marginTop: 24 }}>
                 <Text
                   style={{
                     ...styles.helvetica14,
-                    color: colors.black100,
+                    color: colors.black80,
+                    lineHeight: 21,
                   }}>
-                  {`Product Total • ${productTotal} Items`}
+                  {`Product Total ${productTotal} Items`}
                 </Text>
-                <Text style={{ ...styles.helvetica14, color: colors.black100 }}>
+                <Text
+                  style={{
+                    ...styles.helvetica14,
+                    color: colors.black80,
+                    lineHeight: 21,
+                  }}>
                   {formatRupiah(order.total_amount)}
                 </Text>
               </View>
 
-              <View {...styles.row} style={{ marginTop: 24 }}>
+              <View style={{ ...styles.row, marginBottom: 2 }}>
                 <Text
                   style={{
                     ...styles.helvetica14,
-                    color: colors.black100,
+                    color: colors.black80,
+                    lineHeight: 21,
                   }}>
                   Total Shipping Cost
                 </Text>
-                <Text style={{ ...styles.helvetica14, color: colors.black100 }}>
+                <Text
+                  style={{
+                    ...styles.helvetica14,
+                    color: colors.black80,
+                    lineHeight: 21,
+                  }}>
                   {formatRupiah(order.shipping_cost)}
                 </Text>
               </View>
 
-              <View {...styles.row} style={{ marginTop: 24 }}>
-                <View {...styles.row} style={{ alignItems: 'center' }}>
-                  <Text
-                    style={{
-                      ...styles.helvetica14,
-                      color: colors.black100,
-                    }}>
-                    Delivery Protection
-                  </Text>
-                  <View style={{ marginLeft: 8 }}>
-                    <IconMi
-                      name="verified-user"
-                      size={12}
-                      color={colors.blue60}
-                    />
-                  </View>
-                </View>
+              <View style={{ ...styles.row, marginBottom: 2 }}>
                 <Text
                   style={{
                     ...styles.helvetica14,
-                    color: colors.black100,
+                    color: colors.black80,
+                    lineHeight: 21,
+                  }}>
+                  Total Insurance Fee
+                </Text>
+                <Text
+                  style={{
+                    ...styles.helvetica14,
+                    color: colors.black80,
+                    lineHeight: 21,
                   }}>
                   {formatRupiah(order.insurance_cost)}
                 </Text>
@@ -621,27 +752,26 @@ class OrderDetails extends React.PureComponent<any, any> {
               borderStyle: 'dashed',
               borderWidth: 1,
               width: '100%',
-              marginTop: 19,
+              marginTop: 24,
             }}
           />
 
           {/* total */}
-          <View {...styles.row} style={{ marginTop: 24, marginBottom: 43 }}>
-            <View {...styles.row} style={{ alignItems: 'center' }}>
-              <Text
-                style={{
-                  ...styles.helveticaBold14,
-                  color: colors.black100,
-                }}>
-                Total
-              </Text>
-              <View style={{ marginLeft: 8 }}>
-                <IconMi name="verified-user" size={12} color={colors.blue60} />
-              </View>
-            </View>
+          <View style={{ ...styles.row, marginTop: 24, marginBottom: 43 }}>
             <Text
               style={{
                 ...styles.helveticaBold14,
+                fontSize: 18,
+                fontWeight: '700',
+                color: colors.black100,
+              }}>
+              Total
+            </Text>
+            <Text
+              style={{
+                ...styles.helveticaBold14,
+                fontSize: 18,
+                fontWeight: '700',
                 color: colors.black100,
               }}>
               {formatRupiah(

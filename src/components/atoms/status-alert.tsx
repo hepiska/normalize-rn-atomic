@@ -40,8 +40,8 @@ const getColorFromStatus = status => {
     case 'shipping':
     case 'sent':
       return {
-        textColor: '#FFA010',
-        backgroundColor: 'rgba(255, 160, 16, 0.05)',
+        textColor: colors.black80,
+        backgroundColor: 'rgba(255, 200, 0, 0.1)',
       }
     case 'delivered':
     case 'complete':
@@ -75,7 +75,7 @@ const StatusAlert = (props: StatusAlrtPropsType) => {
       />
       <Text
         style={{
-          ...fontStyle.helveticaBold,
+          ...fontStyle.helvetica,
           color: getColorFromStatus(props.status).textColor,
           fontSize: 12,
           marginLeft: 8,
