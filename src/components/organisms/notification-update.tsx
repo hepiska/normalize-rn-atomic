@@ -13,6 +13,7 @@ import { fontStyle } from '../commont-styles'
 import HorizontalList from '@components/organisms/horizontal-list'
 import NotificationLoader from '@src/components/atoms/loaders/notification-update'
 import { makeSelectedGroupData } from '@src/modules/notification/social-selector'
+import { colors } from '@utils/constants'
 
 const { width } = Dimensions.get('screen')
 
@@ -82,7 +83,7 @@ class NotificationPage extends React.Component<any, any> {
         style={{
           width: width,
           paddingVertical: 8,
-          backgroundColor: '#f2f2f2',
+          // backgroundColor: '#f2f2f2',
           paddingHorizontal: 16,
         }}>
         <Text
@@ -140,7 +141,7 @@ class NotificationPage extends React.Component<any, any> {
           width,
           flex: 1,
           paddingTop: 4,
-          // backgroundColor: colors.white,
+          backgroundColor: colors.white,
         }}>
         <HorizontalList
           data={dataAnnouncement}

@@ -317,7 +317,7 @@ class Cart extends React.Component<any, any> {
 
   _emptyComponent = () => {
     return (
-      <View {...styles.cartMargin}>
+      <View style={{ ...styles.cartMargin }}>
         <CartEmptyState />
       </View>
     )
@@ -360,9 +360,10 @@ class Cart extends React.Component<any, any> {
   }
 
   render() {
-    const { footer, stateCarts, carts, cartsLoading } = this.props
+    const { footer, stateCarts, carts, cartsLoading, products } = this.props
     const { selectedVariant } = this.state
 
+    // need refacotr with selector
     let data = []
     let groupData = carts.reduce((total, currentValue) => {
       let selectedItem = stateCarts[currentValue]
@@ -377,6 +378,7 @@ class Cart extends React.Component<any, any> {
       }
       return total
     }, {})
+
     data = Object.keys(groupData).map(k => groupData[k])
 
     const enableCheckout = selectedVariant.reduce((isAvail, value) => {
@@ -389,14 +391,17 @@ class Cart extends React.Component<any, any> {
       return <CartListLoader style={{ marginHorizontal: 16 }} />
     }
     return (
-      <>
+      <View style={{ flex: 1 }}>
         <SectionList
+          style={{ flex: 1 }}
           sections={data}
           keyExtractor={this._keyExtractor}
           renderItem={this._renderItem}
+          scrollEnabled={!!products.length || !!data.length}
           renderSectionHeader={this._sectionHeader}
           ListHeaderComponent={this._header}
           stickyHeaderIndices={[0]}
+          contentContainerStyle={{ flexGrow: 1 }}
           ListFooterComponent={footer && footer}
           ListEmptyComponent={this._emptyComponent}
           onEndReachedThreshold={0.97}
@@ -410,7 +415,7 @@ class Cart extends React.Component<any, any> {
             enableButton={enableCheckout}
           />
         )}
-      </>
+      </View>
     )
   }
 }
@@ -424,6 +429,7 @@ const mapDispatchToProps = dispatch =>
 const mapStateToProps = (state: any) => {
   return {
     addresses: state.addresses.order,
+    products: state.productsSaved.order,
     stateCarts: state.carts.data,
     transactionCount: state.transaction.count,
   }

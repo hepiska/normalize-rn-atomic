@@ -5,6 +5,7 @@ import ProductSearch from '@components/atoms/loaders/product-search'
 import PostCardFulll from '@components/atoms/loaders/post-card'
 import PostDetail from '@components/atoms/loaders/post-detail'
 import SearchListLoader from '@src/components/atoms/loaders/search-list'
+import ConnectionsLoader from '@src/components/atoms/loaders/connection'
 import ContentExpandable from '@components/molecules/content-expandable'
 
 const TestPage = props => {
@@ -15,9 +16,9 @@ const TestPage = props => {
   const renimage = image || { uri: '' }
 
   return (
-    <View style={{ flex: 1 }} ref={toolTipsParent}>
+    <View style={{ flex: 1, marginTop: 62 }} ref={toolTipsParent}>
       {/* <CircleLoader r={50} /> */}
-      <SearchListLoader />
+      <ConnectionsLoader />
       {/* <HorizontalImageLoader /> */}
       {/* <View ref={toolTipsTarget}>
         <Text>sas</Text>

@@ -109,6 +109,7 @@ const FilterBrandOrg = (props: any) => {
         .map(value => parseInt(value))
       return (
         <FilterBrandItem
+          waiting
           key={'key-brand' + item.id}
           fontStyle={fontStyle.helvetica}
           onPress={brand => props.changeSelectedBrand(brand.id)}

@@ -61,7 +61,19 @@ const getAntributesItem = (label: string, data: any, isSelected?: boolean) => {
         </Div>
       )
     default:
-      return null
+      return (
+        <Div
+          key={data.id}
+          radius="4px"
+          _padding="8px"
+          style={{ marginRight: 8 }}
+          _border={`1px solid ${
+            isSelected ? colors.black100 : colors.black50
+          }`}>
+          <Font>{data.label}</Font>
+          <Div />
+        </Div>
+      )
   }
 }
 

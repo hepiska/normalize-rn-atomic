@@ -202,8 +202,8 @@ class AccountSetting extends Component<any, any> {
       title: 'Log Out',
       desc: 'It’s okay to leave sometimes',
       onPress: async () => {
-        await this.props.setLogout()
         navigate('Main', { screen: 'Shop' })
+        await this.props.setLogout()
       },
     },
   ]
@@ -230,6 +230,10 @@ class AccountSetting extends Component<any, any> {
   render() {
     const { finishAnimation, isVisible } = this.state
     const { user } = this.props
+
+    if (!user) {
+      return null
+    }
 
     return (
       <View>
@@ -468,9 +472,15 @@ class AccountSetting extends Component<any, any> {
     )
   }
 }
-const mapStateToProps = state => ({
-  user: state.user.data[state.auth.data.user.id] || state.auth.data.user,
-})
+const mapStateToProps = state => {
+  if (!state.auth.data.user) {
+    return {}
+  }
+
+  return {
+    user: state.user.data[state.auth.data.user.id] || state.auth.data.user,
+  }
+}
 
 const mapDispatchToProps = dispatch =>
   bindActionCreators({ setLogout }, dispatch)

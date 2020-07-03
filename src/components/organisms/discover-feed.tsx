@@ -16,6 +16,7 @@ import PostListItem from '@src/components/molecules/post-card'
 import { postListData } from '@hocs/data/post'
 import EmtyState from '@components/molecules/order-empty-state'
 import TopInsider from '@components/organisms/insider-top'
+import Toast from '@components/molecules/toast'
 import ProductTrending from '@components/organisms/product-trending'
 import HorizontalListLookBook from '@components/organisms/horzontal-list-lookbook'
 import { colors } from '@utils/constants'
@@ -199,25 +200,27 @@ class FeedOrg extends React.Component<any, any> {
         {this.state.finishAnimation && firstLoading ? (
           <PostCardFull />
         ) : (
-          <List
-            data={posts}
-            loading={loading}
-            refreshControl={
-              <RefreshControl
-                onRefresh={this._freshfetch}
-                refreshing={firstLoading}
-              />
-            }
-            onScroll={this._hanleScroll}
-            onEndReached={this._fetchMore}
-            scrollEnabled={scrollEnabled}
-            ListEmptyComponent={this._emptyState}
-            layoutType="list"
-            columnStyle={{ flex: 1, marginHorizontal: 8 }}
-            numColumns={2}
-            ListFooterComponent={this._renderFooterLoader}
-            renderItem={this._renderItem}
-          />
+          <>
+            <List
+              data={posts}
+              loading={loading}
+              refreshControl={
+                <RefreshControl
+                  onRefresh={this._freshfetch}
+                  refreshing={firstLoading}
+                />
+              }
+              onScroll={this._hanleScroll}
+              onEndReached={this._fetchMore}
+              scrollEnabled={scrollEnabled}
+              ListEmptyComponent={this._emptyState}
+              layoutType="list"
+              columnStyle={{ flex: 1, marginHorizontal: 8 }}
+              numColumns={2}
+              ListFooterComponent={this._renderFooterLoader}
+              renderItem={this._renderItem}
+            />
+          </>
         )}
       </View>
     )

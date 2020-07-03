@@ -37,6 +37,7 @@ import Follow from './follow'
 import AccountSetting from './account-setting'
 import Wishlist from './wishlist'
 import PostDetail from './post-detail'
+import PostEdit from './post-edit'
 import Articles from './articles'
 import Setting from './setting'
 import PasswordSecurity from './password-security'
@@ -93,6 +94,7 @@ function InsiderStack() {
       <Stack.Screen name="SearchList" component={Search} />
       <Stack.Screen name="Wishlist" component={Wishlist} />
       <Stack.Screen name="PostDetail" component={PostDetail} />
+      <Stack.Screen name="PostEdit" component={PostEdit} />
       <Stack.Screen name="Articles" component={Articles} />
       <Stack.Screen name="Setting" component={Setting} />
       <Stack.Screen

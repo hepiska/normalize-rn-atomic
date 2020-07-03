@@ -88,7 +88,7 @@ class ChooseAddressPage extends Component<any, any> {
     const { setCheckoutAddressData } = this.props
     const { tempSelectedAddress } = this.state
     setCheckoutAddressData(tempSelectedAddress)
-    // this.onBackCheckoutPage()
+    this.onBackCheckoutPage()
   }
 
   _addnewaddress = () => {

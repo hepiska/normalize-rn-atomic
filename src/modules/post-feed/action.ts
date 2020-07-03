@@ -55,6 +55,9 @@ export const fetchFeed = (params: any = {}) => {
         return setFeedLoading(false)
       },
       success: (data, { pagination }) => {
+        if (!data) {
+          return setFeedLoading(false)
+        }
         const composeAction = [
           ...dispatchPostEntities(data.entities),
           setPagination(pagination),

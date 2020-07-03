@@ -162,6 +162,7 @@ const ProductCard = ({
     product.variants.find(variant => variant.id === selectedVariantId) ||
     product.variants[0]
   const images = selectedVariant.image_urls || product.image_urls || []
+
   // const random = Math.floor(Math.random() * images.length)
   const variantPrice = selectedVariantId && {
     current: selectedVariant.price_disc || selectedVariant.price,
@@ -578,6 +579,13 @@ const ProductCardVertical = ({
 }
 
 const MemVerticalCard = memo(ProductCardVertical, (prev, nex) => {
+  if (prev.image !== nex.image) {
+    return false
+  }
+
+  if (!isEqual(prev.variantPrice, nex.variantPrice)) {
+    return false
+  }
   if (!isEqual(prev.layout, nex.layout)) {
     return false
   }

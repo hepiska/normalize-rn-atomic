@@ -50,14 +50,21 @@ const isAllChildernIncluded = (children, str) => {
 const CategoryListItem = categoryListData(SelectAbleItem)
 
 class FilterCategory extends Component<any, any> {
+  state = {
+    selectedCategory: this.props.selectedCategory,
+  }
+
+  timer = null
+
   shouldComponentUpdate(nextProps, nextState) {
     const { state, props } = this
 
-    if (props.selectedCategory !== nextProps.selectedCategory) {
+    if (state.selectedCategory !== nextState.selectedCategory) {
       return true
     }
     return false
   }
+
   _renderItem = ({ item }) => {
     return (
       <CategoryListItem
@@ -66,21 +73,54 @@ class FilterCategory extends Component<any, any> {
         style={{ paddingLeft: 16 }}
         fontStyle={styles.itemFont}
         onPress={this._setFilter}
-        isSelected={this.props.selectedCategory.includes(item)}
+        isSelected={this.state.selectedCategory.includes(item)}
         categoryId={item}
       />
     )
   }
+
   _setFilter = item => {
-    this.props.changeSelectedCategory(item.id)
-    let categoryId = this.props.selectedCategory
-    this.props.fetchCountProduct({
-      category_ids: categoryId || this.props.activeCategory,
+    let categoryId = this.state.selectedCategory
+    const regex = new RegExp(`(,${item.id})|(${item.id})`)
+
+    if (categoryId.includes(item.id)) {
+      categoryId = categoryId.replace(regex, '')
+    } else {
+      categoryId += ',' + item.id
+    }
+
+    this.setState({ selectedCategory: categoryId }, () => {
+      this._dispatchCategoryChange(categoryId)
     })
   }
 
+  _dispatchCategoryChange = categoryId => {
+    if (this.timer) {
+      clearTimeout(this.timer)
+      this.timer = null
+    } else {
+      this.timer = setTimeout(() => {
+        batch(() => {
+          const params = {
+            category_ids: categoryId || this.props.activeCategory,
+            brand_ids: this.props.brans_ids,
+            ...this.props.selectedPrice,
+          }
+          if (this.props.activeCollection === 'sales') {
+            params.is_disc = true
+          } else {
+            params.collection_ids
+          }
+          this.props.setSelectedCategory(categoryId)
+          this.props.fetchCountProduct(params)
+        })
+        this.timer = null
+      }, 100)
+    }
+  }
+
   _headerSelected = isSelected => item => {
-    let categoryId = this.props.selectedCategory || ''
+    let categoryId = this.state.selectedCategory || ''
     if (isSelected) {
       item.children.forEach(child => {
         if (categoryId.includes(child)) {
@@ -96,21 +136,16 @@ class FilterCategory extends Component<any, any> {
         }
       })
     }
-    batch(() => {
-      this.props.setSelectedCategory(categoryId)
-      this.props.fetchCountProduct({
-        category_ids: categoryId || this.props.activeCategory,
-        collection_ids: this.props.activeCollection,
-        brand_ids: this.props.brans_ids,
-        ...this.props.selectedPrice,
-      })
+
+    this.setState({ selectedCategory: categoryId }, () => {
+      this._dispatchCategoryChange(categoryId)
     })
   }
 
   _renderSectionHeader = ({ section }) => {
     const isSelected = isAllChildernIncluded(
       section.children,
-      this.props.selectedCategory,
+      this.state.selectedCategory,
     )
     return (
       <SelectAbleItem
@@ -127,7 +162,9 @@ class FilterCategory extends Component<any, any> {
   _keyExtractor = (item, index) => '' + item.id + index
 
   render() {
-    const { categories, selectedCategory } = this.props
+    const { categories } = this.props
+    const { selectedCategory } = this.state
+
     return (
       <View style={{ flex: 1, width, backgroundColor: 'white' }}>
         <SectionList

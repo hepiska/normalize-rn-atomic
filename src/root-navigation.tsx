@@ -34,7 +34,7 @@ export function dispatch(params) {
   }
 }
 
-export function goBack<goBackParamsType>(name, params) {
+export function goBack<goBackParamsType>(name?: string, params?: any) {
   if (isMountedRef.current && navigationRef.current) {
     // Perform navigation if the app has mounted
     navigationRef.current.goBack(name, params)

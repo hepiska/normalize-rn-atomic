@@ -79,6 +79,9 @@ class ImageAutoSchale extends React.Component<ImageAutoSchaleType, any> {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
+    if (!isEqual(nextProps.source, this.props.source)) {
+      return true
+    }
     if (this.state.isError !== nextState.isError) {
       return true
     }

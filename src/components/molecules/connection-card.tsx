@@ -14,6 +14,7 @@ import { navigate } from '@src/root-navigation'
 import UserPp from '@components/atoms/user-profile-picture'
 import { getFollowerFollowing, getUser } from '@modules/user/action'
 import { userListData } from '@src/hocs/data/user'
+import ConnectionsLoader from '@components/atoms/loaders/connection'
 
 const UserPpHoc = userListData(UserPp)
 
@@ -68,6 +69,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  margin: {
+    marginHorizontal: 8,
+  },
 })
 
 const navigateTo = (screen, screenName, params = {}) => {
@@ -81,6 +85,7 @@ interface ConnectionCardType {
   style?: ViewStyle
   user?: any
   type?: string
+  loading?: boolean
   getFollowerFollowing?: (parameter: Object, type: string) => void
   follows?: Array<number>
   userLoading?: boolean
@@ -101,6 +106,20 @@ class ConnectionCard extends React.Component<ConnectionCardType, any> {
       followType,
       name: this.props.user.name,
     })
+  }
+
+  _rendeFailtext = () => {
+    const { loading } = this.props
+
+    if (loading) {
+      return <ConnectionsLoader style={{ width: '100%' }} />
+    }
+
+    return (
+      <View>
+        <Text style={[styles.helvetica14]}>There is no connection yet</Text>
+      </View>
+    )
   }
 
   render() {
@@ -129,11 +148,13 @@ class ConnectionCard extends React.Component<ConnectionCardType, any> {
           )}
         </View>
         <View style={{ ...styles.photoCollections }}>
-          {follows?.map((value, key) => {
-            return key < this.connectionLimit ? (
-              <UserPpHoc userId={value} key={`user-pp-${key}`} />
-            ) : null
-          })}
+          {follows.length
+            ? follows?.map((value, key) => {
+                return key < this.connectionLimit ? (
+                  <UserPpHoc userId={value} key={`user-pp-${key}`} />
+                ) : null
+              })
+            : this._rendeFailtext()}
           {user?.following_count > this.connectionLimit && (
             <View
               style={{
@@ -162,6 +183,7 @@ const mapStateToProps = (state: any) => {
 
   return {
     follows: state.user.order,
+    loading: state.user.loading,
     userLoading: state.user.loading,
     user,
   }

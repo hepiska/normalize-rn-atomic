@@ -93,6 +93,7 @@ const FullscreenCard = ({
   onShare,
   // goToUser,
   goToUsers,
+  onMore,
   onLike,
   onBookmark,
   likeCount,
@@ -155,7 +156,7 @@ const FullscreenCard = ({
               </Text>
             </View>
           </TouchableOpacity>
-          <IconFa name="ellipsis-h" size={16} />
+          <IconFa name="ellipsis-h" size={16} onPress={onMore} />
         </View>
       )}
       {width && (
@@ -602,6 +603,11 @@ class PostListItem extends React.Component<PostListItemType, any> {
     }
   }
 
+  _onMore = () => {
+    const { post } = this.props
+    navigate('modals', { screen: 'PostMore', params: { postId: post.id } })
+  }
+
   _onLike = () => {
     const { addLikedPost, removeLikedPost, userAuth } = this.props
     const { isPostLiked, likeCount, postLikes } = this.state
@@ -716,6 +722,7 @@ class PostListItem extends React.Component<PostListItemType, any> {
           <MemFullSizeCard
             onPress={this._onPress}
             onUserPress={this._goToUser}
+            onMore={this._onMore}
             post={post}
             user={user}
             goToUsers={this._goToUsers}

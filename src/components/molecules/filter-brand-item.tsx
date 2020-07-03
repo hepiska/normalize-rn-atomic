@@ -29,6 +29,7 @@ interface SelectAbleItemType {
   fontStyle?: TextStyle
   onPress?: (brand: any) => void
   style?: ViewStyle
+  waiting?: boolean
   isSelected?: boolean
   selectorShape?: SelectorShapeType
 }
@@ -47,12 +48,16 @@ class SelectAbleItem extends React.PureComponent<SelectAbleItemType, any> {
   }
 
   _onPress = () => {
-    const { item, onPress } = this.props
-    this.setState({ isSelected: !this.state.isSelected }, () => {
-      setTimeout(() => {
-        onPress(item)
-      }, 600)
-    })
+    const { item, onPress, waiting } = this.props
+    if (waiting) {
+      this.setState({ isSelected: !this.state.isSelected }, () => {
+        setTimeout(() => {
+          onPress(item)
+        }, 600)
+      })
+    } else {
+      onPress(item)
+    }
   }
 
   getRadius = shape => {

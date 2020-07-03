@@ -10,6 +10,7 @@ import LikeListModal from '@pages/modals/like-list'
 import ProductSortBottomSheet from './product-sort'
 import ProductFilter from './product-filter'
 import initialPageConfig from '@pages/page-initial.config'
+import PostMoreModal from './post-more'
 
 import ShareModal from '@pages/modals/share'
 
@@ -51,6 +52,15 @@ function ModalStack() {
           cardStyle: { backgroundColor: 'transparent' },
         }}
         component={ShareModal}
+      />
+      <Stack.Screen
+        name="PostMore"
+        options={{
+          animationEnabled: false,
+
+          cardStyle: { backgroundColor: 'transparent' },
+        }}
+        component={PostMoreModal}
       />
       <Stack.Screen
         name="LikeList"

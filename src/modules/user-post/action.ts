@@ -2,6 +2,7 @@ import { API } from '../action-types'
 import * as schema from '@modules/normalize-schema'
 import { getMe } from '@utils/helpers'
 import { dispatchPostEntities } from '../entities-action-dispacer'
+import { exp } from 'react-native-reanimated'
 export const actionType = {
   FETCH: 'user-post/FETCH',
   SET_LOADING: 'user-post/SET_LOADING',
@@ -52,6 +53,20 @@ export const getUserPosts = (params): any => {
           res.push(setReachEnd(true))
         }
         return res
+      },
+    },
+  }
+}
+
+export const archivePost = postid => {
+  return {
+    type: API,
+    payload: {
+      url: '/post/' + postid + '/archive',
+      startNetwork: () => setuserPostLoading(true),
+      endNetwork: () => setuserPostLoading(false),
+      success: () => {
+        return getUserPosts({ skip: 0, limit: 10 })
       },
     },
   }

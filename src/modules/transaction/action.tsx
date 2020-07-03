@@ -101,6 +101,10 @@ export const getAllTransactionCount = params => {
       requestParams: { params: { ...params, limit: 100 } },
       success: data => {
         const count = {}
+
+        if (!data) {
+          return setTransactionCount({})
+        }
         data.forEach(dat => {
           const status = dat.status.toLowerCase()
           if (count[status]) {

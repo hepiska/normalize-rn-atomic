@@ -51,9 +51,10 @@ class AnnouncementCard extends React.PureComponent<AnnouncementCardType, any> {
     const { announcement, idx, style } = this.props
     const img = announcement.image_url
     const defaultStyle = { ...styles.container, ...style }
+    const marginStyle = idx === 0 ? { marginLeft: 16 } : {}
     return announcement ? (
       <TouchableWithoutFeedback onPress={this.handlePressAnnouncement}>
-        <View style={{ ...defaultStyle, marginLeft: idx === 0 && 16 }}>
+        <View style={[defaultStyle, marginStyle]}>
           <Image
             key={`image-announcement-${idx}`}
             source={

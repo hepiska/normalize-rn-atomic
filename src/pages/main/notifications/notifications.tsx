@@ -40,7 +40,7 @@ const NotificationPage = props => {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
       <Tab.Navigator tabBar={props => <NotificationTab {...props} />}>
         <Tab.Screen name="Update" component={NotificationUpdate} />
         <Tab.Screen name="Transaction" component={notificationTransaction} />
