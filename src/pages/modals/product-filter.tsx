@@ -76,7 +76,7 @@ const Header = props => {
 }
 
 const snapPoints = [Math.ceil(height * 0.92), Math.max(360, height * 0.5), 0]
-const totalheaderheight = 140
+const totalheaderheight = 90
 
 class ProductFilterBottomSheet extends React.Component<any, any> {
   state = {
