@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Dimensions, FlatList } from 'react-native'
+import { View, Dimensions, FlatList, InteractionManager } from 'react-native'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { Div } from '@components/atoms/basic'
@@ -7,7 +7,7 @@ import { getProductSaved } from '@modules/product-saved/action'
 import NavbarTop from '@components/molecules/navbar-top'
 import { productListData } from '@hocs/data/product'
 import ProductCard from '@components/molecules/product-card-new'
-
+import ProductCardLoader from '@components/atoms/loaders/product-card'
 const { width } = Dimensions.get('screen')
 
 const ProductWithCardHoc = productListData(ProductCard)
@@ -17,8 +17,15 @@ class Wishlist extends Component<any, any> {
   skip = 0
   lastSkip = 0
 
+  state = {
+    finishAnimation: false,
+  }
+
   componentDidMount() {
-    this._freshFetch()
+    InteractionManager.runAfterInteractions(() => {
+      this.setState({ finishAnimation: true })
+      this._freshFetch()
+    })
   }
 
   _freshFetch = async () => {
@@ -37,6 +44,7 @@ class Wishlist extends Component<any, any> {
       offset: this.limit * skip,
     }
     this.props.getProductSaved(params)
+    this.props.getProductSaved()
   }
 
   _fetchMore = () => {
@@ -75,23 +83,28 @@ class Wishlist extends Component<any, any> {
 
   render() {
     const { products, loading } = this.props
+    const { finishAnimation } = this.state
     return (
       <>
         <NavbarTop leftContent={['back']} title="Wishlist" />
-        <View style={{ flex: 1 }}>
-          <FlatList
-            style={{ paddingHorizontal: 8 }}
-            numColumns={2}
-            onRefresh={this._freshFetch}
-            keyExtractor={this._keyExtractor}
-            refreshing={loading}
-            data={products}
-            renderItem={this._renderItem}
-            onEndReached={this._fetchMore}
-            onEndReachedThreshold={0.99}
-            scrollIndicatorInsets={{ right: 1 }}
-          />
-        </View>
+        {finishAnimation && !loading ? (
+          <View style={{ flex: 1 }}>
+            <FlatList
+              style={{ paddingHorizontal: 8 }}
+              numColumns={2}
+              onRefresh={this._freshFetch}
+              keyExtractor={this._keyExtractor}
+              refreshing={loading}
+              data={products}
+              renderItem={this._renderItem}
+              onEndReached={this._fetchMore}
+              onEndReachedThreshold={0.99}
+              scrollIndicatorInsets={{ right: 1 }}
+            />
+          </View>
+        ) : (
+          <ProductCardLoader style={{ marginTop: 16, marginHorizontal: 16 }} />
+        )}
       </>
     )
   }

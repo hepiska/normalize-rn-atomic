@@ -91,7 +91,7 @@ class ChooseCourierPage extends Component<any, any> {
                 </View>
               </View>
 
-              {shipments[warehouseId].length === 0 ? (
+              {shipments[warehouseId]?.length === 0 ? (
                 <EmptyState
                   title={`Oops...`}
                   description="Your address doesn't support by any shipment courier"

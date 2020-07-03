@@ -74,7 +74,7 @@ class PaymentList extends Component<any, any> {
       offset: this.limit * skip,
       sort_by: 'date',
       sort_direction: 'desc',
-      status: selectedStatus.join(),
+      status: selectedStatus.toString(),
     })
   }
 

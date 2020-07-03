@@ -13,6 +13,7 @@ import { productApi } from '@modules/product/action'
 import { fontStyle } from '../commont-styles'
 import WishlistLoader from '@components/atoms/loaders/wishlist'
 import { navigate } from '@src/root-navigation'
+import { makeSlicedProductSaved } from '@src/modules/product-saved/selector'
 // import { addCart } from '@modules/cart/action'
 
 const { width } = Dimensions.get('window')
@@ -85,10 +86,9 @@ class Wishlist extends Component<any, any> {
           justify="space-between"
           align="flex-start"
           style={{ flexWrap: 'wrap' }}>
-          {loading ? (
+          {loading || !products ? (
             <WishlistLoader />
           ) : (
-            products &&
             products.map((item, k) => (
               <ProductWithCardHoc
                 key={item}
@@ -129,11 +129,14 @@ const mapDispatchToProps = dispatch =>
     dispatch,
   )
 
-const mapStateToProps = state => ({
-  products: state.productsSaved.order,
-  pagination: state.products.pagination,
-  loading: state.productsSaved.loading,
-  error: state.productsSaved.error,
-})
+const mapStateToProps = () => {
+  const getSlicedProduct = makeSlicedProductSaved()
+  return state => ({
+    products: getSlicedProduct(state),
+    pagination: state.products.pagination,
+    loading: state.productsSaved.loading,
+    error: state.productsSaved.error,
+  })
+}
 
 export default connect(mapStateToProps, mapDispatchToProps)(Wishlist)
