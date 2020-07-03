@@ -1,8 +1,7 @@
 import { createSelector } from 'reselect'
-import { ReloadInstructions } from 'react-native/Libraries/NewAppScreen'
 
 const getPostLiked = (state, postId) => {
-  return state.postsLiked.data[postId] || {}
+  return state.postsLiked.data[postId] || null
 }
 
 export const makePostLiked = () =>

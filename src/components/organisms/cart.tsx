@@ -1,6 +1,17 @@
 import React, { Component } from 'react'
-import { View, StyleSheet, SectionList, Text } from 'react-native'
-import { Font, PressAbbleDiv, Div } from '@components/atoms/basic'
+import {
+  View,
+  StyleSheet,
+  SectionList,
+  Text,
+  TouchableOpacity,
+} from 'react-native'
+import {
+  Font,
+  PressAbbleDiv,
+  Div,
+  TouchableWithoutFeedback,
+} from '@components/atoms/basic'
 import { colors } from '@src/utils/constants'
 import { Checkbox } from '@components/atoms/checkbox'
 import { helveticaBlackBold, fontStyle } from '@components/commont-styles'
@@ -15,6 +26,7 @@ import IconFa from 'react-native-vector-icons/FontAwesome5'
 import { navigate } from '@src/root-navigation'
 import { getUserAddressById } from '@modules/address/action'
 import CartListLoader from '@components/atoms/loaders/cart-list'
+import { getAllTransactionCount } from '@modules/transaction/action'
 
 const styles = StyleSheet.create({
   solidDivider: {
@@ -38,16 +50,33 @@ const styles = StyleSheet.create({
 })
 const CartHoc = cartListData(CartCard)
 
-class Cart extends Component<any, any> {
+class Cart extends React.Component<any, any> {
   state = {
     selectedVariant: [],
+    isShowOrderAlert: true,
   }
 
   skip = 0
   lastSkip = 0
 
+  shouldComponentUpdate(nextProps, nextState) {
+    const { selectedVariant, isShowOrderAlert } = this.state
+    const { transactionCount } = this.props
+    if (selectedVariant !== nextState.selectedVariant) {
+      return true
+    }
+    if (isShowOrderAlert !== nextState.isShowOrderAlert) {
+      return true
+    }
+    if (transactionCount !== nextProps.transactionCount) {
+      return true
+    }
+
+    return false
+  }
   componentDidMount() {
     this.props.getUserAddressById()
+    this.props.getAllTransactionCount({ status: 'unpaid,waiting' })
     this._chooseAll()
   }
 
@@ -157,37 +186,101 @@ class Cart extends Component<any, any> {
     }
   }
 
+  handleSeeOrder = () => {
+    navigate('Screens', {
+      screen: 'PaymentList',
+      params: {
+        selectedFilter: ['unpaid', 'waiting'],
+        hideHeader: true,
+      },
+    })
+  }
+
+  handleCloseOrderAlert = () => {
+    this.setState({
+      isShowOrderAlert: false,
+    })
+  }
+
   _header = () => {
-    const { carts } = this.props
-    const { selectedVariant } = this.state
+    const { carts, transactionCount } = this.props
+    const { selectedVariant, isShowOrderAlert } = this.state
     const isChecked = carts.length === selectedVariant.length
+
+    const pendingTransaction = Object.keys(transactionCount).reduce(
+      (acc, dat) => {
+        acc += transactionCount[dat]
+        return acc
+      },
+      0,
+    )
     if (carts.length > 0) {
       return (
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            backgroundColor: 'white',
-          }}
-          {...styles.solidDivider}>
-          <PressAbbleDiv onPress={this._chooseAll}>
-            <View {...styles.cartMargin} style={{ flexDirection: 'row' }}>
-              <Checkbox isChecked={isChecked} onPress={this._chooseAll} />
-              <View style={{ marginLeft: 16 }}>
-                <Text style={{ ...styles.helvetica14, color: colors.black100 }}>
-                  Choose All
+        <>
+          {isShowOrderAlert && (
+            <View
+              style={{
+                backgroundColor: colors.black50,
+                margin: 16,
+                marginBottom: 0,
+                padding: 8,
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                borderRadius: 8,
+              }}>
+              <Text
+                style={{
+                  ...fontStyle.helvetica,
+                  fontSize: 13,
+                  lineHeight: 17,
+                  flex: 9,
+                }}>
+                You have {pendingTransaction} order(s) waiting for payment,
+                <TouchableWithoutFeedback onPress={this.handleSeeOrder}>
+                  <Text style={{ fontWeight: '700' }}>{` click here `}</Text>
+                </TouchableWithoutFeedback>
+                to complete your purchase
+              </Text>
+              <TouchableOpacity onPress={this.handleCloseOrderAlert}>
+                <IconFa name="times" size={16} color={colors.black70} />
+              </TouchableOpacity>
+            </View>
+          )}
+
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              backgroundColor: 'white',
+              ...styles.solidDivider,
+            }}>
+            <PressAbbleDiv onPress={this._chooseAll}>
+              <View style={{ flexDirection: 'row', ...styles.cartMargin }}>
+                <Checkbox isChecked={isChecked} onPress={this._chooseAll} />
+                <View style={{ marginLeft: 16 }}>
+                  <Text
+                    style={{ ...styles.helvetica14, color: colors.black100 }}>
+                    Choose All
+                  </Text>
+                </View>
+              </View>
+            </PressAbbleDiv>
+            <PressAbbleDiv onPress={this._removeCart}>
+              <View style={styles.cartMargin}>
+                <Text
+                  style={{
+                    ...styles.helveticaBold14,
+                    fontWeight: '700',
+                    color: colors.black80,
+                    textDecorationLine: 'underline',
+                  }}>
+                  Remove
                 </Text>
               </View>
-            </View>
-          </PressAbbleDiv>
-          <PressAbbleDiv onPress={this._removeCart}>
-            <View {...styles.cartMargin}>
-              <Text style={{ ...styles.helveticaBold14, color: colors.blue60 }}>
-                Remove
-              </Text>
-            </View>
-          </PressAbbleDiv>
-        </View>
+            </PressAbbleDiv>
+          </View>
+        </>
       )
     }
     return <></>
@@ -323,12 +416,16 @@ class Cart extends Component<any, any> {
 }
 
 const mapDispatchToProps = dispatch =>
-  bindActionCreators({ removeCart, getUserAddressById }, dispatch)
+  bindActionCreators(
+    { removeCart, getUserAddressById, getAllTransactionCount },
+    dispatch,
+  )
 
 const mapStateToProps = (state: any) => {
   return {
     addresses: state.addresses.order,
     stateCarts: state.carts.data,
+    transactionCount: state.transaction.count,
   }
 }
 

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { ViewStyle, SafeAreaView, View } from 'react-native'
-import CircleLoader from './cirle'
+import CircleLoader from './circle-loader'
 import LineLoader from './line'
 
 interface LoaderPropsType {

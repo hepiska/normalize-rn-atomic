@@ -4,7 +4,7 @@ import ContentLoader from 'react-content-loader/native'
 import { Rect, Circle } from 'react-native-svg'
 import LineLoader from '@components/atoms/loaders/line'
 import { shimmerLoader } from '@utils/constants'
-import CircleLoader from './cirle'
+import CircleLoader from './circle-loader'
 
 interface LoaderPropsType {
   style?: ViewStyle

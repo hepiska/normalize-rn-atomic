@@ -98,6 +98,7 @@ class MyPost extends React.Component<any, any> {
         key={`horizontal-list-post-${index}`}
         postId={item}
         idx={index}
+        fullscreen
       />
     )
   }

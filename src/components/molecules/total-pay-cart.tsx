@@ -46,8 +46,8 @@ const styles = StyleSheet.create({
     flex: 0.5,
     justifyContent: 'center',
   },
-  helveticaBold12: {
-    ...fontStyle.helveticaBold,
+  helvetica12: {
+    ...fontStyle.helvetica,
     fontSize: 12,
   },
 })
@@ -66,10 +66,12 @@ class TotalPayCart extends Component<any, any> {
     return (
       <View {...styles.container}>
         <View {...styles.totalText}>
-          {/* <Font {...helveticaBlackFont12} style={{ fontWeight: 'bold' }}>
-            Total
-          </Font> */}
-          <Text style={{ ...styles.helveticaBold12, color: colors.black80 }}>
+          <Text
+            style={{
+              ...styles.helvetica12,
+              fontWeight: '300',
+              color: colors.black80,
+            }}>
             Total
           </Text>
           <Font {...helveticaBlackTitleBold} size="18">

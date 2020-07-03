@@ -12,6 +12,7 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs'
 import { colors } from '@utils/constants'
 import DiscoverTab from '@src/components/molecules/tab-menu-chip'
+import { navigate } from '@src/root-navigation'
 
 const { width } = Dimensions.get('window')
 
@@ -27,6 +28,7 @@ const DiscoverSearchComponent = ({ onPress }) => {
 
 const DiscoverPage = () => {
   const onSearchPress = useCallback(() => {
+    navigate('Screens', { screen: 'SearchList' })
     console.log('on discover search')
   }, [])
 

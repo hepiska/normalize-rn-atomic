@@ -1,5 +1,6 @@
 import React, { useState, memo, PureComponent } from 'react'
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
+import Immutable from 'seamless-immutable'
 import {
   Div,
   PressAbbleDiv,
@@ -16,9 +17,7 @@ import {
   shadows,
 } from '@components/commont-styles'
 import { colors, images as defaultImages } from '@utils/constants'
-import Icon from 'react-native-vector-icons/FontAwesome5'
 import IconFa from 'react-native-vector-icons/FontAwesome'
-import IconMC from 'react-native-vector-icons/MaterialCommunityIcons'
 import Config from 'react-native-config'
 import { navigate } from '@src/root-navigation'
 import Line from '@components/atoms/line'
@@ -41,6 +40,7 @@ interface PostListItemType {
   isBookmarked?: boolean
   style?: any
   isAuth?: boolean
+  userAuth?: any
 }
 
 const fullscreenstyles = StyleSheet.create({
@@ -84,7 +84,7 @@ const FullscreenCard = ({
   user,
   width,
   post,
-  isLiked,
+  isPostLiked,
   isBookmarked,
   onLayout,
   style,
@@ -95,6 +95,8 @@ const FullscreenCard = ({
   goToUsers,
   onLike,
   onBookmark,
+  likeCount,
+  postLikes,
 }: any) => {
   const maxTitile = 3000
   const maxSubtitle = 200
@@ -109,6 +111,11 @@ const FullscreenCard = ({
     post.subtitle.length > maxSubtitle
       ? post.subtitle.substring(0, maxSubtitle) + '...'
       : null
+  const postType =
+    post.post_type !== 'article'
+      ? post.post_type.toUpperCase()
+      : post.category.name.toUpperCase() || 'UNCATEGORIZED'
+
   return (
     <View
       style={{
@@ -144,7 +151,7 @@ const FullscreenCard = ({
                   fontSize: 14,
                   color: colors.black100,
                 }}>
-                {user.username}
+                {user.username || user.name}
               </Text>
             </View>
           </TouchableOpacity>
@@ -175,7 +182,7 @@ const FullscreenCard = ({
             fontSize: 10,
             color: colors.black70,
           }}>
-          {post.post_type.toUpperCase()}
+          {postType}
         </Text>
       </View>
       <View style={{ ...fullscreenstyles.sectionContainer }}>
@@ -235,23 +242,27 @@ const FullscreenCard = ({
         }}>
         <View style={fullscreenstyles.rowContainer}>
           <View style={{ ...fullscreenstyles.rowContainer, marginRight: 24 }}>
-            <IconFa
-              name={isLiked ? 'heart' : 'heart-o'}
-              onPress={onLike}
-              size={20}
-              color={isLiked ? colors.red2 : colors.black80}
-            />
+            <TouchableOpacity onPress={onLike}>
+              <Image
+                source={
+                  isPostLiked
+                    ? require('@src/assets/icons/heart-filled.png')
+                    : require('@src/assets/icons/heart.png')
+                }
+                style={{ width: 20, height: 20 }}
+              />
+            </TouchableOpacity>
             <Font size="10.5px" color={colors.black80} padd="0 0 0 8px">
-              {post.like_count}
+              {likeCount}
             </Font>
           </View>
           <View style={fullscreenstyles.rowContainer}>
-            <IconFa
-              name="comment-o"
-              onPress={onLike}
-              size={20}
-              color={colors.black80}
-            />
+            <TouchableOpacity onPress={onLike}>
+              <Image
+                source={require('@src/assets/icons/comment.png')}
+                style={{ width: 20, height: 20 }}
+              />
+            </TouchableOpacity>
             <Font size="10.5px" color={colors.black80} padd="0 0 0 8px">
               {post.comment_count}
             </Font>
@@ -259,22 +270,25 @@ const FullscreenCard = ({
         </View>
 
         <View style={fullscreenstyles.rowContainer}>
-          <IconMC
-            name="share-outline"
-            size={20}
-            onPress={onShare}
-            color={colors.black70}
-          />
-          <IconMC
-            name={isBookmarked ? 'bookmark' : 'bookmark-outline'}
-            size={20}
-            style={{ marginLeft: 26 }}
-            onPress={onBookmark}
-            color={colors.black70}
-          />
+          <TouchableOpacity onPress={onShare}>
+            <Image
+              source={require('@src/assets/icons/share-outline.png')}
+              style={{ width: 20, height: 20 }}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={onBookmark}>
+            <Image
+              source={
+                isBookmarked
+                  ? require('@src/assets/icons/bookmark-filled.png')
+                  : require('@src/assets/icons/bookmark.png')
+              }
+              style={{ width: 20, height: 20, marginLeft: 26 }}
+            />
+          </TouchableOpacity>
         </View>
       </View>
-      {post.likes && (
+      {postLikes?.length > 0 ? (
         <View
           style={{
             ...fullscreenstyles.sectionContainer,
@@ -284,19 +298,19 @@ const FullscreenCard = ({
           <TouchableOpacity
             style={fullscreenstyles.rowContainer}
             onPress={goToUsers}>
-            {post.likes.map((_like, idx) => {
-              const img = _like.user.photo_url
+            {postLikes.map((value, key) => {
+              const img = value.user.photo_url
               return (
                 <View
-                  key={`user-saved-${idx}`}
+                  key={`user-like-${key}`}
                   style={{
                     borderColor: colors.white,
                     borderRadius: 20,
                     borderWidth: 1,
-                    marginLeft: idx !== 0 ? -16 : 0,
+                    marginLeft: key !== 0 ? -16 : 0,
                   }}>
                   <Image
-                    key={`image-user-saved-${idx}`}
+                    key={`image-user-like-${key}`}
                     source={
                       img
                         ? { uri: img }
@@ -315,28 +329,29 @@ const FullscreenCard = ({
           <View style={{ ...fullscreenstyles.rowContainer, marginLeft: 8 }}>
             <Text
               style={{
-                ...fontStyle.helveticaThin,
+                ...fontStyle.helvetica,
                 fontSize: 12,
                 marginRight: 4,
               }}>
               Liked By
             </Text>
-            <TouchableOpacity onPress={onUserPress(post.likes[0].user)}>
+            <TouchableOpacity onPress={onUserPress(postLikes[0].user)}>
               <Text
                 style={{
-                  ...fontStyle.helvetica,
+                  ...fontStyle.helveticaBold,
+                  fontWeight: '700',
                   fontSize: 12,
                   marginRight: 4,
                   color: colors.black100,
                 }}>
-                {post.likes[0].user.username}
+                {postLikes[0].user.username || postLikes[0].user.name}
               </Text>
             </TouchableOpacity>
-            {post && post.likes.length > 1 && (
+            {likeCount > 1 && (
               <>
                 <Text
                   style={{
-                    ...fontStyle.helveticaThin,
+                    ...fontStyle.helvetica,
                     fontSize: 12,
                     marginRight: 4,
                   }}>
@@ -345,17 +360,30 @@ const FullscreenCard = ({
                 <TouchableOpacity onPress={goToUsers}>
                   <Text
                     style={{
-                      ...fontStyle.helvetica,
+                      ...fontStyle.helveticaBold,
+                      fontWeight: '700',
                       fontSize: 12,
                       marginRight: 4,
                     }}>
-                    {`${post.likes.length - 1} others`}
+                    {`${likeCount - 1} others`}
                   </Text>
                 </TouchableOpacity>
               </>
             )}
           </View>
         </View>
+      ) : (
+        <Text
+          style={{
+            ...fontStyle.helvetica,
+            fontSize: 12,
+            marginRight: 4,
+            color: colors.black100,
+            marginLeft: 16,
+          }}>
+          Be the first to
+          <Text style={{ fontWeight: '500' }}>{` like`}</Text>
+        </Text>
       )}
     </View>
   )
@@ -365,13 +393,14 @@ const VerticalCart = ({
   user,
   width,
   post,
-  isLiked,
+  isPostLiked,
   onLayout,
   style,
   onPress,
   onUserPress,
   onShare,
   onLike,
+  likeCount,
 }: any) => {
   const maxTitile = 3000
   const title =
@@ -472,23 +501,26 @@ const VerticalCart = ({
           justifyContent: 'space-between',
         }}>
         <View style={{ flexDirection: 'row' }}>
-          <IconFa
-            name="heart"
-            onPress={onLike}
-            size={16}
-            color={isLiked ? colors.red2 : colors.black50}
-          />
+          <TouchableOpacity onPress={onLike}>
+            <Image
+              source={
+                isPostLiked
+                  ? require('@src/assets/icons/heart-filled.png')
+                  : require('@src/assets/icons/heart.png')
+              }
+              style={{ width: 16, height: 16 }}
+            />
+          </TouchableOpacity>
           <Font size="10.5px" color={colors.black70} padd="0 0 0 4px">
-            {post.like_count}
+            {likeCount}
           </Font>
         </View>
-
-        <IconMC
-          name="share-outline"
-          size={16}
-          onPress={onShare}
-          color={colors.black70}
-        />
+        <TouchableOpacity onPress={onShare}>
+          <Image
+            source={require('@src/assets/icons/share-outline.png')}
+            style={{ width: 16, height: 16 }}
+          />
+        </TouchableOpacity>
       </View>
     </View>
   )
@@ -502,9 +534,14 @@ class PostListItem extends React.Component<PostListItemType, any> {
     isPostLiked: this.props.isLiked,
     width: null,
     isPostBookmarked: this.props.isBookmarked,
+    likeCount: this.props.post.like_count,
+    postLikes: this.props.post.likes,
   }
   shouldComponentUpdate(nextProps, nextState) {
     if (this.state.isPostLiked !== nextState.isPostLiked) {
+      return true
+    }
+    if (this.state.isPostBookmarked !== nextState.isPostBookmarked) {
       return true
     }
     if (nextState.width !== this.state.width) {
@@ -531,19 +568,34 @@ class PostListItem extends React.Component<PostListItemType, any> {
   }
 
   _onLike = () => {
-    const { isLiked, addLikedPost, removeLikedPost } = this.props
+    const { addLikedPost, removeLikedPost, userAuth } = this.props
+    const { isPostLiked, likeCount, postLikes } = this.state
 
     if (!this.props.isAuth) {
       navigate('modals', { screen: 'LoginModal' })
     } else {
-      if (isLiked) {
+      let newLikeCount = likeCount
+      let newPostLikes = Immutable(postLikes)
+      if (isPostLiked) {
+        newLikeCount -= 1
         removeLikedPost(this.props.post.id)
+        if (newPostLikes?.length > 0) {
+          newPostLikes = newPostLikes.filter(val => val.user.id !== userAuth.id)
+        }
       } else {
-        addLikedPost(this.props.post)
+        newLikeCount += 1
+        addLikedPost(this.props.post.id)
+        if (newPostLikes?.length > 0) {
+          newPostLikes = newPostLikes.concat(Immutable({ user: userAuth }))
+        } else {
+          newPostLikes = Immutable([{ user: userAuth }])
+        }
       }
 
       this.setState(state => ({
         isPostLiked: !state.isPostLiked,
+        likeCount: newLikeCount,
+        postLikes: newPostLikes,
       }))
     }
   }
@@ -552,7 +604,7 @@ class PostListItem extends React.Component<PostListItemType, any> {
     if (!this.props.isAuth) {
       navigate('modals', { screen: 'LoginModal' })
     } else {
-      if (this.props.isBookmarked) {
+      if (this.state.isPostBookmarked) {
         this.props.removeBookmarkPost(this.props.post.id)
       } else {
         this.props.addBookmarkPost(this.props.post.id)
@@ -616,7 +668,13 @@ class PostListItem extends React.Component<PostListItemType, any> {
       style,
       type = 'default',
     } = this.props
-    const { width, isPostLiked, isPostBookmarked } = this.state
+    const {
+      width,
+      isPostLiked,
+      isPostBookmarked,
+      likeCount,
+      postLikes,
+    } = this.state
     if (post) {
       if (fullscreen) {
         return (
@@ -634,8 +692,10 @@ class PostListItem extends React.Component<PostListItemType, any> {
             onBookmark={this._onBookmark}
             onShare={this._onShare}
             onLayout={this._onLayout}
-            isLiked={isPostLiked}
+            isPostLiked={isPostLiked}
             isBookmarked={isPostBookmarked}
+            likeCount={likeCount}
+            postLikes={postLikes}
           />
         )
       } else {
@@ -651,7 +711,8 @@ class PostListItem extends React.Component<PostListItemType, any> {
             type={type}
             onShare={this._onShare}
             onLayout={this._onLayout}
-            isLiked={isPostLiked}
+            isPostLiked={isPostLiked}
+            likeCount={likeCount}
           />
         )
       }

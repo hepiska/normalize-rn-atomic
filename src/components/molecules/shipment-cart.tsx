@@ -19,6 +19,7 @@ interface ShipmentCartType {
   variantIds?: any
   addressId?: any
   warehouseId?: any
+  navigation?: any
 }
 
 const styles = StyleSheet.create({
@@ -71,6 +72,7 @@ class ShipmentCart extends React.PureComponent<ShipmentCartType, any> {
       variantIds,
       addressId,
       warehouseId,
+      navigation,
     } = this.props
 
     if (!shipment) {
@@ -131,6 +133,7 @@ class ShipmentCart extends React.PureComponent<ShipmentCartType, any> {
                   variantIds={variantIds}
                   addressId={addressId}
                   warehouseId={warehouseId}
+                  navigation={navigation}
                 />
               )
             })}

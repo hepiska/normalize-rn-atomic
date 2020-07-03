@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, StyleSheet, Text } from 'react-native'
+import { View, StyleSheet, Text, Image } from 'react-native'
 import { Font } from '@components/atoms/basic'
 import ImageAutoSchale from '@components/atoms/image-autoschale'
 import { connect } from 'react-redux'
@@ -22,6 +22,7 @@ import { fontStyle } from '../commont-styles'
 import { navigate } from '@src/root-navigation'
 import { images as defaultImages } from '@utils/constants'
 import FocusContainer from '@components/molecules/focus-container'
+import OrderDetailLoader from '@src/components/atoms/loaders/order-detail-loader'
 
 const CartHoc = cartListData(ProductSummaryCart)
 
@@ -92,7 +93,9 @@ const handleNavigate = (screen, screenName, params = {}) => () => {
 
 class OrderDetails extends React.PureComponent<any, any> {
   async componentDidMount() {
-    await this.props.getOrderById(this.props.orderId)
+    await this.props.getOrderById(
+      this.props.orderId || this.props.route.params.orderId,
+    )
   }
 
   buttonAction = [
@@ -311,15 +314,16 @@ class OrderDetails extends React.PureComponent<any, any> {
         return total
       }, 0)
 
-    const image =
-      null ||
-      (!!order.courier.image_url
-        ? changeImageUri(order.courier.image_url, { width: 54, height: 54 })
-        : defaultImages.product)
+    const imageCourier =
+      !!order?.courier.image_url &&
+      changeImageUri(order?.courier.image_url, { width: 54, height: 54 })
+    const thumbnailCourier =
+      !!order?.courier.image_url &&
+      changeImageUri(order?.courier.image_url, { width: 12, height: 12 })
 
     const getColor = this.orderStatus()
     if (!order) {
-      return null
+      return <OrderDetailLoader style={{ margin: 16 }} />
     }
     return (
       <View {...style} {...styles.container}>
@@ -470,11 +474,12 @@ class OrderDetails extends React.PureComponent<any, any> {
                   }}
                 />
               </View>
-              <ImageAutoSchale
-                source={require('@src/assets/icons/the-shonet-logo-black.png')}
-                width={54}
-                style={{ borderRadius: 8, marginLeft: 16 }}
-              />
+              <View style={{ marginLeft: 16 }}>
+                <Image
+                  source={require('@src/assets/icons/the-shonet-logo-black.png')}
+                  style={{ borderRadius: 8, width: 54, height: 54 }}
+                />
+              </View>
               <View style={{ marginLeft: 16 }}>
                 <Text
                   style={{
@@ -541,29 +546,27 @@ class OrderDetails extends React.PureComponent<any, any> {
                   }}
                 />
               </View>
-              {/* <ImageAutoSchale
-                source={{ uri: order.courier.image_url }}
-                width={54}
-                style={{ borderRadius: 8, marginLeft: 16 }}
-              /> */}
-              <ImageAutoSchale
-                errorStyle={{ width: 54, height: 54 }}
-                // thumbnailSource={
-                //   typeof thumbnailImage === 'string'
-                //     ? { uri: thumbnailImage }
-                //     : thumbnailImage
-                // }
-                showErrorIcon={false}
-                source={
-                  typeof image === 'string'
-                    ? {
-                        uri: image,
-                      }
-                    : image
-                }
-                width={54}
-                style={{ borderRadius: 8, marginLeft: 16 }}
-              />
+              <View style={{ marginLeft: 16 }}>
+                <ImageAutoSchale
+                  errorStyle={{ width: 54, height: 54 }}
+                  thumbnailSource={
+                    typeof thumbnailCourier === 'string'
+                      ? {
+                          uri: thumbnailCourier,
+                        }
+                      : thumbnailCourier
+                  }
+                  source={
+                    typeof imageCourier === 'string'
+                      ? {
+                          uri: imageCourier,
+                        }
+                      : imageCourier
+                  }
+                  width={54}
+                  style={{ borderRadius: 8 }}
+                />
+              </View>
               <View style={{ marginLeft: 16 }}>
                 <Text
                   style={{
@@ -650,14 +653,13 @@ class OrderDetails extends React.PureComponent<any, any> {
               <>
                 <View
                   style={{
-                    marginTop: 12,
+                    // marginTop: 12,
                     flexDirection: 'row',
                     alignItems: 'center',
                   }}>
-                  <ImageAutoSchale
+                  <Image
                     source={{ uri: order.provider_payment_method.image }}
-                    width={88}
-                    style={{ borderRadius: 8 }}
+                    style={{ borderRadius: 8, width: 88, height: 66 }}
                   />
                   <View style={{ marginLeft: 16 }}>
                     <Text

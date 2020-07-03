@@ -9,18 +9,22 @@ import {
   addBookmarkPost,
   removeBookmarkPost,
 } from '@modules/post-bookmarked/action'
+import { makePostBookmarked } from '@src/modules/post-bookmarked/selector'
 
 const postListMap = () => {
   const getPost = makeGetPost()
   const getUser = makeGetUser()
   const getIsLiked = makePostLiked()
+  const getIsBookmarked = makePostBookmarked()
 
   return (state, ownProps) => {
     const { postId } = ownProps
     const post = getPost(state, postId)
     const user = getUser(state, post.user)
     const isLiked = getIsLiked(state, postId)
-    const isBookmarked = !!state.postsBookmarked.data[postId]
+    const isBookmarked = getIsBookmarked(state, postId)
+    const userAuth =
+      getUser(state, state.auth.data.user.id) || state.auth.data.user
 
     return {
       post,
@@ -28,6 +32,7 @@ const postListMap = () => {
       isLiked,
       isBookmarked,
       isAuth: state.auth.isAuth,
+      userAuth,
     }
   }
 }
@@ -43,6 +48,8 @@ const searchPostListMap = () => {
     const user = post.user
     const isLiked = getIsLiked(state, postId)
     const isBookmarked = !!state.postsBookmarked.data[postId]
+    const userAuth =
+      getUser(state, state.auth.data.user.id) || state.auth.data.user
 
     return {
       post,
@@ -50,6 +57,7 @@ const searchPostListMap = () => {
       isLiked,
       isBookmarked,
       isAuth: state.auth.isAuth,
+      userAuth,
     }
   }
 }

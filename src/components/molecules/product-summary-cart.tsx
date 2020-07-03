@@ -77,36 +77,25 @@ class ProductSummaryCart extends React.PureComponent<
       const random = Math.floor(Math.random() * images.length)
 
       image =
-        this.state.defaultImage ||
-        (!!variant.image_urls[random]
-          ? changeImageUri(images[random], { width: 60, height: 80 })
-          : defaultImages.product)
-      thumbnailImage = this.state.defaultImage
-        ? null
-        : !!images[random] &&
-          changeImageUri(images[random], { width: 60, height: 80 })
-    }
-    if (variant.image_url) {
-      image =
-        this.state.defaultImage ||
-        (!!variant.image_url
-          ? changeImageUri(variant.image_url, { width: 60, height: 80 })
-          : defaultImages.product)
-      thumbnailImage = this.state.defaultImage
-        ? null
-        : !!variant.image_url &&
-          changeImageUri(variant.image_url, { width: 60, height: 80 })
-    }
-    if (variant.variant.image_url) {
-      image =
-        this.state.defaultImage ||
-        (!!variant.variant.image_url
-          ? changeImageUri(variant.variant.image_url, { width: 60, height: 80 })
-          : defaultImages.product)
-      thumbnailImage = this.state.defaultImage
-        ? null
-        : !!variant.variant.image_url &&
-          changeImageUri(variant.variant.image_url, { width: 60, height: 80 })
+        !!variant.image_urls[random] &&
+        changeImageUri(images[random], { width: 60, height: 80 })
+      thumbnailImage =
+        !!variant.image_urls[random] &&
+        changeImageUri(images[random], { width: 24, height: 30 })
+    } else if (variant.image_url) {
+      image = !!variant.image_url
+        ? changeImageUri(variant.image_url, { width: 60, height: 80 })
+        : defaultImages.product
+      thumbnailImage =
+        !!variant.image_url &&
+        changeImageUri(variant.image_url, { width: 60, height: 80 })
+    } else if (variant.variant.image_url) {
+      image = !!variant.variant.image_url
+        ? changeImageUri(variant.variant.image_url, { width: 60, height: 80 })
+        : defaultImages.product
+      thumbnailImage =
+        !!variant.variant.image_url &&
+        changeImageUri(variant.variant.image_url, { width: 60, height: 80 })
     }
     return (
       <>
@@ -120,7 +109,7 @@ class ProductSummaryCart extends React.PureComponent<
             }
           }
         />
-        <View {...style} {...styles.container}>
+        <View style={{ ...styles.container, ...style }}>
           <Div flexDirection="row" alignItems="center">
             <ImageAutoSchale
               errorStyle={{ width: 60, height: 80 }}
@@ -129,7 +118,6 @@ class ProductSummaryCart extends React.PureComponent<
                   ? { uri: thumbnailImage }
                   : thumbnailImage
               }
-              showErrorIcon={false}
               source={
                 typeof image === 'string'
                   ? {
@@ -211,11 +199,11 @@ class ProductSummaryCart extends React.PureComponent<
                   )
                 })}
               </Div>
-              <Font {...helveticaBlackBold} _margin="16px 0 0 0">
+              <Text style={{ ...helveticaBlackBold, marginTop: 16 }}>
                 {formatRupiah(
                   (variant.price || variant.variant.price) * cart.qty,
                 ) || '0'}
-              </Font>
+              </Text>
             </Div>
           </Div>
         </View>

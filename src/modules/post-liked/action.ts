@@ -88,10 +88,10 @@ export const addLikedPost = postId => {
   return {
     type: API,
     payload: {
-      url: '/posts/' + getMe().id + '/likes',
+      url: '/posts/' + postId + '/likes',
       requestParams: {
         method: 'POST',
-        data: { post_id: postId },
+        // data: { post_id: postId },
       },
       startNetwork: () => postLikedLoading(true),
       success: () => {
@@ -108,10 +108,10 @@ export const removeLikedPost = postId => {
   return {
     type: API,
     payload: {
-      url: '/posts/' + getMe().id + '/likes',
+      url: '/posts/' + postId + '/likes',
       requestParams: {
         method: 'DELETE',
-        data: { post_id: postId },
+        // data: { post_id: postId },
       },
       startNetwork: () => postLikedLoading(true),
       success: () => {

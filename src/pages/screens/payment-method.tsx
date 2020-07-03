@@ -63,6 +63,7 @@ class PaymentMethodPage extends Component<any, any> {
           params: {
             transactionId,
             from: 'notification',
+            holdOpenWeb: true,
           },
         })
       }

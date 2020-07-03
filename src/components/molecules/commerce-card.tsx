@@ -46,13 +46,23 @@ class CommerceCard extends React.PureComponent<CommerceCardType, any> {
       })
     }
     if (commerce.target.type === 'transaction') {
-      navigation.replace('Screens', {
-        screen: 'PaymentMethod',
-        params: {
-          transactionId: commerce.target.data.id,
-          from: 'notification',
-        },
-      })
+      if (commerce.action === 'COMMERCE_TRANSACTION_PAID') {
+        navigation.replace('Screens', {
+          screen: 'PaymentWaiting',
+          params: {
+            transactionId: commerce.target.data.id,
+            from: 'notification',
+          },
+        })
+      } else {
+        navigation.replace('Screens', {
+          screen: 'PaymentMethod',
+          params: {
+            transactionId: commerce.target.data.id,
+            from: 'notification',
+          },
+        })
+      }
     }
   }
   renderStatusCommerce = () => {

@@ -75,21 +75,25 @@ export const getSearchPost = (params, url) => ({
     },
     success: (data, { pagination }) => {
       const newPosts = new schema.Entity('search_post')
-      const normalizedPost = normalize(data.posts, [newPosts])
+      let normalizedPost
+      let dispatchers
+      if (data.posts) {
+        normalizedPost = normalize(data.posts, [newPosts])
+        dispatchers = [
+          setSearchData(normalizedPost.entities.search_post),
+          setSearchLoading(false),
+        ]
 
-      const dispatchers = [
-        setSearchData(normalizedPost.entities.search_post),
-        setSearchLoading(false),
-      ]
-
-      if (params.offset > 0) {
-        dispatchers.push(addSearchOrder(normalizedPost.result))
-        dispatchers.push(setPagination(pagination.articles))
-      } else {
-        dispatchers.push(setSearchOrder(normalizedPost.result))
-        dispatchers.push(setPagination(pagination.articles))
+        if (params.offset > 0) {
+          dispatchers.push(addSearchOrder(normalizedPost.result))
+          dispatchers.push(setPagination(pagination.articles))
+        } else {
+          dispatchers.push(setSearchOrder(normalizedPost.result))
+          dispatchers.push(setPagination(pagination.articles))
+        }
       }
-      return data ? dispatchers : [setSearchLoading(false)]
+
+      return data.posts ? dispatchers : [setSearchLoading(false)]
     },
   },
 })

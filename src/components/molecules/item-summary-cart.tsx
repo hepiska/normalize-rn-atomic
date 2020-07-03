@@ -1,14 +1,7 @@
 import React from 'react'
 import { StyleSheet, ViewStyle, View, Dimensions, Text } from 'react-native'
 import { connect } from 'react-redux'
-import Tooltip from 'rn-tooltip'
-import { Font } from '@components/atoms/basic'
-import {
-  helveticaBlackFont12,
-  helveticaBlackFont14,
-  helveticaBlackTitleBold,
-  fontStyle,
-} from '@components/commont-styles'
+import { helveticaBlackTitleBold, fontStyle } from '@components/commont-styles'
 import { colors } from '@utils/constants'
 import { formatRupiah } from '@utils/helpers'
 import Icon from 'react-native-vector-icons/FontAwesome5'
@@ -226,9 +219,11 @@ class ItemSummaryCart extends React.PureComponent<ItemSummaryCartType, any> {
     const showItem = isProductExpand ? item.data.length : itemToShow
     return (
       <View
-        {...style}
-        {...styles.container}
-        style={{ marginTop: index !== 0 ? 40 : 24 }}>
+        style={{
+          marginTop: index !== 0 ? 40 : 24,
+          ...styles.container,
+          ...style,
+        }}>
         <View {...styles.warehouse}>
           <Icon name="warehouse" size={14} color={colors.black80} />
           <View style={{ paddingLeft: 8 }}>
@@ -252,10 +247,10 @@ class ItemSummaryCart extends React.PureComponent<ItemSummaryCartType, any> {
 
         {/* shipment courier */}
         <View style={{ marginTop: 30 }}>
-          <Font {...helveticaBlackTitleBold} color={colors.black80}>
+          <Text style={{ ...helveticaBlackTitleBold, color: colors.black80 }}>
             Shipment Courier
-          </Font>
-          <View {...styles.shipmentCourier}>
+          </Text>
+          <View style={{ ...styles.shipmentCourier }}>
             <Icon name="business-time" size={16} color={colors.black100} />
             <View style={{ marginLeft: 16 }}>
               <Text style={{ ...styles.helvetica12, color: colors.black100 }}>
@@ -373,7 +368,7 @@ class ItemSummaryCart extends React.PureComponent<ItemSummaryCartType, any> {
           }
           content={
             <>
-              <View {...styles.orderSummaryDetail}>
+              <View style={{ ...styles.orderSummaryDetail }}>
                 <Text style={{ ...styles.helvetica14, color: colors.black70 }}>
                   {`Product Total • ${item.data.length} Items`}
                 </Text>
@@ -381,7 +376,7 @@ class ItemSummaryCart extends React.PureComponent<ItemSummaryCartType, any> {
                   {formatRupiah(productTotal)}
                 </Text>
               </View>
-              <View {...styles.orderSummaryDetail}>
+              <View style={{ ...styles.orderSummaryDetail }}>
                 <Text style={{ ...styles.helvetica14, color: colors.black70 }}>
                   {`Shipping Cost`}
                 </Text>

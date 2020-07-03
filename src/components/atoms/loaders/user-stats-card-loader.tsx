@@ -3,7 +3,7 @@ import { View, ViewStyle } from 'react-native'
 import ContentLoader from 'react-content-loader/native'
 import { Rect, Circle } from 'react-native-svg'
 import { shimmerLoader } from '@utils/constants'
-import CircleLoader from './cirle'
+import CircleLoader from './circle-loader'
 import LineLoader from './line'
 
 interface LoaderPropsType {

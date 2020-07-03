@@ -194,7 +194,7 @@ class PaymentWaiting extends Component<any, any> {
       await this.callApi
       this.interval = setInterval(this.callApi, 10000)
     }
-    if (transaction) {
+    if (transaction && transaction?.status !== 'PAID') {
       if (!holdOpenWeb) {
         this.handleTransaction()
       }
@@ -210,7 +210,7 @@ class PaymentWaiting extends Component<any, any> {
 
   componentDidUpdate(prevProps) {
     const { transaction } = this.props
-    if (prevProps.transaction.expiring_at !== transaction.expiring_at) {
+    if (prevProps.transaction?.expiring_at !== transaction?.expiring_at) {
       clearInterval(this.interval)
       clearInterval(this.count)
       const expired = transaction.expiring_at
@@ -487,7 +487,7 @@ class PaymentWaiting extends Component<any, any> {
 
   renderFooterButton = () => {
     const { transaction } = this.props
-    if (!transaction.provider_payment_method) {
+    if (!transaction.provider_payment_method || transaction.status === 'PAID') {
       return null
     }
 
@@ -657,7 +657,7 @@ class PaymentWaiting extends Component<any, any> {
     const { transaction } = this.props
     const { finishAnimation } = this.state
     if (!transaction) {
-      return null
+      return <PaymentWaitingLoader style={{ margin: 16 }} />
     }
     return (
       <>

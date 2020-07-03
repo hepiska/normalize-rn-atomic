@@ -11,7 +11,6 @@ interface ProductOverviewCart {
   image: any
   brand: string
   name: string
-  sale?: boolean
 }
 
 const styles = StyleSheet.create({
@@ -21,18 +20,12 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginRight: 16,
   },
-  saleIcon: {
-    width: 56,
-    height: 26,
-    marginBottom: 8,
-  },
 })
 
 const ProductOverviewCart: React.FC<ProductOverviewCart> = ({
   image,
   brand,
   name,
-  sale = false,
 }) => {
   if (image.uri) {
     image.uri = setImage(image.uri, {
@@ -45,12 +38,6 @@ const ProductOverviewCart: React.FC<ProductOverviewCart> = ({
     <Div _direction="row" align="flex-start" _margin="0px 0px 24px">
       <Img source={image} style={styles.image} />
       <Div align="flex-start">
-        {sale && (
-          <Img
-            source={require('../../assets/icons/badge-sale.png')}
-            style={styles.saleIcon}
-          />
-        )}
         <Font
           type="HelveticaNeue"
           size={16}

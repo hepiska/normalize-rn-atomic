@@ -86,6 +86,7 @@ class HorizontalList extends React.Component<HorizontalListType, any> {
                   marginLeft: index === 0 ? 16 : 8,
                 }}
                 idx={index}
+                fullscreen
               />
             </View>
           )

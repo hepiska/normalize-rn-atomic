@@ -17,7 +17,7 @@ import { ScrollView } from 'react-native-gesture-handler'
 import SearchProductResultPart1 from './search-product-result-segment-1'
 import SearchProductResultPart2 from './search-product-result-segment-2'
 
-import EmtyState from '@components/molecules/order-empty-state'
+import EmptyState from '@components/molecules/order-empty-state'
 
 const { width } = Dimensions.get('screen')
 
@@ -64,17 +64,34 @@ class SearchProductResult extends Component<SearchProductType, any> {
     })
   }
 
-  emtyComponent = () => {
+  emptyComponent = () => {
     const { searchKey, loading } = this.props
 
     if (loading) return null
 
-    const title = searchKey.length > 2 ? 'No Brand' : 'Please Fill keyword'
+    const title =
+      searchKey.length > 2 ? 'No Result Found' : 'Find product you love'
     const desc =
       searchKey.length > 2
-        ? 'We Dont find any Product for this Keyword'
-        : 'Please Fill keyword'
-    return <EmtyState title={title} description={desc} />
+        ? ''
+        : 'You can type brand, product tittle to find something that you will love'
+    return (
+      <EmptyState
+        title={
+          <Text
+            style={{
+              ...fontStyle.playfairBold,
+              fontSize: 24,
+              color: colors.black100,
+              fontWeight: '700',
+            }}>
+            {title}
+          </Text>
+        }
+        description={desc}
+        img={require('@src/assets/placeholder/searching-for-the-search-result.png')}
+      />
+    )
   }
 
   renderComponent = () => {
@@ -100,7 +117,7 @@ class SearchProductResult extends Component<SearchProductType, any> {
         {this.state.finishAnimation
           ? searchKey !== ''
             ? this.renderComponent()
-            : this.emtyComponent()
+            : this.emptyComponent()
           : null}
         {}
       </View>

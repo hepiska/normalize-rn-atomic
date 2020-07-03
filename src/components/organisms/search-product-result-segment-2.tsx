@@ -24,7 +24,7 @@ import { colors } from '@src/utils/constants'
 import { fontStyle } from '../commont-styles'
 import { Button, OutlineButton } from '@components/atoms/button'
 import isEqual from 'lodash/isEqual'
-import SearchEmptyState from '@components/molecules/search-empty-state'
+import EmptyState from '@components/molecules/order-empty-state'
 import SearchResultCard from '../molecules/search-result-card'
 import SelectAblePill from '@components/organisms/selectable-pill'
 
@@ -265,17 +265,27 @@ class SearchList extends Component<any, any> {
     if (!this.startSearch) {
       return (
         <View>
-          <SearchEmptyState
+          <EmptyState
             img={require('../../assets/placeholder/searching-for-the-search-result.png')}
-            title="Find Something here"
-            description="Let’s find out product you love at shop page"
+            title={
+              <Text
+                style={{
+                  ...fontStyle.playfairBold,
+                  fontSize: 24,
+                  color: colors.black100,
+                  fontWeight: '700',
+                }}>
+                Find product you love
+              </Text>
+            }
+            description="You can type brand, product tittle to find something that you will love"
           />
         </View>
       )
     } else {
       return (
         <View>
-          <SearchEmptyState
+          <EmptyState
             img={require('../../assets/placeholder/theshonet-not-found.png')}
             title="No result found..."
           />

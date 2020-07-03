@@ -62,7 +62,13 @@ class LikeListModal extends React.Component<any, any> {
   }
   _keyExtractor = (item, index) => '' + item + index
   _emptyComponent = () => {
-    return <Text>No Like yet</Text>
+    return (
+      <>
+        <LikeListLoader style={{ margin: 4 }} />
+        <LikeListLoader style={{ margin: 4 }} />
+        <LikeListLoader style={{ margin: 4 }} />
+      </>
+    )
   }
   _renderItem = ({ item, index }) => {
     const { loading } = this.props

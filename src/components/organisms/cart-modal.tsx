@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, InteractionManager } from 'react-native'
+import { StyleSheet, InteractionManager, Text } from 'react-native'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
@@ -14,7 +14,8 @@ import { addCart, changeVariant } from '@modules/cart/action'
 import { images, colors } from '@utils/constants'
 import { formatRupiah, deepClone } from '@utils/helpers'
 import CartModalLoader from '@components/atoms/loaders/cart-modal-loader'
-// import CircleLoader from '@components/atoms/loaders/cirle'
+import { fontStyle } from '../commont-styles'
+// import CircleLoader from '@components/atoms/loaders/circle-loader'
 
 const AbsDiv = styled(Div)`
   position: absolute;
@@ -192,7 +193,6 @@ class CartModal extends React.Component<any, any> {
               }
               brand={brand.name.toUpperCase()}
               name={product.name}
-              sale // revisi: diubah data dari BE
             />
             <ProductAttributes
               filteredAttributes={filteredAttributes}
@@ -208,16 +208,24 @@ class CartModal extends React.Component<any, any> {
               _background={colors.white}
               style={styles.bottomSheet}>
               <Div _flex={0.5} align="flex-start">
-                <Font
-                  type="title"
-                  color={colors.black100}
-                  size={12}
-                  _margin="0px 0px 8px">
+                <Text
+                  style={{
+                    ...fontStyle.helvetica,
+                    fontSize: 13,
+                    color: colors.gray1,
+                    marginBottom: 8,
+                  }}>
                   Product Price
-                </Font>
-                <Font type="title" color={colors.red2} size={18}>
+                </Text>
+                <Text
+                  style={{
+                    ...fontStyle.helveticaBold,
+                    fontWeight: '700',
+                    fontSize: 18,
+                    color: colors.gray1,
+                  }}>
                   {formatRupiah(product.max_price)}
-                </Font>
+                </Text>
               </Div>
               <Div _flex={0.5} align="flex-end">
                 <GradientButton

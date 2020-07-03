@@ -12,6 +12,10 @@ import { selectOrderCount } from '@modules/order/selector'
 import { colors } from '@utils/constants'
 
 const styles = StyleSheet.create({
+  helvetica9: {
+    ...fontStyle.helvetica,
+    fontSize: 9,
+  },
   helvetica10: {
     ...fontStyle.helvetica,
     fontSize: 10,
@@ -20,6 +24,12 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 0,
     right: 12,
+    backgroundColor: colors.red2,
+    width: 14,
+    height: 14,
+    borderRadius: 100,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 })
 
@@ -129,9 +139,18 @@ const TransactionOrderAction = props => {
                 }}>
                 {value.label}
               </Text>
-              <View style={styles.absoluteCount}>
-                <Text style={styles.helvetica10}>{count}</Text>
-              </View>
+              {count > 0 && (
+                <View style={styles.absoluteCount}>
+                  <Text
+                    style={{
+                      ...styles.helvetica9,
+                      fontWeight: '600',
+                      color: colors.white,
+                    }}>
+                    {count}
+                  </Text>
+                </View>
+              )}
             </View>
           </TouchableOpacity>
         )

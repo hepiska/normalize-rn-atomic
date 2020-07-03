@@ -11,6 +11,7 @@ import { getOptionShipment } from '@modules/shipment/action'
 import ShipmentCart from '@components/molecules/shipment-cart'
 import { shipmentListData } from '@hocs/data/shipment'
 import CourierLoader from '@src/components/atoms/loaders/courier-loader'
+import EmptyState from '@components/molecules/order-empty-state'
 
 const ShipmentHoc = shipmentListData(ShipmentCart)
 
@@ -59,9 +60,20 @@ class ChooseCourierPage extends Component<any, any> {
     })
   }
   render() {
-    const { shipments, cartId, addressId, variantIds, warehouseId } = this.props
+    const {
+      shipments,
+      cartId,
+      addressId,
+      variantIds,
+      warehouseId,
+      loading,
+      navigation,
+    } = this.props
     const { finishAnimation } = this.state
 
+    if (loading) {
+      return <CourierLoader style={{ marginHorizontal: 16 }} />
+    }
     return (
       <>
         <NavbarTop title="Shipment Courier" leftContent={['back']} />
@@ -79,19 +91,27 @@ class ChooseCourierPage extends Component<any, any> {
                 </View>
               </View>
 
-              {shipments[warehouseId]?.map((value, key) => {
-                return (
-                  <ShipmentHoc
-                    key={`shipment-${key}`}
-                    style={{ marginTop: 16 }}
-                    shipmentId={value}
-                    index={key}
-                    variantIds={variantIds}
-                    addressId={addressId}
-                    warehouseId={warehouseId}
-                  />
-                )
-              })}
+              {shipments[warehouseId].length === 0 ? (
+                <EmptyState
+                  title={`Oops...`}
+                  description="Your address doesn't support by any shipment courier"
+                />
+              ) : (
+                shipments[warehouseId]?.map((value, key) => {
+                  return (
+                    <ShipmentHoc
+                      key={`shipment-${key}`}
+                      style={{ marginTop: 16 }}
+                      shipmentId={value}
+                      index={key}
+                      variantIds={variantIds}
+                      addressId={addressId}
+                      warehouseId={warehouseId}
+                      navigation={navigation}
+                    />
+                  )
+                })
+              )}
             </View>
           </ScrollDiv>
         ) : (
@@ -126,6 +146,7 @@ const mapStateToProps = (state, ownProps) => {
     addressId: props.addressId,
     shipments: state.shipments.order,
     warehouseId: props.warehouseId,
+    loading: state.shipments.loading,
   }
 }
 

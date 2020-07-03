@@ -183,12 +183,26 @@ class SearchPostResult extends Component<SearchPostType, any> {
   emptyState = () => {
     const { searchKey, loading } = this.props
     if (loading) return null
-    const title = searchKey.length > 2 ? 'No User' : 'Please Fill keyword'
-    const desc =
-      searchKey.length > 2
-        ? 'We Dont find any user for this Keyword'
-        : 'Please Fill keyword'
-    return <EmptyState title={title} description={desc} />
+    const title =
+      searchKey.length > 2 ? 'No Result Found' : 'Please Fill keyword'
+    const desc = searchKey.length > 2 ? '' : 'Please Fill keyword'
+    return (
+      <EmptyState
+        title={
+          <Text
+            style={{
+              ...fontStyle.playfairBold,
+              fontSize: 24,
+              color: colors.black100,
+              fontWeight: '700',
+            }}>
+            {title}
+          </Text>
+        }
+        description={desc}
+        img={require('@src/assets/placeholder/empty-post.png')}
+      />
+    )
   }
 
   _renderFooterLoader = () => {

@@ -10,7 +10,7 @@ import { dispatch } from '@src/root-navigation'
 import { fontStyle } from '../commont-styles'
 import { makeMapCategories } from '@modules/search-product/selector'
 import ProductSearchLoader from '@components/atoms/loaders/product-search'
-import EmtyState from '@components/molecules/order-empty-state'
+import EmptyState from '@components/molecules/order-empty-state'
 import { productSearchListData } from '@hocs/data/product'
 import { StackActions } from '@react-navigation/native'
 
@@ -166,15 +166,29 @@ const SearchProductResultPart1 = ({
     ) : null
   }, [categories.length, searchKey, products.length, loading])
 
-  const emtyComponent = useMemo(() => {
+  const emptyComponent = useMemo(() => {
     if (loading) return <ProductSearchLoader style={{ marginHorizontal: 16 }} />
 
-    const title = searchKey.length > 2 ? 'No Product' : 'Please Fill keyword'
-    const desc =
-      searchKey.length > 2
-        ? 'We Dont find any product for this Keyword'
-        : 'Please Fill keyword'
-    return <EmtyState title={title} description={desc} />
+    const title =
+      searchKey.length > 2 ? 'No Result Found' : 'Please Fill keyword'
+    const desc = searchKey.length > 2 ? '' : 'Please Fill keyword'
+    return (
+      <EmptyState
+        title={
+          <Text
+            style={{
+              ...fontStyle.playfairBold,
+              fontSize: 24,
+              color: colors.black100,
+              fontWeight: '700',
+            }}>
+            {title}
+          </Text>
+        }
+        description={desc}
+        img={require('@src/assets/placeholder/searching-for-the-search-result.png')}
+      />
+    )
   }, [searchKey, loading, categories])
 
   return (
@@ -185,7 +199,7 @@ const SearchProductResultPart1 = ({
         ListHeaderComponent={renderHeader}
         onEndReachedThreshold={0.9}
         layoutType="normal"
-        ListEmptyComponent={emtyComponent}
+        ListEmptyComponent={emptyComponent}
         renderItem={renderitem}
         keyExtractor={(item, index) =>
           'search-product-listt' + index + ':' + item

@@ -34,6 +34,7 @@ interface CourierCartType {
   courierId?: any
   warehouseId?: any
   isSelected?: boolean
+  navigation?: any
 }
 
 const styles = StyleSheet.create({
@@ -95,6 +96,7 @@ class CourierCart extends React.PureComponent<CourierCartType, any> {
       warehouseId,
       courier,
       addShippingMethodData,
+      navigation,
     } = this.props
 
     changeOptionShipment(variantIds, shippingMethodId, addressId)
@@ -103,6 +105,7 @@ class CourierCart extends React.PureComponent<CourierCartType, any> {
       id: warehouseId,
       shipping: courier,
     })
+    navigation.goBack()
   }
 
   render() {
@@ -119,11 +122,9 @@ class CourierCart extends React.PureComponent<CourierCartType, any> {
       isSelected,
     } = this.props
 
-    const image =
-      this.state.defaultImage ||
-      (!!courier.courier.image_url
-        ? changeImageUri(courier.courier.image_url, { ...styles.image })
-        : defaultImages.product)
+    const image = !!courier?.courier?.image_url
+      ? changeImageUri(courier?.courier?.image_url, { ...styles.image })
+      : defaultImages.product
 
     if (type === 'choose-courier') {
       return (

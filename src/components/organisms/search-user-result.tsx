@@ -8,7 +8,7 @@ import { connect } from 'react-redux'
 import FollowCard from '@components/molecules/follow-card'
 import { searchUserListData } from '@hocs/data/user'
 import FollowListLoader from '@components/atoms/loaders/follow-list'
-import EmtyState from '@components/molecules/order-empty-state'
+import EmptyState from '@components/molecules/order-empty-state'
 import List from '@components/layouts/list-header'
 import { dispatch } from '@src/root-navigation'
 import { StackActions } from '@react-navigation/native'
@@ -120,17 +120,31 @@ class SearchUserResult extends PureComponent<SearchUserType, any> {
     )
   }
 
-  emtyComponent = () => {
+  emptyComponent = () => {
     const { searchKey, loading } = this.props
 
     if (loading) return null
 
-    const title = searchKey.length > 2 ? 'No User' : 'Please Fill keyword'
-    const desc =
-      searchKey.length > 2
-        ? 'We Dont find any user for this Keyword'
-        : 'Please Fill keyword'
-    return <EmtyState title={title} description={desc} />
+    const title =
+      searchKey.length > 2 ? 'No Result Found' : 'Please Fill keyword'
+    const desc = searchKey.length > 2 ? '' : 'Please Fill keyword'
+    return (
+      <EmptyState
+        title={
+          <Text
+            style={{
+              ...fontStyle.playfairBold,
+              fontSize: 24,
+              color: colors.black100,
+              fontWeight: '700',
+            }}>
+            {title}
+          </Text>
+        }
+        description={desc}
+        img={require('@src/assets/placeholder/greeting-card-before-login.png')}
+      />
+    )
   }
 
   _keyExtractor = (item, key) => {
@@ -149,7 +163,7 @@ class SearchUserResult extends PureComponent<SearchUserType, any> {
           onEndReachedThreshold={0.9}
           onEndReached={this.onReachedEnd}
           keyExtractor={this._keyExtractor}
-          ListEmptyComponent={this.emtyComponent}
+          ListEmptyComponent={this.emptyComponent}
           ListFooterComponent={this._renderFooterLoader}
           getItemLayout={(data, index) => ({
             length: userCardHeight,

@@ -61,6 +61,18 @@ const userReducer: Reducer<UserState> = (
     case notificationActionType.SET_NOTIFICATION_LOADING:
       newState.loading[action.payload.key] = action.payload.loading
       return newState
+    case notificationActionType.CLEAR_NOTIFICATION:
+      newState.data['ecommerce'] = Immutable({})
+      newState.data['announcement'] = Immutable({})
+      newState.data['social'] = Immutable({})
+      newState.order_ecommerce = Immutable([])
+      newState.order_announcement = Immutable([])
+      newState.order_social = Immutable([])
+      newState.pagination['ecommerce'] = {}
+      newState.pagination['announcement'] = {}
+      newState.pagination['social'] = {}
+
+      return newState
     default:
       return state
   }

@@ -8,7 +8,7 @@ import { connect } from 'react-redux'
 import { searchBrandListData } from '@hocs/data/brand'
 import BrandHorizontalCard from '@components/molecules/brand-horizontal-card'
 import List from '@components/layouts/list-header'
-import EmtyState from '@components/molecules/order-empty-state'
+import EmptyState from '@components/molecules/order-empty-state'
 import { dispatch } from '@src/root-navigation'
 import { StackActions } from '@react-navigation/native'
 import BrandListLoader from '@components/atoms/loaders/brand-list'
@@ -116,17 +116,31 @@ class SearchBrandResult extends Component<SearchBrandType, any> {
     )
   }
 
-  emtyComponent = () => {
+  emptyComponent = () => {
     const { searchKey, loading } = this.props
 
     if (loading) return null
 
-    const title = searchKey.length > 2 ? 'No Brand' : 'Please Fill keyword'
-    const desc =
-      searchKey.length > 2
-        ? 'We Dont find any brand for this Keyword'
-        : 'Please Fill keyword'
-    return <EmtyState title={title} description={desc} />
+    const title =
+      searchKey.length > 2 ? 'No Result Found' : 'Please Fill keyword'
+    const desc = searchKey.length > 2 ? '' : 'Please Fill keyword'
+    return (
+      <EmptyState
+        title={
+          <Text
+            style={{
+              ...fontStyle.playfairBold,
+              fontSize: 24,
+              color: colors.black100,
+              fontWeight: '700',
+            }}>
+            {title}
+          </Text>
+        }
+        description={desc}
+        img={require('@src/assets/placeholder/theshonet-no-followers.png')}
+      />
+    )
   }
 
   _keyExtractor = (item, key) => {
@@ -148,7 +162,7 @@ class SearchBrandResult extends Component<SearchBrandType, any> {
             ListHeaderComponent={this.renderHeader}
             onEndReachedThreshold={0.9}
             onReachedEnd={this.onReachedEnd}
-            ListEmptyComponent={this.emtyComponent}
+            ListEmptyComponent={this.emptyComponent}
             keyExtractor={this._keyExtractor}
             getItemLayout={(data, index) => ({
               length: brandCardHeight,
