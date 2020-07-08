@@ -9,8 +9,10 @@ interface UserState {
   reachedEnd: boolean
   readonly trendingOrder: Object
   readonly order: Array<number>
+  readonly specificUserOrder: Object
   readonly notification: Object
   pagination: Object
+  specificUserPagination: Object
   loadings: Object
   readonly loading: Boolean
   readonly error?: ErrorType
@@ -18,10 +20,12 @@ interface UserState {
 const initialState: UserState = {
   data: Immutable({}),
   order: Immutable([]),
+  specificUserOrder: Immutable({}),
   reachedEnd: false,
   trendingOrder: Immutable([]),
   notification: Immutable({}),
   pagination: {},
+  specificUserPagination: {},
   loadings: {},
   loading: false,
   error: null,
@@ -65,11 +69,32 @@ const userReducer: Reducer<UserState> = (
       newState.order = Immutable(action.payload)
       return newState
 
+    case userActionType.SET_SPECIFIC_USER_ORDER:
+      newState.specificUserOrder = Immutable.merge(newState.specificUserOrder, {
+        [action.payload.userid]: action.payload.order,
+      })
+      return newState
+
+    case userActionType.CLEAR_USER_ORDER:
+      newState.order = Immutable([])
+      return newState
+
     case userActionType.SET_USER_ORDER_PAGINATION:
       newState.order = newState.order.concat(Immutable(action.payload.order))
       newState.pagination = action.payload.pagination
       return newState
 
+    case userActionType.SET_SPECIFIC_USER_ORDER_PAGINATION:
+      const newSpecificOrder = Immutable.asMutable(newState.specificUserOrder)
+      const index = action.payload.userid
+
+      if (index) {
+        newSpecificOrder[index] = newState.specificUserOrder[
+          action.payload.userid
+        ].concat(action.payload.order)
+      }
+      newState.specificUserOrder = Immutable(newSpecificOrder)
+      return newState
     case userActionType.REMOVE_USER_ORDER:
       newState.order = Immutable(
         newState.order.filter(_order => _order !== action.payload),

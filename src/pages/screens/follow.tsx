@@ -16,10 +16,11 @@ class Follow extends Component<any, any> {
     finishAnimation: false,
   }
   items = () => {
+    const userid = this.props.route.params.userid || null
     return [
       {
         name: 'Follower',
-        Component: <FollowList type="followers" />,
+        Component: <FollowList type="followers" userid={userid} />,
         title: (
           <Font
             style={{
@@ -33,7 +34,7 @@ class Follow extends Component<any, any> {
       },
       {
         name: 'Following',
-        Component: <FollowList type="followings" />,
+        Component: <FollowList type="followings" userid={userid} />,
         title: (
           <Font
             style={{
@@ -98,7 +99,8 @@ class Follow extends Component<any, any> {
 const mapDispatchToProps = dispatch => bindActionCreators({}, dispatch)
 
 const mapStateToProps = (state, ownProps) => {
-  const user = state.user.data[state.auth.data.user.id]
+  const user =
+    ownProps.route.params.user || state.user.data[state.auth.data.user.id]
 
   return {
     follower_count: user?.follower_count || 0,

@@ -8,7 +8,9 @@ export const actionType = {
   SET_LOADING: 'user-post/SET_LOADING',
   SET_ERROR: 'user-post/SET_ERROR',
   SET_ORDER: 'user-post/SET_ORDER',
+  SET_SPECIFIC_ORDER: 'user-post/SET_SPECIFIC_ORDER',
   ADD_ORDER: 'user-post/ADD_ORDER',
+  ADD_SPECIFIC_ORDER: 'user-post/ADD_SPECIFIC_ORDER',
   SET_REACH_END: 'user-post/SET_REACH_END',
 }
 
@@ -32,11 +34,25 @@ const setUserPostOrder = (data, offset) => {
   }
 }
 
-export const getUserPosts = (params): any => {
+const setSpecificUserPostOrder = (data, offset) => {
+  if (offset) {
+    return {
+      type: actionType.ADD_SPECIFIC_ORDER,
+      payload: data,
+    }
+  }
+  return {
+    type: actionType.SET_SPECIFIC_ORDER,
+    payload: data,
+  }
+}
+
+export const getUserPosts = (params, userid): any => {
+  const id = userid || getMe().id
   return {
     type: API,
     payload: {
-      url: '/users/' + getMe().id + '/posts',
+      url: '/users/' + id + '/posts',
       schema: [schema.post],
       requestParams: {
         params: params,
@@ -46,7 +62,12 @@ export const getUserPosts = (params): any => {
       success: data => {
         const res = [
           ...dispatchPostEntities(data.entities),
-          setUserPostOrder(data.result, params?.offset),
+          userid
+            ? setSpecificUserPostOrder(
+                { userid, order: data.result },
+                params?.offset,
+              )
+            : setUserPostOrder(data.result, params?.offset),
           setuserPostLoading(false),
         ]
         if (data.result.length === 0) {
@@ -66,7 +87,7 @@ export const archivePost = postid => {
       startNetwork: () => setuserPostLoading(true),
       endNetwork: () => setuserPostLoading(false),
       success: () => {
-        return getUserPosts({ skip: 0, limit: 10 })
+        return getUserPosts({ skip: 0, limit: 10 }, null)
       },
     },
   }

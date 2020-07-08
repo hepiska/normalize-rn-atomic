@@ -50,7 +50,7 @@ class PaymentMethodCart extends Component<any, any> {
   }
 
   render() {
-    const { paymentMethod, onPress, style, index } = this.props
+    const { paymentMethod, onPress, style, index, transactionId } = this.props
 
     const image =
       this.state.defaultImage ||
@@ -60,9 +60,14 @@ class PaymentMethodCart extends Component<any, any> {
 
     let paymentName = paymentMethod.channel
     if (paymentMethod.name === 'Virtual Account') {
-      paymentName = paymentMethod.name + ' ' + paymentName
-    } else if (paymentMethod.name === 'Credit Card') {
+      paymentName = paymentName + ' ' + paymentMethod.name
+    } else if (
+      paymentMethod.name === 'Gopay' ||
+      paymentMethod.name === 'DANA'
+    ) {
       paymentName = paymentMethod.name
+    } else {
+      paymentName = 'Credit Card'
     }
 
     return (

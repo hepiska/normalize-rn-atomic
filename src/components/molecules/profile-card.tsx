@@ -8,6 +8,7 @@ import {
   Dimensions,
   TouchableWithoutFeedback,
   Image,
+  Linking,
 } from 'react-native'
 import { fontStyle } from '@components/commont-styles'
 import { Div } from '@components/atoms/basic'
@@ -24,6 +25,7 @@ import ModalPreviewImage from './modal-preview-image'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { getUser } from '@modules/user/action'
+import { followUser, unfollowUser } from '@modules/user/action'
 
 const styles = StyleSheet.create({
   container: {
@@ -98,14 +100,15 @@ interface ProfileCardType {
   type?: string
   onEditProfile?: () => void
   onFollowUnfollow?: () => void
-  connectToInstagram?: () => void
-  connectToYoutube?: () => void
+  followUser: (id: number) => void
+  unfollowUser: (id: number) => void
 }
 const { width } = Dimensions.get('screen')
 
 class ProfileCard extends React.Component<ProfileCardType, any> {
   state = {
     isVisible: false,
+    isFollow: this.props.user.is_followed,
   }
 
   shouldComponentUpdate(nextProps, nextState) {
@@ -115,6 +118,10 @@ class ProfileCard extends React.Component<ProfileCardType, any> {
     if (nextProps.user !== this.props.user) {
       return true
     }
+    if (nextState.isFollow !== this.state.isFollow) {
+      return true
+    }
+
     return false
   }
 
@@ -146,17 +153,42 @@ class ProfileCard extends React.Component<ProfileCardType, any> {
       </TouchableWithoutFeedback>
     </AbsDiv>
   )
+  handleFollow = () => {
+    if (this.state.isFollow) {
+      this.props.unfollowUser(this.props.user.id)
+    } else {
+      this.props.followUser(this.props.user.id)
+    }
+    this.setState({
+      isFollow: !this.state.isFollow,
+    })
+  }
+  handleConnectIG = () => {
+    const username = this.props.user.instagram_account.instagram_username
+    const igUrlScheme = `instagram://user?username=${username}`
+    Linking.canOpenURL(igUrlScheme)
+      .then(supported =>
+        Linking.openURL(
+          supported ? igUrlScheme : `https://www.instagram.com/${username}`,
+        ),
+      )
+      .catch(err => console.error('An error occurred', err))
+  }
 
+  handleConnectYT = () => {
+    const username = this.props.user.youtube_account.youtube_username
+    const youtubeUrlScheme = `youtube://user?username=${username}`
+    Linking.canOpenURL(youtubeUrlScheme)
+      .then(supported =>
+        Linking.openURL(
+          supported ? youtubeUrlScheme : `https://www.youtube.com/${username}`,
+        ),
+      )
+      .catch(err => console.error('An error occurred', err))
+  }
   render() {
-    const { isVisible } = this.state
-    const {
-      user,
-      type,
-      onEditProfile,
-      connectToInstagram,
-      connectToYoutube,
-      onFollowUnfollow,
-    } = this.props
+    const { isVisible, isFollow } = this.state
+    const { user, type, onEditProfile } = this.props
     if (!user) {
       return null
     }
@@ -208,9 +240,9 @@ class ProfileCard extends React.Component<ProfileCardType, any> {
           <View style={{ marginTop: 24, flexDirection: 'row' }}>
             {type === 'friendProfile' ? (
               <>
-                {user.isFollowed ? (
+                {isFollow ? (
                   <OutlineButton
-                    onPress={onFollowUnfollow}
+                    onPress={this.handleFollow}
                     title="Following"
                     fontStyle={{
                       ...fontStyle.helveticaBold,
@@ -223,7 +255,7 @@ class ProfileCard extends React.Component<ProfileCardType, any> {
                   />
                 ) : (
                   <Button
-                    onPress={onFollowUnfollow}
+                    onPress={this.handleFollow}
                     title="Follow"
                     fontStyle={{
                       ...fontStyle.helveticaBold,
@@ -235,18 +267,22 @@ class ProfileCard extends React.Component<ProfileCardType, any> {
                     style={{ ...styles.buttonBlack, width: 176 }}
                   />
                 )}
-                <ButtonIcon
-                  onPress={connectToInstagram}
-                  icon={
-                    <Icon name="instagram" size={14} color={colors.black70} />
-                  }
-                />
-                <ButtonIcon
-                  onPress={connectToYoutube}
-                  icon={
-                    <Icon name="youtube" size={14} color={colors.black70} />
-                  }
-                />
+                {user.instagram_account?.instagram_username != null && (
+                  <ButtonIcon
+                    onPress={this.handleConnectIG}
+                    icon={
+                      <Icon name="instagram" size={14} color={colors.black70} />
+                    }
+                  />
+                )}
+                {user.youtube_account?.youtube_username != null && (
+                  <ButtonIcon
+                    onPress={this.handleConnectYT}
+                    icon={
+                      <Icon name="youtube" size={14} color={colors.black70} />
+                    }
+                  />
+                )}
               </>
             ) : (
               <>
@@ -295,13 +331,21 @@ class ProfileCard extends React.Component<ProfileCardType, any> {
   }
 }
 
-const mapDispatchToProps = dispatch => bindActionCreators({ getUser }, dispatch)
+const mapDispatchToProps = dispatch =>
+  bindActionCreators({ getUser, followUser, unfollowUser }, dispatch)
 
-const mapStateToProps = state => {
+const mapStateToProps = (state, ownProps) => {
   const isAuth = state.auth.isAuth
   let user
   if (isAuth) {
-    user = state.user.data[state.auth.data.user.id] || state.auth.data.user
+    user =
+      ownProps.user ||
+      state.user.data[state.auth.data.user.id] ||
+      state.auth.data.user
+  } else {
+    if (ownProps.user) {
+      user = ownProps.user
+    }
   }
 
   return {

@@ -95,14 +95,12 @@ interface UserProfilePictType {
   getFollowerFollowing?: (parameter: Object, type: string) => void
   follows?: Array<number>
   userLoading?: boolean
+  navigation?: any
 }
 
 class UserProfilePict extends React.Component<UserProfilePictType, any> {
   onPressUser = () => {
-    navigate('Screens', {
-      screen: 'UserDetail',
-      params: { userId: this.props.user.id },
-    })
+    this.props.navigation.push('UserDetail', { userId: this.props.user.id })
   }
 
   render() {

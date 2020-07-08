@@ -37,13 +37,25 @@ const styles = StyleSheet.create({
 })
 
 class GroupPaymentMethod extends Component<any, any> {
+  shouldComponentUpdate(nextProps) {
+    const { item, transactionId, title } = this.props
+    if (item !== nextProps.item) {
+      return true
+    }
+    if (transactionId !== nextProps.transactionId) {
+      return true
+    }
+    if (title !== nextProps.title) {
+      return true
+    }
+    return false
+  }
+
   changeTitle = title => {
     const _title = title.replace(/_/g, ' ')
     switch (_title) {
       case 'E Wallet':
         return 'E-Wallet'
-      case 'Virtual Account':
-        return 'Bank Transfer'
       default:
         return _title
     }
@@ -100,21 +112,29 @@ class GroupPaymentMethod extends Component<any, any> {
   }
 
   render() {
-    const { item, style, transactionId } = this.props
+    const { item, style, transactionId, title } = this.props
 
     return (
       <View {...style} style={{ marginTop: 24 }}>
         {this.renderTitle()}
-        {item.map((_item, key) => {
-          return (
-            <PaymentMethodHoc
-              key={key}
-              paymentMethodId={_item}
-              index={key}
-              transactionId={transactionId}
-            />
-          )
-        })}
+        {title !== 'Credit_Card' ? (
+          item.map((_item, key) => {
+            return (
+              <PaymentMethodHoc
+                key={key}
+                paymentMethodId={_item}
+                index={key}
+                transactionId={transactionId}
+              />
+            )
+          })
+        ) : (
+          <PaymentMethodHoc
+            paymentMethodId={item[0]}
+            index={0}
+            transactionId={transactionId}
+          />
+        )}
       </View>
     )
   }

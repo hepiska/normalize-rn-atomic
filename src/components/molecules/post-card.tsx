@@ -348,7 +348,7 @@ const FullscreenCard = ({
                 {postLikes[0].user.username || postLikes[0].user.name}
               </Text>
             </TouchableOpacity>
-            {likeCount > 1 ? (
+            {likeCount > 1 && (
               <>
                 <Text
                   style={{
@@ -356,55 +356,20 @@ const FullscreenCard = ({
                     fontSize: 12,
                     marginRight: 4,
                   }}>
-                  Liked By
+                  and
                 </Text>
-                <TouchableOpacity onPress={onUserPress(post.likes[0].user)}>
+                <TouchableOpacity onPress={goToUsers}>
                   <Text
                     style={{
                       ...fontStyle.helveticaBold,
                       fontWeight: '700',
                       fontSize: 12,
                       marginRight: 4,
-                      color: colors.black100,
                     }}>
                     {`${likeCount - 1} others`}
                   </Text>
                 </TouchableOpacity>
-                {post && post.likes.length > 1 && (
-                  <>
-                    <Text
-                      style={{
-                        ...fontStyle.helvetica,
-                        fontSize: 12,
-                        marginRight: 4,
-                      }}>
-                      and
-                    </Text>
-                    <TouchableOpacity onPress={goToUsers}>
-                      <Text
-                        style={{
-                          ...fontStyle.helveticaBold,
-                          fontWeight: '700',
-                          fontSize: 12,
-                          marginRight: 4,
-                        }}>
-                        {`${post.likes.length - 1} others`}
-                      </Text>
-                    </TouchableOpacity>
-                  </>
-                )}
               </>
-            ) : (
-              <Text
-                style={{
-                  ...fontStyle.helvetica,
-                  fontSize: 12,
-                  marginRight: 4,
-                  color: colors.black100,
-                }}>
-                Be the first to
-                <Text style={{ fontWeight: '500' }}>{` like`}</Text>
-              </Text>
             )}
           </View>
         </View>

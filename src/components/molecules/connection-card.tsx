@@ -86,29 +86,41 @@ interface ConnectionCardType {
   user?: any
   type?: string
   loading?: boolean
-  getFollowerFollowing?: (parameter: Object, type: string) => void
+  getFollowerFollowing?: (parameter: Object, type: string, id: number) => void
+  getUser?: (id: number, type: string) => void
   follows?: Array<number>
   userLoading?: boolean
+  userid?: number
+  navigation?: any
 }
 
 class ConnectionCard extends React.Component<ConnectionCardType, any> {
   connectionLimit = 7
   componentDidMount() {
     const params = {
-      offset: 10,
-      limit: 5,
+      offset: 0,
+      limit: 7,
     }
-    this.props.getFollowerFollowing(params, 'followings')
+    this.props.getFollowerFollowing(
+      params,
+      'followings',
+      this.props.userid || null,
+    )
+    if (this.props.userid) {
+      this.props.getUser(this.props.userid, 'id')
+    }
   }
 
   gotoFollowPage = followType => () => {
     navigateTo('Screens', 'Follow', {
       followType,
       name: this.props.user.name,
+      userid: this.props.userid,
+      user: this.props.user,
     })
   }
 
-  _rendeFailtext = () => {
+  _renderFailtext = () => {
     const { loading } = this.props
 
     if (loading) {
@@ -123,7 +135,7 @@ class ConnectionCard extends React.Component<ConnectionCardType, any> {
   }
 
   render() {
-    const { user, style, follows } = this.props
+    const { user, style, follows, navigation } = this.props
     if (!follows || !user) {
       return null
     }
@@ -151,10 +163,14 @@ class ConnectionCard extends React.Component<ConnectionCardType, any> {
           {follows.length
             ? follows?.map((value, key) => {
                 return key < this.connectionLimit ? (
-                  <UserPpHoc userId={value} key={`user-pp-${key}`} />
+                  <UserPpHoc
+                    userId={value}
+                    key={`user-pp-${key}`}
+                    navigation={navigation}
+                  />
                 ) : null
               })
-            : this._rendeFailtext()}
+            : this._renderFailtext()}
           {user?.following_count > this.connectionLimit && (
             <View
               style={{
@@ -174,15 +190,20 @@ class ConnectionCard extends React.Component<ConnectionCardType, any> {
   }
 }
 
-const mapStateToProps = (state: any) => {
+const mapStateToProps = (state: any, ownProps: any) => {
   const isAuth = state.auth.isAuth
-  let user
+  let user = null
   if (isAuth) {
     user = state.user.data[state.auth.data.user.id] || state.auth.data.user
   }
+  if (ownProps.userid) {
+    user = state.user.data[ownProps.userid]
+  }
 
   return {
-    follows: state.user.order,
+    follows: ownProps.userid
+      ? state.user.specificUserOrder[ownProps.userid]
+      : state.user.order,
     loading: state.user.loading,
     userLoading: state.user.loading,
     user,

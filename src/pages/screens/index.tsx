@@ -6,7 +6,7 @@ import {
 } from '@react-navigation/stack'
 import AddNewAddress from './add-address'
 import AddNewAddressManual from './add-address-manual'
-import UserDetail from './user-detail'
+import UserDetail from './user-detail-new'
 import Checkout from './checkout'
 import ChooseCourier from './choose-courier'
 import ChooseAddress from './choose-address'

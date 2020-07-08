@@ -11,6 +11,7 @@ interface TransactionState {
   active: number
   userPostStatus: Array<string>
   readonly order: Object
+  readonly specificOrder: Object
   readonly loading: Boolean
   readonly error?: ErrorType
 }
@@ -21,6 +22,7 @@ const initialState: any = {
   isEndReached: false,
   postcount: {},
   order: Immutable([]),
+  specificOrder: Immutable({}),
   loading: false,
   error: null,
 }
@@ -38,8 +40,27 @@ const userPostReducer: Reducer<TransactionState> = (
     case actionType.SET_ORDER:
       newState.order = Immutable(action.payload)
       return newState
+    case actionType.SET_SPECIFIC_ORDER:
+      newState.specificOrder = Immutable.merge(newState.specificOrder, {
+        [action.payload.userid]: action.payload.order,
+      })
+      return newState
     case actionType.ADD_ORDER:
       newState.order = newState.order.concat(Immutable(action.payload))
+      return newState
+    case actionType.ADD_SPECIFIC_ORDER:
+      let tempt
+      tempt = newState.specificOrder[action.payload.userid].concat(
+        action.payload.order,
+      )
+      const neworder = Immutable.asMutable(newState.specificOrder)
+      const index = action.payload.userid
+
+      if (~index) {
+        neworder[index] = tempt
+      }
+      newState.specificOrder = Immutable(neworder)
+
       return newState
     case actionType.SET_ERROR:
       newState.error = payload

@@ -59,7 +59,7 @@ class FollowList extends Component<any, any> {
       limit: this.limit,
       name: this.state.searchKey,
     }
-    this.props.getFollowerFollowing(params, this.props.type)
+    this.props.getFollowerFollowing(params, this.props.type, this.props.userid)
   }
 
   _renderItem = ({ item }) => {
@@ -177,9 +177,13 @@ class FollowList extends Component<any, any> {
   }
 }
 
-const mapStateToProps = (state: any) => {
+const mapStateToProps = (state: any, ownProps) => {
+  let follows = state.user.order
+  if (ownProps.userid) {
+    follows = state.user.specificUserOrder[ownProps.userid]
+  }
   return {
-    follows: state.user.order,
+    follows,
     userLoading: state.user.loading,
   }
 }

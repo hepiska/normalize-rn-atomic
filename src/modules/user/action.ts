@@ -8,9 +8,12 @@ export const userActionType = {
   FETCH: 'post/FETCH',
   SET_USER_DATA: 'user/SET_USER_DATA',
   SET_USER_ORDER: 'user/SET_USER_ORDER',
+  SET_SPECIFIC_USER_ORDER: 'user/SET_SPECIFIC_USER_ORDER',
   SET_USER_ORDER_PAGINATION: 'user/SET_USER_ORDER_PAGINATION',
+  SET_SPECIFIC_USER_ORDER_PAGINATION: 'user/SET_SPECIFIC_USER_ORDER_PAGINATION',
   SET_USER_NOTIFICATION: 'user/SET_USER_NOTIFICATION',
   ADD_USER_ORDER: 'user/ADD_USER_ORDER',
+  CLEAR_USER_ORDER: 'user/CLEAR_USER_ORDER',
   REMOVE_USER_ORDER: 'user/REMOVE_USER_ORDER',
   CHANGE_FOLLOW_DATA: 'user/CHANGE_FOLLOW_DATA',
   FETCH_START: 'user/FETCH_START',
@@ -47,8 +50,22 @@ export const setUserOrder = (data: any) => ({
   payload: data,
 })
 
+export const setSpecificUserOrder = (data: any) => ({
+  type: userActionType.SET_SPECIFIC_USER_ORDER,
+  payload: data,
+})
+
+export const clearUserOrder = () => ({
+  type: userActionType.CLEAR_USER_ORDER,
+})
+
 export const setUserOrderPagination = (data: any) => ({
   type: userActionType.SET_USER_ORDER_PAGINATION,
+  payload: data,
+})
+
+export const setSpecificUserOrderPagination = (data: any) => ({
+  type: userActionType.SET_SPECIFIC_USER_ORDER_PAGINATION,
   payload: data,
 })
 
@@ -131,11 +148,12 @@ export const editUserProfile = (data: any) => ({
   },
 })
 
-export const getFollowerFollowing = (params: any, type: string) => {
+export const getFollowerFollowing = (params: any, type: string, userid) => {
+  const id = userid || getMe().id
   return {
     type: API,
     payload: {
-      url: `/users/` + getMe().id + `/${type}`,
+      url: `/users/` + id + `/${type}`,
       schema: [schema.user],
       requestParams: {
         params,
@@ -143,22 +161,42 @@ export const getFollowerFollowing = (params: any, type: string) => {
       startNetwork: () => setUserLoading(true),
       success: (data, { pagination }) => {
         if (params.offset === 0) {
-          return [
-            setUserData(data.entities.user),
-            setUserOrder(data.result),
-            setUserLoading(false),
-          ]
+          if (userid) {
+            //specific user
+            return [
+              setUserData(data.entities.user),
+              setSpecificUserOrder({ userid, order: data.result }),
+              setUserLoading(false),
+            ]
+          } else {
+            // auth user
+            return [
+              setUserData(data.entities.user),
+              setUserOrder(data.result),
+              setUserLoading(false),
+            ]
+          }
         }
 
         if (data && data.result.length) {
-          return [
-            setUserData(data.entities.user),
-            setUserOrderPagination({ order: data.result, pagination }),
-            setUserLoading(false),
-          ]
+          if (userid) {
+            return [
+              setUserData(data.entities.user),
+              setSpecificUserOrderPagination({
+                userid,
+                order: data.result,
+                pagination,
+              }),
+              setUserLoading(false),
+            ]
+          } else {
+            return [
+              setUserData(data.entities.user),
+              setUserOrderPagination({ order: data.result, pagination }),
+              setUserLoading(false),
+            ]
+          }
         }
-
-        return [setUserLoading(false)]
       },
       error: err => {
         return [setUserLoading(false)]

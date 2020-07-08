@@ -116,7 +116,7 @@ class PaymentCard extends React.PureComponent<any, any> {
           </View>
         </View>
         <Button
-          disabled={!isActive}
+          // disabled={!isActive}
           style={{ paddingVertical: 16, backgroundColor: colors.black100 }}
           onPress={this._getAction(provider_payment_method)}
           title={title}

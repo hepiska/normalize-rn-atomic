@@ -22,7 +22,7 @@ class MyPost extends React.Component<any, any> {
 
   shouldComponentUpdate(nextProps) {
     const { posts, loading } = this.props
-    if (posts.length !== nextProps.posts.length) {
+    if (posts && posts.length !== nextProps.posts.length) {
       return true
     }
     if (loading !== nextProps.loading) {
@@ -62,7 +62,7 @@ class MyPost extends React.Component<any, any> {
       params.type = selectedStatus
     }
 
-    this.props.getUserPosts(params)
+    this.props.getUserPosts(params, this.props.userid)
   }
 
   _fetchMore = () => {
@@ -141,12 +141,18 @@ class MyPost extends React.Component<any, any> {
   }
 }
 
-const mapStateToProps = state => ({
-  userPostStatus: state.userPosts.status,
-  posts: state.userPosts.order,
-  isEndReached: state.userPosts.isEndReached,
-  loading: state.userPosts.loading,
-})
+const mapStateToProps = (state, ownProps) => {
+  let posts = state.userPosts.order
+  if (ownProps.userid) {
+    posts = state.userPosts.specificOrder[ownProps.userid]
+  }
+  return {
+    userPostStatus: state.userPosts.status,
+    posts,
+    isEndReached: state.userPosts.isEndReached,
+    loading: state.userPosts.loading,
+  }
+}
 const mapDispatchToProps = dispatch =>
   bindActionCreators({ getUserPosts }, dispatch)
 
