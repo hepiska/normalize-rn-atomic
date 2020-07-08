@@ -15,6 +15,8 @@ import {
   clearSearchPost,
   setTagSearch,
 } from '@src/modules/search-post/action'
+import { resetSkip, setSkip } from '@modules/global-search-ui/action'
+
 import EmptyState from '@components/molecules/order-empty-state'
 import SearchPostLoader from '@components/atoms/loaders/search-post-loader'
 import PostListLoader from '@components/atoms/loaders/post-card-list'
@@ -66,8 +68,10 @@ interface SearchPostType {
   loading?: boolean
   fetchMore?: () => void
   total?: number
-  skip?: number
+  activeTab?: number
+  skip?: {}
   tag?: Array<string>
+  setSkip: (skip: any) => void
   isTagSearch?: boolean
   setTagSearch?: (data: boolean) => void
   onSearchChange?: (text: string) => void
@@ -79,6 +83,26 @@ class SearchPostResult extends Component<SearchPostType, any> {
   skip = 0
   lastSkip = 0
   limit = 10
+
+  componentWillUnmount() {
+    if (this.props.isTagSearch) {
+      this.props.onSearchChange('')
+      this.props.clearSearchPost()
+    }
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    if (
+      this.props.total !== nextProps.total ||
+      this.props.activeTab !== nextProps.activeTab ||
+      this.props.loading !== nextProps.loading ||
+      this.props.post.length !== nextProps.post.length ||
+      this.props.searchKey !== nextProps.searchKey
+    ) {
+      return true
+    }
+    return false
+  }
   _handlePress = postId => () => {
     dispatch(StackActions.replace('PostDetail', { postId }))
   }
@@ -95,17 +119,13 @@ class SearchPostResult extends Component<SearchPostType, any> {
     )
   }
 
-  componentWillUnmount() {
-    if (this.props.isTagSearch) {
-      this.props.onSearchChange('')
-      this.props.clearSearchPost()
-    }
-  }
-
   onReachEnd = () => {
-    const { loading, fetchMore } = this.props
+    const { loading, skip, activeTab } = this.props
+    const newSkip = { ...skip }
     if (!loading) {
-      fetchMore()
+      newSkip[activeTab] += 1
+
+      this.props.setSkip(newSkip)
     }
   }
 
@@ -250,13 +270,18 @@ const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
       getSearchPost,
+      resetSkip,
       clearSearchPost,
       setTagSearch,
+      setSkip,
     },
     dispatch,
   )
 const mapStateToProps = state => {
   return {
+    searchKey: state.globalSearchUi.searchKey,
+    skip: state.globalSearchUi.skip,
+    activeTab: state.globalSearchUi.activeTab,
     post: state.searchPost.order,
     loading: state.searchPost.loading,
     total:

@@ -1,5 +1,6 @@
 import { API } from '../action-types'
 import { setPostData } from '@modules/post/action'
+import { request } from '@utils/services'
 import * as schema from '@modules/normalize-schema'
 import { normalize } from 'normalizr'
 export const searchActionType = {

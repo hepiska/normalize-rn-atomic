@@ -1,6 +1,5 @@
 import React, { Component, useMemo, useCallback } from 'react'
 import { Dimensions, ViewStyle, View, Text, StyleSheet } from 'react-native'
-import ProductCard from '@components/molecules/product-card-new'
 import SearchResultCard from '../molecules/search-result-card'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
@@ -13,10 +12,11 @@ import ProductSearchLoader from '@components/atoms/loaders/product-search'
 import EmptyState from '@components/molecules/order-empty-state'
 import { productSearchListData } from '@hocs/data/product'
 import { StackActions } from '@react-navigation/native'
+import ProductSearchCard from '@components/molecules/product-search-card'
 
 import List from '@components/layouts/list-header'
 
-const ProductListHoc = productSearchListData(ProductCard)
+const ProductListHoc = productSearchListData(ProductSearchCard)
 
 const { width } = Dimensions.get('screen')
 
@@ -79,12 +79,12 @@ const onPress = productId => () => {
 const renderitem = ({ item, index }) => {
   return (
     <ProductListHoc
+      horizontal
       productId={item}
       onPress={onPress(item)}
       style={{
-        maxWidth: width / 2 - 16,
-        minHeight: 220,
         margin: 8,
+        marginHorizontal: 16,
         flex: 1,
       }}
       key={'search-product-list' + index + item}
@@ -195,14 +195,13 @@ const SearchProductResultPart1 = ({
     <View style={{ ...styles.container, ...style }}>
       <List
         data={products}
-        numColumns={2}
         ListHeaderComponent={renderHeader}
         onEndReachedThreshold={0.9}
-        layoutType="normal"
+        layoutType="list"
         ListEmptyComponent={emptyComponent}
         renderItem={renderitem}
         keyExtractor={(item, index) =>
-          'search-product-listt' + index + ':' + item
+          'search-product-list' + index + ':' + item
         }
       />
     </View>

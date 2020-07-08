@@ -16,6 +16,9 @@ import { fontStyle } from '../commont-styles'
 import { ScrollView } from 'react-native-gesture-handler'
 import SearchProductResultPart1 from './search-product-result-segment-1'
 import SearchProductResultPart2 from './search-product-result-segment-2'
+import isEqual from 'lodash/isEqual'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 
 import EmptyState from '@components/molecules/order-empty-state'
 
@@ -31,11 +34,10 @@ const styles = StyleSheet.create({
 interface SearchProductType {
   style?: any
   skip?: number
+  isActive?: boolean
   loading?: boolean
   searchKey?: string
   fetchMore?: () => void
-  total?: number
-  product?: any
 }
 
 class SearchProductResult extends Component<SearchProductType, any> {
@@ -49,6 +51,29 @@ class SearchProductResult extends Component<SearchProductType, any> {
     InteractionManager.runAfterInteractions(() => {
       this.setState({ finishAnimation: true })
     })
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.searchKey !== this.props.searchKey && this.props.isActive) {
+      this.setState({ isConfirmed: false })
+    }
+  }
+
+  shouldComponentUpdate(nextProps, nextState) {
+    const { state, props } = this
+
+    if (!isEqual(state, nextState)) {
+      return true
+    }
+    if (
+      nextProps.isActive !== props.isActive ||
+      props.searchKey !== nextProps.searchKey ||
+      props.loading !== nextProps.loading
+    ) {
+      return true
+    }
+
+    return false
   }
 
   setfilter = data => {
@@ -111,13 +136,14 @@ class SearchProductResult extends Component<SearchProductType, any> {
     )
   }
   render() {
-    const { searchKey, style } = this.props
+    const { searchKey, style, isActive } = this.props
+
     return (
       <View style={{ ...styles.container, ...style }}>
         {this.state.finishAnimation
-          ? searchKey !== ''
-            ? this.renderComponent()
-            : this.emptyComponent()
+          ? searchKey === '' && isActive
+            ? this.emptyComponent()
+            : this.renderComponent()
           : null}
         {}
       </View>
@@ -125,4 +151,9 @@ class SearchProductResult extends Component<SearchProductType, any> {
   }
 }
 
-export default SearchProductResult
+const mapStateToProps = state => ({
+  searchKey: state.globalSearchUi.searchKey,
+  isActive: state.globalSearchUi.activeTab === 0,
+})
+
+export default connect(mapStateToProps, null)(SearchProductResult)

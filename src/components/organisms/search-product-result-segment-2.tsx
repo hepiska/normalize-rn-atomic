@@ -12,8 +12,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { Div } from '@components/atoms/basic'
 import { productSearchApi, clearProductSearch } from '@modules/product/action'
-import Field from '@components/atoms/field'
-import Icon from 'react-native-vector-icons/FontAwesome'
+
 import Icon5 from 'react-native-vector-icons/FontAwesome5'
 import { makeMapCategories } from '@modules/search-product/selector'
 import { navigate } from '@src/root-navigation'
@@ -22,17 +21,24 @@ import { StackActions } from '@react-navigation/native'
 
 import { colors } from '@src/utils/constants'
 import { fontStyle } from '../commont-styles'
-import { Button, OutlineButton } from '@components/atoms/button'
+import { OutlineButton } from '@components/atoms/button'
 import isEqual from 'lodash/isEqual'
 import EmptyState from '@components/molecules/order-empty-state'
 import SearchResultCard from '../molecules/search-result-card'
 import SelectAblePill from '@components/organisms/selectable-pill'
-
+import { request } from '@utils/services'
 import ProductCard from '@components/molecules/product-card-new'
 import SearchListLoader from '@src/components/atoms/loaders/search-list'
 import TwoCollumnCardLoaderSmall from '@components/atoms/loaders/two-column-card-small'
 import { productSearchListData } from '@hocs/data/product'
 import { findProductSearch } from '@modules/search-product/action'
+
+const getcontex = async params => {
+  const newParams = { ...params }
+  return request({ url: '/products/search', params: newParams }).then(res => {
+    return res.data.meta.context
+  })
+}
 
 const { width } = Dimensions.get('screen')
 
@@ -67,15 +73,20 @@ class SearchList extends Component<any, any> {
       this._freshFetch()
       return ''
     }
+    if (this.props.activeTab !== prevProps.activeTab) {
+      getcontex({ query: this.props.searchKey }).then(ctx => {
+        this._freshFetch(ctx)
+      })
+    }
   }
 
   _openSort = () => {
     navigate('modals', { screen: 'ProductSort' })
   }
 
-  _freshFetch = async () => {
+  _freshFetch = async (ctx?: any) => {
     try {
-      this._fetchData(0)
+      this._fetchData(0, ctx)
       this.skip = 0
       this.lastSkip = 0
     } catch (err) {
@@ -83,9 +94,11 @@ class SearchList extends Component<any, any> {
     }
   }
 
-  _fetchData = skip => {
+  _fetchData = (skip, localCtx?: any) => {
     const { context, searchKey } = this.props
     const { selectedCategory } = this.state
+
+    const appliedCtx = localCtx || context
 
     const params: any = {
       limit: this.limit,
@@ -94,30 +107,13 @@ class SearchList extends Component<any, any> {
       ...this.props.sort.value,
       // is_commerce: true,
     }
-    context.forEach(ctx => {
+    appliedCtx.forEach(ctx => {
       params[ctx.type] = ctx.value
     })
     params.categories = selectedCategory.map(cat => cat.id).join(',')
 
     this.props.findProductSearch(params)
   }
-
-  // onSearchChange = text => {
-  //   this.setState({ searchKey: text })
-
-  //   if (this.timer) {
-  //     clearTimeout(this.timer)
-  //   }
-
-  //   this.timer = setTimeout(() => {
-  //     if (this.state.searchKey.length > 2) {
-  //       this.skip = 0
-  //       this._fetchData(this.skip)
-
-  //       this.startSearch = true
-  //     }
-  //   }, 800)
-  // }
 
   _fetchMore = () => {
     if (!this.props.loading) {
@@ -353,6 +349,8 @@ const mapStateToProps = () => {
 
   return state => {
     return {
+      searchKey: state.globalSearchUi.searchKey,
+      activeTab: state.globalSearchUi.activeTab,
       products: state.searchProduct.productFindOrder,
       sort: state.sort.selected,
       categories: mapCategories(state),

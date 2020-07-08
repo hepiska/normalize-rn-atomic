@@ -12,6 +12,8 @@ import EmptyState from '@components/molecules/order-empty-state'
 import { dispatch } from '@src/root-navigation'
 import { StackActions } from '@react-navigation/native'
 import BrandListLoader from '@components/atoms/loaders/brand-list'
+import { setSkip } from '@src/modules/global-search-ui/action'
+import { bindActionCreators } from 'redux'
 
 const BrandHoc = searchBrandListData(BrandHorizontalCard)
 const brandCardHeight = 73
@@ -29,8 +31,10 @@ interface SearchBrandType {
   searchKey?: string
   loading?: boolean
   total?: number
+  activeTab?: number
+  setSkip: (skip: any) => void
   brand?: any
-  skip?: number
+  skip?: object
 }
 
 class SearchBrandResult extends Component<SearchBrandType, any> {
@@ -43,7 +47,19 @@ class SearchBrandResult extends Component<SearchBrandType, any> {
       this.setState({ finishAnimation: true })
     })
   }
-
+  shouldComponentUpdate(nextProps, nextState) {
+    if (
+      this.props.total !== nextProps.total ||
+      this.props.activeTab !== nextProps.activeTab ||
+      this.props.loading !== nextProps.loading ||
+      this.props.searchKey !== nextProps.searchKey ||
+      this.props.brand.length !== nextProps.brand.length ||
+      this.state.finishAnimation !== nextState.finishAnimation
+    ) {
+      return true
+    }
+    return false
+  }
   renderHeader = () => {
     const { searchKey, total } = this.props
 
@@ -84,9 +100,12 @@ class SearchBrandResult extends Component<SearchBrandType, any> {
   }
 
   onReachedEnd = () => {
-    const { loading, fetchMore } = this.props
+    const { loading, skip, activeTab } = this.props
+    const newSkip = { ...skip }
     if (!loading) {
-      fetchMore()
+      newSkip[activeTab] += 1
+
+      this.props.setSkip(newSkip)
     }
   }
 
@@ -183,8 +202,13 @@ class SearchBrandResult extends Component<SearchBrandType, any> {
 
 const mapStateToProps = state => ({
   // brand: state.brands.order,
+  searchKey: state.globalSearchUi.searchKey,
+  skip: state.globalSearchUi.skip,
   loading: state.searchBrand.loading,
   total: state.searchBrand.total || state.searchBrand.order.length || 0,
   brand: state.searchBrand.order,
 })
-export default connect(mapStateToProps, null)(SearchBrandResult)
+
+const mapDispatchToProps = dispatch => bindActionCreators({ setSkip }, dispatch)
+
+export default connect(mapStateToProps, mapDispatchToProps)(SearchBrandResult)

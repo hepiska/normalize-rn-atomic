@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { View, SafeAreaView, InteractionManager } from 'react-native'
-import { connect } from 'react-redux'
+import { connect, batch } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import Field from '@components/atoms/field'
 import Icon from 'react-native-vector-icons/FontAwesome'
@@ -19,6 +19,11 @@ import {
   getSearchTag,
   getPostByTag,
 } from '@src/modules/search-post/action'
+import {
+  setSearchKey,
+  setActiveTab,
+  setSkip,
+} from '@modules/global-search-ui/action'
 import { getSearchBrand } from '@modules/search-brand/action'
 import { getSearchUser } from '@modules/search-user/action'
 import { getSearchProduct } from '@modules/search-product/action'
@@ -43,15 +48,32 @@ class SearchList extends Component<any, any> {
     })
   }
 
-  onChangeTab = activeTab => {
-    this.limit = 10
-    this.skip[activeTab] = 0
-    if (this.state.searchKey.length > 2) {
-      this._fetchData(this.skip[activeTab] || 0)
+  componentDidUpdate(prevProps) {
+    if (
+      prevProps.activeTab === this.props.activeTab &&
+      prevProps.skip[prevProps.activeTab] !==
+        this.props.skip[prevProps.activeTab]
+    ) {
+      this._fetchData(this.props.skip[prevProps.activeTab])
     }
-    this.setState({
-      activeTab: activeTab,
+  }
+
+  onChangeTab = async activeTab => {
+    const newSkip = { ...this.props.skip }
+    const { searchKey, setSkip } = this.props
+
+    if (!newSkip[activeTab]) {
+      newSkip[activeTab] = 0
+    }
+
+    await batch(() => {
+      this.props.setActiveTab(activeTab)
+      this.props.setSkip(newSkip)
     })
+
+    if (searchKey.length > 2) {
+      this._fetchData(newSkip[activeTab] || 0)
+    }
   }
 
   resetSkip = activeTab => {
@@ -69,23 +91,28 @@ class SearchList extends Component<any, any> {
   }
 
   onSearchChange = text => {
-    this.setState({ searchKey: text })
+    const newSkip = { ...this.props.skip }
+    const { activeTab, searchKey, setSkip } = this.props
+
+    this.props.setSearchKey(text)
     if (this.timer) {
       clearTimeout(this.timer)
     }
 
     this.timer = setTimeout(() => {
-      if (this.state.searchKey.length > 2) {
-        this.skip[this.state.activeTab] = 0
-        this._fetchData(this.skip[this.state.activeTab] || 0)
+      if (searchKey.length > 2) {
+        newSkip[activeTab] = 0
+        batch(() => {
+          this._fetchData(this.skip[activeTab] || 0)
 
-        this.startSearch = true
+          setSkip(newSkip)
+        })
       }
     }, 600)
   }
 
   _fetchData = skip => {
-    const { searchKey, activeTab } = this.state
+    const { searchKey, activeTab } = this.props
     const { isTagSearch } = this.props
     const params = {
       query: searchKey,
@@ -128,51 +155,10 @@ class SearchList extends Component<any, any> {
     this.setState({ searchKey: '' })
   }
 
-  renderScreen = type => () => {
-    const { searchKey } = this.state
-
-    switch (type) {
-      case 'product':
-        return (
-          <SearchProductResult
-            searchKey={searchKey}
-            skip={this.skip['0']}
-            fetchMore={this.fetchMore}
-          />
-        )
-      case 'brand':
-        return (
-          <SearchBrandResult
-            searchKey={searchKey}
-            skip={this.skip['1']}
-            fetchMore={this.fetchMore}
-          />
-        )
-      case 'user':
-        return (
-          <SearchUserResult
-            searchKey={searchKey}
-            skip={this.skip['2']}
-            fetchMore={this.fetchMore}
-          />
-        )
-      case 'post':
-        return (
-          <SearchPostResult
-            searchKey={searchKey}
-            skip={this.skip['3']}
-            fetchMore={this.fetchMore}
-            onSearchChange={this.onSearchChange}
-            resetSkip={this.resetSkip}
-          />
-        )
-      default:
-        return null
-    }
-  }
-
   render() {
-    const { searchKey, finishAnimation } = this.state
+    const { finishAnimation } = this.state
+    const { searchKey, skip } = this.props
+
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
         {finishAnimation ? (
@@ -225,9 +211,6 @@ class SearchList extends Component<any, any> {
             </View>
             <Tab.Navigator
               tabBar={props => {
-                // this.setState({
-                //   activeTab: props.state.index,
-                // })
                 return (
                   <TabMenuCursor
                     {...props}
@@ -236,13 +219,10 @@ class SearchList extends Component<any, any> {
                   />
                 )
               }}>
-              <Tab.Screen
-                name="Product"
-                component={this.renderScreen('product')}
-              />
-              <Tab.Screen name="Brand" component={this.renderScreen('brand')} />
-              <Tab.Screen name="User" component={this.renderScreen('user')} />
-              <Tab.Screen name="Post" component={this.renderScreen('post')} />
+              <Tab.Screen name="Product" component={SearchProductResult} />
+              <Tab.Screen name="Brand" component={SearchBrandResult} />
+              <Tab.Screen name="User" component={SearchUserResult} />
+              <Tab.Screen name="Post" component={SearchPostResult} />
             </Tab.Navigator>
           </>
         ) : (
@@ -262,11 +242,17 @@ const mapDispatchToProps = dispatch =>
       getSearchProduct,
       getSearchUser,
       getPostByTag,
+      setSearchKey,
+      setActiveTab,
+      setSkip,
     },
     dispatch,
   )
 const mapStateToProps = state => {
   return {
+    searchKey: state.globalSearchUi.searchKey,
+    skip: state.globalSearchUi.skip,
+    activeTab: state.globalSearchUi.activeTab,
     isTagSearch: state.searchPost.isTagSearch,
   }
 }

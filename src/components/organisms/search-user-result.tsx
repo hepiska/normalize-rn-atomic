@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react'
+import React, { Component } from 'react'
 import { View, Text, StyleSheet, InteractionManager } from 'react-native'
 
 import SearchResultCard from '../molecules/search-result-card'
@@ -12,6 +12,8 @@ import EmptyState from '@components/molecules/order-empty-state'
 import List from '@components/layouts/list-header'
 import { dispatch } from '@src/root-navigation'
 import { StackActions } from '@react-navigation/native'
+import { setSkip } from '@src/modules/global-search-ui/action'
+import { bindActionCreators } from 'redux'
 
 const UserHoc = searchUserListData(FollowCard)
 
@@ -30,11 +32,13 @@ interface SearchUserType {
   searchKey?: string
   loading?: boolean
   total?: number
-  skip?: number
+  skip?: {}
+  activeTab: number
+  setSkip: (obj: any) => void
   user?: any
 }
 
-class SearchUserResult extends PureComponent<SearchUserType, any> {
+class SearchUserResult extends Component<SearchUserType, any> {
   state = {
     finishAnimation: false,
   }
@@ -45,10 +49,29 @@ class SearchUserResult extends PureComponent<SearchUserType, any> {
     })
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    if (
+      this.props.total !== nextProps.total ||
+      this.props.activeTab !== nextProps.activeTab ||
+      this.props.loading !== nextProps.loading ||
+      this.props.searchKey !== nextProps.searchKey ||
+      this.props.user.length !== nextProps.user.length ||
+      this.state.finishAnimation !== nextState.finishAnimation
+    ) {
+      return true
+    }
+
+    return false
+  }
+
   onReachedEnd = () => {
-    const { loading, fetchMore } = this.props
+    const { loading, skip, activeTab } = this.props
+    const newSkip = { ...skip }
+
     if (!loading) {
-      fetchMore()
+      newSkip[activeTab] += 1
+
+      this.props.setSkip(newSkip)
     }
   }
 
@@ -156,11 +179,11 @@ class SearchUserResult extends PureComponent<SearchUserType, any> {
     const data = searchKey.length > 2 ? user : []
 
     return (
-      <View style={{ ...styles.container, ...style }}>
+      <View style={{ ...styles.container }}>
         <List
           data={data}
           ListHeaderComponent={this.renderHeader}
-          onEndReachedThreshold={0.9}
+          onEndReachedThreshold={0.98}
           onEndReached={this.onReachedEnd}
           keyExtractor={this._keyExtractor}
           ListEmptyComponent={this.emptyComponent}
@@ -179,10 +202,16 @@ class SearchUserResult extends PureComponent<SearchUserType, any> {
 
 const mapStateToProps = state => {
   return {
+    searchKey: state.globalSearchUi.searchKey,
+    skip: state.globalSearchUi.skip,
+    activeTab: state.globalSearchUi.activeTab,
     loading: state.searchUser.loading,
     total:
       state.searchUser.pagination?.total || state.searchUser.order.length || 0,
     user: state.searchUser.order,
   }
 }
-export default connect(mapStateToProps, null)(SearchUserResult)
+
+const mapDispatchToProps = dispatch => bindActionCreators({ setSkip }, dispatch)
+
+export default connect(mapStateToProps, mapDispatchToProps)(SearchUserResult)
