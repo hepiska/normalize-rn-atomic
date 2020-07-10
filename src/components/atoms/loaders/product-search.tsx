@@ -11,7 +11,7 @@ import ContentLoader from 'react-content-loader/native'
 import { Rect } from 'react-native-svg'
 import { shimmerLoader } from '@utils/constants'
 import LineLoader from './line'
-import ProductCard from './product-card'
+import ProductCard from './product-searct-item'
 
 interface LoaderPropsType {
   style?: ViewStyle

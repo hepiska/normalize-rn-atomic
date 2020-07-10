@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactElement } from 'react'
 import { StyleSheet, ViewStyle, TextStyle } from 'react-native'
 import { colors } from '@utils/constants'
 import Icon from 'react-native-vector-icons/FontAwesome5'
@@ -31,6 +31,7 @@ interface SelectAbleItemType {
   style?: ViewStyle
   waiting?: boolean
   isSelected?: boolean
+  rightContent?: ReactElement
   selectorShape?: SelectorShapeType
 }
 
@@ -43,6 +44,7 @@ class SelectAbleItem extends React.PureComponent<SelectAbleItemType, any> {
       prevProps.isSelected !== this.props.isSelected &&
       this.state.isSelected !== this.props.isSelected
     ) {
+      console.log('======')
       this.setState({ isSelected: this.props.isSelected })
     }
   }
@@ -52,11 +54,11 @@ class SelectAbleItem extends React.PureComponent<SelectAbleItemType, any> {
     if (waiting) {
       this.setState({ isSelected: !this.state.isSelected }, () => {
         setTimeout(() => {
-          onPress(item)
+          if (onPress) onPress(item)
         }, 600)
       })
     } else {
-      onPress(item)
+      if (onPress) onPress(item)
     }
   }
 
@@ -71,7 +73,13 @@ class SelectAbleItem extends React.PureComponent<SelectAbleItemType, any> {
   }
 
   render() {
-    const { style, item, selectorShape = 'square', fontStyle } = this.props
+    const {
+      style,
+      item,
+      selectorShape = 'square',
+      fontStyle,
+      rightContent,
+    } = this.props
     const { isSelected } = this.state
     const composeStyle = { ...styles.container, ...style }
 
@@ -82,6 +90,7 @@ class SelectAbleItem extends React.PureComponent<SelectAbleItemType, any> {
         onPress={this._onPress}
         justify="space-between"
         _direction="row">
+        {rightContent}
         <Font style={fontStyle}>{item && item.name}</Font>
         <Div
           _background={isSelected ? colors.black100 : 'transparent'}

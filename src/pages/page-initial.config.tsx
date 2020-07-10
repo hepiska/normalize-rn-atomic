@@ -1,6 +1,6 @@
 export default {
   root: 'RootScreens',
-  index: 'Screens',
+  index: 'Main',
   main: 'Discover',
   screens: 'SearchList',
   modal: 'ProductFilter',

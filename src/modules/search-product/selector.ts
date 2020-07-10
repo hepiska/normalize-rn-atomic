@@ -3,6 +3,7 @@ import { createSelector } from 'reselect'
 
 const getCategoriesData = state => state.searchProduct.categoryData
 const getCategoriesOrder = state => state.searchProduct.categoryOrder
+const getAppliedFilter = state => state.globalSearchProductFilter.applied
 const getProductData = (state, productId) =>
   state.searchProduct.productData[productId]
 

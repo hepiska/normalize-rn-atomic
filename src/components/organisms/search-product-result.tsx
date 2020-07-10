@@ -17,8 +17,16 @@ import { ScrollView } from 'react-native-gesture-handler'
 import SearchProductResultPart1 from './search-product-result-segment-1'
 import SearchProductResultPart2 from './search-product-result-segment-2'
 import isEqual from 'lodash/isEqual'
-import { connect } from 'react-redux'
+import { connect, batch } from 'react-redux'
 import { bindActionCreators } from 'redux'
+import {
+  updateSelected,
+  setInitialFilter,
+  applyFilter,
+  changeSelectedCategory,
+  clearFilter,
+  setInitialCategory,
+} from '@modules/global-search-product-filter/action'
 
 import EmptyState from '@components/molecules/order-empty-state'
 
@@ -36,6 +44,10 @@ interface SearchProductType {
   skip?: number
   isActive?: boolean
   loading?: boolean
+  changeSelectedCategory?: (id: number) => void
+  setInitialCategory?: (id: number) => void
+  clearFilter?: () => void
+  applyFilter?: () => void
   searchKey?: string
   fetchMore?: () => void
 }
@@ -43,7 +55,6 @@ interface SearchProductType {
 class SearchProductResult extends Component<SearchProductType, any> {
   state = {
     isConfirmed: false,
-    selectedCategory: [],
     finishAnimation: false,
   }
 
@@ -56,6 +67,7 @@ class SearchProductResult extends Component<SearchProductType, any> {
   componentDidUpdate(prevProps) {
     if (prevProps.searchKey !== this.props.searchKey && this.props.isActive) {
       this.setState({ isConfirmed: false })
+      this.props.clearFilter()
     }
   }
 
@@ -78,10 +90,10 @@ class SearchProductResult extends Component<SearchProductType, any> {
 
   setfilter = data => {
     if (data) {
-      const newSelectedCategory = [...this.state.selectedCategory, data]
-      this.setState({
-        isConfirmed: true,
-        selectedCategory: newSelectedCategory,
+      batch(() => {
+        this.props.setInitialCategory(data.id)
+        this.props.changeSelectedCategory(data.id)
+        this.props.applyFilter()
       })
     }
     this.setState({
@@ -120,7 +132,7 @@ class SearchProductResult extends Component<SearchProductType, any> {
   }
 
   renderComponent = () => {
-    const { isConfirmed, selectedCategory } = this.state
+    const { isConfirmed } = this.state
     const { searchKey } = this.props
 
     return !isConfirmed ? (
@@ -129,10 +141,7 @@ class SearchProductResult extends Component<SearchProductType, any> {
         setfilter={this.setfilter}
       />
     ) : (
-      <SearchProductResultPart2
-        searchKey={searchKey}
-        selectedCategory={selectedCategory}
-      />
+      <SearchProductResultPart2 searchKey={searchKey} />
     )
   }
   render() {
@@ -156,4 +165,17 @@ const mapStateToProps = state => ({
   isActive: state.globalSearchUi.activeTab === 0,
 })
 
-export default connect(mapStateToProps, null)(SearchProductResult)
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      updateSelected,
+      clearFilter,
+      setInitialFilter,
+      changeSelectedCategory,
+      applyFilter,
+      setInitialCategory,
+    },
+    dispatch,
+  )
+
+export default connect(mapStateToProps, mapDispatchToProps)(SearchProductResult)

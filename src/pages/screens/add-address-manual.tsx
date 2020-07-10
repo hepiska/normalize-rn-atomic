@@ -141,7 +141,6 @@ const AddAddressManual = props => {
     })
   }
   const _getInitialData = section => {
-    console.log('selectedLocation', selectedLocation)
     if (selectedLocation[regionMap[section].parent]) {
       getLocation(
         regionMap[section].parent,

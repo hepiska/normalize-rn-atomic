@@ -53,7 +53,7 @@ const searchReducer: Reducer<SearchState> = (
       return { ...state }
     case searchActionType.SET_FIND_PRODUCT_ORDER:
       state.productFindOrder = Immutable(action.payload)
-      return state
+      return { ...state }
     case searchActionType.ADD_FIND_PRODUCT_ORDER:
       state.productFindOrder = Immutable(state.productFindOrder).concat(
         state.productFindOrder,

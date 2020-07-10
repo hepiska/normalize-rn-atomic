@@ -119,7 +119,6 @@ class ThisCameraRoll extends React.Component<CameraRollType> {
         })
       }
     } else if (this.props.getImages) {
-      console.log('masuk kene ')
       this.props.getImages(data)
       this.setState({})
       this.props.onClose()

@@ -29,7 +29,6 @@ const DiscoverSearchComponent = ({ onPress }) => {
 const DiscoverPage = () => {
   const onSearchPress = useCallback(() => {
     navigate('Screens', { screen: 'SearchList' })
-    console.log('on discover search')
   }, [])
 
   // return null

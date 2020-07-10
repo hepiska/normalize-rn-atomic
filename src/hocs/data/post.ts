@@ -23,9 +23,10 @@ const postListMap = () => {
     const user = getUser(state, post.user)
     const isLiked = getIsLiked(state, postId)
     const isBookmarked = getIsBookmarked(state, postId)
-    const userAuth =
-      getUser(state, state.auth.data.user.id) || state.auth.data.user
-
+    let userAuth = null
+    if (state.auth.data.user) {
+      userAuth = getUser(state, state.auth.data.user.id) || state.auth.data.user
+    }
     return {
       post,
       user,
@@ -60,7 +61,7 @@ const searchPostListMap = () => {
       isLiked,
       isBookmarked,
       isAuth: state.auth.isAuth,
-      userAuth,
+      userAuth: userAuth,
     }
   }
 }

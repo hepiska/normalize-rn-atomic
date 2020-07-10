@@ -150,7 +150,6 @@ export const checkUsernameAvailable = username => ({
 })
 
 export const _authSelector = ({ auth }) => {
-  console.log('auth', auth)
   return {
     loading: auth.loading,
     error: auth.error,

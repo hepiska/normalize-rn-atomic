@@ -17,6 +17,16 @@ export const shadows = {
   elevation: 5;
 `,
 }
+
+export const contextMaping = {
+  color: 'color_ids',
+  category: 'category_ids',
+  material: 'material_ids',
+  pattern: 'pattern_ids',
+  skin_concern: 'skin_concern_ids',
+  skin_type: 'skin_type_ids',
+  style: 'style_ids',
+}
 export const colors = {
   font1: '#1A1A1A',
   font2: '#454545',

@@ -2,6 +2,11 @@ import { API } from '../action-types'
 import { setPostData } from '@modules/post/action'
 import { request } from '@utils/services'
 import * as schema from '@modules/normalize-schema'
+import {
+  setInitialFilter,
+  updateSelected as globalUpdateSelected,
+} from '../global-search-product-filter/action'
+import { contextMaping } from '@utils/constants'
 import { normalize } from 'normalizr'
 export const searchActionType = {
   FETCH: 'search-product/FETCH',
@@ -117,9 +122,22 @@ export const getSearchProduct = (params, url) => ({
     success: (data, { pagination, meta }) => {
       const normalizeProduct = normalize(data.products, [schema.searchProduct])
       const normalizeCategory = normalize(data.categories, [schema.category])
+
+      const context = meta.context.reduce((acc, ctx) => {
+        const newAcc = { ...acc }
+        if (newAcc[contextMaping[ctx.type]]) {
+          newAcc[contextMaping[ctx.type]] += `,${ctx.id}`
+        } else {
+          newAcc[contextMaping[ctx.type]] = '' + ctx.id
+        }
+        return newAcc
+      }, {})
+
       const dispacers = [
         setSearchProdutData(normalizeProduct.entities.product || {}),
         setSearchCategoryData(normalizeCategory.entities.category || {}),
+        setInitialFilter(context),
+        globalUpdateSelected(context),
         setContext(meta.context),
         setSearchLoading(false),
       ]
@@ -149,11 +167,12 @@ export const findProductSearch = (params, url) => ({
       return setFindSearchLoading(true)
     },
 
-    success: (data, { pagination }) => {
+    success: (data, { pagination, meta }) => {
       const dispacers = [
         setFindSearchLoading(false),
         setSearchProdutData(data.entities.product || {}),
         setFindPagination(pagination || {}),
+        setContext(meta.context),
       ]
 
       if (params.offset > 0 && !data.result.length) {

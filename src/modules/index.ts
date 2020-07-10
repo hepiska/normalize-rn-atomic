@@ -37,6 +37,7 @@ import feedReducer from './post-feed/reducer'
 import discoverReducer from './post-discover/reducer'
 import insightReducer from './insights/reducer'
 import globalSearchUiReducer from './global-search-ui/reducer'
+import globalSearchProductFilterReducer from './global-search-product-filter/reducer'
 
 const combinedReducer: Reducer<any> = combineReducers({
   addresses: addressReducer,
@@ -56,6 +57,7 @@ const combinedReducer: Reducer<any> = combineReducers({
 
   global: globalReducer,
   globalSearchUi: globalSearchUiReducer,
+  globalSearchProductFilter: globalSearchProductFilterReducer,
 
   insights: insightReducer,
 

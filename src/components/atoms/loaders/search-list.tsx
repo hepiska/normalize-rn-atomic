@@ -1,7 +1,5 @@
 import React, { useState } from 'react'
 import { View, ViewStyle, SafeAreaView, StyleSheet } from 'react-native'
-import SearchFilterLoader from './search-filter-loader'
-import ProductCardLoader from './product-card'
 import Line from './line'
 import Circle from './circle-loader'
 

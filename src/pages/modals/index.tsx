@@ -11,6 +11,7 @@ import ProductSortBottomSheet from './product-sort'
 import ProductFilter from './product-filter'
 import initialPageConfig from '@pages/page-initial.config'
 import PostMoreModal from './post-more'
+import GlobalSearchProductFilter from './global-search-product-filter'
 
 import ShareModal from '@pages/modals/share'
 
@@ -35,6 +36,14 @@ function ModalStack() {
           cardStyle: { backgroundColor: 'transparent' },
         }}
         component={ProductFilter}
+      />
+      <Stack.Screen
+        name="GlobalSearchProductFilter"
+        options={{
+          animationEnabled: false,
+          cardStyle: { backgroundColor: 'transparent' },
+        }}
+        component={GlobalSearchProductFilter}
       />
       <Stack.Screen
         name="ProductSort"

@@ -6,29 +6,12 @@ import React, {
   useMemo,
   useCallback,
 } from 'react'
-import {
-  Dimensions,
-  FlatList,
-  Modal,
-  StyleSheet,
-  TextInput,
-} from 'react-native'
-import { connect, batch } from 'react-redux'
-import { bindActionCreators } from 'redux'
+import { Dimensions, TextInput } from 'react-native'
+import { batch } from 'react-redux'
 import { Div, Font } from '@components/atoms/basic'
-import { helveticaNormalFont } from '@components/commont-styles'
-import Field from '@components/atoms/field'
 import { colors } from '@utils/constants'
-import Icon from 'react-native-vector-icons/FontAwesome5'
-import { changeValue as changeValueUiIneraction } from '@modules/ui-interaction/action'
-import isEqual from 'lodash/isEqual'
-import MultiSlider from '@ptomasroos/react-native-multi-slider'
-import {
-  setSelectedPrice,
-  fetchCountProduct,
-} from '@modules/product-filter/action'
 
-import Slider from '@components/atoms/slider-2-pin'
+import MultiSlider from '@ptomasroos/react-native-multi-slider'
 
 const { width } = Dimensions.get('screen')
 
@@ -38,6 +21,7 @@ const PriceComponent = ({ label, curency = 'Rp', value, onChange }: any) => {
       <Font>{label}</Font>
       <Div _direction="row" _margin="4px 0px 0px 0px">
         <Div
+          _height="38px"
           _border={`1px solid ${colors.black90}`}
           style={{
             borderTopRightRadius: 0,
@@ -54,15 +38,15 @@ const PriceComponent = ({ label, curency = 'Rp', value, onChange }: any) => {
             borderBottomLeftRadius: 0,
             transform: [{ translateX: -1 }],
           }}
-          _height="32px"
+          _height="38px"
           _width="96px"
           radius="8px"
-          padd="8px 8px">
+          padd="0px 8px">
           <TextInput
             keyboardType="numeric"
             value={String(value)}
             onChangeText={onChange}
-            style={{ width: '100%', height: '100%' }}
+            style={{ width: '100%', height: '100%', fontSize: 10 }}
           />
         </Div>
       </Div>
@@ -100,7 +84,9 @@ const FilterPriceOrg = ({
     const initialCursorMax = Math.round(
       ((maximum_price - colectionPrices.minimum_price) / delta) * maxSlider,
     )
+
     changeMultiSlider([initialCursorMin, initialCursorMax])
+
     return () => {
       clearTimeout(timeout)
     }
@@ -119,13 +105,6 @@ const FilterPriceOrg = ({
         setSelectedPrice({
           type: 'maximum_price',
           value: locPrice.max,
-        })
-        fetchCountProduct({
-          collection_ids: activeCollection,
-          maximum_price: locPrice.max,
-          minimum_price: locPrice.min,
-          brand_ids: selectedBrand,
-          category_ids: selectedCategory,
         })
       })
     }, 500)
@@ -164,6 +143,8 @@ const FilterPriceOrg = ({
 
     setLocPrice({ max: maxPrice, min: minPrice })
   }, [])
+
+  console.log('====locpice', locPrice)
 
   return (
     <Div
@@ -218,28 +199,4 @@ const memoizeFilterOrg = memo(FilterPriceOrg, (prevProps, nextProp) => {
   return true
 })
 
-const mapDispatchToProps = dispatch =>
-  bindActionCreators(
-    {
-      setSelectedPrice,
-      fetchCountProduct,
-    },
-    dispatch,
-  )
-
-const mapStateToProps = state => ({
-  colectionPrices: { ...state.productFilter.data.prices } || {},
-  minimum_price: state.productFilter.selected.prices.minimum_price,
-  maximum_price: state.productFilter.selected.prices.maximum_price,
-  activeCollection: state.productFilter.activePage.collection_ids || '',
-  selectedCategory:
-    state.productFilter.selected.category_ids ||
-    state.productFilter.activePage.category_ids ||
-    '',
-  selectedBrand:
-    state.productFilter.selected.brand_ids ||
-    state.productFilter.activePage.brand_ids ||
-    '',
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(memoizeFilterOrg)
+export default memoizeFilterOrg

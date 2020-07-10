@@ -1,12 +1,8 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Dimensions, StyleSheet, View } from 'react-native'
-import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
-import { Div } from '@components/atoms/basic'
 import { Button, GradientButton } from '@components/atoms/button'
 import { useNavigation } from '@react-navigation/native'
 import { colors } from '@utils/constants'
-import { clearFilter, applyFilter } from '@modules/product-filter/action'
 import { formatCur } from '@utils/helpers'
 
 const { width } = Dimensions.get('screen')
@@ -49,10 +45,25 @@ const ProductFilterAction = ({
   count,
   style,
   isLoading,
+  selectedFilter,
+  fetchCountProduct,
+  searchKey,
   clearFilter,
   applyFilter,
 }: any) => {
   const navigation = useNavigation()
+
+  useEffect(() => {
+    if (fetchCountProduct) {
+      fetchCountProduct({ ...selectedFilter, query: searchKey })
+    }
+  }, [
+    selectedFilter.brand_ids,
+    selectedFilter.color_ids,
+    selectedFilter.maximum_price,
+    selectedFilter.minimum_price,
+    selectedFilter.category_ids,
+  ])
 
   const _applyFilter = () => {
     applyFilter()
@@ -81,12 +92,4 @@ const ProductFilterAction = ({
   )
 }
 
-const mapDispatchToProps = dispatch =>
-  bindActionCreators({ clearFilter, applyFilter }, dispatch)
-
-const mapStateToProps = state => ({
-  count: state.productFilter.countedProducts.count,
-  isLoading: state.productFilter.countedProducts.isLoading,
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(ProductFilterAction)
+export default ProductFilterAction

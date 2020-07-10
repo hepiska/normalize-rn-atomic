@@ -6,7 +6,7 @@ import { colors } from '@utils/constants'
 import { setSelectedSort } from '@modules/sort/action'
 import SelectAbleItem, {
   SelectorShapeType,
-} from '@components/molecules/filter-brand-item'
+} from '@src/components/molecules/selectable-item'
 import { changeValue } from '@modules/product-filter/action'
 
 const { width } = Dimensions.get('screen')

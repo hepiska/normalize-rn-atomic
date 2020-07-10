@@ -21,7 +21,7 @@ import {
 } from '@modules/product-filter/action'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import AlvabetSelectorMol from '@components/molecules/alvabet-selector'
-import FilterBrandItem from '@components/molecules/filter-brand-item'
+import FilterBrandItem from '@src/components/molecules/selectable-item'
 import { fontStyle } from '../commont-styles'
 import { deepClone } from '@src/utils/helpers'
 

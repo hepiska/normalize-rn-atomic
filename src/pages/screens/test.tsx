@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, Text, TouchableOpacity, ScrollView } from 'react-native'
 import UserDetail from '@components/atoms/loaders/user-detail'
-import ProductSearch from '@components/atoms/loaders/product-search'
+import FilterList from '@components/atoms/loaders/filter-list'
 import PostCardFulll from '@components/atoms/loaders/post-card'
 import PostDetail from '@components/atoms/loaders/post-detail'
 import SearchListLoader from '@src/components/atoms/loaders/search-list'
@@ -17,8 +17,9 @@ const TestPage = props => {
 
   return (
     <View style={{ flex: 1, marginTop: 62 }} ref={toolTipsParent}>
+      <FilterList />
       {/* <CircleLoader r={50} /> */}
-      <ConnectionsLoader />
+      {/* <ConnectionsLoader /> */}
       {/* <HorizontalImageLoader /> */}
       {/* <View ref={toolTipsTarget}>
         <Text>sas</Text>

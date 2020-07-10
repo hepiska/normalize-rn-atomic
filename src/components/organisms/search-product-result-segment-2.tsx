@@ -8,7 +8,7 @@ import {
   FlatList,
   InteractionManager,
 } from 'react-native'
-import { connect } from 'react-redux'
+import { connect, batch } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { Div } from '@components/atoms/basic'
 import { productSearchApi, clearProductSearch } from '@modules/product/action'
@@ -18,6 +18,14 @@ import { makeMapCategories } from '@modules/search-product/selector'
 import { navigate } from '@src/root-navigation'
 import { dispatch } from '@src/root-navigation'
 import { StackActions } from '@react-navigation/native'
+import {
+  setInitialFilter as globalSetInitialFilter,
+  updateSelected as globalUpdateSelected,
+  changeSelectedCategory as globalChangeSelectedCategory,
+  changeContext as globalChangeContext,
+  applyFilter,
+} from '@modules/global-search-product-filter/action'
+import { contextMaping } from '@utils/constants'
 
 import { colors } from '@src/utils/constants'
 import { fontStyle } from '../commont-styles'
@@ -32,6 +40,7 @@ import SearchListLoader from '@src/components/atoms/loaders/search-list'
 import TwoCollumnCardLoaderSmall from '@components/atoms/loaders/two-column-card-small'
 import { productSearchListData } from '@hocs/data/product'
 import { findProductSearch } from '@modules/search-product/action'
+import { makeMapAppliedFilters } from '@modules/global-search-product-filter/selector'
 
 const getcontex = async params => {
   const newParams = { ...params }
@@ -47,7 +56,7 @@ const ProductWithCardHoc = productSearchListData(ProductCard)
 class SearchList extends Component<any, any> {
   state = {
     finishAnimation: false,
-    selectedCategory: [...this.props.selectedCategory],
+    selectedCategory: [],
   }
   limit = 20
   skip = 0
@@ -74,14 +83,38 @@ class SearchList extends Component<any, any> {
       return ''
     }
     if (this.props.activeTab !== prevProps.activeTab) {
-      getcontex({ query: this.props.searchKey }).then(ctx => {
-        this._freshFetch(ctx)
+      getcontex({ query: this.props.searchKey }).then(async ctx => {
+        const context = ctx.reduce((acc, _ctx) => {
+          const newAcc = { ...acc }
+          if (newAcc[contextMaping[_ctx.type]]) {
+            newAcc[contextMaping[_ctx.type]] += `,${_ctx.id}`
+          } else {
+            newAcc[contextMaping[_ctx.type]] = '' + _ctx.id
+          }
+          return newAcc
+        }, {})
+
+        await batch(() => {
+          this.props.globalSetInitialFilter(context)
+          this.props.globalUpdateSelected(context)
+        })
+        this.props.applyFilter()
+
+        // this._freshFetch(ctx)
       })
+    }
+
+    if (!isEqual(prevProps.appliedFilter, this.props.appliedFilter)) {
+      this._freshFetch()
     }
   }
 
   _openSort = () => {
     navigate('modals', { screen: 'ProductSort' })
+  }
+
+  _openFiler = () => {
+    navigate('modals', { screen: 'GlobalSearchProductFilter' })
   }
 
   _freshFetch = async (ctx?: any) => {
@@ -95,23 +128,17 @@ class SearchList extends Component<any, any> {
   }
 
   _fetchData = (skip, localCtx?: any) => {
-    const { context, searchKey } = this.props
-    const { selectedCategory } = this.state
-
-    const appliedCtx = localCtx || context
+    const { searchKey, appliedFilter } = this.props
+    const {} = this.state
 
     const params: any = {
       limit: this.limit,
       offset: this.limit * skip,
       query: searchKey,
       ...this.props.sort.value,
-      // is_commerce: true,
+      ...appliedFilter,
+      is_commerce: true,
     }
-    appliedCtx.forEach(ctx => {
-      params[ctx.type] = ctx.value
-    })
-    params.categories = selectedCategory.map(cat => cat.id).join(',')
-
     this.props.findProductSearch(params)
   }
 
@@ -130,35 +157,20 @@ class SearchList extends Component<any, any> {
     }
   }
 
-  handleSelecCategory = category => {
-    const { selectedCategory } = this.state
-    let newSelectedCategory = [...selectedCategory]
-    if (!category.isSelected) {
-      newSelectedCategory.push(category)
-    } else {
-      newSelectedCategory = newSelectedCategory.filter(cat => {
-        return cat.id !== category.id
-      })
-    }
-    this.setState({ selectedCategory: newSelectedCategory }, () => {
-      this._freshFetch()
-    })
+  handleSelectedContext = context => {
+    this.props.globalChangeContext(context)
   }
 
   _renderSearch = () => {
-    const { searchKey, total, categories } = this.props
-    const { selectedCategory } = this.state
+    const { searchKey, total, context } = this.props
 
     if (!searchKey) return null
 
-    const mapCategory = categories.map(cat => {
-      const newCat = { ...cat }
-      newCat.title = cat.name
-      newCat.isSelected = !!selectedCategory.find(_cat => {
-        return _cat.id === cat.id
-      })
-      return newCat
-    })
+    const mappedContex = context.map(ctx => ({
+      ...ctx,
+      title: ctx.value,
+      isSelected: !ctx.suggestion,
+    }))
 
     return (
       <>
@@ -199,9 +211,9 @@ class SearchList extends Component<any, any> {
             marginVertical: 16,
           }}>
           <OutlineButton
-            title={`Filters (${selectedCategory.length})`}
+            title={`Filters (${0})`}
             style={{ borderColor: colors.black50 }}
-            onPress={() => {}}
+            onPress={this._openFiler}
             leftIcon={
               <Icon5
                 // style={{ marginRight: 8 }}
@@ -224,9 +236,9 @@ class SearchList extends Component<any, any> {
           />
         </View>
         <SelectAblePill
-          data={mapCategory}
+          data={mappedContex}
           style={{ marginHorizontal: 8, marginBottom: 12 }}
-          onPress={this.handleSelecCategory}
+          onPress={this.handleSelectedContext}
         />
       </>
     )
@@ -304,11 +316,15 @@ class SearchList extends Component<any, any> {
   }
 
   render() {
-    const { products, loading } = this.props
+    const { products, loading, context } = this.props
     const { finishAnimation } = this.state
+    const firstLoading = loading && this.skip < 1
+
     return (
       <>
-        {finishAnimation ? (
+        {!finishAnimation || firstLoading ? (
+          <SearchListLoader style={{ margin: 16 }} />
+        ) : (
           <View style={{ flex: 1 }}>
             <FlatList
               numColumns={2}
@@ -328,8 +344,6 @@ class SearchList extends Component<any, any> {
               // stickyHeaderIndices={[0]}
             />
           </View>
-        ) : (
-          <SearchListLoader style={{ margin: 16 }} />
         )}
       </>
     )
@@ -340,12 +354,18 @@ const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
       findProductSearch,
+      applyFilter,
+      globalUpdateSelected,
+      globalSetInitialFilter,
+      globalChangeSelectedCategory,
+      globalChangeContext,
       // clearProductSearch,
     },
     dispatch,
   )
 const mapStateToProps = () => {
   const mapCategories = makeMapCategories()
+  const mapAppliedFilters = makeMapAppliedFilters()
 
   return state => {
     return {
@@ -354,6 +374,7 @@ const mapStateToProps = () => {
       products: state.searchProduct.productFindOrder,
       sort: state.sort.selected,
       categories: mapCategories(state),
+      appliedFilter: mapAppliedFilters(state),
       context: state.searchProduct.context,
       total: state.searchProduct.findPagination?.total || 0,
       loading: state.searchProduct.findLoading,

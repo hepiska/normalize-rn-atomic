@@ -106,7 +106,7 @@ class FeedOrg extends React.Component<any, any> {
     if (index === 3) {
       return (
         <View>
-          <TopInsider navigation={this.props.navigation} />
+          {/* <TopInsider navigation={this.props.navigation} /> */}
           <PostItem
             style={styles.itemStyle}
             key={`horizontal-list-post-${index}`}
@@ -120,7 +120,7 @@ class FeedOrg extends React.Component<any, any> {
     if (index === 6) {
       return (
         <View>
-          <HorizontalListLookBook navigation={this.props.navigation} />
+          {/* <HorizontalListLookBook navigation={this.props.navigation} /> */}
 
           <PostItem
             style={styles.itemStyle}
@@ -189,7 +189,6 @@ class FeedOrg extends React.Component<any, any> {
   render() {
     const { posts, scrollEnabled, loading } = this.props
     const firstLoading = loading && !this.skip
-
     return (
       <View
         style={{

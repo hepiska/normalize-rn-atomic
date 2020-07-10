@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { View, Text, ScrollView, StyleSheet, ViewStyle } from 'react-native'
 import Pill from '@components/atoms/pill'
 import { colors } from '@src/utils/constants'

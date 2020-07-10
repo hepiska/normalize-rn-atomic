@@ -1,20 +1,12 @@
 import React, { Component } from 'react'
 import { Dimensions, StyleSheet, SectionList, View } from 'react-native'
-import { connect, batch } from 'react-redux'
-import { bindActionCreators } from 'redux'
+import { batch } from 'react-redux'
 import { colors } from '@utils/constants'
-import isEqual from 'lodash/isEqual'
-import {
-  changeSelectedCategory,
-  fetchCountProduct,
-  setSelectedCategory,
-} from '@modules/product-filter/action'
 import { categoryListData } from '@hocs/data/category'
+import FilterListLoader from '@components/atoms/loaders/filter-list'
 import SelectAbleItem, {
   SelectorShapeType,
-} from '@components/molecules/filter-brand-item'
-
-import { makeMapFilterCategories } from '@modules/product-filter/selector'
+} from '@src/components/molecules/selectable-item'
 
 const { width } = Dimensions.get('screen')
 
@@ -55,11 +47,65 @@ class FilterCategory extends Component<any, any> {
   }
 
   timer = null
+  skip = 0
+  limit = 20
+  lastskip = 0
+
+  componentDidMount() {
+    this._freshfetch()
+  }
+
+  componentDidUpdate(prevProps) {
+    if (
+      prevProps.selectedCategory !== this.props.selectedCategory &&
+      this.props.selectedCategory === ''
+    ) {
+      this.setState({ selectedCategory: this.props.selectedCategory })
+    }
+  }
+
+  _freshfetch = () => {
+    this.skip = 0
+    this._fetchData(this.skip)
+  }
+
+  _fetchData = skip => {
+    const params = {
+      offset: skip * this.limit,
+      limit: this.limit,
+    }
+    if (this.props.fetchCategory) {
+      this.props.fetchCategory(params)
+    }
+  }
+
+  _fetchMore = () => {
+    if (!this.props.loading) {
+      const newskip = this.skip + 1
+      if (newskip > this.lastskip) {
+        this.skip = newskip
+        this.lastskip = newskip
+      }
+      if (this.props.loading) {
+        return
+      }
+      this._fetchData(this.skip)
+    }
+  }
 
   shouldComponentUpdate(nextProps, nextState) {
     const { state, props } = this
-
     if (state.selectedCategory !== nextState.selectedCategory) {
+      return true
+    }
+    if (
+      nextProps.selectedCategory !== props.selectedCategory &&
+      nextProps.selectedCategory === ''
+    ) {
+      return true
+    }
+
+    if (props.categories.length !== nextProps.categories.length) {
       return true
     }
     return false
@@ -112,7 +158,7 @@ class FilterCategory extends Component<any, any> {
             params.collection_ids
           }
           this.props.setSelectedCategory(categoryId)
-          this.props.fetchCountProduct(params)
+          // this.props.fetchCountProduct(params)
         })
         this.timer = null
       }, 100)
@@ -162,48 +208,30 @@ class FilterCategory extends Component<any, any> {
   _keyExtractor = (item, index) => '' + item.id + index
 
   render() {
-    const { categories } = this.props
+    const { categories, loading } = this.props
     const { selectedCategory } = this.state
+
+    const firstLoading = loading && this.skip < 1
 
     return (
       <View style={{ flex: 1, width, backgroundColor: 'white' }}>
-        <SectionList
-          extraData={selectedCategory}
-          style={styles.sectionContainer}
-          keyExtractor={this._keyExtractor}
-          renderSectionHeader={this._renderSectionHeader}
-          sections={categories}
-          renderItem={this._renderItem}
-        />
+        {firstLoading ? (
+          <FilterListLoader />
+        ) : (
+          <SectionList
+            extraData={selectedCategory}
+            // onEndReached={this._fetchMore}
+            onEndReachedThreshold={0.98}
+            style={styles.sectionContainer}
+            keyExtractor={this._keyExtractor}
+            renderSectionHeader={this._renderSectionHeader}
+            sections={categories}
+            renderItem={this._renderItem}
+          />
+        )}
       </View>
     )
   }
 }
 
-const mapStateToProps = () => {
-  const mapCategoriesfilter = makeMapFilterCategories()
-
-  return state => {
-    return {
-      categories: mapCategoriesfilter(state),
-      selectedPrice: state.productFilter.selected.price,
-      activeCollection: state.productFilter.activePage.collection_ids || '',
-      selectedBrand:
-        state.productFilter.selected.brand_ids ||
-        state.productFilter.activePage.brand_ids ||
-        '',
-      activeCategory: state.productFilter.activePage.category_ids || '',
-      selectedCategory: state.productFilter.selected.category_ids
-        ? state.productFilter.selected.category_ids
-        : '',
-    }
-  }
-}
-
-const mapDispatchToProps = dispatch =>
-  bindActionCreators(
-    { changeSelectedCategory, fetchCountProduct, setSelectedCategory },
-    dispatch,
-  )
-
-export default connect(mapStateToProps, mapDispatchToProps)(FilterCategory)
+export default FilterCategory

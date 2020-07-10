@@ -19,21 +19,22 @@ import TabMenuCursor from '@src/components/molecules/tab-menu-cursor'
 import { changeValue } from '@modules/product-filter/action'
 import FilterPriceOrg from '@src/components/organisms/filter-price'
 import FilterCategoryOrg from '@src/components/organisms/filter-category'
-import FilterBrandOrg from '@src/components/organisms/filter-brand'
+import FilterBrandOrg from '@src/components/organisms/filter-brand-global-search'
 import ProductFilterAction from '@components/molecules/product-filter-action'
+import FilterColor from '@components/organisms/filter-color'
 import {
-  collectionFilterCategoriesData,
-  productFilterActionData,
-  productFilterPriceData,
+  globalSearchCategoriesData,
+  globalSearchFilterPriceData,
+  globalSearchActionData,
+  globalSearchFilterColorData,
 } from '@hocs/data/filter'
 
 const { height, width } = Dimensions.get('screen')
 
-const FilterBrandOrgData = collectionFilterCategoriesData(FilterCategoryOrg)
-
-const ProductFilterActionWithData = productFilterActionData(ProductFilterAction)
-
-const ProductFilterWithData = productFilterPriceData(FilterPriceOrg)
+const CategoryFilter = globalSearchCategoriesData(FilterCategoryOrg)
+const PriceFilterWithData = globalSearchFilterPriceData(FilterPriceOrg)
+const ProductFilterWithData = globalSearchActionData(ProductFilterAction)
+const FilterColorWithData = globalSearchFilterColorData(FilterColor)
 
 const Tab = createMaterialTopTabNavigator()
 
@@ -132,21 +133,22 @@ class ProductFilterBottomSheet extends React.Component<any, any> {
           backgroundColor: 'white',
         }}>
         <Tab.Navigator
-          initialRouteName={route.params.section}
+          initialRouteName={route.params?.section}
           lazy
           tabBar={props => <TabMenuCursor {...props} />}>
-          <Tab.Screen name="Category" component={FilterBrandOrgData} />
+          <Tab.Screen name="colors" component={FilterColorWithData} />
           <Tab.Screen name="Brand" component={FilterBrandOrg} />
-          <Tab.Screen name="Price" component={ProductFilterWithData} />
+          <Tab.Screen name="Category" component={CategoryFilter} />
+          <Tab.Screen name="Price" component={PriceFilterWithData} />
         </Tab.Navigator>
-        <ProductFilterActionWithData style={{ bottom: totalheaderheight }} />
+        <ProductFilterWithData style={{ bottom: totalheaderheight }} />
       </View>
     )
   }
 
   render() {
     return (
-      <View style={{ flex: 1 }}>
+      <View style={{ height }}>
         <BottomSheet
           onCloseEnd={this._onBack}
           ref={ref => {

@@ -175,7 +175,7 @@ const EditProfile = props => {
           return res
         })
         .catch(err => {
-          console.log('read error ---', err)
+          console.error('read error ---', err)
         })
 
       // hit upload image

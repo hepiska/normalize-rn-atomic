@@ -10,10 +10,16 @@ export const makeflatenFilter = () =>
     return filter
   })
 
-const getCategoryFilter = state => state.productFilter.data.categories
-const getCategoriesData = state => state.categories.data
+export const getCategoryFilter = state => state.productFilter.data.categories
+export const getCategoriesData = state => state.categories.data
+export const getGlobalSearchCategoryFilter = state => {
+  return state.globalSearchProductFilter.order.categories || []
+}
 
-export const makeMapFilterCategories = () =>
+export const makeMapFilterCategories = (
+  getCategoryFilter: (state: any) => Array<any>,
+  getCategoriesData: (state: any) => Array<any>,
+) =>
   createSelector(
     [getCategoryFilter, getCategoriesData],
     (catfilter, catData) => {
