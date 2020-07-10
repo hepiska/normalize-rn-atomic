@@ -5,7 +5,12 @@ import {
   addProductSaved,
   deleteProductSaved,
 } from '@modules/product-saved/action'
-import { removeCart, changeCartQty } from '@modules/cart/action'
+import {
+  removeCart,
+  changeCartQty,
+  changeQtyData,
+  removeCartOrder,
+} from '@modules/cart/action'
 import { navigate } from '@src/root-navigation'
 import { getProductById } from '@modules/product/action'
 import { makeSelectorCarts } from '@src/modules/cart/selector'
@@ -45,7 +50,6 @@ const cartListMap = () => {
         })
       }
     }
-
     if (ownProps.productId) {
       product = getSelectedProducts(state, ownProps.productId)
       brand = getSelectedBrands(state, product.brand)
@@ -77,7 +81,9 @@ const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
       removeCart,
+      removeCartOrder,
       changeCartQty,
+      changeQtyData,
       addProductSaved,
       deleteProductSaved,
       getProductById,

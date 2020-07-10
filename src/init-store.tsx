@@ -70,6 +70,7 @@ class InitStore extends React.Component<any, any> {
   async componentDidMount() {
     const _store = createStore(rootReducer, initialState, composedEnhancers)
     store = _store
+    global.store = _store
     const persistor = persistStore(store)
     presist = persistor
     this.setState({ store: _store, persistor, isLoading: false })

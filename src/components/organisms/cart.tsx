@@ -21,7 +21,7 @@ import TotalPayCart from '@components/molecules/total-pay-cart'
 import { cartListData } from '@hocs/data/cart'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { removeCart } from '@modules/cart/action'
+import { removeCart, removeCartOrder } from '@modules/cart/action'
 import IconFa from 'react-native-vector-icons/FontAwesome5'
 import { navigate } from '@src/root-navigation'
 import { getUserAddressById } from '@modules/address/action'
@@ -75,8 +75,10 @@ class Cart extends React.Component<any, any> {
     return false
   }
   componentDidMount() {
-    this.props.getUserAddressById()
-    this.props.getAllTransactionCount({ status: 'unpaid,waiting' })
+    if (this.props.isAuth) {
+      this.props.getUserAddressById()
+      this.props.getAllTransactionCount({ status: 'unpaid,waiting' })
+    }
     this._chooseAll()
   }
 
@@ -94,7 +96,6 @@ class Cart extends React.Component<any, any> {
   _renderItem = ({ item, index }) => {
     let isChecked = this.state.selectedVariant.find(v => v === item)
     isChecked = isChecked !== undefined ? true : false
-
     return (
       <CartHoc
         key={`cart-${index}`}
@@ -104,17 +105,25 @@ class Cart extends React.Component<any, any> {
         isChecked={isChecked}
         chooseCart={this.onChooseCartByItem}
         removeSelectedVariant={this.onRemoveSelectedVariant}
+        isAuth={this.props.isAuth}
       />
     )
   }
 
   _removeCart = () => {
-    const { carts, removeCart } = this.props
+    const { carts, removeCart, isAuth, removeCartOrder } = this.props
 
-    carts &&
-      carts.map(cart => {
-        removeCart(cart)
-      })
+    if (isAuth) {
+      carts &&
+        carts.map(cart => {
+          removeCart(cart)
+        })
+    } else {
+      carts &&
+        carts.map(cart => {
+          removeCartOrder(cart)
+        })
+    }
     this.setState({
       selectedVariant: [],
     })
@@ -203,7 +212,7 @@ class Cart extends React.Component<any, any> {
   }
 
   _header = () => {
-    const { carts, transactionCount } = this.props
+    const { carts, transactionCount, isAuth } = this.props
     const { selectedVariant, isShowOrderAlert } = this.state
     const isChecked = carts.length === selectedVariant.length
 
@@ -217,7 +226,7 @@ class Cart extends React.Component<any, any> {
     if (carts.length > 0) {
       return (
         <>
-          {isShowOrderAlert && (
+          {isShowOrderAlert && isAuth && (
             <View
               style={{
                 backgroundColor: colors.black50,
@@ -324,21 +333,25 @@ class Cart extends React.Component<any, any> {
   }
 
   _onCheckout = (item, totalPrice) => () => {
-    if (this.props.addresses.length > 0) {
-      navigate('Screens', {
-        screen: 'Checkout',
-        params: { cartsId: item, totalPrice: totalPrice },
-      })
+    if (!this.props.isAuth) {
+      navigate('modals', { screen: 'LoginModal' })
     } else {
-      navigate('Screens', {
-        screen: 'AddNewAddressManual',
-        params: {
-          afterSubmit: {
-            screen: 'Checkout',
-            params: { cartsId: item, totalPrice: totalPrice },
+      if (this.props.addresses.length > 0) {
+        navigate('Screens', {
+          screen: 'Checkout',
+          params: { cartsId: item, totalPrice: totalPrice },
+        })
+      } else {
+        navigate('Screens', {
+          screen: 'AddNewAddressManual',
+          params: {
+            afterSubmit: {
+              screen: 'Checkout',
+              params: { cartsId: item, totalPrice: totalPrice },
+            },
           },
-        },
-      })
+        })
+      }
     }
   }
 
@@ -362,7 +375,6 @@ class Cart extends React.Component<any, any> {
   render() {
     const { footer, stateCarts, carts, cartsLoading, products } = this.props
     const { selectedVariant } = this.state
-
     // need refacotr with selector
     let data = []
     let groupData = carts.reduce((total, currentValue) => {
@@ -412,7 +424,7 @@ class Cart extends React.Component<any, any> {
             items={selectedVariant}
             buttonText="Checkout"
             onCheckout={this._onCheckout}
-            enableButton={enableCheckout}
+            enableButton={enableCheckout || !this.props.isAuth}
           />
         )}
       </View>
@@ -422,16 +434,24 @@ class Cart extends React.Component<any, any> {
 
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
-    { removeCart, getUserAddressById, getAllTransactionCount },
+    { removeCart, removeCartOrder, getUserAddressById, getAllTransactionCount },
     dispatch,
   )
 
 const mapStateToProps = (state: any) => {
+  const isAuth = state.auth.isAuth
+  let addresses = []
+  let transactionCount = []
+  if (isAuth) {
+    addresses = state.addresses.order
+    transactionCount = state.transaction.count
+  }
   return {
-    addresses: state.addresses.order,
+    isAuth,
+    addresses,
     products: state.productsSaved.order,
     stateCarts: state.carts.data,
-    transactionCount: state.transaction.count,
+    transactionCount,
   }
 }
 

@@ -28,7 +28,7 @@ import HTML from 'react-native-render-html'
 import ProductAttributes from '@components/organisms/product-attributes'
 import Animated from 'react-native-reanimated'
 import { colors } from '@src/utils/constants'
-import { addCart } from '@modules/cart/action'
+import { addCart, addCartBeforeLogin } from '@modules/cart/action'
 import RangePrice from '@components/molecules/range-price'
 import Price from '@components/atoms/price'
 import ButtonGroup from '@components/molecules/button-group'
@@ -293,8 +293,16 @@ class ProductListPage extends React.Component<any, any> {
   }
 
   _addToCart = () => {
-    if (!this.props.isAuth) {
-      this.props.navigation.navigate('modals', { screen: 'LoginModal' })
+    const { product, isAuth, totalCart } = this.props
+    if (!isAuth) {
+      this.props.addCartBeforeLogin({
+        variant_id: this.state.selectedVariant,
+        variant: this.getVariantData(this.state.selectedVariant),
+        qty: 1,
+        remark: 'offline',
+        product,
+        id: `notlogin_${totalCart}`,
+      })
     } else {
       if (this.state.isUserSelectVariant) {
         this.props.addCart({ variant_id: this.state.selectedVariant, qty: 1 })
@@ -867,7 +875,7 @@ const mapStateToProps = () => {
 
     const _product = deepClone(selectedProduct)
 
-    _product.brand = getselectedBrand(state, _product.brand)
+    _product.brand = getselectedBrand(state, selectedProduct.brand)
 
     return {
       product: _product,
@@ -875,12 +883,19 @@ const mapStateToProps = () => {
       isSaved: !!state.productsSaved.data[productId],
       loading: state.products.productLoading,
       categories: state.categories.data,
+      totalCart: Object.keys(state.carts.data).length || 0,
     }
   }
 }
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
-    { getProductById, addCart, addProductSaved, deleteProductSaved },
+    {
+      getProductById,
+      addCart,
+      addProductSaved,
+      deleteProductSaved,
+      addCartBeforeLogin,
+    },
     dispatch,
   )
 

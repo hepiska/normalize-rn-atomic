@@ -5,6 +5,7 @@ import {
   deleteProductSaved,
 } from '@modules/product-saved/action'
 import { makeCloneProduct } from '@modules/selector-general'
+import { addCartBeforeLogin } from '@modules/cart/action'
 
 import { makeSelectedProducts } from '@modules/product/selector'
 import { makeSelectedSearchProduct } from '@modules/search-product/selector'
@@ -31,6 +32,7 @@ const productListMap = () => {
       brand: state.brands.data[_product.brand],
       isSaved,
       isAuth: state.auth.isAuth,
+      totalCart: Object.keys(state.carts.data).length || 0,
     }
   }
 }
@@ -38,6 +40,7 @@ const productListMap = () => {
 const mapDispatchToProps = dispatch => {
   return bindActionCreators(
     {
+      addCartBeforeLogin,
       addProductSaved,
       deleteProductSaved,
     },

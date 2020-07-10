@@ -10,7 +10,11 @@ import NavbarTop from '@components/molecules/navbar-top'
 import ProductOverviewCart from '@components/molecules/product-overview-cart'
 import ProductAttributes from '@components/organisms/product-attributes'
 import { getProductById } from '@modules/product/action'
-import { addCart, changeVariant } from '@modules/cart/action'
+import {
+  addCart,
+  changeVariant,
+  changeVariantBeforeLogin,
+} from '@modules/cart/action'
 import { images, colors } from '@utils/constants'
 import { formatRupiah, deepClone } from '@utils/helpers'
 import CartModalLoader from '@components/atoms/loaders/cart-modal-loader'
@@ -130,14 +134,23 @@ class CartModal extends React.Component<any, any> {
   }
 
   _addToCart = async () => {
-    const { navigation } = this.props
+    const { navigation, isAuth, product } = this.props
     const { type, cart } = this.props.route.params
-
     if (type === 'change_variant' && cart) {
-      await this.props.changeVariant({
-        variant_id: this.state.selectedVariant,
-        cart: cart,
-      })
+      if (isAuth) {
+        await this.props.changeVariant({
+          variant_id: this.state.selectedVariant,
+          cart: cart,
+        })
+      } else {
+        this.props.changeVariantBeforeLogin({
+          variant_id: this.state.selectedVariant,
+          variant: this.getVariantData(this.state.selectedVariant),
+          cart,
+          product,
+          brand: this.props.brand.name,
+        })
+      }
       navigation.goBack()
     } else {
       await this.props.addCart({
@@ -255,12 +268,14 @@ const mapDispatchToProps = dispatch =>
       getProductById,
       addCart,
       changeVariant,
+      changeVariantBeforeLogin,
     },
     dispatch,
   )
 
 const mapStateToProps = (state, ownProps) => {
   const productId = ownProps.route.params?.product
+  const isAuth = ownProps.route.params?.isAuth
   const product = state.products.data[productId]
   const _product = { ...product }
 
@@ -268,6 +283,7 @@ const mapStateToProps = (state, ownProps) => {
     product: _product,
     loading: state.products.productLoading,
     brand: state.brands.data[product.brand],
+    isAuth,
   }
 }
 

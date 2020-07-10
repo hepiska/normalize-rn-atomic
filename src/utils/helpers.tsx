@@ -144,6 +144,17 @@ export const getMe = () => {
   return {}
 }
 
+export const getNotLoginCart = () => {
+  if (global.store) {
+    const allCarts = global.store.getState().carts.data
+    const unSyncId = Object.keys(allCarts).filter(v => {
+      if (allCarts[v].remark === 'offline') return allCarts[v]
+    })
+    const unSyncData = unSyncId.map(v => allCarts[v])
+    return unSyncData
+  }
+}
+
 export const countdown = (date, callback, onEndCallback?) => {
   return setInterval(() => {
     const now = new Date()

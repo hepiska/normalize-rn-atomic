@@ -36,10 +36,12 @@ interface ProductCardType {
   isAtributesShow: boolean
   deleteProductSaved: (productId) => void
   addProductSaved: (productId) => void
+  addCartBeforeLogin: (data) => void
   onPress: () => {}
   style?: ViewStyle
   horizontal?: boolean
   isAuth?: boolean
+  totalCart?: number
 }
 
 const typeDict = {
@@ -102,12 +104,14 @@ const ProductCard = ({
   onAddtoCart,
   deleteProductSaved,
   addProductSaved,
+  addCartBeforeLogin,
   horizontal = false,
   isAtributesShow = true,
   onPress,
   isShowRangePrice = true,
   isSaved,
   isAuth,
+  totalCart,
 }: ProductCardType) => {
   const [layout, setLayout] = useState(null)
   const type = 'med'
@@ -163,6 +167,25 @@ const ProductCard = ({
     product.variants[0]
   const images = selectedVariant.image_urls || product.image_urls || []
 
+  const _addToCart = () => {
+    const _product = {
+      ...product,
+      brand,
+    }
+    if (!isAuth) {
+      addCartBeforeLogin({
+        variant_id: selectedVariant.id,
+        variant: selectedVariant,
+        qty: 1,
+        remark: 'offline',
+        product: _product,
+        id: `notlogin_${totalCart}`,
+      })
+    } else {
+      onAddtoCart
+    }
+  }
+
   // const random = Math.floor(Math.random() * images.length)
   const variantPrice = selectedVariantId && {
     current: selectedVariant.price_disc || selectedVariant.price,
@@ -199,6 +222,7 @@ const ProductCard = ({
       isAuth={isAuth}
       triggerLogin={triggerLogin}
       onAddtoCart={onAddtoCart}
+      addToCart={_addToCart}
       product={product}
       colorAttributes={colorAttributes}
       attributeSelected={attributeSelected}
@@ -220,6 +244,7 @@ const ProductCard = ({
       isAuth={isAuth}
       triggerLogin={triggerLogin}
       onAddtoCart={onAddtoCart}
+      addToCart={_addToCart}
       type={type}
       colorAttributes={colorAttributes}
       brand={brand}
@@ -240,6 +265,7 @@ const ProductCardHorizontal = ({
   product,
   isAuth,
   onPress,
+  addToCart,
   onSave,
   triggerLogin,
   onAddtoCart,
@@ -345,11 +371,11 @@ const ProductCardHorizontal = ({
         ) : (
           <RangePrice {...price} upTo />
         )}
-        {onAddtoCart && product.is_commerce && (
+        {addToCart && product.is_commerce && (
           <View style={{ flex: 1, justifyContent: 'flex-end', marginTop: 16 }}>
             <OutlineButton
               title="Add to Cart"
-              onPress={isAuth ? onAddtoCart : triggerLogin}
+              onPress={addToCart}
               leftIcon={
                 <IconFa name="shopping-bag" size={12} color={colors.black80} />
               }
@@ -386,6 +412,7 @@ const ProductCardVertical = ({
   onColorChange,
   layout,
   onLayout,
+  addToCart,
 }) => {
   if (!product) {
     return null
@@ -554,7 +581,7 @@ const ProductCardVertical = ({
           />
         )}
 
-        {onAddtoCart && product.is_commerce && (
+        {addToCart && product.is_commerce && (
           <View
             style={{
               width: '100%',
@@ -563,7 +590,7 @@ const ProductCardVertical = ({
             }}>
             <OutlineButton
               title="Add to Cart"
-              onPress={isAuth ? onAddtoCart : triggerLogin}
+              onPress={addToCart}
               leftIcon={
                 <IconFa name="shopping-bag" size={12} color={colors.black80} />
               }

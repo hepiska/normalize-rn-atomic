@@ -36,6 +36,39 @@ const cartReducer: Reducer<CartStateType> = (
       if (action.payload)
         newState.data = Immutable.merge(newState.data, action.payload)
       return newState
+
+    case actionType.SET_CART_DATA_BEFORE_LOGIN:
+      if (action.payload) {
+        newState.data = Immutable.merge(newState.data, {
+          [`${action.payload.id}`]: {
+            ...action.payload,
+          },
+        })
+      }
+      return newState
+
+    case actionType.CHANGE_CART_DATA_BEFORE_LOGIN:
+      if (action.payload) {
+        delete newState.data[`${action.payload.id}`]
+        newState.data = Immutable.merge(newState.data, {
+          [`${action.payload.id}`]: {
+            ...action.payload,
+          },
+        })
+      }
+      return newState
+
+    case actionType.SET_CART_ORDER_BEFORE_LOGIN:
+      newState.order = newState.order.concat(Immutable(action.payload))
+      return newState
+
+    case actionType.REMOVE_CART_BEFORE_LOGIN:
+      delete newState.data[action.payload]
+      newState.order = Immutable(
+        newState.order.filter(_order => _order !== action.payload),
+      )
+      return newState
+
     case actionType.SET_CART_ORDER:
       if (
         action.payload.pagination.offset &&
@@ -88,4 +121,9 @@ const cartReducer: Reducer<CartStateType> = (
   }
 }
 
-export default cartReducer
+const cartPersistConfig = {
+  key: 'cart',
+  storage: AsyncStorage,
+}
+
+export default persistReducer(cartPersistConfig, cartReducer)

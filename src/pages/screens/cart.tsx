@@ -4,7 +4,7 @@ import { InteractionManager } from 'react-native'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import NavbarTop from '@components/molecules/navbar-top'
-import { getAllCart } from '@modules/cart/action'
+import { getAllCart, setLoading } from '@modules/cart/action'
 import Cart from '@src/components/organisms/cart'
 import Wishlist from '@src/components/organisms/wishlist'
 import CartListLoader from '@components/atoms/loaders/cart-list'
@@ -16,13 +16,16 @@ class CartPage extends Component<any, any> {
   }
   componentDidMount() {
     InteractionManager.runAfterInteractions(() => {
-      this.props.getAllCart()
+      if (this.props.isAuth) {
+        this.props.getAllCart()
+      }
+      this.props.setLoading(false)
       this.setState({ finishAnimation: true })
     })
   }
 
   render() {
-    const { navigation, carts, cartsLoading } = this.props
+    const { navigation, carts, cartsLoading, isAuth } = this.props
     const { finishAnimation } = this.state
     return (
       <>
@@ -32,10 +35,15 @@ class CartPage extends Component<any, any> {
             carts={carts}
             cartsLoading={cartsLoading}
             footer={
-              <Div align="flex-start" justify="flex-start" _padding="0px 16px">
-                <Wishlist navigation={navigation} />
-                {/* <ProductSimilarList /> */}
-              </Div>
+              isAuth && (
+                <Div
+                  align="flex-start"
+                  justify="flex-start"
+                  _padding="0px 16px">
+                  <Wishlist navigation={navigation} />
+                  {/* <ProductSimilarList /> */}
+                </Div>
+              )
             }
           />
         ) : (
@@ -47,11 +55,14 @@ class CartPage extends Component<any, any> {
 }
 
 const mapDispacthToProps = dispatch =>
-  bindActionCreators({ getAllCart }, dispatch)
+  bindActionCreators({ getAllCart, setLoading }, dispatch)
 
-const mapStateToProps = state => ({
-  carts: state.carts.order,
-  cartsLoading: state.carts.loading,
-})
+const mapStateToProps = state => {
+  return {
+    isAuth: state.auth.isAuth,
+    carts: state.carts.order,
+    cartsLoading: state.carts.loading,
+  }
+}
 
 export default connect(mapStateToProps, mapDispacthToProps)(CartPage)

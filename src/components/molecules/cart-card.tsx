@@ -37,8 +37,11 @@ interface CartCardType {
   isSaved?: boolean
   onSave?: (productId: any) => void
   removeCart: (data: any) => void
+  removeCartOrder: (data: any) => void
   changeCartQty: (data: any) => void
+  changeQtyData: (data: any) => void
   removeSelectedVariant: (data: any) => void
+  isAuth?: boolean
 }
 
 const styles = StyleSheet.create({
@@ -109,18 +112,31 @@ class CartCard extends React.Component<CartCardType, any> {
   componentDidMount() {
     const { cart, getProductById } = this.props
     getProductById(cart.variant.product_id)
+    // getProductById(cart.variant?.product_id || cart.product?.id)
   }
 
   _deleteCart = () => {
-    this.props.removeCart(this.props.cart.id)
-    this.props.removeSelectedVariant(this.props.cart.id)
+    if (this.props.isAuth) {
+      this.props.removeCart(this.props.cart.id)
+      this.props.removeSelectedVariant(this.props.cart.id)
+    } else {
+      this.props.removeCartOrder(this.props.cart.id)
+    }
   }
 
   _incQty = val => {
-    this.props.changeCartQty({ cart_id: this.props.cart.id, qty: val })
+    if (this.props.isAuth) {
+      this.props.changeCartQty({ cart_id: this.props.cart.id, qty: val })
+    } else {
+      this.props.changeQtyData({ cart_id: this.props.cart.id, qty: val })
+    }
   }
   _decQty = val => {
-    this.props.changeCartQty({ cart_id: this.props.cart.id, qty: val })
+    if (this.props.isAuth) {
+      this.props.changeCartQty({ cart_id: this.props.cart.id, qty: val })
+    } else {
+      this.props.changeQtyData({ cart_id: this.props.cart.id, qty: val })
+    }
   }
   _changeVariant = (attribute, attributes) => () => {
     const fixAttributes = attributes.find(_att => {
@@ -140,6 +156,7 @@ class CartCard extends React.Component<CartCardType, any> {
         cart: this.props.cart,
         changeAttribute,
         type: 'change_variant',
+        isAuth: this.props.isAuth,
       },
     })
   }
@@ -182,10 +199,14 @@ class CartCard extends React.Component<CartCardType, any> {
   }
 
   _onSave = () => {
-    this.props.onSave(this.props.product.id)
-    this.setState(state => ({
-      isProductSaved: !state.isProductSaved,
-    }))
+    if (this.props.isAuth) {
+      this.props.onSave(this.props.product.id)
+      this.setState(state => ({
+        isProductSaved: !state.isProductSaved,
+      }))
+    } else {
+      navigate('modals', { screen: 'LoginModal' })
+    }
   }
 
   gotoProductDetail = () => {

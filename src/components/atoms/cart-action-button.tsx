@@ -4,9 +4,11 @@ import { useNavigation } from '@react-navigation/native'
 import { Div, Font, Image, PressAbbleDiv } from '@components/atoms/basic'
 import LinearGradient from 'react-native-linear-gradient'
 import { colors } from '@utils/constants'
+import { getNotLoginCart } from '@utils/helpers'
 import { connect } from 'react-redux'
 import { getAllCart } from '@modules/cart/action'
 import { bindActionCreators } from 'redux'
+import { synchronizeCart } from '@modules/cart/action'
 
 import Icon from 'react-native-vector-icons/FontAwesome'
 
@@ -45,12 +47,12 @@ const CartActionButton = props => {
   }, [])
 
   const _gotoCart = () => {
-    if (!props.isAuth) {
-      navigation.navigate('modals', { screen: 'LoginModal' })
-    } else {
-      navigation.navigate('Screens', {
-        screen: 'Cart',
-      })
+    navigation.navigate('Screens', {
+      screen: 'Cart',
+    })
+    if (props.isAuth) {
+      const notLoginCart = getNotLoginCart()
+      props.synchronizeCart(notLoginCart)
     }
   }
   return (
@@ -76,6 +78,6 @@ const mapStateToProps = state => ({
   totalCart: state.carts.order.length,
 })
 const mapDispatchToProps = dispatch =>
-  bindActionCreators({ getAllCart }, dispatch)
+  bindActionCreators({ getAllCart, synchronizeCart }, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(CartActionButton)
