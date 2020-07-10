@@ -1,5 +1,6 @@
 import { API } from '../action-types'
 import AsyncStorage from '@react-native-community/async-storage'
+import { clearCart } from '../cart/action'
 
 export const authActionType = {
   FETCHNG: 'auth/FETCHNG',
@@ -35,12 +36,15 @@ const setRegisterSuccess = (data: any) => ({
 
 export const setLogout = () => {
   AsyncStorage.removeItem('token')
-  return {
-    type: authActionType.SET_LOGOUT_SUCCESS,
-    payload: {
-      isAuth: false,
+  return [
+    clearCart(),
+    {
+      type: authActionType.SET_LOGOUT_SUCCESS,
+      payload: {
+        isAuth: false,
+      },
     },
-  }
+  ]
 }
 
 export const setAuthError = (data: any) => ({

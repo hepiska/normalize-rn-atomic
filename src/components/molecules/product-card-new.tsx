@@ -168,22 +168,10 @@ const ProductCard = ({
   const images = selectedVariant.image_urls || product.image_urls || []
 
   const _addToCart = () => {
-    const _product = {
-      ...product,
-      brand,
-    }
-    if (!isAuth) {
-      addCartBeforeLogin({
-        variant_id: selectedVariant.id,
-        variant: selectedVariant,
-        qty: 1,
-        remark: 'offline',
-        product: _product,
-        id: `notlogin_${totalCart}`,
-      })
-    } else {
-      onAddtoCart
-    }
+    navigate('modals', {
+      screen: 'CartModal',
+      params: { product: product.id },
+    })
   }
 
   // const random = Math.floor(Math.random() * images.length)

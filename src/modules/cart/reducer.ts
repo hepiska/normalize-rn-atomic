@@ -39,17 +39,47 @@ const cartReducer: Reducer<CartStateType> = (
 
     case actionType.SET_CART_DATA_BEFORE_LOGIN:
       if (action.payload) {
-        newState.data = Immutable.merge(newState.data, {
-          [`${action.payload.id}`]: {
-            ...action.payload,
-          },
+        // delete newState.data[`${action.payload.id}`]
+        let replace = false
+
+        const findCart = Object.keys(newState.data).find(key => {
+          const value = newState.data[key]
+
+          return value.variant_id === action.payload.variant_id
         })
+        if (findCart) {
+          newState.data = Immutable.merge(
+            newState.data,
+            {
+              [findCart]: {
+                qty: newState.data[findCart].qty + 1,
+              },
+            },
+            { deep: true },
+          )
+          // newState.data = Immutable(newData)
+        } else {
+          newState.data = Immutable.merge(newState.data, {
+            [`${action.payload.id}`]: {
+              ...action.payload,
+            },
+          })
+          newState.order = newState.order.concat(Immutable(action.payload.id))
+        }
+
+        console.log('=====', newState)
+
+        // newState.data = Immutable.merge(newState.data, {
+        //   [`${action.payload.id}`]: {
+        //     ...action.payload,
+        //   },
+        // })
       }
       return newState
 
     case actionType.CHANGE_CART_DATA_BEFORE_LOGIN:
       if (action.payload) {
-        delete newState.data[`${action.payload.id}`]
+        // delete newState.data[`${action.payload.id}`]
         newState.data = Immutable.merge(newState.data, {
           [`${action.payload.id}`]: {
             ...action.payload,
@@ -69,6 +99,9 @@ const cartReducer: Reducer<CartStateType> = (
       )
       return newState
 
+    case actionType.CLEAR_CART:
+      return initialState
+
     case actionType.SET_CART_ORDER:
       if (
         action.payload.pagination.offset &&
@@ -81,6 +114,7 @@ const cartReducer: Reducer<CartStateType> = (
       }
       newState.pagination = action.payload.pagination
       return newState
+
     case actionType.ADD_ONE_CART_ORDER:
       if (!newState.order.includes(action.payload)) {
         newState.order = newState.order.concat(Immutable([action.payload]))
@@ -126,4 +160,5 @@ const cartPersistConfig = {
   storage: AsyncStorage,
 }
 
-export default persistReducer(cartPersistConfig, cartReducer)
+export default cartReducer
+//  persistReducer(cartPersistConfig, cartReducer)

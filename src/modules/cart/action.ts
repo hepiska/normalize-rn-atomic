@@ -17,6 +17,7 @@ export const actionType = {
   CHANGE_QTY_DATA: 'cart/CHANGE_QTY_DATA',
   REMOVE_CART: 'cart/REMOVE_CART',
   REMOVE_CART_BEFORE_LOGIN: 'cart/REMOVE_CART_BEFORE_LOGIN',
+  CLEAR_CART: 'cart/CLEAR_CART',
 }
 
 export const setLoading = data => ({
@@ -77,8 +78,12 @@ export const getAllCart = () => ({
 })
 
 export const addCartBeforeLogin = data => {
-  return [setCartDataBeforeLogin(data), setCartOrderBeforeLogin(data)]
+  return [setCartDataBeforeLogin(data)]
 }
+
+export const clearCart = () => ({
+  type: actionType.CLEAR_CART,
+})
 
 export const changeCartDataBeforeLogin = data => {
   return {
@@ -113,6 +118,7 @@ export const setCartDataBeforeLogin = data => {
     variant: _variant,
     variant_id: data.variant_id,
   }
+  console.log('=====data')
   return {
     type: actionType.SET_CART_DATA_BEFORE_LOGIN,
     payload: manipulatedData,
