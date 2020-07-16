@@ -21,6 +21,7 @@ interface ActionListCartType {
   index: number
   isFirst?: Boolean
   backgroundColor?: string
+  backgroundImage?: string
   borderRadius?: number
   style?: ViewStyle
   onPress?: any
@@ -51,6 +52,7 @@ const ActionListCard = ({
   desc,
   index,
   backgroundColor,
+  backgroundImage,
   borderRadius,
   style,
   onPress,
@@ -59,6 +61,7 @@ const ActionListCard = ({
   return (
     <ListItemCard
       onPress={onPress}
+      backgroundImage={backgroundImage}
       leftContent={
         <View
           style={{
@@ -90,7 +93,6 @@ const ActionListCard = ({
         <Icon name="chevron-right" size={16} color={colors.black100} />
       }
       style={{
-        ...style,
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
@@ -100,6 +102,7 @@ const ActionListCard = ({
         paddingVertical: 24,
         backgroundColor,
         borderRadius,
+        ...style,
       }}
     />
   )

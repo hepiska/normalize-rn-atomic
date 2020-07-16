@@ -12,6 +12,7 @@ interface CartStateType {
   readonly error?: ErrorType
   readonly itemError: Object
   activeCart: number
+  appliedCoupon: number
   pagination: Object
   loading: Boolean
 }
@@ -21,6 +22,7 @@ const initialState: CartStateType = {
   order: Immutable([]),
   error: null,
   itemError: Immutable({}),
+  appliedCoupon: null,
   pagination: null,
   activeCart: null,
   loading: false,
@@ -67,8 +69,6 @@ const cartReducer: Reducer<CartStateType> = (
           newState.order = newState.order.concat(Immutable(action.payload.id))
         }
 
-        console.log('=====', newState)
-
         // newState.data = Immutable.merge(newState.data, {
         //   [`${action.payload.id}`]: {
         //     ...action.payload,
@@ -86,6 +86,10 @@ const cartReducer: Reducer<CartStateType> = (
           },
         })
       }
+      return newState
+
+    case actionType.APPLY_COUPON:
+      newState.appliedCoupon = action.payload
       return newState
 
     case actionType.SET_CART_ORDER_BEFORE_LOGIN:

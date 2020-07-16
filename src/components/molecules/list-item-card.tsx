@@ -1,5 +1,5 @@
 import React from 'react'
-import { ViewStyle, View, StyleSheet } from 'react-native'
+import { ViewStyle, View, StyleSheet, Image } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 
 const styles = StyleSheet.create({
@@ -13,6 +13,7 @@ const styles = StyleSheet.create({
 interface ListItemCardType {
   leftContent: any
   rightContent?: any
+  backgroundImage?: any
   style?: ViewStyle
   onPress?: () => void
   activeOpacity?: number
@@ -22,6 +23,7 @@ const ListItemCard = ({
   leftContent,
   rightContent,
   style,
+  backgroundImage,
   onPress,
   activeOpacity,
 }: ListItemCardType) => {
@@ -31,6 +33,9 @@ const ListItemCard = ({
         {leftContent && leftContent}
         {rightContent && rightContent}
       </View>
+      {backgroundImage && (
+        <Image style={StyleSheet.absoluteFillObject} source={backgroundImage} />
+      )}
     </TouchableOpacity>
   )
 }

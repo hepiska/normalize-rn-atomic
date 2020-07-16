@@ -69,10 +69,11 @@ export const removeCheckoutAddressData = () => ({
   type: checkoutActionType.REMOVE_CHECKOUT_DATA,
 })
 
-export const payNow = (cart_ids, user_address_id) => {
+export const payNow = (cart_ids, user_address_id, user_coupon_id) => {
   const params = {
     cart_ids,
     user_address_id,
+    user_coupon_id,
   }
   return {
     type: API,

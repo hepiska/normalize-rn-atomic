@@ -45,6 +45,7 @@ export const colors = {
   green1: '#219653',
   green2: '#27AE60',
   green3: '#6FCF97',
+  gold: '#B68545',
   greenAccent: '#00B800',
   blue1: '#2F80ED',
   blue2: '#2D9CDB',

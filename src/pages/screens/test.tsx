@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, Text, TouchableOpacity, ScrollView } from 'react-native'
 import UserDetail from '@components/atoms/loaders/user-detail'
-import FilterList from '@components/atoms/loaders/filter-list'
+import FilterList from '@components/atoms/loaders/coupon'
 import PostCardFulll from '@components/atoms/loaders/post-card'
 import PostDetail from '@components/atoms/loaders/post-detail'
 import SearchListLoader from '@src/components/atoms/loaders/search-list'

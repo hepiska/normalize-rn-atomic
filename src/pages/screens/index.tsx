@@ -26,7 +26,10 @@ import PaymentWaiting from './payment-waiting'
 import PaymentResponse from './payment-status-response'
 import PaymentWebView from './payment-webview'
 import CreateCollection from './create-collection'
+import CouponsPage from './coupons'
+import CouponDetail from './coupon-detail'
 import CreateJurnal from './create-jurnal'
+import PromoCodePage from './promo-code'
 // import Search from './search-list'
 import Search from './search-list-new'
 import MyProfile from './my-other-profille'
@@ -77,6 +80,9 @@ function InsiderStack() {
       <Stack.Screen name="ChooseAddress" component={ChooseAddress} />
       <Stack.Screen name="AddNewAddress" component={AddNewAddress} />
       <Stack.Screen name="ProductDetail" component={ProductDetail} />
+      <Stack.Screen name="PromoCode" component={PromoCodePage} />
+      <Stack.Screen name="Coupons" component={CouponsPage} />
+      <Stack.Screen name="CouponDetail" component={CouponDetail} />
       {/* <Stack.Screen name="ProductList" component={ProductList} /> */}
       <Stack.Screen name="PaymentWaiting" component={PaymentWaiting} />
       <Stack.Screen name="Cart" component={Cart} />

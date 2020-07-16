@@ -17,11 +17,17 @@ export const actionType = {
   CHANGE_QTY_DATA: 'cart/CHANGE_QTY_DATA',
   REMOVE_CART: 'cart/REMOVE_CART',
   REMOVE_CART_BEFORE_LOGIN: 'cart/REMOVE_CART_BEFORE_LOGIN',
+  APPLY_COUPON: 'cart/APPLY_COUPON',
   CLEAR_CART: 'cart/CLEAR_CART',
 }
 
 export const setLoading = data => ({
   type: actionType.SET_LOADING,
+  payload: data,
+})
+
+export const applyCoupon = data => ({
+  type: actionType.APPLY_COUPON,
   payload: data,
 })
 

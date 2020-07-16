@@ -20,6 +20,11 @@
     "prefix": ["rni","react-native-import"],
     "body": ["import React from 'react'", "import { View, Text } from 'react-native'"]
   },
+  "redux-action-dispacther": {
+    "scope": "typescript,typescriptreact",
+    "prefix": ["rdxad","react-native-import"],
+    "body": ["export const ${1:actionName} = (data) =>{ ", "return {type: actionType.${2:ACTION} , payload: data} }"]
+  },
   "redux-import": {
     "scope": "typescript,typescriptreact",
    "prefix": ["rdxi","redux-import"],

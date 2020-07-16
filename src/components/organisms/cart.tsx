@@ -27,6 +27,7 @@ import { navigate } from '@src/root-navigation'
 import { getUserAddressById } from '@modules/address/action'
 import CartListLoader from '@components/atoms/loaders/cart-list'
 import { getAllTransactionCount } from '@modules/transaction/action'
+import CouponAlert from '@components/molecules/coupon-alert'
 
 const styles = StyleSheet.create({
   solidDivider: {
@@ -256,6 +257,11 @@ class Cart extends React.Component<any, any> {
               </TouchableOpacity>
             </View>
           )}
+
+          <CouponAlert
+            style={{ marginHorizontal: 16, marginVertical: 16 }}
+            selectedCart={this.state.selectedVariant.join()}
+          />
 
           <View
             style={{

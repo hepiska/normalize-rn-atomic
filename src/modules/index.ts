@@ -6,6 +6,7 @@ import postReducer from './post/reducer'
 import topPostReducer from './post-top/reducer'
 import productsReducer from './product/reducer'
 import brandReducer from './brand/reducer'
+import couponsReducer from './coupons/reducer'
 import categoryReducer from './category/reducer'
 import productFilterReducer from './product-filter/reducer'
 import sortReducer from './sort/reducer'
@@ -50,6 +51,7 @@ const combinedReducer: Reducer<any> = combineReducers({
   checkout: checkoutReducer,
   collection: collectionReducer,
   comments: commentReducer,
+  coupons: couponsReducer,
 
   discover: discoverReducer,
 

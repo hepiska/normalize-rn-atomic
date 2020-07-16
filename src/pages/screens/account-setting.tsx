@@ -183,6 +183,21 @@ class AccountSetting extends Component<any, any> {
     },
   ]
 
+  couponList = [
+    {
+      icon: require('@src/assets/icons/add-user.png'),
+      title: 'GET 10% DISCOUNT COUPON ',
+      desc: 'Share your invitation code',
+      onPress: () => navigateTo('Screens', 'Promo-Code', {}),
+    },
+    {
+      icon: require('@src/assets/icons/price-tag.png'),
+      title: 'Promo Code ',
+      desc: 'Enter Promo code and earn gift',
+      onPress: () => navigateTo('Screens', 'Promo-Code', {}),
+    },
+  ]
+
   othersList = [
     {
       icon: require('@src/assets/icons/setting.png'),
@@ -403,6 +418,23 @@ class AccountSetting extends Component<any, any> {
                     )
                   })}
                 </View>
+              </View>
+
+              <View style={{ marginTop: 16 }}>
+                {this.couponList.map((value, key) => {
+                  return (
+                    <ActionListCard
+                      isFirst
+                      key={`orderlist-card-${key}`}
+                      icon={value.icon}
+                      style={{ borderTopWidth: 0, borderBottomWidth: 0 }}
+                      title={value.title}
+                      desc={value.desc}
+                      index={key}
+                      onPress={value.onPress}
+                    />
+                  )
+                })}
               </View>
               {/* my social  */}
               {/* <View

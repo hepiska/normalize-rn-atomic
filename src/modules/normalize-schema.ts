@@ -105,6 +105,7 @@ export const page = new schema.Entity(
 )
 
 export const cart = new schema.Entity('cart')
+export const coupon = new schema.Entity('coupon')
 
 export const address = new schema.Entity('address')
 
