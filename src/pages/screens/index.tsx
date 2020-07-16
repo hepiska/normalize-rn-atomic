@@ -20,6 +20,7 @@ import PaymentDetails from './payment-details'
 import PaymentList from './payment-list'
 import OrderDetails from './order-details'
 import OrderList from './order-list'
+import LoginRegister from './loginRegister'
 import TrackShipment from './track-shipment'
 import Cart from './cart'
 import PaymentWaiting from './payment-waiting'
@@ -33,6 +34,7 @@ import PromoCodePage from './promo-code'
 // import Search from './search-list'
 import Search from './search-list-new'
 import MyProfile from './my-other-profille'
+import Register from './register'
 import SizeGuideWebView from './size-guide-webview'
 import TestLayout from './test-layout'
 import EditProfile from './edit-profile'
@@ -100,9 +102,11 @@ function InsiderStack() {
       <Stack.Screen name="SearchList" component={Search} />
       <Stack.Screen name="Wishlist" component={Wishlist} />
       <Stack.Screen name="PostDetail" component={PostDetail} />
+      <Stack.Screen name="Register" component={Register} />
       <Stack.Screen name="PostEdit" component={PostEdit} />
       <Stack.Screen name="Articles" component={Articles} />
       <Stack.Screen name="Setting" component={Setting} />
+      <Stack.Screen name="LoginRegister" component={LoginRegister} />
       <Stack.Screen
         name="CategoryProductList"
         component={CategoryProductList}

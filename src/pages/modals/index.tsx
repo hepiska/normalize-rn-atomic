@@ -12,6 +12,7 @@ import ProductFilter from './product-filter'
 import initialPageConfig from '@pages/page-initial.config'
 import PostMoreModal from './post-more'
 import GlobalSearchProductFilter from './global-search-product-filter'
+import Register from './register'
 
 import ShareModal from '@pages/modals/share'
 
@@ -85,7 +86,7 @@ function ModalStack() {
         options={{ cardStyle: { backgroundColor: 'transparent' } }}
         component={FormLogin}
       />
-      <Stack.Screen name="RegisterModal" component={FormRegister} />
+      <Stack.Screen name="RegisterModal" component={Register} />
       <Stack.Screen
         name="ConfirmationModal"
         options={{ cardStyle: { backgroundColor: 'transparent' } }}

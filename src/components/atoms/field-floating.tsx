@@ -8,6 +8,7 @@ import {
   Platform,
   TextStyle,
   Animated,
+  ViewStyle,
   LayoutChangeEvent,
   Text,
 } from 'react-native'
@@ -67,6 +68,8 @@ type TextInputTypesWithoutMode = $Omit<TextInputProps, 'mode'>
 
 type ChildTextInputProps = {
   parentState: State
+  disabledStyle?: ViewStyle
+  disabledTextStyle?: TextStyle
   innerRef: (ref: NativeTextInput | null | undefined) => void
   onFocus?: (args: any) => void
   onBlur?: (args: any) => void
@@ -598,6 +601,7 @@ class TextInputOutlined extends React.Component<ChildTextInputProps, {}> {
       onFocus,
       onBlur,
       desc,
+      disabledTextStyle,
       onChangeText,
       onLayoutAnimatedText,
       rightIcon,
@@ -738,7 +742,8 @@ class TextInputOutlined extends React.Component<ChildTextInputProps, {}> {
                 style={{
                   minHeight,
                   justifyContent: 'center',
-                  padding: 16,
+                  paddingHorizontal: 16,
+                  paddingVertical: 8,
                 }}>
                 {rest.value ? (
                   <>
@@ -752,7 +757,7 @@ class TextInputOutlined extends React.Component<ChildTextInputProps, {}> {
                       }}>
                       <Font
                         size={12}
-                        style={fontStyle.helvetica}
+                        style={[fontStyle.helvetica, disabledTextStyle]}
                         color={colors.black70}
                         _margin="0px 0px 1px">
                         {label}

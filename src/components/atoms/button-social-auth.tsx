@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
   },
 })
 
-export const ButtonGoogleSignIn = ({ onSuccess }: any) => {
+export const ButtonGoogleSignIn = ({ onSuccess, style }: any) => {
   return (
     <OutlineButton
       title="Google"
@@ -129,13 +129,13 @@ export const ButtonGoogleSignIn = ({ onSuccess }: any) => {
           style={styles.googleIcon}
         />
       }
-      style={styles.btnSocialMedia}
+      style={{ ...styles.btnSocialMedia, ...style }}
       fontStyle={styles.btnSocialMediaText}
     />
   )
 }
 
-export const ButtonFacebookSignin = ({ onSuccess }: any) => {
+export const ButtonFacebookSignin = ({ onSuccess, style }: any) => {
   return (
     <OutlineButton
       title="Facebook"
@@ -146,7 +146,7 @@ export const ButtonFacebookSignin = ({ onSuccess }: any) => {
           style={styles.fbIcon}
         />
       }
-      style={styles.btnSocialMedia}
+      style={{ ...styles.btnSocialMedia, ...style }}
       fontStyle={styles.btnSocialMediaText}
     />
   )

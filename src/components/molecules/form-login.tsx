@@ -86,7 +86,7 @@ const FormLogin: React.FC<FormLogin> = ({ navigation }) => {
 
   const _onRegisterClick = () => {
     navigation.navigate('modals', {
-      screen: 'RegisterModal',
+      screen: 'Register',
     })
   }
 

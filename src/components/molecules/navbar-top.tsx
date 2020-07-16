@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
 const { width } = Dimensions.get('screen')
 
 interface NavbarTopProps {
-  title?: string
+  title?: string | React.ReactElement
   subtitle?: string
   style?: ViewStyle
   saveAreaStyle?: ViewStyle
@@ -147,12 +147,16 @@ const NavbarTop: React.SFC<NavbarTopProps> = ({
           </Div>
         ) : (
           <Div justify="center" _width="100%" style={{ maxWidth: 200 }}>
-            <Text
-              numberOfLines={1}
-              ellipsizeMode="tail"
-              style={{ ...fontStyle.helveticaBold, fontSize: 18 }}>
-              {title}
-            </Text>
+            {typeof title === 'string' ? (
+              <Text
+                numberOfLines={1}
+                ellipsizeMode="tail"
+                style={{ ...fontStyle.helveticaBold, fontSize: 18 }}>
+                {title}
+              </Text>
+            ) : (
+              title
+            )}
           </Div>
         )}
         <RenderRightContent content={rightContent} rightAction={rightAction} />

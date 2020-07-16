@@ -68,7 +68,7 @@ class ReCaptchaComponent extends React.PureComponent<IProps> {
         getExecutionFunction(this.props.siteKey),
       )
     } else if (platform.isAndroid && this._webViewRef) {
-      this._webViewRef.reload()
+      // this._webViewRef.reload()
     }
   }
 
@@ -76,8 +76,9 @@ class ReCaptchaComponent extends React.PureComponent<IProps> {
     this.props.recaptchaRef({
       refreshToken: () => this.refreshToken,
     })
+    console.log(this.props)
     return (
-      <View style={{ flex: 0.0001, width: 0, height: 0 }}>
+      <View style={{ flex: 0.0001, width: 1, height: 1 }}>
         <WebView
           ref={ref => {
             this._webViewRef = ref
@@ -88,8 +89,9 @@ class ReCaptchaComponent extends React.PureComponent<IProps> {
           mixedContentMode={'always'}
           injectedJavaScript={patchPostMessageJsCode}
           source={{
-            html: getInvisibleRecaptchaContent(this.props.siteKey),
-            baseUrl: this.props.captchaDomain,
+            uri: 'https://shonet.dev',
+            // html: getInvisibleRecaptchaContent(this.props.siteKey),
+            // baseUrl: this.props.captchaDomain,
           }}
           onMessage={(e: any) => {
             this.props.onReceiveToken(e.nativeEvent.data)

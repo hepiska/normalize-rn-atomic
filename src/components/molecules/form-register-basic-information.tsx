@@ -1,6 +1,11 @@
 import React, { useRef, useState, useMemo, useEffect } from 'react'
-import { StyleSheet, ScrollView, SafeAreaView } from 'react-native'
-import { withNavigation } from 'react-navigation'
+import {
+  StyleSheet,
+  ScrollView,
+  SafeAreaView,
+  Text,
+  TouchableOpacity,
+} from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import CheckBox from 'react-native-check-box'
 import Config from 'react-native-config'
@@ -9,6 +14,7 @@ import { Div, Font, PressAbbleDiv, ScrollDiv } from '@components/atoms/basic'
 import { colors } from '@src/utils/constants'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { Button } from '@components/atoms/button'
+import { fontStyle } from '@components/commont-styles'
 import TextInputOutline from '@src/components/atoms/field-floating'
 import {
   registerApi,
@@ -38,6 +44,22 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: 12,
   },
+  field: {
+    height: 46,
+  },
+  boldText: {
+    ...fontStyle.helveticaBold,
+    fontSize: 14,
+  },
+  disabled: {
+    paddingVertical: 8,
+    backgroundColor: colors.black10,
+  },
+  disabledText: {
+    ...fontStyle.helveticaBold,
+    color: colors.black80,
+    fontSize: 14,
+  },
   btnSocialMedia: {
     width: '48%',
     height: 46,
@@ -60,8 +82,9 @@ const styles = StyleSheet.create({
   },
 })
 
-interface FormRegisterBasicInformation {
+interface FormRegisterBasicInformationType {
   navigation: any
+  route: any
 }
 
 const gender = [
@@ -69,14 +92,15 @@ const gender = [
   { label: 'Female', value: 'F' },
 ]
 
-const FormRegisterBasicInformation: React.FC<FormRegisterBasicInformation> = ({
+const FormRegisterBasicInformation: React.FC<FormRegisterBasicInformationType> = ({
   navigation,
+  route,
 }) => {
   let pickerRef = null
   let datePickerRef = null
   let recapthcaRef: any = useRef(null)
   let scrollRef = useRef<ScrollView>(null)
-
+  let defaultEmail: string = route.params?.email || ''
   const dispatch = useDispatch()
   const { data, loading, error, called, usernameAvalaible } = useSelector(
     _authSelector,
@@ -84,8 +108,8 @@ const FormRegisterBasicInformation: React.FC<FormRegisterBasicInformation> = ({
 
   const [username, setUsername] = useState('')
   const [recaptcha, setRecaptcha] = useState('')
+  const [isEmailDisabeled, setIsEmailDisabeled] = useState(!!defaultEmail)
   const debounceInputTerm = useDebounce(username, 300)
-
   const [showPassword, setShowPassword] = useState(false)
 
   const _onShowPassword = () => setShowPassword(prevState => !prevState)
@@ -103,7 +127,7 @@ const FormRegisterBasicInformation: React.FC<FormRegisterBasicInformation> = ({
   }
 
   const _onSubmit = ({ isValid, state }) => {
-    // recapthcaRef.refreshToken()()
+    recapthcaRef.refreshToken()()
     if (isValid) {
       const {
         email,
@@ -147,6 +171,7 @@ const FormRegisterBasicInformation: React.FC<FormRegisterBasicInformation> = ({
     {
       email: {
         required: false,
+        initialValue: defaultEmail,
         pattern: {
           regEx: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
           message: 'Invalid email address format',
@@ -221,7 +246,7 @@ const FormRegisterBasicInformation: React.FC<FormRegisterBasicInformation> = ({
   return (
     <SafeAreaView style={{ flex: 1, width: '100%', height: '100%' }}>
       <Div _flex={1} _width="100%" _padding="16px">
-        <Div
+        {/* <Div
           _width="100%"
           _direction="row"
           justify="space-between"
@@ -236,7 +261,7 @@ const FormRegisterBasicInformation: React.FC<FormRegisterBasicInformation> = ({
           <PressAbbleDiv onPress={_onBack}>
             <Icon name="close" size={24} color={colors.black70} />
           </PressAbbleDiv>
-        </Div>
+        </Div> */}
         <ScrollDiv
           ref={scrollRef}
           style={{ width: '100%' }}
@@ -261,6 +286,23 @@ const FormRegisterBasicInformation: React.FC<FormRegisterBasicInformation> = ({
                 label="Your Email"
                 value={state.email.value}
                 onChangeText={handleOnChange('email')}
+                disabled={isEmailDisabeled}
+                style={
+                  isEmailDisabeled
+                    ? {
+                        ...styles.field,
+                        backgroundColor: colors.black10,
+                        height: 48,
+                      }
+                    : styles.field
+                }
+                rightIcon={
+                  <TouchableOpacity>
+                    <Text style={[styles.boldText, { fontSize: 12 }]}>
+                      Change
+                    </Text>
+                  </TouchableOpacity>
+                }
                 keyboardType="email-address"
                 error={state.email.error}
                 autoCapitalize="none"
@@ -270,6 +312,7 @@ const FormRegisterBasicInformation: React.FC<FormRegisterBasicInformation> = ({
             <Div _width="100%" _margin="0px 0px 24px">
               <TextInputOutline
                 label="First Name"
+                style={styles.field}
                 value={state.firstName.value}
                 onChangeText={handleOnChange('firstName')}
                 autoCapitalize="none"
@@ -280,6 +323,7 @@ const FormRegisterBasicInformation: React.FC<FormRegisterBasicInformation> = ({
             <Div _width="100%" _margin="0px 0px 24px">
               <TextInputOutline
                 label="Last Name"
+                style={styles.field}
                 value={state.lastName.value}
                 onChangeText={handleOnChange('lastName')}
                 autoCapitalize="none"
@@ -291,6 +335,7 @@ const FormRegisterBasicInformation: React.FC<FormRegisterBasicInformation> = ({
               <TextInputOutline
                 label="Username"
                 value={state.username.value}
+                style={styles.field}
                 onChangeText={value => {
                   handleOnChange('username')(value)
                   setUsername(value)
@@ -304,6 +349,7 @@ const FormRegisterBasicInformation: React.FC<FormRegisterBasicInformation> = ({
               <TextInputOutline
                 label="Password"
                 value={state.password.value}
+                style={styles.field}
                 onChangeText={handleOnChange('password')}
                 secureTextEntry={!showPassword ? true : false}
                 autoCapitalize="none"
@@ -324,6 +370,7 @@ const FormRegisterBasicInformation: React.FC<FormRegisterBasicInformation> = ({
               <TextInputOutline
                 label="Confirm Password"
                 value={state.confirmPassword.value}
+                style={styles.field}
                 onChangeText={handleOnChange('confirmPassword')}
                 secureTextEntry={true}
                 autoCapitalize="none"
@@ -346,6 +393,7 @@ const FormRegisterBasicInformation: React.FC<FormRegisterBasicInformation> = ({
                 onPress={() => pickerRef.show()}>
                 <TextInputOutline
                   label="Gender"
+                  style={styles.field}
                   value={
                     state.gender.value
                       ? gender.find(x => x.value === state.gender.value).label
@@ -383,6 +431,7 @@ const FormRegisterBasicInformation: React.FC<FormRegisterBasicInformation> = ({
                 <TextInputOutline
                   label="Date Of Birth"
                   value={state.dateOfBirth.value}
+                  style={styles.field}
                   error={state.dateOfBirth.error}
                   disabled
                   rightIcon={
@@ -443,4 +492,4 @@ const FormRegisterBasicInformation: React.FC<FormRegisterBasicInformation> = ({
   )
 }
 
-export default withNavigation(FormRegisterBasicInformation)
+export default FormRegisterBasicInformation
