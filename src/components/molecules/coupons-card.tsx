@@ -8,6 +8,7 @@ import { navigate } from '@src/root-navigation'
 import IconFa from 'react-native-vector-icons/FontAwesome5'
 import dayjs from 'dayjs'
 import { colors } from '@utils/constants'
+import { coupon } from '@src/modules/normalize-schema'
 
 const styles = StyleSheet.create({
   container: {
@@ -62,6 +63,9 @@ const styles = StyleSheet.create({
   justify: {
     justifyContent: 'space-between',
   },
+  inActive: {
+    backgroundColor: 'rgba(124,124,124, 0.5)',
+  },
   dashedLine: {
     borderStyle: 'dotted',
     borderColor: colors.black10,
@@ -72,10 +76,15 @@ const styles = StyleSheet.create({
 
 const CouponsCard = (props: any) => {
   const [layout, setLayout] = useState(undefined)
+  const { is_valid } = props.coupon
   const _setLayout = ({ nativeEvent }) => {
     setLayout(nativeEvent.layout)
   }
   const _handleUse = useCallback(() => {
+    if (is_valid === false) {
+      return null
+    }
+
     if (props.onUse) {
       props.onUse(props.coupon)
     }
@@ -90,7 +99,11 @@ const CouponsCard = (props: any) => {
       })
     }
   }, [])
+  // const is_valid = false
   const style = StyleSheet.flatten(props.style)
+  const invalidStyleFont = is_valid === false ? { color: colors.black60 } : {}
+  const invalidStyleButton =
+    is_valid === false ? { backgroundColor: colors.black60 } : {}
   return (
     <>
       <View style={[styles.container, style]} onLayout={_setLayout}>
@@ -100,15 +113,26 @@ const CouponsCard = (props: any) => {
               width={328}
               height={62}
               source={{
-                uri: setImage(props.coupon.image_url, {
-                  width: layout.width * 2,
-                }),
+                uri:
+                  is_valid === false
+                    ? setImage(
+                        props.coupon.image_url,
+                        {
+                          width: layout.width * 2,
+                        },
+                        '&monochrome=716F6F',
+                      )
+                    : setImage(props.coupon.image_url, {
+                        width: layout.width * 2,
+                      }),
               }}
             />
           )}
         </TouchableOpacity>
 
-        <Text style={[styles.title, styles.section]}>{props.coupon.name}</Text>
+        <Text style={[styles.title, styles.section, invalidStyleFont]}>
+          {props.coupon.name}
+        </Text>
         <Text style={[styles.section, styles.description]}>
           {props.coupon.description}
         </Text>
@@ -118,10 +142,10 @@ const CouponsCard = (props: any) => {
               styles.action,
               { justifyContent: 'center', alignItems: 'center' },
             ]}>
-            <IconFa name="stopwatch" size={14} />
+            <IconFa name="stopwatch" size={14} style={invalidStyleFont} />
             <View style={styles.timeContainer}>
-              <Text style={styles.timeText}>
-                Valid until:{' '}
+              <Text style={[styles.timeText, invalidStyleFont]}>
+                Valid until:
                 {dayjs(props.coupon.expiring_at).format('MMM DD[th], hhA')}
               </Text>
             </View>
@@ -129,10 +153,11 @@ const CouponsCard = (props: any) => {
           <Button
             title="Use"
             onPress={_handleUse}
-            style={styles.btnSubmit}
+            style={{ ...styles.btnSubmit, ...invalidStyleButton }}
             fontStyle={styles.btnSubmitText}
           />
         </View>
+        {/* <View style={[StyleSheet.absoluteFill, styles.inActive]} /> */}
       </View>
       {/* <View style={styles.dashedLine} /> */}
     </>

@@ -18,6 +18,7 @@ import ProductDetail from './product-detail'
 import PaymentMethod from './payment-method'
 import PaymentDetails from './payment-details'
 import PaymentList from './payment-list'
+import SocialAuthRef from './social-auth-ref'
 import OrderDetails from './order-details'
 import OrderList from './order-list'
 import LoginRegister from './loginRegister'
@@ -31,6 +32,9 @@ import CouponsPage from './coupons'
 import CouponDetail from './coupon-detail'
 import CreateJurnal from './create-jurnal'
 import PromoCodePage from './promo-code'
+import ReferralsPage from './referrals'
+import ReferralsPageStatus from './referrals-status'
+import ReferalLanding from './referral-landing'
 // import Search from './search-list'
 import Search from './search-list-new'
 import MyProfile from './my-other-profille'
@@ -107,6 +111,10 @@ function InsiderStack() {
       <Stack.Screen name="Articles" component={Articles} />
       <Stack.Screen name="Setting" component={Setting} />
       <Stack.Screen name="LoginRegister" component={LoginRegister} />
+      <Stack.Screen name="Referrals" component={ReferralsPage} />
+      <Stack.Screen name="ReferralsStatus" component={ReferralsPageStatus} />
+      <Stack.Screen name="ReferralLanding" component={ReferalLanding} />
+      <Stack.Screen name="SocialAuthRef" component={SocialAuthRef} />
       <Stack.Screen
         name="CategoryProductList"
         component={CategoryProductList}

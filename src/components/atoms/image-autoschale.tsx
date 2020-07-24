@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from 'react'
-import { Image, ViewStyle, View, StyleSheet, Animated } from 'react-native'
+import {
+  Image,
+  ViewStyle,
+  View,
+  StyleSheet,
+  Animated,
+  ImageStyle,
+} from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { colors } from '@src/utils/constants'
 import isEqual from 'lodash/isEqual'
@@ -29,6 +36,7 @@ interface ImageAutoSchaleType {
   showErrorIcon?: boolean
   thumbnailSource?: any
   errorStyle?: ViewStyle
+  imageStyle?: ImageStyle
   containerStyle?: ViewStyle
   width?: number | string
   height?: number
@@ -158,6 +166,7 @@ class ImageAutoSchale extends React.Component<ImageAutoSchaleType, any> {
       showErrorIcon = true,
       thumbnailSource,
       containerStyle,
+      imageStyle,
       height,
       onError,
       ...props
@@ -187,7 +196,10 @@ class ImageAutoSchale extends React.Component<ImageAutoSchaleType, any> {
             onError={this.handleError}
             source={thumbnailSource}
             blurRadius={2}
-            style={[{ ...size, ...style }, { opacity: this.thumbnailAnimated }]}
+            style={[
+              { ...size, ...style, ...imageStyle },
+              { opacity: this.thumbnailAnimated },
+            ]}
             {...props}
           />
         )}

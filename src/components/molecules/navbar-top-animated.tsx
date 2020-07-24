@@ -4,6 +4,7 @@ import { Dimensions, StyleSheet, SafeAreaView, View, Text } from 'react-native'
 import { Div, Font, Image, PressAbbleDiv } from '@components/atoms/basic'
 import LinearGradient from 'react-native-linear-gradient'
 import { globalDimention, colors } from '@utils/constants'
+import TopBaner from '@components/molecules/top-baner'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import Animated from 'react-native-reanimated'
 import styled from 'styled-components/native'
@@ -114,6 +115,7 @@ const NavbarTopAnimated: React.SFC<NavbarBottomProps> = ({
         backgroundColor: backgroundColor,
         zIndex: 10,
       }}>
+      <TopBaner />
       <Div
         as={Animated.View}
         style={[StyleSheet.absoluteFill, { zIndex: -1, opacity }]}

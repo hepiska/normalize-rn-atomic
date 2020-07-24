@@ -1,24 +1,14 @@
-import React, { useEffect, useState, useCallback, useReducer } from 'react'
-import { View, Text, StyleSheet, ScrollView } from 'react-native'
-import { setImage } from '@utils/helpers'
-import { connect, useDispatch } from 'react-redux'
-import { getUserCoupons } from '@modules/coupons/action'
+import React, { useCallback, useReducer } from 'react'
+import { View, Text, StyleSheet } from 'react-native'
+import { connect } from 'react-redux'
 import NavbarTop from '@components/molecules/navbar-top'
-import { couponsData } from '@hocs/data/coupons'
-import List from '@components/layouts/list-header'
-import { fontStyle, borderStyle } from '@components/commont-styles'
-import IconFa from 'react-native-vector-icons/FontAwesome5'
-import dayjs from 'dayjs'
-import Line from '@components/atoms/line'
-import { Button, OutlineButton } from '@components/atoms/button'
-import TextInputOutline from '@src/components/atoms/field-floating'
-import { colors } from '@utils/constants'
-import TitleDescription from '@src/components/molecules/title-description'
-import Field from '@components/atoms/field'
 
-import ImageAutoSchale from '@components/atoms/image-autoschale'
-import { color } from 'react-native-reanimated'
-import { Props } from 'react-native-image-zoom-viewer/built/image-viewer.type'
+import { fontStyle, borderStyle } from '@components/commont-styles'
+
+import { Button, OutlineButton } from '@components/atoms/button'
+import { colors } from '@utils/constants'
+import Field from '@components/atoms/field'
+import { redemCoupon } from '@modules/coupons/action'
 
 const styles = StyleSheet.create({
   container: {
@@ -91,11 +81,12 @@ const actionType = {
   CHANGE_LOADING: 'CHANGE_LOADING',
   CHANGE_IS_SUCCESS: 'CHANGE_STATUS',
   CHANGE_DATA: 'CHANGE_DATA',
+  SET_ERROR: 'SET_ERROR',
   CHANGE_CODE: 'CHANGE_CODE',
 }
 const initialState = {
   loading: false,
-  data: {},
+  data: [],
   code: '',
   isSuccess: false,
   error: null,
@@ -119,23 +110,46 @@ const promoReducer = (state, action) => {
       newState.status = payload
       return newState
 
+    case actionType.SET_ERROR:
+      newState.error = payload
+      return newState
+
     default:
       return state
   }
 }
 
-const PromoCode = ({ coupon, navigation, route }: any) => {
-  const [{ loading, code, isSuccess, error }, dispatch] = useReducer(
+const PromoCode = ({ navigation, route }: any) => {
+  const [{ loading, code, isSuccess, error, data }, dispatch] = useReducer(
     promoReducer,
     initialState,
   )
   const { source } = route.params || {}
-  const _handleSumit = useCallback(() => {}, [])
+  const _handleSumit = useCallback(() => {
+    dispatch({ type: actionType.SET_ERROR, payload: null })
+    dispatch({ type: actionType.CHANGE_LOADING, payload: true })
+
+    redemCoupon(code)
+      .then(_data => {
+        dispatch({ type: actionType.CHANGE_DATA, payload: _data.data.data })
+        dispatch({ type: actionType.CHANGE_LOADING, payload: false })
+        dispatch({ type: actionType.CHANGE_IS_SUCCESS, payload: true })
+      })
+      .catch(() => {
+        dispatch({
+          type: actionType.SET_ERROR,
+          payload: 'Seems like this promo code is fully redeemed or invalid.',
+        })
+        dispatch({ type: actionType.CHANGE_LOADING, payload: false })
+      })
+  }, [code])
   const _goToCoupons = useCallback(() => {
     navigation.replace('Coupons')
   }, [])
 
   const _changeCode = useCallback(e => {
+    dispatch({ type: actionType.SET_ERROR, payload: null })
+
     dispatch({ type: actionType.CHANGE_CODE, payload: e })
   }, [])
 
@@ -146,14 +160,15 @@ const PromoCode = ({ coupon, navigation, route }: any) => {
       // handle back to shop
     }
   }, [])
-
   return (
     <>
-      <NavbarTop
-        leftContent={['back']}
-        title="Promo Code"
-        saveAreaStyle={{ backgroundColor: 'white' }}
-      />
+      {!isSuccess && (
+        <NavbarTop
+          leftContent={['back']}
+          title="Promo Code"
+          saveAreaStyle={{ backgroundColor: 'white' }}
+        />
+      )}
 
       {!isSuccess ? (
         <View style={[styles.container, { marginTop: 24 }]}>
@@ -172,7 +187,10 @@ const PromoCode = ({ coupon, navigation, route }: any) => {
           </View>
           {error && (
             <Text
-              style={[styles.desc, { marginBottom: 24, color: colors.gold }]}>
+              style={[
+                styles.desc,
+                { marginBottom: 24, color: colors.gold, marginTop: 8 },
+              ]}>
               Seems like this promo code is fully redeemed or invalid.
             </Text>
           )}
@@ -184,7 +202,7 @@ const PromoCode = ({ coupon, navigation, route }: any) => {
             { marginTop: 24, justifyContent: 'center', alignItems: 'center' },
           ]}>
           <Text style={[styles.title, { fontSize: 18 }]}>
-            You Got 1 New Coupon
+            You Got {data.length} New Coupon
           </Text>
           <Text style={[styles.desc, { marginBottom: 24 }]}>
             Use coupon for shopping at Shonet Commerce

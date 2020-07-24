@@ -17,6 +17,7 @@ interface ContentExpandableType {
   content?: any
   isDisabledBorder?: boolean
   style?: ViewStyle
+  isCapitalEahWord?: boolean
   divider?: any
   paddingTitleVertical?: number
   paddingTitleHorizontal?: number
@@ -53,6 +54,7 @@ class ContentExpandable extends React.Component<ContentExpandableType, any> {
       rightTitle,
       content,
       isDisabledBorder,
+      isCapitalEahWord = true,
       style,
       divider,
       paddingTitleVertical,
@@ -93,8 +95,10 @@ class ContentExpandable extends React.Component<ContentExpandableType, any> {
             }}>
             {/* left */}
             {typeof title === 'string' ? (
-              <Font type="heading" size="18px">
-                {capitalEachWord(title.replace('-', ' '))}
+              <Font type="heading" size="18px" mar="0px 8px 0px 0px">
+                {isCapitalEahWord
+                  ? capitalEachWord(title.replace('-', ' '))
+                  : title}
               </Font>
             ) : (
               title

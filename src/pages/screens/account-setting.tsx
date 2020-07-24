@@ -188,13 +188,14 @@ class AccountSetting extends Component<any, any> {
       icon: require('@src/assets/icons/add-user.png'),
       title: 'GET 10% DISCOUNT COUPON ',
       desc: 'Share your invitation code',
-      onPress: () => navigateTo('Screens', 'Promo-Code', {}),
+      backgroundImage: require('@src/assets/placeholder/get-coupon-bg.png'),
+      onPress: () => navigateTo('Screens', 'PromoCode', {}),
     },
     {
       icon: require('@src/assets/icons/price-tag.png'),
       title: 'Promo Code ',
       desc: 'Enter Promo code and earn gift',
-      onPress: () => navigateTo('Screens', 'Promo-Code', {}),
+      onPress: () => navigateTo('Screens', 'PromoCode', {}),
     },
   ]
 
@@ -420,14 +421,22 @@ class AccountSetting extends Component<any, any> {
                 </View>
               </View>
 
-              <View style={{ marginTop: 16 }}>
+              <View style={{ marginTop: 60 }}>
                 {this.couponList.map((value, key) => {
                   return (
                     <ActionListCard
                       isFirst
                       key={`orderlist-card-${key}`}
+                      backgroundImage={value.backgroundImage}
                       icon={value.icon}
-                      style={{ borderTopWidth: 0, borderBottomWidth: 0 }}
+                      borderRadius={8}
+                      style={{
+                        borderTopWidth: 0,
+                        borderBottomWidth: 0,
+                        paddingVertical: 16,
+                        paddingHorizontal: 16,
+                        overflow: 'hidden',
+                      }}
                       title={value.title}
                       desc={value.desc}
                       index={key}

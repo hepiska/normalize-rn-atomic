@@ -10,6 +10,7 @@ interface RegisterState {
   loading: Boolean
   error?: ErrorType
   called: Boolean
+  referral_code: string
   readonly data: any
   isAuth: Boolean
   usernameAvalaible: any
@@ -17,6 +18,7 @@ interface RegisterState {
 const initialState: RegisterState = {
   loading: false,
   called: false,
+  referral_code: null,
   error: null,
   data: Immutable({}),
   isAuth: false,
@@ -51,6 +53,9 @@ const registerReducer: Reducer<RegisterState> = (
     case authActionType.SET_REGISTER_SUCCESS:
       newState.called = true
       newState.data.user = Immutable.merge(newState.data, action.payload)
+      return newState
+    case authActionType.SET_REF_CODE:
+      newState.referral_code = action.payload
       return newState
     case authActionType.SET_USERNAME_AVAILABLE:
       newState.usernameAvalaible = action.payload

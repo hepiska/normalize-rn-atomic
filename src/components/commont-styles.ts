@@ -274,3 +274,56 @@ export const modalSyle = StyleSheet.create({
   titleFont: { ...fontStyle.futuraDemi, fontSize: 20 },
   descStyle: { ...fontStyle.helvetica, fontSize: 16 },
 })
+
+export const landingPageStyles = StyleSheet.create({
+  container: {
+    paddingHorizontal: 16,
+  },
+  title: {
+    ...fontStyle.playfairBold,
+    fontSize: 24,
+    color: colors.black100,
+  },
+  text: {
+    ...fontStyle.helvetica,
+    fontSize: 14,
+    color: colors.black60,
+  },
+  rowContainer: {
+    flexDirection: 'row',
+  },
+  blackSection: {
+    borderRadius: 8,
+    paddingVertical: 8,
+    paddingHorizontal: 8,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: colors.black100,
+  },
+  btnblack: {
+    width: '100%',
+    backgroundColor: colors.black100,
+    height: 46,
+  },
+  btnblackText: {
+    color: colors.white,
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
+  desc: {
+    ...fontStyle.helvetica,
+    fontSize: 14,
+    color: colors.black80,
+  },
+  textStyle: {
+    marginLeft: 0,
+    color: colors.black100,
+    ...fontStyle.helveticaBold,
+  },
+  textbold: {
+    ...fontStyle.helveticaBold,
+    color: colors.black100,
+  },
+  cartTitle: {},
+})

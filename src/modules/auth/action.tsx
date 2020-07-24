@@ -9,6 +9,7 @@ export const authActionType = {
   SET_LOGIN_SUCCESS: 'auth/SET_LOGIN_SUCCESS',
   SET_LOGOUT_SUCCESS: 'auth/SET_LOGOUT_SUCCESS',
   SET_REGISTER_SUCCESS: 'auth/SET_REGISTER_SUCCESS',
+  SET_REF_CODE: 'auth/SET_REF_CODE',
 }
 
 const setAuthFetching = (isFetching: boolean) => ({
@@ -17,6 +18,13 @@ const setAuthFetching = (isFetching: boolean) => ({
     loading: isFetching,
   },
 })
+
+export const setRefCode = data => {
+  return {
+    type: authActionType.SET_REF_CODE,
+    payload: data,
+  }
+}
 
 const setLoginSuccess = (data: any) => {
   AsyncStorage.setItem('token', data.id_token)
@@ -72,7 +80,7 @@ export const loginApi = params => ({
       return setAuthFetching(false)
     },
     success: (data, { pagination }) => {
-      return [setLoginSuccess(data)]
+      return [setLoginSuccess(data), setRefCode(null)]
     },
     error: err => {
       const error = err.response.data.meta.message
@@ -96,7 +104,7 @@ export const oauthApi = params => ({
       return setAuthFetching(false)
     },
     success: (data, { pagination }) => {
-      return [setLoginSuccess(data)]
+      return [setLoginSuccess({ ...data, provider: params.provider })]
     },
     error: err => {
       const error = err.response.data.meta.message
@@ -121,6 +129,7 @@ export const registerApi = params => ({
         loginApi({ email: params.email, password: params.password }),
         setRegisterSuccess(data),
         setAuthFetching(false),
+        setRefCode(null),
       ]
     },
     error: err => {

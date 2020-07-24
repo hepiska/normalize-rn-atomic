@@ -16,13 +16,53 @@ import Pages from '@pages/index'
 import Config from 'react-native-config'
 import SplashScreen from 'react-native-splash-screen'
 import { enableScreens } from 'react-native-screens'
+import CONFIG from 'react-native-config'
 
 enableScreens()
 
 // initial store
-const initialState = {}
 const enhancers = []
 const middleware = [apiMidleware, multidipacerMidleware]
+const initialState = {}
+
+const linking = {
+  prefixes: [CONFIG.SHONET_URI, CONFIG.APP_SCHEMA + '://'],
+  config: {
+    screens: {
+      Screens: {
+        path: '',
+        screens: {
+          LoginRegister: 'register',
+        },
+      },
+    },
+  },
+}
+
+const initialStateScreen = {
+  routes: [
+    {
+      name: 'Main',
+      state: {
+        routes: [
+          {
+            name: 'Shop',
+          },
+        ],
+      },
+    },
+    {
+      name: 'Screens',
+      state: {
+        routes: [
+          {
+            name: 'LoginRegister',
+          },
+        ],
+      },
+    },
+  ],
+}
 
 export let presist = null
 export let store = null
@@ -83,7 +123,10 @@ class InitStore extends React.Component<any, any> {
     return isLoading ? null : (
       <Provider store={this.state.store}>
         <PersistGate loading={null} persistor={this.state.persistor}>
-          <NavigationContainer ref={navigationRef}>
+          <NavigationContainer
+            linking={linking}
+            initialState={initialStateScreen}
+            ref={navigationRef}>
             <Pages />
           </NavigationContainer>
         </PersistGate>

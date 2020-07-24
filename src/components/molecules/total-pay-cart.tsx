@@ -13,6 +13,8 @@ import { bindActionCreators } from 'redux'
 import { removeCart } from '@modules/cart/action'
 import { formatRupiah } from '@utils/helpers'
 import Icon from 'react-native-vector-icons/FontAwesome5'
+import DiscountTag from '@components/atoms/discount-tag'
+import { coupon } from '@src/modules/normalize-schema'
 
 const styles = StyleSheet.create({
   totalText: {
@@ -29,6 +31,12 @@ const styles = StyleSheet.create({
     height: 46,
     backgroundColor: '#8131E2',
   },
+  oldPrice: {
+    ...fontStyle.helvetica,
+    color: colors.black60,
+    fontSize: 12,
+    textDecorationLine: 'line-through',
+  },
   container: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -41,6 +49,9 @@ const styles = StyleSheet.create({
     paddingBottom: 8,
     paddingLeft: 15,
     paddingRight: 15,
+  },
+  rowContainer: {
+    flexDirection: 'row',
   },
   buttonContainer: {
     flex: 0.5,
@@ -60,6 +71,7 @@ class TotalPayCart extends Component<any, any> {
       onCheckout,
       items,
       enableButton = true,
+      oldPrice,
       loading,
     } = this.props
 
@@ -74,9 +86,20 @@ class TotalPayCart extends Component<any, any> {
             }}>
             Total
           </Text>
-          <Font {...helveticaBlackTitleBold} size="18">
-            {formatRupiah(totalPrice)}
-          </Font>
+          {oldPrice && (
+            <Text style={styles.oldPrice}>{formatRupiah(oldPrice)}</Text>
+          )}
+          <View style={styles.rowContainer}>
+            <Font {...helveticaBlackTitleBold} size="18">
+              {formatRupiah(totalPrice)}
+            </Font>
+            {oldPrice && (
+              <DiscountTag
+                value={(oldPrice - totalPrice) / oldPrice}
+                style={{ marginTop: 8, marginLeft: 8 }}
+              />
+            )}
+          </View>
         </View>
         <View {...styles.buttonContainer}>
           <GradientButton
@@ -113,6 +136,7 @@ const mapStateToProps = (state, ownProps) => {
   const shippingCost = ownProps.shippingCost || 0
   const deliveryProtection = ownProps.deliveryProtection || 0
   let totalPrice = 0
+  let discountedPrice = null
   if (cartsId) {
     totalPrice = cartsId.reduce((_total, item) => {
       const singleItem = state.carts.data[item]
@@ -123,6 +147,19 @@ const mapStateToProps = (state, ownProps) => {
     }, 0)
   }
   totalPrice += shippingCost + deliveryProtection
+  // console.log(state.coupons.data)
+  const appliedCoupon = state.coupons.data[state.carts.appliedCoupon]
+  if (appliedCoupon?.is_valid) {
+    discountedPrice = totalPrice - appliedCoupon.discount
+  }
+  if (discountedPrice) {
+    return {
+      totalItems: cartsId.length,
+      totalPrice: Math.max(discountedPrice, 0),
+      oldPrice: totalPrice,
+    }
+  }
+
   return {
     totalItems: cartsId.length,
     totalPrice: totalPrice,

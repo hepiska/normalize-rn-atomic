@@ -1,4 +1,5 @@
 import { API } from '../action-types'
+import { request } from '@utils/services'
 import * as schema from '@modules/normalize-schema'
 
 export const ActionType = {
@@ -43,6 +44,9 @@ export const getUserCoupons = params => {
       startNetwork: () => [setLoading(true), setError(null)],
       endNetwork: () => setLoading(false),
       success: (data, { pagination }) => {
+        if (!data.result.length) {
+          return setLoading(false)
+        }
         const dispatch = [
           setData(data.entities.coupon),
           setPagination(pagination),
@@ -60,6 +64,14 @@ export const getUserCoupons = params => {
   }
 }
 
+export const redemCoupon = vocerCoder => {
+  return request({
+    url: '/coupons/redeem',
+    method: 'POST',
+    data: { voucher_code: vocerCoder },
+  })
+}
+
 export const getAvailiableCoupons = params => {
   return {
     type: API,
@@ -70,6 +82,10 @@ export const getAvailiableCoupons = params => {
       startNetwork: () => [setLoading(true), setError(null)],
       endNetwork: () => setLoading(false),
       success: (data, { pagination }) => {
+        if (!data.result.length) {
+          return setLoading(false)
+        }
+
         const dispatch = [
           setData(data.entities.coupon),
           setPagination({ total: data.result.length }),

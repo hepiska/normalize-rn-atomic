@@ -60,9 +60,10 @@ const styles = StyleSheet.create({
 interface FormLogin {
   navigation: any
   loading: boolean
+  onForgotPassword: () => void
 }
 
-const FormLogin: React.FC<FormLogin> = ({ navigation }) => {
+const FormLogin: React.FC<FormLogin> = ({ navigation, onForgotPassword }) => {
   const dispatch = useDispatch()
   const { data, error, called, loading } = useSelector(_authSelector)
 
@@ -122,7 +123,7 @@ const FormLogin: React.FC<FormLogin> = ({ navigation }) => {
   )
 
   useEffect(() => {
-    if (data?.id_token && called) {
+    if (data?.id_token && called && !error) {
       navigation.goBack()
     }
   }, [called])
@@ -154,9 +155,9 @@ const FormLogin: React.FC<FormLogin> = ({ navigation }) => {
               color={colors.black100}>
               Login
             </Font>
-            <PressAbbleDiv onPress={_onBack}>
+            {/* <PressAbbleDiv onPress={_onBack}>
               <Icon name="close" size={24} color={colors.black70} />
-            </PressAbbleDiv>
+            </PressAbbleDiv> */}
           </Div>
           <Div
             justify="flex-start"
@@ -224,7 +225,7 @@ const FormLogin: React.FC<FormLogin> = ({ navigation }) => {
             </Div>
 
             <Div _width="100%" align="flex-end" _margin="0px 0px 24px">
-              <PressAbbleDiv onPress={null}>
+              <PressAbbleDiv onPress={onForgotPassword}>
                 <Font size="14px" color={colors.black100}>
                   Forgot Password?
                 </Font>

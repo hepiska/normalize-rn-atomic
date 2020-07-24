@@ -7,6 +7,8 @@ import { bindActionCreators } from 'redux'
 import { getProductSaved } from '@modules/product-saved/action'
 import { getPostLiked } from '@modules/post-liked/action'
 import GlobalErrorAndWarning from '@src/components/molecules/global-error-warning'
+import PopUpModal from '@components/layouts/pop-up-modals'
+import Baner from '@components/layouts/baner'
 import {
   createStackNavigator,
   TransitionPresets,
@@ -67,6 +69,7 @@ class Pages extends React.Component<any, any> {
   render() {
     return (
       <>
+        <PopUpModal />
         <GlobalErrorAndWarning />
         <Stack2.Navigator initialRouteName={InitialPage.root} mode="modal">
           <Stack2.Screen

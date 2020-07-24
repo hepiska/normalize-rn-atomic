@@ -11,6 +11,7 @@ import {
   Text,
 } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
+import TopBaner from '@components/molecules/top-baner'
 import { Div, PressAbbleDiv, Font } from '@components/atoms/basic'
 import {
   helveticaBlackBold,
@@ -127,6 +128,7 @@ const NavbarTop: React.SFC<NavbarTopProps> = ({
 }) => {
   return (
     <SafeAreaView style={[styles.saveArea, saveAreaStyle]} {...props}>
+      <TopBaner />
       <View style={{ ...styles.container, ...style }}>
         <RenderLeftContent
           content={leftContent}

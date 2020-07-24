@@ -13,6 +13,7 @@ import ReCaptcha, { IProps } from '@components/atoms/recaptcha'
 import { Div, Font, PressAbbleDiv, ScrollDiv } from '@components/atoms/basic'
 import { colors } from '@src/utils/constants'
 import Icon from 'react-native-vector-icons/FontAwesome'
+import ReferalInputCard from '@components/molecules/referral-input-card'
 import { Button } from '@components/atoms/button'
 import { fontStyle } from '@components/commont-styles'
 import TextInputOutline from '@src/components/atoms/field-floating'
@@ -101,6 +102,7 @@ const FormRegisterBasicInformation: React.FC<FormRegisterBasicInformationType> =
   let recapthcaRef: any = useRef(null)
   let scrollRef = useRef<ScrollView>(null)
   let defaultEmail: string = route.params?.email || ''
+  let defaultRefcode: string = route.params?.refcode || ''
   const dispatch = useDispatch()
   const { data, loading, error, called, usernameAvalaible } = useSelector(
     _authSelector,
@@ -169,6 +171,8 @@ const FormRegisterBasicInformation: React.FC<FormRegisterBasicInformationType> =
     setFieldError,
   } = useFormValidator(
     {
+      referral_code: { required: false, initialValue: defaultRefcode },
+
       email: {
         required: false,
         initialValue: defaultEmail,
@@ -274,12 +278,16 @@ const FormRegisterBasicInformation: React.FC<FormRegisterBasicInformationType> =
                 _width="100%"
                 _background="rgba(225, 54, 97, 0.25)"
                 _padding="8px"
-                _margin="0px 0px -16px">
+                _margin="0px 0px 16px">
                 <Font size={11} color={colors.redBookmark}>
                   {state.tnc.error || error}
                 </Font>
               </Div>
             )}
+            <ReferalInputCard
+              value={state.referral_code.value}
+              onChangeText={handleOnChange('referral_code')}
+            />
 
             <Div _width="100%" _margin="32px 0px 24px">
               <TextInputOutline

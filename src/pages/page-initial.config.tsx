@@ -1,8 +1,8 @@
 export default {
   root: 'RootScreens',
-  index: 'Screens',
-  main: 'Shop',
-  screens: 'AccountSetting',
+  index: 'Main',
+  main: 'Home',
+  screens: 'SocialAuthRef',
   modal: 'ProductFilter',
   shop: 'Shop',
   insider: 'User',

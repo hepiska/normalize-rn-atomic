@@ -15,6 +15,7 @@ import ImageAutoSchale from '@components/atoms/image-autoschale'
 import { navigate } from '@src/root-navigation'
 import { setImage as changeImageUri } from '@utils/helpers'
 import { Button, GradientButton } from '@components/atoms/button'
+import dayjs from 'dayjs'
 import Gradient from 'react-native-linear-gradient'
 import { connect } from 'react-redux'
 
@@ -37,6 +38,7 @@ interface FollowCardType {
   style?: ViewStyle
   user?: any
   isFollowed?: boolean
+  showCreated?: boolean
   onFollow: (userId) => void
   onPress: (userId) => void
   disableDivider?: boolean
@@ -84,6 +86,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     width: 65,
   },
+  joinedtext: {
+    ...fontStyle.helveticaBold,
+    fontSize: 10,
+    marginBottom: 6,
+    color: colors.black60,
+  },
   gradientButton: {
     width: 88,
     height: 28,
@@ -121,6 +129,7 @@ class FollowCard extends React.PureComponent<FollowCardType, any> {
       isFollowed,
       disableDivider,
       isGradientButton,
+      showCreated,
       authId,
     } = this.props
 
@@ -213,6 +222,12 @@ class FollowCard extends React.PureComponent<FollowCardType, any> {
                     justifyContent: 'flex-end',
                     alignItems: 'flex-end',
                   }}>
+                  {showCreated && (
+                    <Text style={styles.joinedtext}>
+                      Joined {dayjs(user.created_at).format('DD MMM YYYY')}
+                    </Text>
+                  )}
+
                   {isGradientButton ? (
                     <GradientButton
                       onPress={this.handleFollow}

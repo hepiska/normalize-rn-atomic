@@ -7,6 +7,7 @@ const styles = StyleSheet.create({
     width: '100%',
     flexDirection: 'row',
     justifyContent: 'space-between',
+    zIndex: 1,
   },
 })
 
@@ -28,13 +29,22 @@ const ListItemCard = ({
   activeOpacity,
 }: ListItemCardType) => {
   return (
-    <TouchableOpacity onPress={onPress} activeOpacity={activeOpacity || 0.2}>
+    <TouchableOpacity
+      onPress={onPress}
+      activeOpacity={activeOpacity || 0.2}
+      style={{ overflow: 'hidden' }}>
       <View style={{ ...styles.container, ...style }}>
         {leftContent && leftContent}
         {rightContent && rightContent}
       </View>
       {backgroundImage && (
-        <Image style={StyleSheet.absoluteFillObject} source={backgroundImage} />
+        <Image
+          style={[
+            StyleSheet.absoluteFill,
+            { zIndex: 0, width: '100%', height: '100%' },
+          ]}
+          source={backgroundImage}
+        />
       )}
     </TouchableOpacity>
   )

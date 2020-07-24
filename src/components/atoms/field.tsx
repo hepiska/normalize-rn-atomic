@@ -13,6 +13,7 @@ interface FieldType {
   title?: string
   placeholder?: string
   onChangeText(text: string): void
+  onBlur(): void
   value: string
   inputProps?: TextInputProps
   leftIcon?: ReactElement
@@ -36,6 +37,7 @@ const Field = ({
   value = '',
   placeholder = 'placeholder...',
   inputProps,
+  onBlur,
 }: FieldType) => {
   return (
     <Div
@@ -47,6 +49,7 @@ const Field = ({
       {leftIcon && leftIcon}
       <TextInput
         value={value}
+        onBlur={onBlur}
         style={{
           flex: 1,
           paddingVertical: 0,

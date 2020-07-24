@@ -6,6 +6,7 @@ import { fontStyle, borderStyle } from '@components/commont-styles'
 import NavbarTop from '@components/molecules/navbar-top'
 import { couponsData } from '@hocs/data/coupons'
 import { applyCoupon } from '@modules/cart/action'
+import EmptyState from '@components/molecules/empty-state'
 import CouponLoader from '@components/atoms/loaders/coupon'
 import List from '@components/layouts/list-header'
 import CouponsCard from '@components/molecules/coupons-card'
@@ -26,6 +27,11 @@ const styles = StyleSheet.create({
   rowContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  desc: {
+    textAlign: 'center',
+    ...fontStyle.helvetica,
+    color: colors.black70,
   },
   containerPadding: { paddingVertical: 10, paddingHorizontal: 16 },
   icon: { width: 16, height: 12, marginRight: 10, color: colors.black100 },
@@ -55,9 +61,19 @@ const CouponsPage = (props: any) => {
     _fetchData()
   }, [skip])
 
-  const _goToReferal = useCallback(() => {
+  const _goToPromoCode = useCallback(() => {
     props.navigation.navigate('Screens', {
       screen: 'PromoCode',
+      params: {
+        source: 'cart',
+        cartIds: props.selectedCart,
+      },
+    })
+  }, [])
+
+  const _goToReferal = useCallback(() => {
+    props.navigation.navigate('Screens', {
+      screen: 'Referrals',
       params: {
         source: 'cart',
         cartIds: props.selectedCart,
@@ -90,10 +106,59 @@ const CouponsPage = (props: any) => {
     [],
   )
 
+  const _rendeFooter = useMemo(
+    () => ({ item, index }) => {
+      if (!props.coupons.length) {
+        return null
+      }
+
+      return (
+        <View
+          style={[
+            styles.rowContainer,
+            {
+              backgroundColor: colors.black10,
+              padding: 16,
+              borderRadius: 8,
+              marginBottom: 32,
+            },
+          ]}>
+          <View style={{ flex: 1 }}>
+            <Text style={[styles.text, { ...fontStyle.helveticaBold }]}>
+              Do you more need coupon ?
+            </Text>
+            <Text
+              style={[
+                styles.text,
+                { fontSize: 10, color: colors.black70, marginTop: 8 },
+              ]}>
+              Share your referral code to get 10% OFF discount coupon{' '}
+            </Text>
+          </View>
+          <TouchableOpacity
+            onPress={_goToReferal}
+            style={{
+              paddingHorizontal: 16,
+              paddingVertical: 8,
+              borderRadius: 8,
+              borderStyle: 'solid',
+              marginLeft: 16,
+              borderWidth: 1,
+              borderColor: colors.black60,
+            }}>
+            <Text style={[styles.text, { ...fontStyle.helveticaBold }]}>
+              Learn More
+            </Text>
+          </TouchableOpacity>
+        </View>
+      )
+    },
+    [props.coupons],
+  )
   const _renderHeader = useMemo(
     () => () => (
       <TouchableOpacity
-        onPress={_goToReferal}
+        onPress={_goToPromoCode}
         style={[
           styles.rowContainer,
           borderStyle.all,
@@ -125,7 +190,28 @@ const CouponsPage = (props: any) => {
     if (props.loading) {
       return <CouponLoader style={styles.list} />
     }
-    return null
+    return (
+      <View>
+        <EmptyState
+          title="Do You Need Coupon ?"
+          img={require('@assets/placeholder/searching-for-the-search-result.png')}
+          description={
+            <View style={{ alignItems: 'center' }}>
+              <Text style={styles.desc}>
+                Share your invitation code and both of you can get special
+                coupon from Shonet.{' '}
+              </Text>
+              <TouchableOpacity onPress={_goToReferal}>
+                <Text
+                  style={[styles.desc, { textDecorationLine: 'underline' }]}>
+                  Learn More
+                </Text>
+              </TouchableOpacity>
+            </View>
+          }
+        />
+      </View>
+    )
   }
 
   return (
@@ -144,6 +230,7 @@ const CouponsPage = (props: any) => {
           data={props.coupons}
           renderItem={_renderItem}
           style={styles.list}
+          ListFooterComponent={_rendeFooter}
         />
       </View>
     </>

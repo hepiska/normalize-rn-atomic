@@ -21,15 +21,20 @@ class TermConditionWebView extends Component<any, any> {
 
   render() {
     const { finishAnimation } = this.state
+    const { route } = this.props
+    const { title, uri } = route.params || {}
 
     return (
       <>
-        <NavbarTop title="Terms and Condition" leftContent={['back']} />
+        <NavbarTop
+          title={title || 'Terms and Condition'}
+          leftContent={['back']}
+        />
         {finishAnimation ? (
           <WebView
             ref={r => (this.webref = r)}
             source={{
-              uri: Config.SHONET_URI + '/terms-and-condition',
+              uri: uri || Config.SHONET_URI + '/terms-and-condition',
             }}
             onLoadEnd={syntheticEvent => {
               const { nativeEvent } = syntheticEvent

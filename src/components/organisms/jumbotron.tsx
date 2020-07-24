@@ -73,13 +73,13 @@ class Jumbotron extends React.Component<JumbotronType, any> {
           decelerationRate="fast"
           snapToAlignment="center"
           snapToInterval={width}
-          data={data}
+          data={data || []}
           keyExtractor={this._keyExtractor}
           renderItem={this._renderItem}
           onViewableItemsChanged={this._onViewAbleChange}
           viewabilityConfig={this._itemVisiblePercentThreshold}
         />
-        {data.length > 1 && (
+        {data?.length > 1 && (
           <Div
             flexDirection="row"
             position="absolute"

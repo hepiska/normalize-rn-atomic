@@ -36,9 +36,11 @@ import userPostReducer from './user-post/reducer'
 import notificationReducer from './notification/reducer'
 import feedReducer from './post-feed/reducer'
 import discoverReducer from './post-discover/reducer'
+import popupModalReducer from './pop-up-modals/reducer'
 import insightReducer from './insights/reducer'
 import globalSearchUiReducer from './global-search-ui/reducer'
 import globalSearchProductFilterReducer from './global-search-product-filter/reducer'
+import referralsReducer from './referrals/reducer'
 
 const combinedReducer: Reducer<any> = combineReducers({
   addresses: addressReducer,
@@ -77,6 +79,9 @@ const combinedReducer: Reducer<any> = combineReducers({
   productsSaved: productSavedActionType,
   products: productsReducer,
   productAttribute: productAttributeReducer,
+  popupModals: popupModalReducer,
+
+  referrals: referralsReducer,
 
   searchPost: searchPostReducer,
   searchProduct: searchProductReducer,

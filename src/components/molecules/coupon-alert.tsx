@@ -67,8 +67,7 @@ const CouponAlert = (props: any) => {
       },
     })
   }, [])
-
-  if (!props.total && !props.selectedCoupon) {
+  if (!props.selectedCart) {
     return (
       <View style={style}>
         <TouchableOpacity
@@ -77,7 +76,7 @@ const CouponAlert = (props: any) => {
             styles.rowContainer,
             borderStyle.all,
             styles.containerPadding,
-            { justifyContent: 'space-between', marginTop: 16 },
+            { justifyContent: 'space-between' },
           ]}>
           <View style={styles.rowContainer}>
             <Image
@@ -93,7 +92,27 @@ const CouponAlert = (props: any) => {
 
   return (
     <View style={style}>
-      {props.appliedCoupon ? (
+      {!props.appliedCoupon ? (
+        <TouchableOpacity
+          onPress={_goToCoupons}
+          style={[
+            styles.rowContainer,
+            borderStyle.all,
+            styles.containerPadding,
+            { justifyContent: 'space-between' },
+          ]}>
+          <View style={styles.rowContainer}>
+            <Image
+              style={styles.icon}
+              source={require('@assets/icons/ticket.png')}
+            />
+            <Text style={styles.text}>
+              You have {props.total} discount coupon
+            </Text>
+          </View>
+          <Icon name="chevron-right" size={16} />
+        </TouchableOpacity>
+      ) : props.appliedCoupon && props.appliedCoupon.is_valid ? (
         <ImageBackground
           style={[
             styles.successAlert,
@@ -117,25 +136,27 @@ const CouponAlert = (props: any) => {
           />
         </ImageBackground>
       ) : (
-        <TouchableOpacity
-          onPress={_goToCoupons}
+        <View
           style={[
             styles.rowContainer,
-            borderStyle.all,
-            styles.containerPadding,
-            { justifyContent: 'space-between' },
+            {
+              paddingHorizontal: 8,
+              paddingVertical: 16,
+              borderRadius: 8,
+              backgroundColor: colors.orange,
+            },
           ]}>
-          <View style={styles.rowContainer}>
-            <Image
-              style={styles.icon}
-              source={require('@assets/icons/ticket.png')}
-            />
-            <Text style={styles.text}>
-              You have {props.total} discount coupon
-            </Text>
-          </View>
-          <Icon name="chevron-right" size={16} />
-        </TouchableOpacity>
+          <Text style={{ flex: 1, marginRight: 16, color: colors.white }}>
+            Cannot Apply Coupon: Minimum purchase is not met or coupon is no
+            longer valid
+          </Text>
+          <IconMa
+            name="close"
+            onPress={_removeAppliedCoupons}
+            size={14}
+            color={colors.white}
+          />
+        </View>
       )}
     </View>
   )

@@ -415,7 +415,7 @@ class Cart extends React.Component<any, any> {
           sections={data}
           keyExtractor={this._keyExtractor}
           renderItem={this._renderItem}
-          scrollEnabled={!!products.length || !!data.length}
+          // scrollEnabled={!!products.length || !!data.length}
           renderSectionHeader={this._sectionHeader}
           ListHeaderComponent={this._header}
           stickyHeaderIndices={[0]}
