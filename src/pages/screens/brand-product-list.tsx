@@ -15,6 +15,7 @@ import {
 } from '@modules/product-filter/action'
 import { productApi } from '@modules/product/action'
 import { getBrand } from '@modules/brand/action'
+import Amplitude from 'amplitude-js'
 
 import ProductListPageLoader from '@components/atoms/loaders/product-list'
 
@@ -43,6 +44,10 @@ class BrandProductList extends Component<any, any> {
 
     InteractionManager.runAfterInteractions(() => {
       this.setState({ finishAnimation: true })
+      Amplitude.getInstance().logEvent('product-list', {
+        type: 'brand',
+        category: route.params.brandsSlug || brand.id,
+      })
       return getBrand(route.params.brandsSlug || brand.id)
     })
   }

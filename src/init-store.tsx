@@ -8,6 +8,7 @@ import rootReducer from '@modules/index'
 import { composeWithDevTools } from 'redux-devtools-extension'
 import apiMidleware from '@modules/middleware/api'
 import log from '@modules/middleware/log'
+import Amplitude from 'amplitude-js'
 import { PersistGate } from 'redux-persist/integration/react'
 import multidipacerMidleware from '@modules/middleware/multi'
 import { persistStore } from 'redux-persist'
@@ -111,6 +112,7 @@ class InitStore extends React.Component<any, any> {
     const _store = createStore(rootReducer, initialState, composedEnhancers)
     store = _store
     global.store = _store
+    Amplitude.getInstance().init(CONFIG.AMPLITUDE_API_KEY)
     const persistor = persistStore(store)
     presist = persistor
     this.setState({ store: _store, persistor, isLoading: false })

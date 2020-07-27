@@ -14,6 +14,7 @@ import {
   resetSelectedCollection,
 } from '@modules/product-filter/action'
 import { productApi } from '@modules/product/action'
+import Amplitude from 'amplitude-js'
 import { getCategory } from '@modules/category/action'
 import ProductListPageLoader from '@components/atoms/loaders/product-list'
 
@@ -42,6 +43,10 @@ class CategoryProductList extends Component<any, any> {
 
     InteractionManager.runAfterInteractions(() => {
       this.setState({ finishAnimation: true })
+      Amplitude.getInstance().logEvent('product-list', {
+        type: 'category',
+        category: route.params.categoriesSlug || category.id,
+      })
       return getCategory(route.params.categoriesSlug || category.id)
     })
   }

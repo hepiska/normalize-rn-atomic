@@ -10,11 +10,13 @@ import { fontStyle } from '../commont-styles'
 import { makeMapCategories } from '@modules/search-product/selector'
 import ProductSearchLoader from '@components/atoms/loaders/product-search'
 import EmptyState from '@components/molecules/order-empty-state'
+import Amplitude from 'amplitude-js'
 import { productSearchListData } from '@hocs/data/product'
 import { StackActions } from '@react-navigation/native'
 import ProductSearchCard from '@components/molecules/product-search-card'
 
 import List from '@components/layouts/list-header'
+import { category } from '@src/modules/normalize-schema'
 
 const ProductListHoc = productSearchListData(ProductSearchCard)
 
@@ -102,6 +104,10 @@ const SearchProductResultPart1 = ({
   loading,
 }) => {
   const selectCategory = (category?: any) => () => {
+    Amplitude.getInstance().logEvent('product-search-search-category', {
+      searchKey: searchKey,
+      category: category,
+    })
     setfilter(category)
   }
 

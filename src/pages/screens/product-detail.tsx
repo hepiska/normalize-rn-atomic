@@ -23,6 +23,7 @@ import CoverImageAnimated from '@src/components/organisms/cover-image-animated'
 import ImagesWithPreviews from '@components/organisms/images-with-preview'
 import ContentExpandable from '@components/molecules/content-expandable'
 import ImageCoverContentLayout from '@src/components/layouts/image-cover-animated-content'
+import Amplitude from 'amplitude-js'
 import HTML from 'react-native-render-html'
 // import ProductOverviewCard from '@src/components/molecules/product-overview-card-body'
 import ProductAttributes from '@components/organisms/product-attributes'
@@ -163,7 +164,13 @@ class ProductListPage extends React.Component<any, any> {
   _breadcrumb = []
 
   componentDidMount() {
+    const { product } = this.props
     InteractionManager.runAfterInteractions(() => {
+      Amplitude.getInstance().logEvent('product-detail', {
+        id: this.props.route.params?.productId,
+        name: product.name,
+        category: this.props.product.category.name,
+      })
       this._fetchData()
 
       if (this.props.product && this.props.categories) {

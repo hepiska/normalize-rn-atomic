@@ -6,6 +6,7 @@ import styled from 'styled-components'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { Div, Font, PressAbbleDiv } from '@components/atoms/basic'
 import { Button, GradientButton } from '@components/atoms/button'
+import Amplitude from 'amplitude-js'
 import NavbarTop from '@components/molecules/navbar-top'
 import ProductOverviewCart from '@components/molecules/product-overview-cart'
 import ProductAttributes from '@components/organisms/product-attributes'
@@ -136,13 +137,30 @@ class CartModal extends React.Component<any, any> {
   _addToCart = async () => {
     const { navigation, isAuth, product } = this.props
     const { type, cart } = this.props.route.params
+    const variant = product.variants.find(
+      variant => variant.id === this.state.selectedVariant,
+    )
     if (type === 'change_variant' && cart) {
+      Amplitude.getInstance().logEvent('change-variant', {
+        productId: product.id,
+        variantName: variant.slug,
+        variantId: variant.id,
+        productName: product.name,
+        category: product.category.slug,
+      })
       if (isAuth) {
         await this.props.changeVariant({
           variant_id: this.state.selectedVariant,
           cart: cart,
         })
       } else {
+        Amplitude.getInstance().logEvent('change-variant', {
+          productId: product.id,
+          variantName: variant.slug,
+          variantId: variant.id,
+          productName: product.name,
+          category: product.category.slug,
+        })
         this.props.changeVariantBeforeLogin({
           variant_id: this.state.selectedVariant,
           variant: this.getVariantData(this.state.selectedVariant),
@@ -153,6 +171,13 @@ class CartModal extends React.Component<any, any> {
       }
       navigation.goBack()
     } else {
+      Amplitude.getInstance().logEvent('add-to-cart', {
+        product_id: product.id,
+        variant_name: variant.slug,
+        variant_id: variant.id,
+        product_name: product.name,
+        category: this.props.product.category.name,
+      })
       await this.props.addCart({
         variant_id: this.state.selectedVariant,
         qty: 1,
@@ -180,7 +205,7 @@ class CartModal extends React.Component<any, any> {
 
     const selectedAttributes =
       type === 'change_variant' && fixAttributes ? [fixAttributes] : []
-    console.log('==change att', changeAttribute)
+    // console.log('==change att', changeAttribute)
     const headerTitle =
       type === 'change_variant' && changeAttribute
         ? `Choose New ${changeAttribute.label}`

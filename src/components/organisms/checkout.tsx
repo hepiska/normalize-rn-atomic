@@ -10,10 +10,12 @@ import ItemSummaryCart from '../molecules/item-summary-cart'
 import { formatRupiah } from '@src/utils/helpers'
 import TotalPayCart from '@components/molecules/total-pay-cart'
 import { bindActionCreators } from 'redux'
+import Amplitude from 'amplitude-js'
 import { getUserAddressById } from '@modules/address/action'
 import { navigate } from '@src/root-navigation'
 import { setCheckoutAddressData, payNow } from '@modules/checkout/action'
 import { makeSelectedCoupons } from '@src/modules/coupons/selector'
+import coupons from '@src/pages/screens/coupons'
 
 const AddressHoc = addressListData(AddressCart)
 
@@ -75,6 +77,12 @@ class Checkout extends Component<any, any> {
 
   onPayNow = (item, totalPrice) => async () => {
     const { payNow, userCheckoutAddress, appliedCoupon } = this.props
+    Amplitude.getInstance().logEvent('add-to-cart', {
+      carts: item.join(','),
+      coupon_name: appliedCoupon.name,
+      coupon_id: appliedCoupon.id,
+      total_price: totalPrice,
+    })
     await payNow(item, userCheckoutAddress.id, appliedCoupon.id)
   }
 

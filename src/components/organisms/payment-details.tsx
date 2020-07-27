@@ -14,6 +14,7 @@ import { GradientButton } from '@components/atoms/button'
 import { formatRupiah } from '@utils/helpers'
 import { colors } from '@utils/constants'
 import Icon from 'react-native-vector-icons/FontAwesome5'
+import Amplitude from 'amplitude-js'
 import IconMi from 'react-native-vector-icons/MaterialIcons'
 import { Checkbox } from '../atoms/checkbox'
 import ImageAutoSchale from '@components/atoms/image-autoschale'
@@ -22,6 +23,7 @@ import { navigate } from '@src/root-navigation'
 import OrderCard from '@components/molecules/order-card'
 import { payTransaction } from '@modules/transaction/action'
 import TextInputOutline from '@src/components/atoms/field-floating'
+import { transaction } from '@src/modules/normalize-schema'
 
 // interface PaymentDetailType {
 //   style?: ViewStyle
@@ -377,6 +379,12 @@ class PaymentDetail extends React.PureComponent<any, any> {
   handlePayment = async () => {
     const { payTransaction, transaction, details } = this.props
     const { dataCreditCard } = this.state
+
+    Amplitude.getInstance().logEvent('payment-method', {
+      payment_method: details.name,
+      transaction_id: transaction.id,
+    })
+
     if (
       details.name.toLowerCase() === 'gopay' ||
       details.name.toLowerCase() === 'dana' ||

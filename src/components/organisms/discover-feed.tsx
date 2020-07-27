@@ -10,6 +10,7 @@ import {
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import List from '@components/layouts/list-header'
+import Amplitude from 'amplitude-js'
 import { capitalEachWord } from '@utils/helpers'
 import { fetchFeed } from '@modules/post-feed/action'
 import PostListItem from '@src/components/molecules/post-card'
@@ -45,6 +46,7 @@ class FeedOrg extends React.Component<any, any> {
   lastskip = 0
 
   componentDidMount() {
+    Amplitude.getInstance().logEvent('feed')
     InteractionManager.runAfterInteractions(() => {
       this.setState({ finishAnimation: true })
       this._freshfetch()

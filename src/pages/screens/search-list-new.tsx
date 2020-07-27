@@ -10,6 +10,7 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import DiscoverTab from '@src/components/molecules/tab-menu-chip'
 import TabMenuCursor from '@components/molecules/tab-menu-cursor'
 import SearchProductResult from '@src/components/organisms/search-product-result'
+import Amplitude from 'amplitude-js'
 import SearchBrandResult from '@src/components/organisms/search-brand-result'
 import SearchUserResult from '@src/components/organisms/search-user-result'
 import SearchPostResult from '@src/components/organisms/search-post-result'
@@ -29,6 +30,8 @@ import { getSearchUser } from '@modules/search-user/action'
 import { getSearchProduct } from '@modules/search-product/action'
 
 const Tab = createMaterialTopTabNavigator()
+
+const tabposname = { '1': 'product', '2': 'brand', '3': 'user', '4': 'post' }
 
 class SearchList extends Component<any, any> {
   state = {
@@ -102,6 +105,10 @@ class SearchList extends Component<any, any> {
     this.timer = setTimeout(() => {
       if (searchKey.length > 2) {
         newSkip[activeTab] = 0
+        Amplitude.getInstance().logEvent('search', {
+          searchKey: searchKey,
+          transaction_id: tabposname['' + activeTab],
+        })
         batch(() => {
           this._fetchData(this.skip[activeTab] || 0)
 

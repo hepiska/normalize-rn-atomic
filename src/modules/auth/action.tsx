@@ -1,6 +1,7 @@
 import { API } from '../action-types'
 import AsyncStorage from '@react-native-community/async-storage'
 import { clearCart } from '../cart/action'
+import Amplitude from 'amplitude-js'
 
 export const authActionType = {
   FETCHNG: 'auth/FETCHNG',
@@ -44,6 +45,8 @@ const setRegisterSuccess = (data: any) => ({
 
 export const setLogout = () => {
   AsyncStorage.removeItem('token')
+  Amplitude.getInstance().setUserId(null) // not string 'null'
+  Amplitude.getInstance().regenerateDeviceId()
   return [
     clearCart(),
     {
@@ -80,6 +83,7 @@ export const loginApi = params => ({
       return setAuthFetching(false)
     },
     success: (data, { pagination }) => {
+      Amplitude.getInstance().setUserId(data.user.id)
       return [setLoginSuccess(data), setRefCode(null)]
     },
     error: err => {
@@ -104,6 +108,7 @@ export const oauthApi = params => ({
       return setAuthFetching(false)
     },
     success: (data, { pagination }) => {
+      Amplitude.getInstance().setUserId(data.user.id)
       return [setLoginSuccess({ ...data, provider: params.provider })]
     },
     error: err => {
@@ -125,6 +130,7 @@ export const registerApi = params => ({
       return setAuthFetching(true)
     },
     success: data => {
+      Amplitude.getInstance().setUserId(data.user.id)
       return [
         loginApi({ email: params.email, password: params.password }),
         setRegisterSuccess(data),

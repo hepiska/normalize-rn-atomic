@@ -8,6 +8,7 @@ import {
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { Div, Font, PressAbbleDiv } from '@components/atoms/basic'
+import Amplitude from 'amplitude-js'
 import BrandCard from '@components/molecules/brand-card'
 import FilterTriger from '@components/organisms/brand-filter-buttons'
 import {
@@ -45,6 +46,8 @@ class BrandList extends Component<any, any> {
   }
 
   componentWillUnmount() {
+    Amplitude.getInstance().logEvent('brand')
+
     this.props.clearSearch()
     this.props.resetBrand()
   }
@@ -86,6 +89,9 @@ class BrandList extends Component<any, any> {
 
     if (search) {
       params.keyword = search
+      Amplitude.getInstance().logEvent('search-brand', {
+        keyword: search,
+      })
     }
     this.props.brandApi(params)
   }

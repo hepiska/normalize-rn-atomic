@@ -14,6 +14,7 @@ import {
   resetSelectedCollection,
 } from '@modules/product-filter/action'
 import { productApi } from '@modules/product/action'
+import Amplitude from 'amplitude-js'
 import { getCollectionBySlug, getSales } from '@modules/collection/action'
 
 import ProductListPageLoader from '@components/atoms/loaders/product-list'
@@ -46,7 +47,10 @@ class CollectionProductList extends Component<any, any> {
       if (route.params.collectionsSlug === 'sales') {
         return getSales()
       }
-
+      Amplitude.getInstance().logEvent('product-list', {
+        type: 'collection',
+        category: route.params.collectionsSlug,
+      })
       return getCollectionBySlug(route.params.collectionsSlug)
     })
   }

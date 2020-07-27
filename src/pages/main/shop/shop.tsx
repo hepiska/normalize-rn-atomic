@@ -15,6 +15,7 @@ import Jumbotron from '@components/organisms/jumbotron'
 import SectionGridList from '@components/organisms/section-grid-list'
 import Animated from 'react-native-reanimated'
 import { globalDimention } from '@utils/constants'
+import Amplitude from 'amplitude-js'
 import { onScroll } from 'react-native-redash'
 import NavbarTopAnimated from '@components/molecules/navbar-top-animated'
 import FeaturedCategory from '@components/organisms/featured-category'
@@ -46,6 +47,7 @@ class ShopPage extends React.Component<any, any> {
     finishAnimation: false,
   }
   componentDidMount() {
+    Amplitude.getInstance().logEvent('shop')
     InteractionManager.runAfterInteractions(() => {
       this._fetchData()
       this.setState({ finishAnimation: true })

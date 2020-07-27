@@ -9,6 +9,7 @@ import {
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import List from '@components/layouts/list-header'
+import Amplitude from 'amplitude-js'
 import { capitalEachWord } from '@utils/helpers'
 import { getUserPosts } from '@modules/user-post/action'
 import { fetchDicover } from '@modules/post-discover/action'
@@ -37,6 +38,8 @@ class DiscoverOrg extends React.Component<any, any> {
   lastskip = 0
 
   componentDidMount() {
+    Amplitude.getInstance().logEvent('discover')
+
     InteractionManager.runAfterInteractions(() => {
       this.setState({ finishAnimation: true })
       this._freshfetch()

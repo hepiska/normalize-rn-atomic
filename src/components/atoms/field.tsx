@@ -13,7 +13,7 @@ interface FieldType {
   title?: string
   placeholder?: string
   onChangeText(text: string): void
-  onBlur(): void
+  onBlur?: () => void
   value: string
   inputProps?: TextInputProps
   leftIcon?: ReactElement
