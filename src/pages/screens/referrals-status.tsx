@@ -60,7 +60,7 @@ const _renderItem = ({ item, index }) => {
   return <FollowCardHoc userId={item} showCreated />
 }
 
-let limit = 0
+let limit = 10
 const ReferalStatus = (props: any) => {
   const [skip, setSkip] = useState(0)
   const dispatch = useDispatch()

@@ -76,16 +76,15 @@ export const referralsUser = params => {
 }
 
 export const newReferal = () => {
-  const start_at = dayjs()
+  const start_date = dayjs()
     .startOf('day')
-    .toISOString()
-  const end_at = dayjs().toISOString()
-  console.log(start_at, end_at)
+    .format('YYYY-MM-DD')
+  const end_date = dayjs().format('YYYY-MM-DD')
   return {
     type: API,
     payload: {
       url: 'account/referrals',
-      requestParams: { params: { skip: 0, limit: 5 } },
+      requestParams: { params: { skip: 0, limit: 5, start_date, end_date } },
       schema: [schema.user],
       startNetwork: () => [setLoading(true)],
       endNetwork: () => [setLoading(false)],
