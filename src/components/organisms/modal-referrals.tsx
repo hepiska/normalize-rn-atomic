@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Image } from 'react-native'
 import { fontStyle } from '../commont-styles'
 import { useDispatch } from 'react-redux'
 import IconFa from 'react-native-vector-icons/FontAwesome'
-import { changeOpenPopUp } from '@modules/pop-up-modals/action'
+import { closeModal } from '@modules/pop-up-modals/action'
 import Gradient from 'react-native-linear-gradient'
 import { navigate } from '@src/root-navigation'
 import { Button } from '@components/atoms/button'
@@ -50,12 +50,12 @@ const styles = StyleSheet.create({
 const ModalReferrals = (props: any) => {
   const dispatch = useDispatch()
   const _goToReferal = useCallback(() => {
-    dispatch(changeOpenPopUp())
+    dispatch(closeModal('referrals'))
     navigate('Screens', { screen: 'Referrals' })
   }, [])
 
   const _closeModal = useCallback(() => {
-    dispatch(changeOpenPopUp())
+    dispatch(closeModal('referrals'))
   }, [])
 
   return (

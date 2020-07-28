@@ -9,12 +9,24 @@ export const ActionType = {
   SET_DATA: 'pop-up-modals/SET_DATA',
   SET_ORDER: 'pop-up-modals/SET_ORDER',
   ADD_ORDER: 'pop-up-modals/ADD_ORDER',
+  CLOSE_MODAL: 'pop-up-modals/CLOSE_MODAL',
 }
 
 const setLoading = data => ({
   type: ActionType.SET_LOADING,
   payload: data,
 })
+
+export const closeModal = id => {
+  const closeTime = new Date()
+  return {
+    type: ActionType.CLOSE_MODAL,
+    payload: {
+      id: id,
+      closeTime: closeTime,
+    },
+  }
+}
 
 export const changeOpenPopUp = () => ({ type: ActionType.CHANGE_OPEN })
 export const changeType = data => ({
