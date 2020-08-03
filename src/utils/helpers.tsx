@@ -302,6 +302,24 @@ export const removeHeaderWebviewCreateJurnalScript = `(function() {
 })()
 true;
 `
+function paramsToObject(str) {
+  return str.split('&').reduce((acc, _data) => {
+    const [key, data] = _data.split('=')
+    if (data.split(',').length > 1) {
+      console.log('masuk sini')
+      acc[key] = data.split(',')
+    } else {
+      acc[key] = data
+    }
+    return acc
+  }, {})
+}
+
+export const getQueryParamObj = (queryparams: string) => {
+  const params = paramsToObject(queryparams)
+  // console.log('[[[[[[', params)
+  return params
+}
 
 export const urlScreenMap = url => {
   const clearUrl = url.replace(Config.SHONET_URI, '')

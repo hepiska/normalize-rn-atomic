@@ -67,6 +67,6 @@ const presistConfig = {
   storage: AsyncStorage,
 }
 
-// const exportReducer = persistReducer(presistConfig, reducer)
+const exportReducer = persistReducer(presistConfig, reducer)
 
-export default reducer
+export default exportReducer

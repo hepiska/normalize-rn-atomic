@@ -1,5 +1,6 @@
 import * as React from 'react'
 import MainPage from './main'
+import { Platform } from 'react-native'
 import Screens from './screens'
 import ModalPages from './modals'
 import { connect } from 'react-redux'
@@ -8,13 +9,18 @@ import { getProductSaved } from '@modules/product-saved/action'
 import { getPostLiked } from '@modules/post-liked/action'
 import GlobalErrorAndWarning from '@src/components/molecules/global-error-warning'
 import PopUpModal from '@components/layouts/pop-up-modals'
+import { navigate } from '@src/root-navigation'
+import dynamicLinks from '@react-native-firebase/dynamic-links'
+import firebase from '@react-native-firebase/app'
 import Baner from '@components/layouts/baner'
+import { uriToScreen } from '@utils/config'
 import {
   createStackNavigator,
   TransitionPresets,
 } from '@react-navigation/stack'
 import { createDrawerNavigator } from '@react-navigation/drawer'
 import ConstumeDrawer from '@components/organisms/drawer-costume'
+import { firebaseCredential } from '@utils/config'
 
 import InitialPage from './page-initial.config'
 
@@ -60,10 +66,42 @@ const MainWithModal = () => (
 )
 
 class Pages extends React.Component<any, any> {
+  linkSub = null
   componentDidMount() {
     if (this.props.isAuth) {
       this.props.getProductSaved()
       this.props.getPostLiked()
+    }
+    this._firebase()
+  }
+
+  componentWillUnmount() {
+    if (this.linkSub) {
+      this.linkSub()
+    }
+  }
+
+  _firebase = async () => {
+    if (firebase.apps.length < 1) {
+      await firebase.initializeApp(firebaseCredential)
+    }
+    this.linkSub = dynamicLinks().onLink(this._handleDynamicLink)
+    dynamicLinks()
+      .getInitialLink()
+      .then(this._handleDynamicLink)
+  }
+
+  _handleDynamicLink = link => {
+    if (link) {
+      const screen = uriToScreen(link.url)
+      navigate(screen.root, screen.obj)
+    }
+  }
+
+  _handleDynamicLinkOnClose = link => {
+    if (link) {
+      uriToScreen(link.url)
+      // navigate('Screens', { screen: 'LoginRegister' })
     }
   }
   render() {
