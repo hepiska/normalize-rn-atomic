@@ -91,8 +91,14 @@ const ReferalPage = (props: any) => {
     })
   }, [])
 
+  const _openQr = () => {
+    props.navigation.navigate('modals', { screen: 'QR' })
+  }
+
   useEffect(() => {
-    dispatch(getUser(props.me.username, 'username'))
+    if (props.me) {
+      dispatch(getUser(props.me.username, 'username'))
+    }
   }, [])
   return (
     <>
@@ -100,6 +106,14 @@ const ReferalPage = (props: any) => {
         leftContent={['back']}
         title="Referrals"
         saveAreaStyle={{ backgroundColor: 'white' }}
+        rightAction={
+          <TouchableOpacity onPress={_openQr}>
+            <Image
+              source={require('@assets/icons/qr-code.png')}
+              style={{ height: 18, width: 18, marginHorizontal: 16 }}
+            />
+          </TouchableOpacity>
+        }
       />
       <ScrollView>
         <Image
@@ -210,9 +224,14 @@ const ReferalPage = (props: any) => {
   )
 }
 
-const mapStateToProps = state => ({
-  me: state.auth.data.user,
-  detailme: state.user.data[state.auth.data.user.id],
-})
+const mapStateToProps = state => {
+  if (!state.auth.data.user) {
+    return {}
+  }
+  return {
+    me: state.auth.data.user,
+    detailme: state.user.data[state.auth.data.user.id],
+  }
+}
 
 export default connect(mapStateToProps, null)(ReferalPage)

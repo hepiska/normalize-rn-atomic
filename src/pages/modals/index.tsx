@@ -14,6 +14,7 @@ import PostMoreModal from './post-more'
 import GlobalSearchProductFilter from './global-search-product-filter'
 import Register from './register'
 import LoginPage from './login'
+import QRModal from './qr-code'
 
 import ShareModal from '@pages/modals/share'
 
@@ -63,6 +64,15 @@ function ModalStack() {
           cardStyle: { backgroundColor: 'transparent' },
         }}
         component={ShareModal}
+      />
+      <Stack.Screen
+        name="QR"
+        options={{
+          animationEnabled: false,
+
+          cardStyle: { backgroundColor: 'rgba(0,0,0,0.7)' },
+        }}
+        component={QRModal}
       />
       <Stack.Screen
         name="PostMore"
