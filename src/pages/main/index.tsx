@@ -8,6 +8,7 @@ import { colors } from '@utils/constants'
 import CenterButton from '@components/atoms/tab-bar-center-button'
 import { CommonActions } from '@react-navigation/native'
 import initialPageConfig from '@pages/page-initial.config'
+import { sendSeenData } from '@modules/seen-history/action'
 import ShopPage from './shop/index'
 import DiscoverPage from './discover/index'
 import NotificationPage from './notifications/index'
@@ -21,6 +22,10 @@ class MainPages extends React.Component<any, any> {
   state = {}
 
   componentDidUpdate(prevProps) {
+    if (this.props.isAuth !== prevProps.isAuth && this.props.isAuth) {
+      sendSeenData(this.props.seenProduct)
+    }
+
     if (
       this.props.maintenance_mode !== prevProps.maintenance_mode &&
       this.props.maintenance_mode
@@ -94,6 +99,8 @@ class MainPages extends React.Component<any, any> {
 
 const mapStateToProps = state => ({
   maintenance_mode: state.appConfig.maintenance_mode,
+  seenProduct: state.seenHistory.products,
+  isAuth: state.auth.isAuth,
 })
 
 export default connect(mapStateToProps)(MainPages)

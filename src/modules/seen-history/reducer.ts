@@ -6,16 +6,14 @@ import { persistReducer } from 'redux-persist'
 import AsyncStorage from '@react-native-community/async-storage'
 
 interface ReducerType {
-  readonly data: Object
+  readonly products: Array<any>
   error: ErrorType
   loading: boolean
   active: number
 }
 
 const initialState: ReducerType = {
-  data: Immutable({
-    maintenance_mode: false,
-  }),
+  products: Immutable([]),
   error: null,
   active: undefined,
   loading: false,
@@ -34,16 +32,17 @@ const reducer: Reducer<ReducerType> = (
     case ActionType.SET_ERROR:
       newState.error = payload
       return newState
-    case ActionType.SET_DATA:
-      newState.data = Immutable.merge(newState.data, payload, { deep: true })
+    case ActionType.ADD_PRODUCT:
+      newState.products = Immutable(state.products).concat([payload])
       return newState
+
     default:
       return state
   }
 }
 
 const presistConfig = {
-  key: 'app-config',
+  key: 'seen-product',
   storage: AsyncStorage,
 }
 

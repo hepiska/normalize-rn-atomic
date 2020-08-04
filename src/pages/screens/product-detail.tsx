@@ -42,6 +42,7 @@ import Icon from 'react-native-vector-icons/FontAwesome5'
 import { makeDeepClone } from '@modules/selector-general'
 import { makeSelectedProducts } from '@modules/product/selector'
 import { makeSelectedBrands } from '@modules/brand/selector'
+import { addProduct as addSeenProduct } from '@modules/seen-history/action'
 import {
   addProductSaved,
   deleteProductSaved,
@@ -164,7 +165,8 @@ class ProductListPage extends React.Component<any, any> {
   _breadcrumb = []
 
   componentDidMount() {
-    const { product } = this.props
+    const { product, isAuth, route } = this.props
+    const { reveral } = route.params || {}
     InteractionManager.runAfterInteractions(() => {
       Amplitude.getInstance().logEvent('product-detail', {
         id: this.props.route.params?.productId,
@@ -172,6 +174,17 @@ class ProductListPage extends React.Component<any, any> {
         category: this.props.product.category.name,
       })
       this._fetchData()
+      const date = new Date()
+      const seenProduct: any = {
+        product_id: this.props.route.params?.productId,
+        created_at: date.toISOString(),
+      }
+      if (reveral) {
+        seenProduct.reveral = reveral
+      }
+      if (!isAuth) {
+        this.props.addSeenProduct(seenProduct)
+      }
 
       if (this.props.product && this.props.categories) {
         this.renderBreadcrumb(this.props.product.category.id)
@@ -898,6 +911,7 @@ const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
       getProductById,
+      addSeenProduct,
       addCart,
       addProductSaved,
       deleteProductSaved,
