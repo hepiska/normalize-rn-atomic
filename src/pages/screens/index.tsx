@@ -35,6 +35,7 @@ import PromoCodePage from './promo-code'
 import ReferralsPage from './referrals'
 import ReferralsPageStatus from './referrals-status'
 import ReferalLanding from './referral-landing'
+import Maintenance from './maintenance'
 // import Search from './search-list'
 import Search from './search-list-new'
 import MyProfile from './my-other-profille'
@@ -89,6 +90,7 @@ function InsiderStack() {
       <Stack.Screen name="PromoCode" component={PromoCodePage} />
       <Stack.Screen name="Coupons" component={CouponsPage} />
       <Stack.Screen name="CouponDetail" component={CouponDetail} />
+      <Stack.Screen name="Maintenance" component={Maintenance} />
       {/* <Stack.Screen name="ProductList" component={ProductList} /> */}
       <Stack.Screen name="PaymentWaiting" component={PaymentWaiting} />
       <Stack.Screen name="Cart" component={Cart} />

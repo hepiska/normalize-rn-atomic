@@ -1,9 +1,12 @@
 import * as React from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { View, Text } from 'react-native'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { colors } from '@utils/constants'
 import CenterButton from '@components/atoms/tab-bar-center-button'
+import { CommonActions } from '@react-navigation/native'
 import initialPageConfig from '@pages/page-initial.config'
 import ShopPage from './shop/index'
 import DiscoverPage from './discover/index'
@@ -16,6 +19,20 @@ const Tab = createBottomTabNavigator()
 
 class MainPages extends React.Component<any, any> {
   state = {}
+
+  componentDidUpdate(prevProps) {
+    if (
+      this.props.maintenance_mode !== prevProps.maintenance_mode &&
+      this.props.maintenance_mode
+    ) {
+      this.props.navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{ name: 'Screens', params: { screen: 'Maintenance' } }],
+        }),
+      )
+    }
+  }
 
   render() {
     return (
@@ -75,4 +92,8 @@ class MainPages extends React.Component<any, any> {
   }
 }
 
-export default MainPages
+const mapStateToProps = state => ({
+  maintenance_mode: state.appConfig.maintenance_mode,
+})
+
+export default connect(mapStateToProps)(MainPages)

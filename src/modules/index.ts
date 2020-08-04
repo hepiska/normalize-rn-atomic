@@ -24,6 +24,7 @@ import searchPostReducer from './search-post/reducer'
 import searchBrandReducer from './search-brand/reducer'
 import searchUserReducer from './search-user/reducer'
 import orderReducer from './order/reducer'
+import appConfigReducer from './app-config/reducer'
 import productSavedActionType from './product-saved/reducer'
 import postLikedActionType from './post-liked/reducer'
 import postBookmarkReducer from './post-bookmarked/reducer'
@@ -45,7 +46,7 @@ import referralsReducer from './referrals/reducer'
 const combinedReducer: Reducer<any> = combineReducers({
   addresses: addressReducer,
   auth: authReducer,
-
+  appConfig: appConfigReducer,
   brands: brandReducer,
 
   carts: cartReducer,

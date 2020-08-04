@@ -18,6 +18,7 @@ import {
   createStackNavigator,
   TransitionPresets,
 } from '@react-navigation/stack'
+import { getAppConfig } from '@modules/app-config/action'
 import { createDrawerNavigator } from '@react-navigation/drawer'
 import ConstumeDrawer from '@components/organisms/drawer-costume'
 import { firebaseCredential } from '@utils/config'
@@ -72,6 +73,7 @@ class Pages extends React.Component<any, any> {
       this.props.getProductSaved()
       this.props.getPostLiked()
     }
+    this.props.getAppConfig()
     this._firebase()
   }
 
@@ -142,6 +144,7 @@ const mapDispatchToProps = dispatch =>
     {
       getProductSaved,
       getPostLiked,
+      getAppConfig,
     },
     dispatch,
   )
