@@ -1,6 +1,6 @@
 export default {
   root: 'RootScreens',
-  index: 'Screens',
+  index: 'Main',
   main: 'Home',
   screens: 'MyEarnings',
   modal: 'ProductFilter',
