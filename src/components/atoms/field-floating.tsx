@@ -45,6 +45,7 @@ type TextInputProps = React.ComponentPropsWithRef<typeof NativeTextInput> & {
   desc?: string
   multiline?: boolean
   numberOfLines?: number
+  floatingLabel?: boolean
   onFocus?: (args: any) => void
   onBlur?: (args: any) => void
   render?: (props: RenderProps) => React.ReactNode
@@ -880,8 +881,8 @@ class TextInput extends React.Component<TextInputProps, State> {
         : 1,
     ),
     error: new Animated.Value(this.props.error ? 1 : 0),
-    focused: false,
-    placeholder: '',
+    focused: this.props.floatingLabel ? this.props.floatingLabel : false,
+    placeholder: this.props.placeholder ? this.props.placeholder : '',
     value:
       this.props.value !== undefined
         ? this.props.value

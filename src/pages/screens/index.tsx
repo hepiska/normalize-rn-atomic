@@ -39,6 +39,8 @@ import Maintenance from './maintenance'
 // import Search from './search-list'
 import Search from './search-list-new'
 import MyProfile from './my-other-profille'
+import MyEarnings from './my-earnings'
+import EarningPending from './my-earnings-pending'
 import Register from './register'
 import SizeGuideWebView from './size-guide-webview'
 import TestLayout from './test-layout'
@@ -61,6 +63,8 @@ import CollectionProductList from './collection-product-list'
 import BrandProductList from './brand-product-list'
 
 import TopicInterest from './topic-interest'
+import WithdrawEarnings from './withdraw-earnings'
+import DanaConfirmWithdraw from './dana-confirm-withdraw'
 
 const Stack = createStackNavigator()
 
@@ -101,6 +105,10 @@ function InsiderStack() {
       <Stack.Screen name="PaymentResponse" component={PaymentResponse} />
       <Stack.Screen name="OrderList" component={OrderList} />
       <Stack.Screen name="MyProfile" component={MyProfile} />
+      <Stack.Screen name="MyEarnings" component={MyEarnings} />
+      <Stack.Screen name="MyEarningsPending" component={EarningPending} />
+      <Stack.Screen name="WithdrawEarnings" component={WithdrawEarnings} />
+      <Stack.Screen name="DanaConfirmation" component={DanaConfirmWithdraw} />
       <Stack.Screen name="TestLayout" component={TestLayout} />
       <Stack.Screen name="EditProfile" component={EditProfile} />
       <Stack.Screen name="Follow" component={Follow} />

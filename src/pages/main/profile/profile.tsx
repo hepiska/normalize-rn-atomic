@@ -14,6 +14,7 @@ import ProfileLoader from '@src/components/atoms/loaders/profile-loader'
 // import MyPost from '@components/organisms/my-post'
 import MyPost from '@components/organisms/my-post-new'
 import ConnectionCard from '@src/components/molecules/connection-card'
+import EarningsCard from '@src/components/molecules/earnings-card'
 
 const initialActiveTab = 'userpost'
 
@@ -105,7 +106,13 @@ class ProfilPage extends React.PureComponent<any, any> {
               <View style={{ marginHorizontal: 16 }}>
                 <ProfileCard />
                 <ConnectionCard />
-                <View style={{ marginTop: 40, marginBottom: 8 }}>
+                <View style={{ paddingVertical: 20 }}>
+                  <Text style={[styles.playfairBold20, { marginBottom: 16 }]}>
+                    My Earnings
+                  </Text>
+                  <EarningsCard />
+                </View>
+                <View style={{ marginBottom: 8 }}>
                   <Text style={{ ...styles.playfairBold20 }}>Latest Post</Text>
                 </View>
               </View>

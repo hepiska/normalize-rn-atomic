@@ -22,6 +22,7 @@ import AccountSettingPageLoader from '@components/atoms/loaders/account-setting'
 import TransactionOrderAction from '@components/organisms/transaction-order-action'
 import { setImage as changeImageUri } from '@utils/helpers'
 import ModalPreviewImage from '@components/molecules/modal-preview-image'
+import EarningsCard from '@src/components/molecules/earnings-card'
 
 const { width } = Dimensions.get('screen')
 
@@ -319,7 +320,7 @@ class AccountSetting extends Component<any, any> {
               </View>
 
               {/* user stats */}
-              <View style={{ marginBottom: 40 }}>
+              <View>
                 <View
                   style={{
                     flexDirection: 'row',
@@ -366,6 +367,9 @@ class AccountSetting extends Component<any, any> {
                     onPress={() => {}}
                   />
                 </View>
+              </View>
+              <View style={{ marginTop: 20, marginBottom: 40 }}>
+                <EarningsCard />
               </View>
               {/* my shopping */}
               <View>

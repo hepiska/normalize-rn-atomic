@@ -115,6 +115,8 @@ export const payment = new schema.Entity('payment')
 
 export const transaction = new schema.Entity('transaction')
 
+export const earning = new schema.Entity('earning')
+
 export const transactionPayment = new schema.Entity('transactions_payments')
 
 export const order = new schema.Entity('order', {

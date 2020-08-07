@@ -7,6 +7,7 @@ import PostDetail from '@components/atoms/loaders/post-detail'
 import SearchListLoader from '@src/components/atoms/loaders/search-list'
 import ConnectionsLoader from '@src/components/atoms/loaders/connection'
 import ContentExpandable from '@components/molecules/content-expandable'
+import RefStatus from '@src/components/atoms/loaders/earning-page'
 
 const TestPage = props => {
   const [image, setImage] = React.useState(null)
@@ -17,7 +18,8 @@ const TestPage = props => {
 
   return (
     <View style={{ flex: 1, marginTop: 62 }} ref={toolTipsParent}>
-      <FilterList />
+      <RefStatus />
+      {/* <FilterList /> */}
       {/* <CircleLoader r={50} /> */}
       {/* <ConnectionsLoader /> */}
       {/* <HorizontalImageLoader /> */}

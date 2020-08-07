@@ -19,6 +19,7 @@ import cartReducer from './cart/reducer'
 import addressReducer from './address/reducer'
 import shipmentReducer from './shipment/reducer'
 import shippingMethodsReducer from './shipping-methods/reducer'
+import earningsReducer from './earnings/reducer'
 import searchProductReducer from './search-product/reducer'
 import searchPostReducer from './search-post/reducer'
 import searchBrandReducer from './search-brand/reducer'
@@ -58,6 +59,8 @@ const combinedReducer: Reducer<any> = combineReducers({
   coupons: couponsReducer,
 
   discover: discoverReducer,
+
+  earnings: earningsReducer,
 
   feed: feedReducer,
 
