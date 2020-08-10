@@ -36,6 +36,7 @@ interface ListStikyHeaderType {
   rowStyle: ViewStyle
   columnStyle: ViewStyle
   y: any
+  scrollEnabled: boolean
   getListRef?: any
   mansoryLoader: () =>
     | React.ReactElement
@@ -149,6 +150,7 @@ class ListMansoryStickyHeader extends React.Component<
       composeprops.stickyHeaderIndices = [0]
       composeprops.ListHeaderComponent = header
     }
+
     return (
       <View style={{ flex: 1 }}>
         <AnimatedFlatlist

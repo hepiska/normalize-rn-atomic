@@ -1,6 +1,10 @@
 import { API } from '../action-types'
 import * as schema from '@modules/normalize-schema'
 import { Alert } from 'react-native'
+import {
+  changesRightSideBar,
+  changeRightSideBarSection,
+} from '@modules/ui-interaction/action'
 
 export const actionType = {
   SET_CART_DATA: 'cart/SET_CART_DATA',
@@ -155,8 +159,12 @@ export const addCart = (
     url: '/carts',
     startNetwork: () => setLoading(true),
     success: data => {
-      Alert.alert('Success', 'Success Add Product To Cart')
-      const dispatchers = [setCartData(data.entities.cart), getAllCart()]
+      const dispatchers = [
+        setCartData(data.entities.cart),
+        getAllCart(),
+        changeRightSideBarSection('global-cart'),
+        changesRightSideBar(true),
+      ]
       if (dispatchOnSuccess) {
         dispatchers.push(dispatchOnSuccess)
       }

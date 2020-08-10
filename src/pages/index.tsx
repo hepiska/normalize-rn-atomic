@@ -2,7 +2,7 @@ import * as React from 'react'
 import MainPage from './main'
 import { Platform } from 'react-native'
 import Screens from './screens'
-import ModalPages from './modals'
+import ModalPages, { SideModals } from './modals'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { getProductSaved } from '@modules/product-saved/action'
@@ -14,6 +14,7 @@ import dynamicLinks from '@react-native-firebase/dynamic-links'
 import firebase from '@react-native-firebase/app'
 import Baner from '@components/layouts/baner'
 import { uriToScreen } from '@utils/config'
+import RightSidebar from '@components/layouts/right-sidebar'
 import {
   createStackNavigator,
   TransitionPresets,
@@ -111,6 +112,7 @@ class Pages extends React.Component<any, any> {
       <>
         <PopUpModal />
         <GlobalErrorAndWarning />
+        <RightSidebar />
         <Stack2.Navigator initialRouteName={InitialPage.root} mode="modal">
           <Stack2.Screen
             name="RootScreens"
@@ -125,6 +127,15 @@ class Pages extends React.Component<any, any> {
             component={ModalPages}
             options={{
               animationEnabled: false,
+              headerShown: false,
+              cardStyle: { backgroundColor: 'transparent' },
+            }}
+          />
+          <Stack2.Screen
+            name="SideModals"
+            component={SideModals}
+            options={{
+              ...TransitionPresets.SlideFromRightIOS,
               headerShown: false,
               cardStyle: { backgroundColor: 'transparent' },
             }}

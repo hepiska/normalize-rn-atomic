@@ -68,12 +68,11 @@ function ModalStack() {
       <Stack.Screen
         name="QR"
         options={{
-          animationEnabled: false,
-
           cardStyle: { backgroundColor: 'rgba(0,0,0,0.7)' },
         }}
         component={QRModal}
       />
+
       <Stack.Screen
         name="PostMore"
         options={{
@@ -105,6 +104,31 @@ function ModalStack() {
       />
     </Stack.Navigator>
   )
+}
+
+const SideModalStack = createStackNavigator()
+
+export const SideModals = () => {
+  return null
+  // return (
+  //   // <SideModalStack.Navigator
+  //   //   mode="modal"
+  //   //   initialRouteName={initialPageConfig.modal}
+  //   //   headerMode="none"
+  //   //   screenOptions={{
+  //   //     cardStyle: {
+  //   //       backgroundColor: 'white',
+  //   //     },
+  //   //   }}>
+  //   //   <Stack.Screen
+  //   //     name="GlobalCart"
+  //   //     options={{
+  //   //       cardStyle: { backgroundColor: 'transparent' },
+  //   //     }}
+  //   //     component={GlobalCart}
+  //   //   />
+  //   // </SideModalStack.Navigator>
+  // )
 }
 
 export default ModalStack

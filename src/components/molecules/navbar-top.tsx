@@ -61,6 +61,7 @@ interface NavbarTopProps {
   title?: string | React.ReactElement
   subtitle?: string
   style?: ViewStyle
+  showTopBanner: boolean
   saveAreaStyle?: ViewStyle
   onBeforeBack?: () => void
   leftContent?: Array<string>
@@ -122,13 +123,14 @@ const NavbarTop: React.SFC<NavbarTopProps> = ({
   leftContent,
   rightContent,
   onBeforeBack,
+  showTopBanner = true,
   leftAction,
   rightAction,
   ...props
 }) => {
   return (
     <SafeAreaView style={[styles.saveArea, saveAreaStyle]} {...props}>
-      <TopBaner />
+      {showTopBanner && <TopBaner />}
       <View style={{ ...styles.container, ...style }}>
         <RenderLeftContent
           content={leftContent}

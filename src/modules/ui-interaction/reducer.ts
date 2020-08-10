@@ -8,6 +8,10 @@ const initialState = {
     activebanerIdx: 0,
     baners: [{ id: 1, name: 'register-promo' }],
   },
+  rightSidebar: {
+    isOpen: false,
+    section: null,
+  },
 }
 
 const productFilterReducer: Reducer<any> = (
@@ -39,6 +43,13 @@ const productFilterReducer: Reducer<any> = (
         return _data
       })
       newState.baner = newBanner
+      return newState
+
+    case actionType.CHANGE_RIGHT_SIDEBAR:
+      newState.rightSidebar.isOpen = payload
+      return newState
+    case actionType.CHANGE_RIGHT_SIDEBAR_SECTION:
+      newState.rightSidebar.section = payload
       return newState
     default:
       return state

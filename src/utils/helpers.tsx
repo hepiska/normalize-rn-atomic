@@ -77,6 +77,13 @@ export const setImage = (uri, size, params?) => {
   return res
 }
 
+export const textElipsis = (val, maxLimit) => {
+  if (val.length > maxLimit) {
+    return val.substring(0, maxLimit - 3) + '...'
+  }
+  return val
+}
+
 export const parseUriToScreen = (navigation: any, uri: string) => {
   const [screen, param] = uri.split('/')
   const params = {}

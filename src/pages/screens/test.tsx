@@ -1,5 +1,10 @@
 import React from 'react'
 import { View, Text, TouchableOpacity, ScrollView } from 'react-native'
+import {
+  changesRightSideBar,
+  changeRightSideBarSection,
+} from '@modules/ui-interaction/action'
+import { useDispatch } from 'react-redux'
 import UserDetail from '@components/atoms/loaders/user-detail'
 import FilterList from '@components/atoms/loaders/coupon'
 import PostCardFulll from '@components/atoms/loaders/post-card'
@@ -15,6 +20,7 @@ const TestPage = props => {
   const toolTipsTarget = React.useRef(null)
 
   const renimage = image || { uri: '' }
+  const dispatch = useDispatch()
 
   return (
     <View style={{ flex: 1, marginTop: 62 }} ref={toolTipsParent}>
