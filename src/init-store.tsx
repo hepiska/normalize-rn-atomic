@@ -34,6 +34,7 @@ const linking = {
         path: '',
         screens: {
           LoginRegister: 'register',
+          ProductDetail: 'products/:productSlug',
         },
       },
     },
@@ -127,7 +128,7 @@ class InitStore extends React.Component<any, any> {
         <PersistGate loading={null} persistor={this.state.persistor}>
           <NavigationContainer
             linking={linking}
-            initialState={initialStateScreen}
+            // initialState={initialStateScreen}
             ref={navigationRef}>
             <Pages />
           </NavigationContainer>

@@ -16,6 +16,7 @@ export const productActionType = {
   ClEAR_PRODUCT: 'product/ClEAR_PRODUCT',
   CLEAR_PRODUCT_SEARCH: 'product/CLEAR_PRODUCT_SEARCH',
   SET_PRODUCTS_LOADING: 'product/SET_PRODUCTS_LOADING',
+  SET_ACTIVE_PRODUCT: 'product/SET_ACTIVE_PRODUCT',
   CHANGE_VALUE: 'product/CHANGE_VALUE',
   SET_DEFAULT: 'product/SET_DEFAULT',
   SET_SPECIFIC_LOADING: 'product/SET_SPECIFIC_LOADING',
@@ -39,6 +40,13 @@ export const setProductData = (data: any) => {
 const setTrendingOrder = data => {
   return {
     type: productActionType.SET_TRENDING_ORDER,
+    payload: data,
+  }
+}
+
+const setActiveProducts = data => {
+  return {
+    type: productActionType.SET_ACTIVE_PRODUCT,
     payload: data,
   }
 }
@@ -81,18 +89,22 @@ export const setProductsLoading = (data: any) => ({
   payload: data,
 })
 
-export const getProductById = id => ({
+export const getProductById = (id, type = 'id') => ({
   type: API,
   payload: {
     url: '/products/' + id,
+    requestParams: { params: { id_type: type } },
     schema: schema.product,
     startNetwork: () => changeValue({ key: 'productLoading', value: true }),
-    success: data => [
-      setBrandData(data.entities.brand),
-      setCategoryData(data.entities.category),
-      setProductData(data.entities.product),
-      changeValue({ key: 'productLoading', value: false }),
-    ],
+    success: data => {
+      return [
+        setBrandData(data.entities.brand),
+        setCategoryData(data.entities.category),
+        setProductData(data.entities.product),
+        setActiveProducts(data.result),
+        changeValue({ key: 'productLoading', value: false }),
+      ]
+    },
   },
 })
 

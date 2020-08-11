@@ -43,6 +43,7 @@ import { makeDeepClone } from '@modules/selector-general'
 import { makeSelectedProducts } from '@modules/product/selector'
 import { makeSelectedBrands } from '@modules/brand/selector'
 import { addProduct as addSeenProduct } from '@modules/seen-history/action'
+import { sendSeenData } from '@modules/seen-history/action'
 import {
   addProductSaved,
   deleteProductSaved,
@@ -166,25 +167,12 @@ class ProductListPage extends React.Component<any, any> {
 
   componentDidMount() {
     const { product, isAuth, route } = this.props
-    const { reveral } = route.params || {}
+    const { referral_code, productSlug } = route.params || {}
     InteractionManager.runAfterInteractions(() => {
-      Amplitude.getInstance().logEvent('product-detail', {
-        id: this.props.route.params?.productId,
-        name: product.name,
-        category: this.props.product.category.name,
-      })
+      if (product) {
+        this.logData()
+      }
       this._fetchData()
-      const date = new Date()
-      const seenProduct: any = {
-        product_id: this.props.route.params?.productId,
-        created_at: date.toISOString(),
-      }
-      if (reveral) {
-        seenProduct.reveral = reveral
-      }
-      if (!isAuth) {
-        this.props.addSeenProduct(seenProduct)
-      }
 
       if (this.props.product && this.props.categories) {
         this.renderBreadcrumb(this.props.product.category.id)
@@ -193,8 +181,49 @@ class ProductListPage extends React.Component<any, any> {
     })
   }
 
+  componentDidUpdate(prevProps) {
+    const { product, isAuth, route } = this.props
+    if (product && product.id !== prevProps.product.id) {
+      this.logData()
+    }
+  }
+
+  logData = () => {
+    const { product, isAuth, route } = this.props
+    const { referral_code, productSlug } = route.params || {}
+
+    const date = new Date()
+    const seenProduct: any = {
+      product_id: this.props.route.params?.productId,
+      created_at: date.toISOString(),
+    }
+
+    if (!isAuth) {
+      this.props.addSeenProduct(seenProduct)
+    } else {
+      if (referral_code) {
+        seenProduct.referral_code = referral_code
+        sendSeenData([seenProduct])
+      }
+    }
+
+    Amplitude.getInstance().logEvent('product-detail', {
+      id: this.props.route.params?.productId,
+      name: product.name,
+      category: this.props.product.category.name,
+    })
+  }
+
   _fetchData = () => {
-    this.props.getProductById(this.props.route.params?.productId)
+    const { route } = this.props
+
+    const { referral_code, productSlug } = route.params || {}
+
+    if (productSlug) {
+      this.props.getProductById(productSlug, 'slug')
+    } else {
+      this.props.getProductById(this.props.route.params?.productId)
+    }
   }
 
   getVariantData = id => {
@@ -369,6 +398,10 @@ class ProductListPage extends React.Component<any, any> {
 
   render() {
     const { product, loading, isSaved } = this.props
+    if (!product) {
+      return null
+    }
+
     const {
       selectedVariant,
       isUserSelectVariant,
@@ -882,7 +915,12 @@ const mapStateToProps = () => {
   const getselectedBrand = makeSelectedBrands()
   const deepClone = makeDeepClone()
   return (state, ownProps) => {
-    const productId = ownProps.route.params?.productId
+    const productId =
+      ownProps.route.params?.productId || state.products.activeProduct
+
+    if (!productId) {
+      return {}
+    }
 
     const selectedProduct = getselectedProduct(state, productId)
 
