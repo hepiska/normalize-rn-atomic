@@ -64,8 +64,10 @@ export const colors = {
   black80: '#454545',
   black90: '#949494',
   black100: '#1A1A1A',
-  cream: '#F9F7F3',
-  darkCream: '#DAB379',
+  gold100: '#E0BC85',
+  gold50: '#ECDEC3',
+  gold20: '#F9F7F3',
+  gold10: '#FCFBF9',
   ActivePurple: {
     start: { x: 0, y: 0 },
     end: { x: 1, y: 0 },

@@ -125,9 +125,7 @@ const DanaWithdraw = ({ earningSummary, navigation }) => {
       <View style={styles.ammount}>
         <Text style={styles.textAccent}>
           Available earnings at The Shonet{' '}
-          <Text style={{ color: colors.darkCream }}>
-            IDR {formatCur(earningSummary.balance)}
-          </Text>
+          <Text style={{ color: colors.gold100 }}>IDR {formatCur(earningSummary.balance)}</Text>
         </Text>
         <TextInputOutline
           label="Ammount to Withdraw"

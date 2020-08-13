@@ -4,6 +4,7 @@ import { colors } from '@src/utils/constants'
 import { fontStyle } from '@components/commont-styles'
 import { Button } from '../atoms/button'
 import { navigate } from '@src/root-navigation'
+import { formatCur } from '@src/utils/helpers'
 
 const styles = StyleSheet.create({
   container: {
@@ -24,7 +25,7 @@ const styles = StyleSheet.create({
   card: {
     width: '100%',
     borderRadius: 4,
-    backgroundColor: colors.cream,
+    backgroundColor: colors.gold20,
     justifyContent: 'center',
     overflow: 'hidden',
   },
@@ -38,7 +39,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     textAlign: 'center',
     padding: 8,
-    backgroundColor: colors.darkCream,
+    backgroundColor: colors.gold100,
   },
   btnTxt: {
     ...fontStyle.helveticaBold,
@@ -55,12 +56,18 @@ const navigateTo = (screen, screenName, params = {}) => {
     params,
   })
 }
-class EarningsCard extends React.Component<any> {
+
+interface EarningCard {
+  balance?: number
+}
+
+class EarningsCard extends React.PureComponent<EarningCard, any> {
   goDetailEarning() {
     navigateTo('Screens', 'MyEarnings')
   }
 
   render() {
+    const { balance } = this.props
     return (
       <ImageBackground
         style={styles.card}
@@ -70,7 +77,7 @@ class EarningsCard extends React.Component<any> {
           <View style={{ flex: 2 }}>
             <Text style={styles.fs16}>My Earnings Balance</Text>
             <Text style={[styles.fs16, fontStyle.helveticaBold]}>
-              IDR 145.000
+              IDR {formatCur(Math.abs(balance))}
             </Text>
           </View>
           <Button

@@ -5,7 +5,7 @@ import { bindActionCreators } from 'redux'
 import { Font } from '@components/atoms/basic'
 import NavbarTop from '@src/components/molecules/navbar-top'
 import { colors } from '@src/utils/constants'
-import TabMenu from '@components/layouts/tab-menu'
+import TabMenu from '@src/components/layouts/tab-menu-full-flex'
 import FollowList from '@components/organisms/follow-list'
 import { fontStyle } from '@src/components/commont-styles'
 import FollowListLoader from '@src/components/atoms/loaders/follow-list'
@@ -15,36 +15,30 @@ class Follow extends Component<any, any> {
     activeTab: null,
     finishAnimation: false,
   }
+
+  kFormater = num => {
+    if (num > 999 && num < 1000000) {
+      return num / 1000 + 'K'
+    } else if (num > 999999) {
+      return (num / 1000000).toFixed(2) + 'M'
+    }
+    return num
+  }
+
   items = () => {
     const userid = this.props.route.params.userid || null
+    const following = this.kFormater(this.props.following_count)
+    const followers = this.kFormater(this.props.follower_count)
     return [
       {
         name: 'Follower',
         Component: <FollowList type="followers" userid={userid} />,
-        title: (
-          <Font
-            style={{
-              ...fontStyle.helvetica,
-              fontSize: 14,
-              color: colors.black100,
-            }}>
-            {`Followers (${this.props.follower_count})`}
-          </Font>
-        ),
+        title: `${followers} Followers`,
       },
       {
         name: 'Following',
         Component: <FollowList type="followings" userid={userid} />,
-        title: (
-          <Font
-            style={{
-              ...fontStyle.helvetica,
-              fontSize: 14,
-              color: colors.black100,
-            }}>
-            {`Followings (${this.props.following_count})`}
-          </Font>
-        ),
+        title: `${following} Following`,
       },
     ]
   }
@@ -85,7 +79,8 @@ class Follow extends Component<any, any> {
             selectedItem={activeTab}
             onChangeTab={this.onChangeTab}
             forceRender={follower_count + following_count}
-            isScrollEnabled
+            textMenuAlign="center"
+            isScrollEnabled={false}
             isLazyload
           />
         ) : (

@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
   },
   disabled: {
     borderRadius: 8,
-    backgroundColor: constantsColors.black50,
+    backgroundColor: constantsColors.black60,
   },
 })
 

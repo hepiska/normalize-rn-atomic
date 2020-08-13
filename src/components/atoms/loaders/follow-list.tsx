@@ -20,14 +20,17 @@ const FollowList = (props: LoaderPropsType) => {
     <View style={props.style}>
       {props.showheader && (
         <>
-          <View style={{ flexDirection: 'row', marginVertical: 16 }}>
-            <LineLoader style={{ ...styles.menu, marginRight: 16 }} />
-            <LineLoader style={styles.menu} />
+          <View style={{ flexDirection: 'row' }}>
+            <View style={{ flex: 1, marginRight: 16 }}>
+              <LineLoader style={{ height: 48, marginBottom: 16 }} />
+            </View>
+            <View style={{ flex: 1 }}>
+              <LineLoader style={{ height: 48, marginBottom: 16 }} />
+            </View>
           </View>
-          <LineLoader style={{ height: 48, marginBottom: 24 }} />
+          <LineLoader style={{ height: 32, marginBottom: 24 }} />
         </>
       )}
-
       <FollowItem />
       <FollowItem />
       <FollowItem />

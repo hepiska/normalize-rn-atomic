@@ -19,6 +19,7 @@ import { earningData } from '@hocs/data/earning'
 const EarningWithdata = earningData(EarningStatusCard)
 
 import List from '@components/layouts/list-header'
+import EarningCardLoader from '@components/atoms/loaders/earning-status-card'
 
 const styles = StyleSheet.create({
   earningWrap: {
@@ -73,9 +74,6 @@ const _renderItem = ({ item, index }) => {
     </View>
   )
 }
-const _renderEmpty = () => {
-  return <EarningsEmptyState />
-}
 
 let limit = 10
 const EarningsPending = props => {
@@ -86,6 +84,13 @@ const EarningsPending = props => {
     const params = { limit, offset: skip * limit }
     dispatch(getPendingHistory(params))
   }
+
+  const _renderEmpty = useMemo(() => {
+    if (props.loading) {
+      return <EarningCardLoader />
+    }
+    return <EarningsEmptyState />
+  }, [props.loading])
 
   useEffect(() => {
     if (skip > 0 && props.total <= props.earningHistories.length) {

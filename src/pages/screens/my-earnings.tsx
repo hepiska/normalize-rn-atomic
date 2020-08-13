@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
   card: {
     width: '100%',
     borderRadius: 4,
-    backgroundColor: colors.cream,
+    backgroundColor: colors.gold20,
     justifyContent: 'center',
     overflow: 'hidden',
   },
@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     textAlign: 'center',
     padding: 8,
-    backgroundColor: colors.darkCream,
+    backgroundColor: colors.gold100,
   },
   btnTxt: {
     ...fontStyle.helveticaBold,
@@ -85,6 +85,7 @@ const EarningBalance = ({ balance }) => {
           </View>
           <Button
             title={'Withdraw'}
+            disabled={true}
             onPress={goToWithdraw}
             style={styles.btnDetail}
             fontStyle={styles.btnTxt}
@@ -135,6 +136,7 @@ const MyEarnings = props => {
   const _header = useMemo(() => {
     return <EarningBalance balance={props.earningSummary.balance} />
   }, [props.earningSummary.balance])
+
   const _onReachEnd = useCallback(() => {
     if (!props.loading) {
       setSkip(state => {

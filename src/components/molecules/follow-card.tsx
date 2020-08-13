@@ -73,6 +73,13 @@ const styles = StyleSheet.create({
     lineHeight: 17,
     marginLeft: 0,
   },
+  followingText: {
+    ...fontStyle.helvetica,
+    color: colors.black100,
+    fontSize: 12,
+    lineHeight: 17,
+    marginLeft: 0,
+  },
   userPhotoPlaceholder: {
     width: 40,
     height: 40,
@@ -84,7 +91,15 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     paddingVertical: 4,
     paddingHorizontal: 8,
-    width: 65,
+    width: 100,
+  },
+  following: {
+    borderColor: colors.black50,
+    borderWidth: 1,
+    borderRadius: 4,
+    paddingVertical: 4,
+    paddingHorizontal: 8,
+    width: 100,
   },
   joinedtext: {
     ...fontStyle.helveticaBold,
@@ -243,9 +258,11 @@ class FollowCard extends React.PureComponent<FollowCardType, any> {
                   ) : (
                     <Button
                       onPress={this.handleFollow}
-                      title={isFollowed ? 'Unfollow' : 'Follow'}
-                      fontStyle={styles.buttonText}
-                      style={styles.button}
+                      title={isFollowed ? 'Following' : 'Follow'}
+                      fontStyle={
+                        isFollowed ? styles.followingText : styles.buttonText
+                      }
+                      style={isFollowed ? styles.following : styles.button}
                     />
                   )}
                 </View>

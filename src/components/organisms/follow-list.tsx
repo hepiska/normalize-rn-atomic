@@ -107,9 +107,14 @@ class FollowList extends Component<any, any> {
     return (
       <View style={{ backgroundColor: colors.white }}>
         <Field
-          style={{ marginHorizontal: 12 }}
+          style={{
+            marginHorizontal: 12,
+            backgroundColor: 'white',
+            borderColor: colors.black50,
+            borderWidth: 1,
+          }}
           value={searchKey}
-          placeholder={`Search ${this.props.type}...`}
+          placeholder={`Search username or name...`}
           onChangeText={this.onSearchChange}
           leftIcon={
             <Icon
