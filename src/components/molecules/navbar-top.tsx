@@ -61,7 +61,7 @@ interface NavbarTopProps {
   title?: string | React.ReactElement
   subtitle?: string
   style?: ViewStyle
-  showTopBanner: boolean
+  showTopBanner?: boolean
   saveAreaStyle?: ViewStyle
   onBeforeBack?: () => void
   leftContent?: Array<string>

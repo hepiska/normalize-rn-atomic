@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
 import { Text, View, StyleSheet } from 'react-native'
+import WebView from 'react-native-webview'
 import NavbarTop from '@src/components/molecules/navbar-top'
 import { fontStyle } from '@src/components/commont-styles'
-import { colors } from '@src/utils/constants'
+import { colors, coneectDanaCalback } from '@src/utils/constants'
 import { Div, Image } from '@components/atoms/basic'
 import { Button } from '@src/components/atoms/button'
 import DanaConnect from './dana-connect'
@@ -36,25 +37,43 @@ const styles = StyleSheet.create({
   },
 })
 
-class InitialConnectDana extends React.Component {
+class InitialConnectDana extends React.Component<any, any> {
   state: {
     showInitialState: boolean
+    redirect_url: string
   }
   constructor(props) {
     super(props)
     this.state = {
       showInitialState: true,
+      redirect_url: '',
     }
   }
 
   goToConnectDana = () => {
     this.setState({ showInitialState: !this.state.showInitialState })
-    console.log(this.state)
+  }
+
+  connectPhoneNumber = url => {
+    this.setState({ redirect_url: url.redirect_url })
+  }
+
+  _redirect = navState => {
+    if (navState.url === coneectDanaCalback) {
+      this.props.changeConectedana()
+    }
   }
 
   render() {
-    console.log(this.state.showInitialState)
-
+    if (this.state.redirect_url) {
+      return (
+        <WebView
+          originWhitelist={['https://*']}
+          source={{ uri: this.state.redirect_url }}
+          onNavigationStateChange={this._redirect}
+        />
+      )
+    }
     if (this.state.showInitialState) {
       return (
         <>
@@ -81,7 +100,7 @@ class InitialConnectDana extends React.Component {
         </>
       )
     }
-    return <DanaConnect />
+    return <DanaConnect connectPhoneNumber={this.connectPhoneNumber} />
   }
 }
 

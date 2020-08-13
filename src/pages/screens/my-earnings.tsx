@@ -21,7 +21,7 @@ import { connect, useDispatch } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import List from '@components/layouts/list-header'
 import { formatCur } from '@utils/helpers'
-import { navigate } from '@src/root-navigation'
+import { navigate, push } from '@src/root-navigation'
 import { earningData } from '@hocs/data/earning'
 import EarningsInfo from '@src/components/molecules/earnings-info'
 
@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
 
 const EarningBalance = ({ balance }) => {
   const goToWithdraw = () => {
-    navigate('Screens', {
+    push('Screens', {
       screen: 'WithdrawEarnings',
     })
   }

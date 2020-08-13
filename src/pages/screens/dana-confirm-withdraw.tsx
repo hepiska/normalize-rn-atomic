@@ -2,10 +2,14 @@ import React, { Component } from 'react'
 import { Text, View, StyleSheet } from 'react-native'
 import NavbarTop from '@src/components/molecules/navbar-top'
 import DanaCardProfile from '@src/components/molecules/dana-card-profile'
-import { colors } from '@src/utils/constants'
+import { colors, danafee } from '@src/utils/constants'
 import { fontStyle } from '@src/components/commont-styles'
+import { formatCur } from '@utils/helpers'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Button } from '@src/components/atoms/button'
+import { navigate } from '@src/root-navigation'
+import { reqPostWithdraw } from '@utils/services'
+import Toast from 'react-native-root-toast'
 
 const styles = StyleSheet.create({
   layout: {
@@ -71,13 +75,45 @@ const styles = StyleSheet.create({
   },
 })
 
-export default class DanaConfirmWithdraw extends Component {
+export default class DanaConfirmWithdraw extends Component<any, any> {
+  state = {
+    loading: false,
+  }
+  withdraw = () => {
+    this.setState({ loading: true })
+    const { params } = this.props.route
+
+    reqPostWithdraw(Number(params.amount))
+      .then(res => {
+        this.setState({ loading: false })
+        this.props.navigation.goBack()
+      })
+      .catch(err => {
+        if (err.message.includes('422')) {
+          Toast.show('amont is invalid', {
+            duration: Toast.durations.SHORT,
+            position: Toast.positions.CENTER,
+            backgroundColor: colors.red1,
+            animation: true,
+            hideOnPress: true,
+          })
+        } else if (err.message.includes('503')) {
+          Toast.show('Something goes wrong with DANA', {
+            duration: Toast.durations.SHORT,
+            position: Toast.positions.CENTER,
+            backgroundColor: colors.red1,
+            animation: true,
+            hideOnPress: true,
+          })
+        }
+        this.setState({ loading: false })
+      })
+  }
   render() {
+    const { params } = this.props.route
     return (
       <>
-        <NavbarTop
-          title={'Confirmation Withdraw'}
-          leftContent={['back']}></NavbarTop>
+        <NavbarTop title={'Confirmation Withdraw'} leftContent={['back']} />
         <View style={styles.layout}>
           <View style={styles.checkoutWrap}>
             <View
@@ -87,16 +123,18 @@ export default class DanaConfirmWithdraw extends Component {
                 paddingBottom: 18,
               }}>
               <Text style={styles.h1}>Received Ammount</Text>
-              <Text style={styles.h1}>IDR 1.750.000</Text>
+              <Text style={styles.h1}>
+                IDR {formatCur(params.amount - danafee)}
+              </Text>
             </View>
-            <View style={styles.line}></View>
+            <View style={styles.line} />
             <View style={styles.detailWrap}>
               <Text style={styles.h3}>Withdraw Amount</Text>
-              <Text style={styles.h3}>IDR 1.751.000</Text>
+              <Text style={styles.h3}>IDR {formatCur(params.amount)}</Text>
             </View>
             <View style={styles.detailWrap}>
               <Text style={styles.h3}>Processing Fee</Text>
-              <Text style={styles.h3}>- IDR 1.000</Text>
+              <Text style={styles.h3}>- IDR {formatCur(danafee)}</Text>
             </View>
           </View>
           <View>
@@ -117,7 +155,7 @@ export default class DanaConfirmWithdraw extends Component {
                 <Text
                   style={{ fontWeight: 'bold' }}
                   onPress={() => {
-                    console.log('GO TO TERMS OF USE')
+                    navigate('Screens', { screen: 'TermsCondition' })
                   }}>
                   Terms of Use
                 </Text>{' '}
@@ -125,14 +163,15 @@ export default class DanaConfirmWithdraw extends Component {
                 <Text
                   style={{ fontWeight: 'bold' }}
                   onPress={() => {
-                    console.log('GO TO TERMS OF USE')
+                    navigate('Screens', { screen: 'PrivacyPolicy' })
                   }}>
                   Privacy Policy
                 </Text>
               </Text>
               <Button
                 title="Continue to Disburse"
-                onPress={null}
+                loading={this.state.loading}
+                onPress={this.withdraw}
                 style={styles.button}
                 fontStyle={styles.buttonText}
               />

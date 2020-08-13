@@ -1,15 +1,18 @@
-import React, { Component } from 'react'
+import React, { Component, useState } from 'react'
 import {
   Text,
   View,
   StyleSheet,
   KeyboardAvoidingView,
   Platform,
+  Alert,
   Keyboard,
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { fontStyle } from '../commont-styles'
-import { colors, regex } from '@src/utils/constants'
+import { colors, regex, coneectDanaCalback } from '@src/utils/constants'
+import Toast from 'react-native-root-toast'
+import { reqPostConnectDana } from '@utils/services'
 import { Button } from '../atoms/button'
 import TextInputOutline from '@src/components/atoms/field-floating'
 import { useFormValidator } from '@src/hooks/use-form-validator'
@@ -18,6 +21,7 @@ const styles = StyleSheet.create({
   layout: {
     flex: 1,
     paddingHorizontal: 16,
+    paddingBottom: 16,
   },
   container: {
     paddingTop: 32,
@@ -62,19 +66,49 @@ const HeaderComponent = () => {
   )
 }
 
-const DanaConnect = () => {
+const DanaConnect = ({ connectPhoneNumber }: any) => {
+  const [loading, setLoading] = useState(false)
   const _onSubmit = ({ isValid, state }) => {
     if (isValid) {
       const result = {}
       Object.keys(state).forEach(key => {
         result[key] = state[key].value
+        setLoading(true)
+        reqPostConnectDana({
+          ...result,
+          redirect_url: coneectDanaCalback,
+        })
+          .then(res => {
+            connectPhoneNumber(res)
+            setLoading(false)
+          })
+          .catch(err => {
+            if (err.message.includes('422')) {
+              Toast.show('Phone number invalid', {
+                duration: Toast.durations.SHORT,
+                position: Toast.positions.CENTER,
+                backgroundColor: colors.red1,
+                animation: true,
+                hideOnPress: true,
+              })
+            } else if (err.message.includes('503')) {
+              Toast.show('Something goes wrong with DANA', {
+                duration: Toast.durations.SHORT,
+                position: Toast.positions.CENTER,
+                backgroundColor: colors.red1,
+                animation: true,
+                hideOnPress: true,
+              })
+            }
+            setLoading(false)
+          })
         Keyboard.dismiss()
       })
     }
   }
   const { state, handleOnChange, handleOnSubmit } = useFormValidator(
     {
-      phoneNumber: {
+      phone_number: {
         required: true,
         pattern: {
           message: 'Please input correct phone number',
@@ -94,19 +128,20 @@ const DanaConnect = () => {
           label="Phone Number"
           keyboardType="numeric"
           style={styles.field}
-          value={state.phoneNumber.value}
-          onChangeText={handleOnChange('phoneNumber')}
-          error={state.phoneNumber.error}
+          value={state.phone_number.value}
+          onChangeText={handleOnChange('phone_number')}
+          error={state.phone_number.error}
         />
       </View>
-      <SafeAreaView>
+      <View style={{ paddingBottom: 16 }}>
         <Button
           title="Submit"
           onPress={handleOnSubmit}
+          loading={loading}
           style={styles.button}
           fontStyle={styles.buttonText}
         />
-      </SafeAreaView>
+      </View>
     </KeyboardAvoidingView>
   )
 }

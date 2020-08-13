@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
     color: colors.black80,
   },
 })
-export default class DanaCardProfile extends Component {
+export default class DanaCardProfile extends Component<any, any> {
   render() {
     return (
       <View style={styles.header}>
@@ -37,7 +37,7 @@ export default class DanaCardProfile extends Component {
         </View>
         <View style={{ flex: 1 }}>
           <Text style={styles.h1}>DANA</Text>
-          <Text style={styles.h1}>+62-812-8222-2134</Text>
+          <Text style={styles.h1}>{this.props.phone_number}</Text>
         </View>
       </View>
     )

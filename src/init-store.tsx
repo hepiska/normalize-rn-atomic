@@ -19,6 +19,8 @@ import SplashScreen from 'react-native-splash-screen'
 import { enableScreens } from 'react-native-screens'
 import CONFIG from 'react-native-config'
 
+import { RootSiblingParent } from 'react-native-root-siblings'
+
 enableScreens()
 
 // initial store
@@ -124,16 +126,18 @@ class InitStore extends React.Component<any, any> {
   render() {
     const { isLoading } = this.state
     return isLoading ? null : (
-      <Provider store={this.state.store}>
-        <PersistGate loading={null} persistor={this.state.persistor}>
-          <NavigationContainer
-            linking={linking}
-            // initialState={initialStateScreen}
-            ref={navigationRef}>
-            <Pages />
-          </NavigationContainer>
-        </PersistGate>
-      </Provider>
+      <RootSiblingParent>
+        <Provider store={this.state.store}>
+          <PersistGate loading={null} persistor={this.state.persistor}>
+            <NavigationContainer
+              linking={linking}
+              // initialState={initialStateScreen}
+              ref={navigationRef}>
+              <Pages />
+            </NavigationContainer>
+          </PersistGate>
+        </Provider>
+      </RootSiblingParent>
     )
   }
 }

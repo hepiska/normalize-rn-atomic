@@ -20,6 +20,28 @@ request.interceptors.request.use(
   },
 )
 
+export const reqGetDanaAcount = request({ url: '/account/dana' }).then(res => {
+  return res.data.data
+})
+
+export const reqPostConnectDana = (data: any) =>
+  request({
+    url: '/account/dana',
+    method: 'POST',
+    data,
+  }).then(res => {
+    return res.data.data
+  })
+
+export const reqPostWithdraw = (amount: number) =>
+  request({
+    url: '/account/earnings/withdrawals',
+    method: 'POST',
+    data: { amount },
+  }).then(res => {
+    return res.data.data
+  })
+
 export const googePlaceReq = axios.create({ baseURL: GOOGLE_PLACE_URI })
 export const googeMapsReq = axios.create({ baseURL: GOOGLE_MAPS })
 export const shonetLocation = axios.create({ baseURL: BASE_URL + '/locations' })

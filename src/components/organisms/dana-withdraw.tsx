@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, useEffect, useState } from 'react'
 import {
   Text,
   View,
@@ -8,14 +8,18 @@ import {
   Keyboard,
 } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
+import { reqGetDanaAcount } from '@utils/services'
+import { StackActions } from '@react-navigation/native'
 import { fontStyle } from '../commont-styles'
-import { colors, regex } from '@src/utils/constants'
+import { colors, regex, danafee } from '@src/utils/constants'
+import { useDispatch, connect } from 'react-redux'
 import { Button } from '../atoms/button'
 import { Image } from '@components/atoms/basic'
+import { getEarningHistory } from '@modules/earnings/action'
+import { formatCur } from '@utils/helpers'
 import TextInputOutline from '@src/components/atoms/field-floating'
 import { useFormValidator } from '@src/hooks/use-form-validator'
 import DanaCardProfile from '../molecules/dana-card-profile'
-import { navigate } from '@src/root-navigation'
 
 const styles = StyleSheet.create({
   layout: {
@@ -57,29 +61,56 @@ const styles = StyleSheet.create({
   },
 })
 
-const DanaWithdraw = () => {
+const DanaWithdraw = ({ earningSummary, navigation }) => {
+  const dispatch = useDispatch()
+  const [danaacc, setDanaAcc] = useState(null)
+  useEffect(() => {
+    reqGetDanaAcount.then(data => {
+      setDanaAcc(data)
+    })
+    dispatch(getEarningHistory({}))
+  }, [])
   const _onSubmit = ({ isValid, state }) => {
     if (isValid) {
-      const result = {}
+      const result: any = {}
       Object.keys(state).forEach(key => {
         result[key] = state[key].value
       })
       Keyboard.dismiss()
-      goToConfirmation()
+      goToConfirmation(result.ammount)
     }
   }
 
-  const goToConfirmation = () => {
-    console.log('its work')
-
-    navigate('Screens', {
-      screen: 'DanaConfirmation',
-    })
+  const goToConfirmation = amount => {
+    navigation.dispatch(
+      StackActions.replace('Screens', {
+        screen: 'DanaConfirmation',
+        params: {
+          amount,
+        },
+      }),
+    )
+    // replace('Screens', {
+    //   screen: 'DanaConfirmation',
+    //   params: {
+    //     amount,
+    //   },
+    // })
   }
 
   const { state, handleOnChange, handleOnSubmit } = useFormValidator(
     {
-      ammount: { required: true },
+      ammount: {
+        required: true,
+        pattern: {
+          condition: val => {
+            return (
+              Number(val) + Number(danafee) <= Number(earningSummary.balance)
+            )
+          },
+          message: 'Withdraw more than balance',
+        },
+      },
     },
     _onSubmit,
   )
@@ -90,11 +121,13 @@ const DanaWithdraw = () => {
     <KeyboardAvoidingView
       style={styles.layout}
       behavior={Platform.OS === 'ios' ? 'padding' : null}>
-      <DanaCardProfile />
+      <DanaCardProfile phone_number={danaacc?.phone_number} />
       <View style={styles.ammount}>
         <Text style={styles.textAccent}>
           Available earnings at The Shonet{' '}
-          <Text style={{ color: colors.darkCream }}>IDR 1.764.000</Text>
+          <Text style={{ color: colors.darkCream }}>
+            IDR {formatCur(earningSummary.balance)}
+          </Text>
         </Text>
         <TextInputOutline
           label="Ammount to Withdraw"
@@ -112,16 +145,20 @@ const DanaWithdraw = () => {
           </Text>
         ) : null}
       </View>
-      <SafeAreaView>
+      <View style={{ paddingBottom: 16 }}>
         <Button
           title="Withdraw"
           onPress={handleOnSubmit}
           style={styles.button}
           fontStyle={styles.buttonText}
         />
-      </SafeAreaView>
+      </View>
     </KeyboardAvoidingView>
   )
 }
 
-export default DanaWithdraw
+const mapStateToProps = state => ({
+  earningSummary: state.earnings.summary,
+})
+
+export default connect(mapStateToProps)(DanaWithdraw)

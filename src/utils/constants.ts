@@ -118,6 +118,9 @@ export const uriSchreenMap = {
   },
 }
 
+export const coneectDanaCalback = 'https://theshonet.com/coneect/dana'
+export const danafee = 1650
+
 export const nestedScreenMap = (key, params?) => {
   const map = {
     collections: {
