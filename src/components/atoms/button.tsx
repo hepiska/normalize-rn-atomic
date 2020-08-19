@@ -27,11 +27,11 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   fill: {
-    borderRadius: 8,
+    borderRadius: 4,
     backgroundColor: 'white',
   },
   container: {
-    borderRadius: 8,
+    borderRadius: 4,
     overflow: 'hidden',
   },
   linearGradient: {

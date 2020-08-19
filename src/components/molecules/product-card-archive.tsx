@@ -3,7 +3,6 @@ import {
   ViewStyle,
   StyleSheet,
   View,
-  Image,
   // TouchableWithoutFeedback,
   TouchableOpacity,
   Dimensions,
@@ -18,7 +17,7 @@ import Price from '@src/components/atoms/price'
 import { fontStyle } from '@components/commont-styles'
 import { OutlineButton } from '@components/atoms/button'
 import RangePrice from '@components/molecules/range-price'
-import { setImage as chageImageUri, formatCur } from '@utils/helpers'
+import { setImage as chageImageUri } from '@utils/helpers'
 import ColorList from '@components/molecules/color-list'
 import isEqual from 'lodash/isEqual'
 import { navigate, push } from '@src/root-navigation'
@@ -39,7 +38,6 @@ interface ProductCardType {
   addProductSaved: (productId) => void
   addCartBeforeLogin: (data) => void
   onPress: () => {}
-  goShareEarn: () => {}
   style?: ViewStyle
   horizontal?: boolean
   isAuth?: boolean
@@ -74,22 +72,12 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   button: {
-    flex: 1,
-    marginRight: 8,
+    width: '100%',
     height: 36,
     borderColor: '#EFEFEF',
   },
-  shareBtn: {
-    borderRadius: 8,
-    borderWidth: 1,
-    height: 36,
-    width: 36,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderColor: colors.black50,
-  },
   buttonText: {
-    ...fontStyle.helvetica,
+    ...fontStyle.helveticaBold,
     color: colors.black80,
     marginLeft: 8,
   },
@@ -186,24 +174,6 @@ const ProductCard = ({
     })
   }
 
-  const goShareEarn = () => {
-    if (isAuth) {
-      navigate('modals', {
-        screen: 'ShareProduct',
-        params: {
-          product: product,
-        },
-      })
-    } else {
-      navigate('modals', {
-        screen: 'ShareAndEarn',
-        params: {
-          product: product,
-        },
-      })
-    }
-  }
-
   // const random = Math.floor(Math.random() * images.length)
   const variantPrice = selectedVariantId && {
     current: selectedVariant.price_disc || selectedVariant.price,
@@ -263,7 +233,6 @@ const ProductCard = ({
       triggerLogin={triggerLogin}
       onAddtoCart={onAddtoCart}
       addToCart={_addToCart}
-      goShareEarn={goShareEarn}
       type={type}
       colorAttributes={colorAttributes}
       brand={brand}
@@ -432,7 +401,6 @@ const ProductCardVertical = ({
   layout,
   onLayout,
   addToCart,
-  goShareEarn,
 }) => {
   if (!product) {
     return null
@@ -466,6 +434,26 @@ const ProductCardVertical = ({
           marginBottom: 8,
           overflow: 'visible',
         }}>
+        <TouchableOpacity
+          style={{
+            zIndex: 2,
+            width: 32,
+            height: 32,
+            backgroundColor: colors.white,
+            borderRadius: 16,
+            position: 'absolute',
+            right: 16,
+            top: 16,
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+          onPress={onSave}>
+          <Icon
+            name={isSaved ? 'bookmark' : 'bookmark-border'}
+            size={18}
+            color={isSaved ? colors.black100 : colors.black90}
+          />
+        </TouchableOpacity>
         {layout ? (
           <TouchableWithoutFeedback onPress={onPress}>
             <ImageAutoSchale
@@ -488,31 +476,6 @@ const ProductCardVertical = ({
       </View>
 
       {/* product desc */}
-      <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-        <View
-          style={{
-            paddingHorizontal: 8,
-            paddingVertical: 4,
-            borderRadius: 4,
-            backgroundColor: '#E0BC85',
-          }}>
-          <Text
-            style={{
-              ...fontStyle.helvetica,
-              color: colors.white,
-              textAlignVertical: 'center',
-            }}>
-            Earn IDR {formatCur(product?.max_potential_earnings)}
-          </Text>
-        </View>
-        <TouchableWithoutFeedback onPress={onSave}>
-          <IconFa
-            name={isSaved ? 'heart' : 'heart-o'}
-            size={24}
-            color={colors.black100}
-          />
-        </TouchableWithoutFeedback>
-      </View>
       <View
         style={{
           // flex: 1,
@@ -524,7 +487,7 @@ const ProductCardVertical = ({
             ...fontStyle.helveticaBold,
             textTransform: 'uppercase',
             fontSize: typeDict[type].main,
-            marginVertical: 8,
+            margin: 4,
             color: colors.black100,
           }}>
           {brand.name}
@@ -545,7 +508,8 @@ const ProductCardVertical = ({
                     ...fontStyle.helveticaThin,
                     fontWeight: '300',
                     fontSize: typeDict[type].sub,
-                    marginBottom: 8,
+                    margin: 4,
+                    marginBottom: 0,
                     color: colors.black80,
                   }}
                   numberOfLines={2}
@@ -608,26 +572,20 @@ const ProductCardVertical = ({
         {addToCart && product.is_commerce && (
           <View
             style={{
-              flex: 1,
+              width: '100%',
               justifyContent: 'flex-end',
               marginTop: 16,
-              flexDirection: 'row',
             }}>
             <OutlineButton
               title="Add to Cart"
               onPress={addToCart}
+              leftIcon={
+                <IconFa name="shopping-bag" size={12} color={colors.black80} />
+              }
               style={styles.button}
               fontStyle={styles.buttonText}
               disabled={!product.is_commerce}
             />
-            <TouchableWithoutFeedback
-              onPress={goShareEarn}
-              style={styles.shareBtn}>
-              <Image
-                source={require('@assets/icons/share.png')}
-                style={{ width: 20, height: 20 }}
-              />
-            </TouchableWithoutFeedback>
           </View>
         )}
       </View>

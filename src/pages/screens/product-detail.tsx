@@ -10,6 +10,7 @@ import {
   Div,
   Font,
   Image,
+  PressAbbleDiv,
   // Image,
   // ScrollDiv,
   // PressAbbleDiv,
@@ -36,9 +37,10 @@ import ButtonGroup from '@components/molecules/button-group'
 import { fontStyle } from '@components/commont-styles'
 import { GradientButton } from '@components/atoms/button'
 import { getProductById } from '@modules/product/action'
-import { setImage, getDetailContent } from '@utils/helpers'
+import { setImage, getDetailContent, formatCur } from '@utils/helpers'
 import ProductListLoader from '@components/atoms/loaders/product-detail'
 import Icon from 'react-native-vector-icons/FontAwesome5'
+import IconF from 'react-native-vector-icons/FontAwesome'
 import { makeDeepClone } from '@modules/selector-general'
 import { makeSelectedProducts } from '@modules/product/selector'
 import { makeSelectedBrands } from '@modules/brand/selector'
@@ -68,6 +70,8 @@ import {
   redness,
   sensitive,
 } from '@src/utils/image-skin'
+import { TouchableOpacity } from 'react-native-gesture-handler'
+import CardProduct from '@src/components/molecules/earn-card-product'
 
 const { Value } = Animated
 const { width, height } = Dimensions.get('screen')
@@ -103,6 +107,70 @@ const styles = StyleSheet.create({
     ...fontStyle.helvetica,
     fontSize: 12,
     color: colors.black80,
+  },
+  button: {
+    backgroundColor: colors.black100,
+    height: 46,
+    width: '100%',
+  },
+  buttonText: {
+    color: colors.white,
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
+  disabledBtnText: {
+    color: colors.black60,
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
+  shareSection: {
+    flex: 1,
+    width: '100%',
+    borderBottomColor: colors.black50,
+    borderBottomWidth: 1,
+    paddingBottom: 16,
+    marginBottom: 16,
+  },
+  shareBtn: {
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 16,
+    borderTopColor: 'rgba(224, 188, 133, 0.3)',
+    borderTopWidth: 1,
+  },
+  share: {
+    fontSize: 16,
+    ...fontStyle.helvetica,
+    fontWeight: '500',
+    marginLeft: 8,
+    color: colors.black100,
+  },
+  p: {
+    ...fontStyle.helvetica,
+    color: colors.black70,
+    marginBottom: 16,
+  },
+  preorderWrap: {
+    width: '100%',
+    padding: 8,
+    backgroundColor: 'rgba(224, 188, 133, 0.21)',
+    borderRadius: 4,
+    borderColor: 'rgba(224, 188, 133, 0.34)',
+    borderWidth: 1,
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    marginBottom: 16,
+  },
+  orderAdminWrap: {
+    backgroundColor: '#F8F8F8',
+    padding: 16,
+    borderRadius: 4,
+    width: '100%',
+    marginTop: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 })
 
@@ -162,6 +230,7 @@ class ProductListPage extends React.Component<any, any> {
     isUserSelectVariant: false,
     isProductSaved: this.props.isSaved,
     finishAnimation: false,
+    showEarn: false,
   }
   _breadcrumb = []
 
@@ -396,6 +465,42 @@ class ProductListPage extends React.Component<any, any> {
     navigate('ProductList', { categoriesSlug: slug, from: 'categories' })
   }
 
+  goShareEarn = () => {
+    const { product, isAuth } = this.props
+    if (isAuth) {
+      navigate('modals', {
+        screen: 'ShareProduct',
+        params: {
+          product: product,
+          title: product.name + ' - The Shonet',
+          uri: Config.SHONET_URI + '/products/' + product.slug || product.id,
+          message: 'Shop ' + product.name + ' at The Shonet',
+        },
+      })
+    } else {
+      navigate('modals', {
+        screen: 'ShareAndEarn',
+        params: {
+          product: product,
+        },
+      })
+    }
+  }
+
+  defineStatusButton = () => {
+    const { product, selectedVariant, varianData } = this.props
+    if (!product.is_purchaseable) {
+      return 'Currently Unavailable'
+    } else if (
+      !varianData.is_available &&
+      selectedVariant === varianData.id &&
+      product.is_purchaseable
+    ) {
+      return 'Out Stock'
+    }
+    return 'Add To Cart'
+  }
+
   render() {
     const { product, loading, isSaved } = this.props
     if (!product) {
@@ -407,6 +512,7 @@ class ProductListPage extends React.Component<any, any> {
       isUserSelectVariant,
       filteredAttributes,
       isProductSaved,
+      isLogin,
     } = this.state as any
     if (!product) {
       return null
@@ -438,6 +544,19 @@ class ProductListPage extends React.Component<any, any> {
       price.withDiscount = true
     }
 
+    let statusButton = ''
+    if (!product.is_purchaseable) {
+      statusButton = 'Currently Unavailable'
+    } else if (
+      !varianData.is_available &&
+      selectedVariant === varianData.id &&
+      product.is_purchaseable
+    ) {
+      statusButton = 'Out Stock'
+    } else {
+      statusButton = 'Add To Cart'
+    }
+
     const isButtonDisabled =
       loading ||
       !product.is_commerce ||
@@ -445,9 +564,10 @@ class ProductListPage extends React.Component<any, any> {
       !product.is_purchaseable
 
     const productType = product.is_commerce ? 'cart' : 'collection'
+
     const actionButton = {
       cart: {
-        buttonText: 'Add to cart',
+        buttonText: statusButton,
         action: this._addToCart,
       },
       collection: {
@@ -602,7 +722,7 @@ class ProductListPage extends React.Component<any, any> {
                     },
                   }}
                 />
-                {isUserSelectVariant ? (
+                {isUserSelectVariant ? ( // ada bug disini
                   <Price
                     {...varianData.price}
                     stylePrev={{
@@ -649,7 +769,7 @@ class ProductListPage extends React.Component<any, any> {
                 <View
                   style={{
                     width: '100%',
-                    marginVertical: 8, // should be 12
+                    marginVertical: 16, // should be 12
                     justifyContent: 'flex-start',
                     alignItems: 'center',
                     height: 32,
@@ -672,7 +792,71 @@ class ProductListPage extends React.Component<any, any> {
                   </View>
                 </View>
               )}
-              <GradientButton
+              <View style={styles.shareSection}>
+                <CardProduct product={product} />
+                <TouchableOpacity
+                  style={styles.shareBtn}
+                  onPress={this.goShareEarn}>
+                  <Image
+                    source={require('@assets/icons/share.png')}
+                    style={{ width: 16, height: 16, marginRight: 8 }}
+                  />
+                  <Text style={styles.share}>Share And Earn</Text>
+                </TouchableOpacity>
+                <Text style={styles.p}>
+                  You’ll Earn IDR {formatCur(product?.max_potential_earnings)}{' '}
+                  when your friend buy this product from your link. Learn More
+                </Text>
+              </View>
+
+              {/* // need State */}
+              <View style={styles.preorderWrap}>
+                <Image
+                  source={require('@assets/icons/pre-order.png')}
+                  style={{ width: 20, height: 20, marginRight: 8 }}
+                />
+                <Text style={{ color: colors.black80 }}>
+                  Pre Order. Please check description for details
+                </Text>
+              </View>
+
+              <View style={{ flexDirection: 'row', marginBottom: 16 }}>
+                <TouchableOpacity
+                  onPress={this.onSaveProduct}
+                  style={{
+                    height: 46,
+                    width: 46,
+                    borderColor: colors.black50,
+                    borderWidth: 1,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    borderRadius: 4,
+                    marginRight: 8,
+                  }}>
+                  <IconF
+                    name={isProductSaved ? 'heart' : 'heart-o'}
+                    size={24}
+                    color={colors.black100}
+                  />
+                </TouchableOpacity>
+                <View style={{ flex: 1 }}>
+                  <Button
+                    title={actionButton[productType].buttonText}
+                    onPress={actionButton[productType].action}
+                    style={styles.button}
+                    fontStyle={
+                      isButtonDisabled
+                        ? styles.disabledBtnText
+                        : styles.buttonText
+                    }
+                    disabled={isButtonDisabled}
+                  />
+                </View>
+              </View>
+
+              {/* ego component */}
+
+              {/* <GradientButton
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 1 }}
                 disabled={isButtonDisabled}
@@ -711,7 +895,7 @@ class ProductListPage extends React.Component<any, any> {
                 <WarningLabel text="Sorry, this product is currently unavailable" />
               )}
 
-              <ButtonGroup items={this.groupButton(isProductSaved)} />
+              <ButtonGroup items={this.groupButton(isProductSaved)} /> */}
 
               <View
                 style={{
@@ -719,7 +903,7 @@ class ProductListPage extends React.Component<any, any> {
                   justifyContent: 'flex-start',
                   alignItems: 'center',
                   width: '100%',
-                  marginBottom: 12,
+                  marginBottom: 24,
                 }}>
                 {product.saved &&
                   product.saved.count > 0 &&
@@ -755,6 +939,7 @@ class ProductListPage extends React.Component<any, any> {
                   {product.saved && userSaveProduct}
                 </View>
               </View>
+
               {/* bisa di pisah jadi 1 organimis sendiri biar bisa di use memo itung2gannya refisit: enu */}
               {contentItem?.map((item, idx) => {
                 let newItem = null
@@ -802,6 +987,10 @@ class ProductListPage extends React.Component<any, any> {
                 return (
                   <ContentExpandable
                     paddingTitleVertical={12}
+                    style={{
+                      borderBottomColor: colors.black50,
+                      borderBottomWidth: 1,
+                    }}
                     title={
                       <Text
                         style={{
@@ -890,6 +1079,30 @@ class ProductListPage extends React.Component<any, any> {
                   />
                 )
               })}
+              <PressAbbleDiv
+                onPress={() => {
+                  console.log('go to whatsapp chat')
+                }}
+                style={styles.orderAdminWrap}>
+                <Image
+                  source={require('@assets/icons/whatsapp-icon-large.png')}
+                  style={{ width: 28, height: 28, marginRight: 8 }}
+                />
+                <View style={{ flex: 1 }}>
+                  <Text
+                    style={{
+                      ...fontStyle.helvetica,
+                      fontWeight: '500',
+                      color: colors.black100,
+                      fontSize: 16,
+                    }}>
+                    Order by Whatsapp
+                  </Text>
+                  <Text style={{ color: colors.black70 }}>
+                    Instant buying, our admin ready 24/7 for you
+                  </Text>
+                </View>
+              </PressAbbleDiv>
               {product && <ProductSimilarList />}
             </Div>
           </ImageCoverContentLayout>

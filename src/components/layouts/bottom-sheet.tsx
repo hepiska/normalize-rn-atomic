@@ -91,6 +91,7 @@ const BottomSheetLay = ({
         {...bottomSheetProps}
         onCloseEnd={onClose}
         enabledContentGestureInteraction={false}
+        enabledHeaderGestureInteraction={true}
         initialSnap={initialSnap}
         renderHeader={() => (
           <Header

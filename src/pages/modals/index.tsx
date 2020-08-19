@@ -17,6 +17,8 @@ import LoginPage from './login'
 import QRModal from './qr-code'
 
 import ShareModal from '@pages/modals/share'
+import ShareAndEarn from '@src/pages/modals/share-and-earn'
+import ShareProductModal from './share-product'
 
 const Stack = createStackNavigator()
 
@@ -66,7 +68,7 @@ function ModalStack() {
         component={ShareModal}
       />
       <Stack.Screen
-        name="QR"
+        name="ShareProduct"
         options={{
           cardStyle: { backgroundColor: 'rgba(0,0,0,0.7)' },
         }}
@@ -101,6 +103,11 @@ function ModalStack() {
         name="ConfirmationModal"
         options={{ cardStyle: { backgroundColor: 'transparent' } }}
         component={ConfirmationModal}
+      />
+      <Stack.Screen
+        name="ShareAndEarn"
+        options={{ cardStyle: { backgroundColor: 'transparent' } }}
+        component={ShareAndEarn}
       />
     </Stack.Navigator>
   )

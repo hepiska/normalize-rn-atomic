@@ -19,7 +19,7 @@ const ColorList = ({ selectedId, data, onChange }: ColorList) => {
           <Div
             _width="20px"
             _height="20px"
-            _margin="8px 4px 0px"
+            _margin="8px 8px 0px 0px"
             _border={`1px solid ${
               selectedId === item.id ? colors.black90 : colors.black50
             }`}
