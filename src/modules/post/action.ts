@@ -11,6 +11,8 @@ export const postActionType = {
   FETCH_START: 'post/FETCH_START',
   SET_POST_LOADING: 'post/SET_USER_LOADING',
   CLEAR_POST: 'post/CLEAR_POST',
+  SET_ACTIVE_POST: 'post/SET_ACTIVE_POST',
+  SET_NEXT_ACTIVE_POST: 'post/SET_NEXT_ACTIVE_POST',
   ERROR: 'post/ERROR',
   DEFAULT: 'post/DEFAULT',
 }
@@ -38,6 +40,15 @@ export const setPostOrder = (data: any) => ({
   payload: data,
 })
 
+export const setActivePost = (data: any) => ({
+  type: postActionType.SET_ACTIVE_POST,
+  payload: data,
+})
+export const setNextActivePost = (data: any) => ({
+  type: postActionType.SET_NEXT_ACTIVE_POST,
+  payload: data,
+})
+
 export const setPostLoading = (data: any) => ({
   type: postActionType.SET_POST_LOADING,
   payload: data,
@@ -61,6 +72,35 @@ export const getPostById = (data: any) => ({
       return [
         setPostData(data.entities.post),
         setUserData(data.entities.user),
+        setActivePost(data.result),
+        setPostLoading(false),
+      ]
+    },
+    error: err => {
+      return [setPostLoading(false)]
+    },
+  },
+})
+
+export const getNextPost = (data: any) => ({
+  type: API,
+  payload: {
+    url: '/posts/' + data + '/next',
+    schema: schema.post,
+    requestParams: {
+      method: 'GET',
+    },
+    startNetwork: () => {
+      return setPostLoading(true)
+    },
+    endNetwork: () => {
+      return setPostLoading(false)
+    },
+    success: data => {
+      return [
+        setPostData(data.entities.post),
+        setUserData(data.entities.user),
+        setNextActivePost(data.entities.result),
         setPostLoading(false),
       ]
     },

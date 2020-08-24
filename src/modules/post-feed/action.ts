@@ -39,7 +39,7 @@ export const fetchFeed = (params: any = {}) => {
   const me = getMe().id
   let url = '/posts/feed'
   if (!me) {
-    url = '/posts/v2'
+    url = '/posts'
   }
 
   return {

@@ -273,8 +273,9 @@ export const calculateTimeDifference = date => {
   let week = now.diff(_day, 'week')
   let days = now.diff(_day, 'day')
   let hours = now.diff(_day, 'hour')
+  let minutes = now.diff(_day, 'minute')
 
-  return { year, month, week, days, hours, now }
+  return { year, month, week, days, hours, minutes, now }
 }
 
 export const removeHeaderWebviewScript = `(function() {

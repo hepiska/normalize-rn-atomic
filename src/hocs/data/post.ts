@@ -10,6 +10,7 @@ import {
   removeBookmarkPost,
 } from '@modules/post-bookmarked/action'
 import { makePostBookmarked } from '@src/modules/post-bookmarked/selector'
+import { comment } from '@src/modules/normalize-schema'
 
 const postListMap = () => {
   const getPost = makeGetPost()
@@ -84,4 +85,14 @@ export function postListData(WrappedComponent) {
 
 export function searchPostListData(WrappedComponent) {
   return connect(searchPostListMap, mapDispatchToProps)(WrappedComponent)
+}
+
+const mapCommentData = (state, ownProps) => {
+  console.log('state.comments.data', ownProps.commentId, state.comments.data)
+  const comment = state.comments.data[ownProps.commentId]
+  return { comment }
+}
+
+export function commentsData(WrappedComponent) {
+  return connect(mapCommentData, null)(WrappedComponent)
 }

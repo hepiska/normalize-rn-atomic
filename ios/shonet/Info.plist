@@ -147,6 +147,8 @@
 		<string>PlayfairDisplay-Regular.ttf</string>
 		<string>PlayfairDisplay-SemiBold.ttf</string>
 		<string>PlayfairDisplay-SemiBoldItalic.ttf</string>
+		<string>Chronicle-Display-Roman.otf</string>
+		<string>Georgia-Regular-font.ttf</string>
 	</array>
 	<key>UIBackgroundModes</key>
 	<array>

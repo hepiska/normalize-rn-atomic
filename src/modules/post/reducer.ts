@@ -12,6 +12,7 @@ interface PostType {}
 interface PostState {
   readonly data: Object
   readonly order: Array<number>
+  readonly activePost: Array<number>
   readonly loading: Boolean
   readonly error?: ErrorType
 }
@@ -19,6 +20,7 @@ interface PostState {
 const initialState: any = {
   data: Immutable({}),
   order: Immutable([]),
+  activePost: [],
   loading: false,
   error: null,
 }
@@ -46,6 +48,14 @@ const postLikedReducer: Reducer<PostState> = (
     case postActionType.SET_POST_LOADING:
       newState.loading = action.payload
       return newState
+    case postActionType.SET_ACTIVE_POST:
+      newState.activePost = [action.payload]
+      return newState
+
+    case postActionType.SET_NEXT_ACTIVE_POST:
+      newState.activePost = [...newState.activePost, action.payload]
+      return newState
+
     case postActionType.CLEAR_POST:
       return initialState
     default:

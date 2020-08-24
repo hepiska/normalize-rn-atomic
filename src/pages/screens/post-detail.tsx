@@ -1,73 +1,49 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState, useMemo } from 'react'
 import WebView from 'react-native-webview'
 import Config from 'react-native-config'
 import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 import NavbarTop from '@src/components/molecules/navbar-top'
 import PostDetailLoader from '@components/atoms/loaders/post-detail'
 import { colors } from '@utils/constants'
+import List from '@components/layouts/list-header'
+import PostDetailOrg from '@components/organisms/post-detail'
 import {
   removeHeaderWebviewScript,
   clearLocalStorageScript,
   injectTokenScript,
 } from '@utils/helpers'
+import { getPostById, getNextPost } from '@modules/post/action'
+import { postListData } from '@hocs/data/post'
+
+const PostDetailWithData = postListData(PostDetailOrg)
 
 const PostDetailPage = props => {
-  const mywebView = useRef(null) as any
   const [title, setTitle] = useState('')
-
-  const {
-    post,
-    url,
-    auth_data: { id_token, user },
-  } = props
-  let uri = ''
-  if (post) {
-    uri =
-      Config.SHONET_URI +
-      `/articles/` +
-      (post.post_type === 'collection' ? `collection/` : '') +
-      post.permalink
-  }
+  const { post, url, getPostById, getNextPost, postId, activePost } = props
 
   useEffect(() => {
-    return () => {
-      mywebView.current.injectJavaScript(clearLocalStorageScript())
-    }
+    getPostById(postId)
+    return () => {}
   }, [])
+
+  const _renderItem = useMemo(
+    () => ({ item }) => {
+      return <PostDetailWithData postId={item} />
+    },
+    [],
+  )
+
+  const _keyExtractor = useMemo(() => ({ item }) => 'post-detail' + item, [])
 
   if (post || url) {
     return (
       <>
         <NavbarTop title={post?.title || title} leftContent={['back']} />
-        <WebView
-          renderLoading={() => <PostDetailLoader style={{ marginTop: 16 }} />}
-          ref={mywebView}
-          startInLoadingState={true}
-          sharedCookiesEnabled
-          onMessage={({ nativeEvent }) => {
-            console.log('nativee', nativeEvent.data)
-          }}
-          onLoadStart={syntheticEvent => {
-            const { nativeEvent } = syntheticEvent
-            setTitle(nativeEvent.title)
-            mywebView.current.injectJavaScript(
-              injectTokenScript(id_token, user),
-            )
-          }}
-          onLoadEnd={syntheticEvent => {
-            const { nativeEvent } = syntheticEvent
-            setTitle(nativeEvent.title)
-            if (!nativeEvent.loading) {
-              mywebView.current.injectJavaScript(removeHeaderWebviewScript)
-            }
-          }}
-          source={{
-            uri: url ? Config.SHONET_URI + '/' + url : uri,
-            headers: {
-              Cookie: `tokenId=${id_token}`,
-            },
-          }}
-          originWhitelist={['https://*']}
+        <List
+          data={activePost}
+          renderItem={_renderItem}
+          keyExtractor={_keyExtractor}
         />
       </>
     )
@@ -78,16 +54,17 @@ const mapStateToProps = (state, ownProps) => {
   let post = null
   const { params } = ownProps.route
   const postId = params.postId || null
-
-  if (params.url) {
-    return { url: params.url, auth_data: state.auth.data || {} }
-  }
+  const activePost = state.post.activePost
   if (postId) {
     post = state.post.data[postId] || null
   }
   return {
     post,
-    auth_data: state.auth.data || {},
+    activePost,
+    postId,
   }
 }
-export default connect(mapStateToProps, null)(PostDetailPage)
+
+const mapDispatchToProps = dispatch =>
+  bindActionCreators({ getPostById, getNextPost }, dispatch)
+export default connect(mapStateToProps, mapDispatchToProps)(PostDetailPage)

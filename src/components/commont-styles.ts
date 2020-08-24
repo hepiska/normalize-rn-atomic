@@ -35,6 +35,9 @@ export const fontStyle =
         playfair: {
           fontFamily: 'PlayfairDisplay-Regular',
         },
+        ChronicleDisplay: {
+          fontFamily: 'ChronicleDisplay-Roman',
+        },
       })
     : StyleSheet.create({
         helvetica: {
@@ -64,6 +67,9 @@ export const fontStyle =
         },
         playfair: {
           fontFamily: 'PlayfairDisplay-Regular',
+        },
+        ChronicleDisplay: {
+          fontFamily: 'ChronicleDisplay-Roman',
         },
       })
 

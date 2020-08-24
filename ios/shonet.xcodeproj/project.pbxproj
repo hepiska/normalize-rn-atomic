@@ -46,6 +46,8 @@
 		EDDD11643B3A4BEFBB186FCD /* PlayfairDisplay-SemiBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 87FCF0D14DD848F19FBF303F /* PlayfairDisplay-SemiBold.ttf */; };
 		F309BA0A81724752ABFFFBB0 /* HelveticaNeue-Thin.otf in Resources */ = {isa = PBXBuildFile; fileRef = 7BA3025266E7459B8400918D /* HelveticaNeue-Thin.otf */; };
 		F95C89844F7B634CA17FAA53 /* libPods-shonet-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 47146A0A7C0603E935EC9F57 /* libPods-shonet-tvOSTests.a */; };
+		B7088CB578A343B4B48230BF /* Chronicle-Display-Roman.otf in Resources */ = {isa = PBXBuildFile; fileRef = AA8F30AA4A854EF8AC0977D7 /* Chronicle-Display-Roman.otf */; };
+		F45F610DC5A24DBE9DBF91D9 /* Georgia-Regular-font.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 37E03280CEA045DA8B20069B /* Georgia-Regular-font.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -137,6 +139,8 @@
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
 		FB7653FB23C749AD828FB4E0 /* Ionicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
+		AA8F30AA4A854EF8AC0977D7 /* Chronicle-Display-Roman.otf */ = {isa = PBXFileReference; name = "Chronicle-Display-Roman.otf"; path = "../src/assets/fonts/Chronicle-Display-Roman.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		37E03280CEA045DA8B20069B /* Georgia-Regular-font.ttf */ = {isa = PBXFileReference; name = "Georgia-Regular-font.ttf"; path = "../src/assets/fonts/Georgia-Regular-font.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -234,6 +238,8 @@
 				4C6F9A227A2D4F859E051C11 /* PlayfairDisplay-Regular.ttf */,
 				87FCF0D14DD848F19FBF303F /* PlayfairDisplay-SemiBold.ttf */,
 				DEF96C629DB94C14B80D7B6B /* PlayfairDisplay-SemiBoldItalic.ttf */,
+				AA8F30AA4A854EF8AC0977D7 /* Chronicle-Display-Roman.otf */,
+				37E03280CEA045DA8B20069B /* Georgia-Regular-font.ttf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -500,6 +506,8 @@
 				1B87BE40AA3249BFBEAA2A50 /* PlayfairDisplay-Regular.ttf in Resources */,
 				EDDD11643B3A4BEFBB186FCD /* PlayfairDisplay-SemiBold.ttf in Resources */,
 				CD7C8A4459044258957F920A /* PlayfairDisplay-SemiBoldItalic.ttf in Resources */,
+				B7088CB578A343B4B48230BF /* Chronicle-Display-Roman.otf in Resources */,
+				F45F610DC5A24DBE9DBF91D9 /* Georgia-Regular-font.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
