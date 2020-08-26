@@ -49,6 +49,7 @@ const PostContent = ({ content, style }: any) => {
           // figure: renderBlockQuote,
         }}
         imagesMaxWidth={Dimensions.get('window').width - 32}
+        decodeEntities={false}
         tagsStyles={{
           p: {
             ...fontStyle.ChronicleDisplay,
@@ -57,6 +58,7 @@ const PostContent = ({ content, style }: any) => {
             lineHeight: 30,
             color: colors.black100,
           },
+
           img: {
             borderRadius: 8,
           },
