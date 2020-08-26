@@ -23,6 +23,9 @@ import HorizontalListLookBook from '@components/organisms/horzontal-list-lookboo
 import { colors } from '@utils/constants'
 import { Instagram } from 'react-content-loader/native'
 import PostCardFull from '@components/atoms/loaders/post-card-full'
+import HorizontalList from './horizontal-list'
+import { fetchRecommendedUser } from '@src/modules/user/action'
+import { makeGetRecommendedUserOrder } from '@src/modules/user/selector'
 
 const PostItem = postListData(PostListItem)
 
@@ -65,6 +68,10 @@ class FeedOrg extends React.Component<any, any> {
     this.props.fetchFeed(params)
   }
 
+  _fetchUserRecommendation = () => {
+    this.props.fetchRecommendedUser()
+  }
+
   _fetchMore = () => {
     if (!this.props.loading) {
       const newskip = this.skip + 1
@@ -95,6 +102,7 @@ class FeedOrg extends React.Component<any, any> {
     this.skip = 0
     this.lastskip = 0
     this._fetchData(this.skip, null)
+    this._fetchUserRecommendation()
   }
 
   _emptyState = () => (
@@ -189,8 +197,9 @@ class FeedOrg extends React.Component<any, any> {
   }
 
   render() {
-    const { posts, scrollEnabled, loading } = this.props
+    const { posts, scrollEnabled, loading, recommendedUserOrder } = this.props
     const firstLoading = loading && !this.skip
+    console.log('recommend user order', recommendedUserOrder);
     return (
       <View
         style={{
@@ -232,8 +241,9 @@ const mapStateToProps = state => ({
   posts: state.feed.order,
   loading: state.feed.loading,
   pagination: state.feed.pagination,
+  recommendedUserOrder: makeGetRecommendedUserOrder()(state),
 })
 const mapDispatchToProps = dispatch =>
-  bindActionCreators({ fetchFeed }, dispatch)
+  bindActionCreators({ fetchFeed, fetchRecommendedUser }, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(FeedOrg)
