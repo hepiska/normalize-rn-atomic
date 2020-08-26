@@ -46,7 +46,7 @@ const PostContent = ({ content, style }: any) => {
         renderers={{
           jumbotron: renderJumbotron,
           oembed: renderoembed,
-          // figure: renderBlockQuote,
+          figure: renderBlockQuote,
         }}
         imagesMaxWidth={Dimensions.get('window').width - 32}
         decodeEntities={false}
