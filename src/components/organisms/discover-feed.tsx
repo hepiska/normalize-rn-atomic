@@ -14,6 +14,7 @@ import Amplitude from 'amplitude-js'
 import { capitalEachWord } from '@utils/helpers'
 import { fetchFeed } from '@modules/post-feed/action'
 import PostCardJournal from '@src/components/molecules/post-card-journal'
+import PostCardCollection from '@src/components/molecules/post-card-collection'
 import { postListData } from '@hocs/data/post'
 import EmtyState from '@components/molecules/order-empty-state'
 import TopInsider from '@components/organisms/insider-top'
@@ -37,8 +38,8 @@ import { Font } from '../atoms/basic'
 import { fontStyle } from '../commont-styles'
 import ImageAutoSchale from '@components/atoms/image-autoschale'
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
-
-const PostItem = postListData(PostCardJournal)
+import RecommendList from '../molecules/recommend-follow-list'
+import { makeGetFeedPosts } from '@src/modules/post/selector'
 
 const { width, height } = Dimensions.get('screen')
 
@@ -156,12 +157,31 @@ class FeedOrg extends React.PureComponent<any, any> {
     // this.props.navigation
   }
 
+  _renderPostCard = (item, index) => {
+    let PostItem
+    if (item.article_type === 'J') {
+      PostItem = postListData(PostCardJournal)
+    } else {
+      PostItem = postListData(PostCardCollection)
+    }
+    return (
+      <PostItem
+        style={styles.itemStyle}
+        key={`horizontal-list-post-${index}`}
+        fullscreen
+        postId={item.id}
+        idx={index}
+      />
+    )
+  }
+
   _renderItem = ({ item, index }) => {
     const {
       recommendedUserOrder,
       recommendedBeautyOrder,
       recommendedFashionOrder,
     } = this.props
+
     if (index === 0) {
       return (
         <View>
@@ -174,13 +194,14 @@ class FeedOrg extends React.PureComponent<any, any> {
               width={width}
             />
           </TouchableWithoutFeedback>
-          <PostItem
+          {this._renderPostCard(item, index)}
+          {/* <PostItem
             style={styles.itemStyle}
             key={`horizontal-list-post-${index}`}
             fullscreen
-            postId={item}
+            postId={item.id}
             idx={index}
-          />
+          /> */}
         </View>
       )
     }
@@ -188,13 +209,15 @@ class FeedOrg extends React.PureComponent<any, any> {
       return (
         <View>
           {/* <TopInsider navigation={this.props.navigation} /> */}
-          <PostItem
+          {this._renderPostCard(item, index)}
+          {/* <PostItem
             style={styles.itemStyle}
             key={`horizontal-list-post-${index}`}
-            postId={item}
+            postId={item.id}
             idx={index}
-          />
+          /> */}
           {/* notes: recommended user horizontal list here using recommendedUserOrder */}
+          <RecommendList />
         </View>
       )
     }
@@ -203,13 +226,14 @@ class FeedOrg extends React.PureComponent<any, any> {
         <View>
           {/* <HorizontalListLookBook navigation={this.props.navigation} /> */}
 
-          <PostItem
+          {/* <PostItem
             style={styles.itemStyle}
             key={`horizontal-list-post-${index}`}
             fullscreen
-            postId={item}
+            postId={item.id}
             idx={index}
-          />
+          /> */}
+          {this._renderPostCard(item, index)}
           <Font
             size={24}
             fontFamily={fontStyle.playfairBold.fontFamily}
@@ -236,13 +260,14 @@ class FeedOrg extends React.PureComponent<any, any> {
       return (
         <View>
           {/* <ProductTrending navigation={this.props.navigation} /> */}
-          <PostItem
+          {/* <PostItem
             style={styles.itemStyle}
             key={`horizontal-list-post-${index}`}
             fullscreen
-            postId={item}
+            postId={item.id}
             idx={index}
-          />
+          /> */}
+          {this._renderPostCard(item, index)}
           <Font
             size={24}
             fontFamily={fontStyle.playfairBold.fontFamily}
@@ -265,15 +290,14 @@ class FeedOrg extends React.PureComponent<any, any> {
       )
     }
 
-    return (
-      <PostItem
-        style={styles.itemStyle}
-        key={`horizontal-list-post-${index}`}
-        fullscreen
-        postId={item}
-        idx={index}
-      />
-    )
+    return this._renderPostCard(item, index)
+    // <PostItem
+    //   style={styles.itemStyle}
+    //   key={`horizontal-list-post-${index}`}
+    //   fullscreen
+    //   postId={item.id}
+    //   idx={index}
+    // />
   }
 
   _hanleScroll = e => {
@@ -345,7 +369,9 @@ class FeedOrg extends React.PureComponent<any, any> {
 }
 
 const mapStateToProps = state => ({
-  posts: state.feed.order,
+  // posts: state.feed.order,
+  // NOTES: NEED CONFIRM WITH MAS EGO ABOUT PERFORMACE IMPACT
+  posts: makeGetFeedPosts()(state),
   loading: state.feed.loading,
   pagination: state.feed.pagination,
   recommendedUserOrder: makeGetRecommendedUserOrder()(state),
