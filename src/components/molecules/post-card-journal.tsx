@@ -211,7 +211,6 @@ class PostCardJournal extends React.Component<PostListItemType, any> {
       type = 'default',
     } = this.props
     const { width } = this.state
-    console.log('====post ===>', post)
 
     if (post) {
       return (
