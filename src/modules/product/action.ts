@@ -180,7 +180,7 @@ export const getTrendingProduct = (params, type?: 'beauty' | 'fashion') => {
     default:
       break
   }
-  console.log(newParams)
+
   return {
     type: API,
     payload: {
