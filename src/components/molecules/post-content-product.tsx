@@ -14,7 +14,7 @@ import { colors } from '@src/utils/constants'
 import { Button } from '../atoms/button'
 import { PressAbbleDiv } from '../atoms/basic'
 import { fontStyle } from '../commont-styles'
-import { textElipsis as textLimit } from '@utils/helpers'
+import { textElipsis as textLimit, formatCur } from '@utils/helpers'
 import { navigate } from '@src/root-navigation'
 
 const styles = StyleSheet.create({
@@ -182,10 +182,11 @@ const PostContentProduct = (props: any) => {
         <Text style={styles.btnTxt}>Share and Earn</Text>
       </PressAbbleDiv>
       <Text style={{ ...fontStyle.helvetica, color: colors.black70 }}>
-        You’ll Earn IDR 3.960 when someone buy this product from your link.{' '}
-        <Text onPress={null} style={{ ...fontStyle.helveticaBold }}>
+        You’ll Earn IDR {formatCur(product?.max_potential_earnings)} when
+        someone buy this product from your link.{' '}
+        {/* <Text onPress={null} style={{ ...fontStyle.helveticaBold }}>
           Learn More
-        </Text>
+        </Text> */}
       </Text>
     </View>
   )
