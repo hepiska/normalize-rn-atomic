@@ -3,18 +3,35 @@ import { Text, View, FlatList, TouchableOpacity } from 'react-native'
 import FollowCard from '@src/components/molecules/recommend-follow-card'
 import { colors } from '@src/utils/constants'
 import { fontStyle } from '../commont-styles'
+import { userListData } from '@src/hocs/data/user'
+
+interface RecommendUserListType {
+  data?: number[]
+}
+
+const Card = userListData(FollowCard)
 
 const _renderItem = ({ item }) => {
-  return <FollowCard horizontal style={{ backgroundColor: colors.black10 }} />
+  return (
+    <Card
+      horizontal
+      style={{ backgroundColor: colors.black10 }}
+      userId={item}
+    />
+  )
 }
 const _separator = () => {
   return <View style={{ width: 16 }} />
 }
-export default class RecommendList extends Component {
+export default class RecommendList extends Component<
+  RecommendUserListType,
+  any
+> {
   render() {
-    const data = [{ title: '1' }, { title: '2' }, { title: '3' }]
+    // const data = [{ title: '1' }, { title: '2' }, { title: '3' }]
+    const { data } = this.props
     return (
-      <View style={{ alignItems: 'center' }}>
+      <View style={{ alignItems: 'center', marginBottom: 30 }}>
         <Text
           style={{
             textAlign: 'center',

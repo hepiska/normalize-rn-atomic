@@ -63,6 +63,7 @@ const styles = StyleSheet.create({
   productWrapper: {
     flexDirection: 'row',
     flexWrap: 'wrap',
+    marginBottom: 25,
   },
 })
 
@@ -228,7 +229,7 @@ class FeedOrg extends React.PureComponent<any, any> {
             idx={index}
           /> */}
           {/* notes: recommended user horizontal list here using recommendedUserOrder */}
-          <RecommendList />
+          <RecommendList data={recommendedUserOrder} />
         </View>
       )
     }
