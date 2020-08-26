@@ -163,28 +163,45 @@ export const productSearchApi = (params, url) => ({
   },
 })
 
-export const getTrendingProduct = params => {
+const beautyCategory = 166
+const fashionCategory = 37
+
+export const getTrendingProduct = (params, type?: 'beauty' | 'fashion') => {
+  const newParams = { ...params },
+    uri = type ? type : 'trending'
+
+  switch (type) {
+    case 'beauty':
+      newParams.category_ids = beautyCategory
+      break
+    case 'fashion':
+      newParams.category_ids = fashionCategory
+      break
+    default:
+      break
+  }
+  console.log(newParams)
   return {
     type: API,
     payload: {
       url: '/products/trending',
-      requestParams: { params },
+      requestParams: { params: newParams },
       schema: [schema.product],
       startNetwork: () => {
-        return setSpecificLoading({ uri: 'trending', value: false })
+        return setSpecificLoading({ uri, value: false })
       },
 
       success: (data, { pagination }) => {
         return data
           ? [
               ...dispatchProductEntities(data.entities),
-              setSpecificLoading({ uri: 'trending', value: false }),
+              setSpecificLoading({ uri, value: false }),
               setSepcificOrder({
-                uri: 'trending',
+                uri,
                 value: data.result,
               }),
             ]
-          : [setSpecificLoading({ uri: 'trending', value: false })]
+          : [setSpecificLoading({ uri, value: false })]
       },
     },
   }
