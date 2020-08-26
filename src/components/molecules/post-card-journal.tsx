@@ -113,7 +113,7 @@ const JournalCard = ({
               <Text style={{ fontStyle: 'italic' }}>by</Text>{' '}
             </Text>
             <TouchableOpacity onPress={onUserPress}>
-              <Text style={styles.cat}>{'The Shonet'.toUpperCase()}</Text>
+              <Text style={styles.cat}>{user.username.toUpperCase()}</Text>
             </TouchableOpacity>
           </View>
           <Text
@@ -211,7 +211,6 @@ class PostCardJournal extends React.Component<PostListItemType, any> {
       type = 'default',
     } = this.props
     const { width } = this.state
-    console.log('====post ===>', post)
 
     if (post) {
       return (
