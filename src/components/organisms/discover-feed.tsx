@@ -13,7 +13,7 @@ import List from '@components/layouts/list-header'
 import Amplitude from 'amplitude-js'
 import { capitalEachWord } from '@utils/helpers'
 import { fetchFeed } from '@modules/post-feed/action'
-import PostListItem from '@src/components/molecules/post-card'
+import PostCardJournal from '@src/components/molecules/post-card-journal'
 import { postListData } from '@hocs/data/post'
 import EmtyState from '@components/molecules/order-empty-state'
 import TopInsider from '@components/organisms/insider-top'
@@ -24,12 +24,16 @@ import { colors } from '@utils/constants'
 import { Instagram } from 'react-content-loader/native'
 import PostCardFull from '@components/atoms/loaders/post-card-full'
 
-const PostItem = postListData(PostListItem)
+const PostItem = postListData(PostCardJournal)
 
 const styles = StyleSheet.create({
   itemStyle: {
-    width: '100%',
     paddingBottom: 16,
+    //condition styles for vertical post-card-journal
+    width: '100%',
+    marginBottom: 32,
+    borderBottomColor: colors.black50,
+    borderBottomWidth: 1,
   },
 })
 
@@ -112,7 +116,6 @@ class FeedOrg extends React.Component<any, any> {
           <PostItem
             style={styles.itemStyle}
             key={`horizontal-list-post-${index}`}
-            fullscreen
             postId={item}
             idx={index}
           />
@@ -196,7 +199,7 @@ class FeedOrg extends React.Component<any, any> {
         style={{
           width,
           flex: 1,
-          backgroundColor: colors.black10,
+          backgroundColor: colors.white,
         }}>
         {this.state.finishAnimation && firstLoading ? (
           <PostCardFull />
