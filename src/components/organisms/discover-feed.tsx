@@ -35,6 +35,8 @@ import {
 } from '@src/modules/product/selector'
 import { Font } from '../atoms/basic'
 import { fontStyle } from '../commont-styles'
+import ImageAutoSchale from '@components/atoms/image-autoschale'
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
 
 const PostItem = postListData(PostListItem)
 
@@ -145,12 +147,39 @@ class FeedOrg extends React.PureComponent<any, any> {
     />
   )
 
+  _onPressBanner = () => {
+    // notes: supposedly to social commerce page
+    // this.props.navigation
+  }
+
   _renderItem = ({ item, index }) => {
     const {
       recommendedUserOrder,
       recommendedBeautyOrder,
       recommendedFashionOrder,
     } = this.props
+    if (index === 0) {
+      return (
+        <View>
+          <TouchableWithoutFeedback onPress={this._onPressBanner}>
+            <ImageAutoSchale
+              source={{
+                uri:
+                  'https://shonet.imgix.net/banners/sos-com-banner.jpeg?q=75&w=800',
+              }}
+              width={width}
+            />
+          </TouchableWithoutFeedback>
+          <PostItem
+            style={styles.itemStyle}
+            key={`horizontal-list-post-${index}`}
+            fullscreen
+            postId={item}
+            idx={index}
+          />
+        </View>
+      )
+    }
     if (index === 3) {
       return (
         <View>
