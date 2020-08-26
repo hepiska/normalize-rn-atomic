@@ -6,6 +6,7 @@ import { postActionType } from './action'
 import { deepClone } from '@utils/helpers'
 import AsyncStorage from '@react-native-community/async-storage'
 import CONFIG from 'react-native-config'
+import { comment } from '../normalize-schema'
 
 interface PostType {}
 
@@ -22,6 +23,7 @@ const initialState: any = {
   order: Immutable([]),
   activePost: [],
   loading: false,
+  commentLoading: false,
   error: null,
 }
 
@@ -32,7 +34,9 @@ const postLikedReducer: Reducer<PostState> = (
   const newState = { ...state }
   switch (action.type) {
     case postActionType.SET_POST_DATA:
-      newState.data = Immutable.merge(newState.data, action.payload)
+      newState.data = Immutable.merge(newState.data, action.payload, {
+        deep: true,
+      })
       return newState
     case postActionType.SET_POST_ORDER:
       if (
@@ -50,6 +54,10 @@ const postLikedReducer: Reducer<PostState> = (
       return newState
     case postActionType.SET_ACTIVE_POST:
       newState.activePost = [action.payload]
+      return newState
+
+    case postActionType.SET_COMMENT_LOADING:
+      newState.commentLoading = action.payload
       return newState
 
     case postActionType.SET_NEXT_ACTIVE_POST:

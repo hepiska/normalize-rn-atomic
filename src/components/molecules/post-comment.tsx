@@ -11,15 +11,20 @@ import { colors } from '@src/utils/constants'
 import AvatarImage from '../atoms/avatar-image'
 import Comment from '../molecules/comment-post'
 import { commentsData } from '@hocs/data/post'
+import { connect } from 'react-redux'
+import CommentWrite from './comment-write'
 
 const CommentWithData = commentsData(Comment)
 
 interface CommentsType {
   style?: ViewStyle
   data?: any
+  user: any
+  comments: any
+  postId: number
 }
 
-export default class PostComment extends Component<CommentsType, any> {
+class PostComment extends Component<CommentsType, any> {
   state = {
     showingComment: false,
   }
@@ -36,28 +41,12 @@ export default class PostComment extends Component<CommentsType, any> {
   }
 
   render() {
-    const { style, data } = this.props
-    const dataComments = data?.comments
-    console.log('comments', data)
-
-    const comments = [
-      {
-        comment:
-          'Lorem ipsum, dolor sit amet consectetur adipisicing elit. Accusamus repellat dolor facere?',
-        user: 'Bruce',
-      },
-      {
-        comment:
-          'Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur.?',
-        user: 'Arthur',
-      },
-      // { comment: 'Lorem ipsum dolor sit amet.', user: 'Diana' },
-    ]
+    const { style, comments } = this.props
 
     return (
       <View style={{ ...style }}>
         <TouchableOpacity
-          disabled={dataComments.length === 0}
+          disabled={comments?.length === 0}
           onPress={this._showComment}>
           <Text
             style={{
@@ -66,8 +55,7 @@ export default class PostComment extends Component<CommentsType, any> {
               color: colors.black80,
               marginBottom: 8,
             }}>
-            {' '}
-            All Comments ({dataComments.length}){' '}
+            All Comments ({comments?.length})
           </Text>
         </TouchableOpacity>
         {this.state.showingComment ? (
@@ -76,13 +64,13 @@ export default class PostComment extends Component<CommentsType, any> {
               marginVertical: 8,
               // backgroundColor: 'red',
             }}>
-            {dataComments.map((res, idx) => {
+            {comments?.map((res, idx) => {
               return (
                 <CommentWithData
                   key={'comment' + res + idx}
                   commentId={res}
                   style={{
-                    marginBottom: idx === dataComments.length - 1 ? 0 : 16,
+                    marginBottom: idx === comments?.length - 1 ? 0 : 16,
                   }}
                 />
               )
@@ -91,32 +79,16 @@ export default class PostComment extends Component<CommentsType, any> {
         ) : (
           <></>
         )}
-        <View style={{ flexDirection: 'row', marginTop: 8 }}>
-          <AvatarImage
-            size={40}
-            style={{ marginRight: 16 }}
-            imgUrl={data?.user.photo_url}
-          />
-          <View
-            style={{
-              backgroundColor: colors.black50,
-              height: 40,
-              flex: 1,
-              flexDirection: 'row',
-              borderRadius: 8,
-              paddingHorizontal: 16,
-              alignItems: 'center',
-            }}>
-            <TextInput
-              placeholder={'Add your comment...'}
-              style={{ height: 40, flex: 1 }}
-            />
-            <TouchableOpacity onPress={null}>
-              <Text style={{ ...fontStyle.helveticaBold }}>POST</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
+        <CommentWrite postId={this.props.postId} />
       </View>
     )
   }
 }
+
+const mapStateToProps = (state, ownProps) => {
+  return {
+    comments: state.post.data[ownProps.postId].comments,
+  }
+}
+
+export default connect(mapStateToProps)(PostComment)

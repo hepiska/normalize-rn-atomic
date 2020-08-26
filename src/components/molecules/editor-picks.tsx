@@ -54,7 +54,7 @@ export default class EditorPicks extends Component<EditorPickType, any> {
         </View>
         <View style={{ marginTop: 24 }}>
           {data.map((item, x) => {
-            return <Item item={item} />
+            return <Item key={'editor-picks' + x} item={item} />
           })}
         </View>
       </View>

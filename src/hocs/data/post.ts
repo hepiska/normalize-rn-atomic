@@ -88,7 +88,6 @@ export function searchPostListData(WrappedComponent) {
 }
 
 const mapCommentData = (state, ownProps) => {
-  console.log('state.comments.data', ownProps.commentId, state.comments.data)
   const comment = state.comments.data[ownProps.commentId]
   return { comment }
 }

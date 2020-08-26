@@ -14,6 +14,7 @@ import dynamicLinks from '@react-native-firebase/dynamic-links'
 import firebase from '@react-native-firebase/app'
 import Baner from '@components/layouts/baner'
 import { uriToScreen } from '@utils/config'
+import { getUser } from '@modules/user/action'
 import RightSidebar from '@components/layouts/right-sidebar'
 import {
   createStackNavigator,
@@ -73,6 +74,7 @@ class Pages extends React.Component<any, any> {
     if (this.props.isAuth) {
       this.props.getProductSaved()
       this.props.getPostLiked()
+      this.props.getUser(this.props.me.id)
     }
     this.props.getAppConfig()
     this._firebase()
@@ -148,6 +150,7 @@ class Pages extends React.Component<any, any> {
 
 const mapStateToProps = state => ({
   isAuth: state.auth.isAuth,
+  me: state.auth.data.user,
 })
 
 const mapDispatchToProps = dispatch =>
@@ -156,6 +159,7 @@ const mapDispatchToProps = dispatch =>
       getProductSaved,
       getPostLiked,
       getAppConfig,
+      getUser,
     },
     dispatch,
   )

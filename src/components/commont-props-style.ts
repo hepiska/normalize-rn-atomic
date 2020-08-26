@@ -1,5 +1,5 @@
 // commonet props style is collection of props that make style on certaint componnet so we dont have to manulai stylee the component to
-import { StyleSheet } from 'react-native'
+import { StyleSheet, Platform } from 'react-native'
 import { colors } from '@utils/constants'
 import { fontStyle } from '@components/commont-styles'
 
@@ -23,6 +23,17 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: 'bold',
   },
+  buttontextBlack: {
+    color: colors.black100,
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
+  buttonTextNoIcon: {
+    color: colors.white,
+    fontSize: 14,
+    fontWeight: 'bold',
+    marginLeft: 0,
+  },
   buttonBlue: {
     width: '100%',
     height: 46,
@@ -33,6 +44,12 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 46,
     backgroundColor: '#8131E2',
+  },
+  blackBottonContent: {
+    paddingVertical: 24,
+    paddingHorizontal: 16,
+    width: 80,
+    backgroundColor: colors.black100,
   },
   buttonTextBlue: {
     ...fontStyle.helveticaBold,
@@ -53,5 +70,12 @@ export const buttonPropsStyles = {
   purpleOutline: {
     style: styles.buttonBlue,
     fontStyle: styles.buttonTextBlue,
+  },
+  blackButton: {
+    fontStyle: styles.buttonTextNoIcon,
+    style: styles.blackBottonContent,
+  },
+  whiteButton: {
+    fontStyle: styles.buttontextBlack,
   },
 }

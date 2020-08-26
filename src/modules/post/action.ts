@@ -2,6 +2,7 @@ import { QueryParams } from '@utils/globalInterface'
 import { setUserData } from '../user/action'
 import { setTopPostData } from '../post-top/action'
 import { API } from '../action-types'
+import { dispatchPostEntities } from '../entities-action-dispacer'
 import * as schema from '@modules/normalize-schema'
 
 export const postActionType = {
@@ -14,6 +15,7 @@ export const postActionType = {
   SET_ACTIVE_POST: 'post/SET_ACTIVE_POST',
   SET_NEXT_ACTIVE_POST: 'post/SET_NEXT_ACTIVE_POST',
   ERROR: 'post/ERROR',
+  SET_COMMENT_LOADING: 'post/SET_COMMENT_LOADING',
   DEFAULT: 'post/DEFAULT',
 }
 
@@ -49,6 +51,13 @@ export const setNextActivePost = (data: any) => ({
   payload: data,
 })
 
+export const setCommentLoading = data => {
+  return {
+    type: postActionType.SET_COMMENT_LOADING,
+    payload: data,
+  }
+}
+
 export const setPostLoading = (data: any) => ({
   type: postActionType.SET_POST_LOADING,
   payload: data,
@@ -70,8 +79,8 @@ export const getPostById = (data: any) => ({
     },
     success: data => {
       return [
-        setPostData(data.entities.post),
-        setUserData(data.entities.user),
+        dispatchPostEntities(data.entities),
+
         setActivePost(data.result),
         setPostLoading(false),
       ]
@@ -98,9 +107,8 @@ export const getNextPost = (data: any) => ({
     },
     success: data => {
       return [
-        setPostData(data.entities.post),
-        setUserData(data.entities.user),
-        setNextActivePost(data.entities.result),
+        dispatchPostEntities(data.entities),
+        setActivePost(data.result),
         setPostLoading(false),
       ]
     },
@@ -109,3 +117,105 @@ export const getNextPost = (data: any) => ({
     },
   },
 })
+
+export const updatePost = (data: any) => ({
+  type: API,
+  payload: {
+    url: '/posts/' + data,
+    schema: schema.post,
+    requestParams: {
+      method: 'GET',
+    },
+    // startNetwork: () => {
+    //   return setPostLoading(true)
+    // },
+    // endNetwork: () => {
+    //   return setPostLoading(false)
+    // }
+    success: data => {
+      return [dispatchPostEntities(data.entities), setPostLoading(false)]
+    },
+    error: err => {
+      return [setPostLoading(false)]
+    },
+  },
+})
+
+export const postComment = (
+  { postId, content, commentId }: any,
+  callback: any,
+) => {
+  return {
+    type: API,
+    payload: {
+      url: '/posts/' + postId + '/comments',
+      schema: schema.post,
+      requestParams: {
+        method: 'POST',
+        data: {
+          attributes: [],
+          content,
+          reply_id: commentId,
+        },
+      },
+      startNetwork: () => {
+        return setCommentLoading(true)
+      },
+      endNetwork: () => {
+        if (callback) {
+          callback({ status: 'success' })
+        }
+        return setCommentLoading(false)
+      },
+      success: data => {
+        return [updatePost(postId), setCommentLoading(false)]
+      },
+    },
+  }
+}
+// posts/858364/comments/36120/likes
+export const likeComments = ({ postId, commentId }, callback?: any) => {
+  return {
+    type: API,
+    payload: {
+      url: '/posts/' + postId + '/comments/' + commentId + '/likes',
+      schema: schema.post,
+      requestParams: {
+        method: 'POST',
+      },
+    },
+  }
+}
+
+export const deleteComment = ({ postId, commentId }, callback?: any) => {
+  return {
+    type: API,
+    payload: {
+      url: '/posts/' + postId + '/comments/' + commentId,
+      schema: schema.post,
+      requestParams: {
+        method: 'DELETE',
+      },
+      success: data => {
+        return [updatePost(postId)]
+      },
+    },
+  }
+}
+
+export const relatedPosts = (postId: number, callback?: any) => {
+  return {
+    type: API,
+    payload: {
+      url: '/posts/' + postId + '/related',
+      schema: [schema.post],
+      requestParams: {
+        method: 'GET',
+      },
+      callback: callback,
+      success: data => {
+        return [dispatchPostEntities(data.entities)]
+      },
+    },
+  }
+}

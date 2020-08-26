@@ -27,7 +27,7 @@ interface TagsPillType {
 export default class Tags extends Component<TagsPillType, any> {
   render() {
     const { data } = this.props
-    if (data.length != 0) {
+    if (data) {
       return (
         <View
           style={{
@@ -36,7 +36,7 @@ export default class Tags extends Component<TagsPillType, any> {
             flexWrap: 'wrap',
           }}>
           {data.map((item, idx) => {
-            return <TagsPill item={item} />
+            return <TagsPill key={'tags' + idx} item={item} />
           })}
         </View>
       )

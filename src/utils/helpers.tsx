@@ -264,6 +264,30 @@ export const calculateDay = day => {
   return 'about ' + res + ' ' + convertion + ' ago'
 }
 
+export const countlongCreate = time => {
+  const timeDif = calculateTimeDifference(time)
+  if (timeDif.year) {
+    return timeDif.year + ' years ago'
+  }
+  if (timeDif.month) {
+    return timeDif.month + ' months ago'
+  }
+  if (timeDif.week) {
+    return timeDif.week + ' weeks ago'
+  }
+  if (timeDif.days) {
+    return timeDif.days + ' days ago'
+  }
+  if (timeDif.hours) {
+    return timeDif.hours + ' hours ago'
+  }
+  if (timeDif.minutes) {
+    return timeDif.minutes + ' minutes ago'
+  } else {
+    return ' Less than a minutes ago'
+  }
+}
+
 export const calculateTimeDifference = date => {
   const now = dayjs()
   const _day = dayjs(date)

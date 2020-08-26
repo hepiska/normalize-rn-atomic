@@ -8,88 +8,44 @@ import {
 } from 'react-native'
 import { fontStyle } from '../commont-styles'
 import { colors } from '@src/utils/constants'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 import AvatarImage from '../atoms/avatar-image'
+import CommentWrite from './comment-write'
+import { likeComments, deleteComment } from '@modules/post/action'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
-import { calculateTimeDifference } from '@utils/helpers'
+import ModalConfirmation from '@components/organisms/modal-confirmation'
+import Tooltip from 'rn-tooltip'
+import { calculateTimeDifference, countlongCreate } from '@utils/helpers'
+import { comment } from '@src/modules/normalize-schema'
 
 interface CommentChildType {
   style?: ViewStyle
   data?: any
+  likeComments?: (props: any) => void
   comment?: any
-}
-class CommentChild extends Component<CommentChildType, any> {
-  state = {
-    showReply: false,
-  }
-
-  _reply = () => {
-    if (!this.state.showReply) {
-      this.setState({
-        showReply: this.state.showReply,
-      })
-    }
-    this.setState({
-      showReply: !this.state.showReply,
-    })
-  }
-
-  render() {
-    const { style, data } = this.props
-    return (
-      <View style={{ ...style, flexDirection: 'row' }}>
-        <AvatarImage style={{ marginRight: 8 }} size={28} />
-        <View style={{ marginBottom: 8, flex: 1 }}>
-          <Text style={{ marginBottom: 8, flex: 1 }}>
-            <Text style={{ fontWeight: 'bold' }}>{data.user}</Text>{' '}
-            {data.comment}
-          </Text>
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-            }}>
-            <Text
-              style={{
-                ...fontStyle.helvetica,
-                fontSize: 12,
-                color: colors.black60,
-              }}>
-              Less than a minutes ago
-            </Text>
-            <TouchableOpacity
-              onPress={this._reply}
-              style={{ paddingHorizontal: 8, flex: 1 }}>
-              <Text style={{ ...fontStyle.helvetica, fontSize: 12 }}>
-                {this.state.showReply ? 'Cancel' : 'Reply'}
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-        <View style={{ marginLeft: 16 }}>
-          <TouchableOpacity style={{ marginBottom: 8 }}>
-            <Icon name="heart" size={20} color={colors.black50} />
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <Icon name="dots-horizontal" size={20} color={colors.black60} />
-          </TouchableOpacity>
-        </View>
-      </View>
-    )
-  }
 }
 
 interface CommentListType {
   style?: ViewStyle
   data?: Object
+  likeComments?: (props: any) => void
+  deleteComment?: (props: any) => void
   comment?: any
+  me: any
 }
 
-export default class Comment extends Component<CommentListType, any> {
+class Comment extends Component<CommentListType, any> {
   state = {
     showingComment: true,
     showReplies: false,
     showReply: false,
+    isModalOpen: false,
+    is_liked: this.props.comment.is_liked,
+    modalType:
+      this.props.comment.user_id === this.props.me.id ? 'delete' : 'report',
   }
+  tooltip = null
 
   _showComment = () => {
     if (!this.state.showingComment) {
@@ -100,6 +56,45 @@ export default class Comment extends Component<CommentListType, any> {
     this.setState({
       showingComment: !this.state.showingComment,
     })
+  }
+
+  _modalData = {
+    delete: {
+      title: 'Delete Comment',
+      subtitle: 'Are you sure you want to delete this comment?',
+      confirm: {
+        title: 'Delete',
+        action: () => {
+          this._closeModal()
+          const { comment, deleteComment } = this.props
+          deleteComment({ postId: comment.post_id, commentId: comment.id })
+        },
+      },
+      cancel: {
+        title: 'Cancel',
+        action: () => {
+          this._closeModal()
+        },
+      },
+    },
+    report: {
+      title: 'Report Comment',
+      subtitle: 'Are you sure you want to report this comment?',
+      confirm: {
+        title: 'Report',
+        action: () => {
+          const { comment, deleteComment } = this.props
+
+          this._closeModal()
+        },
+      },
+      cancel: {
+        title: 'Cancel',
+        action: () => {
+          this._closeModal()
+        },
+      },
+    },
   }
 
   _showReplies = () => {
@@ -114,43 +109,80 @@ export default class Comment extends Component<CommentListType, any> {
   }
 
   _reply = () => {
-    if (!this.state.showReply) {
-      this.setState({
-        showReply: this.state.showReply,
-      })
-    }
     this.setState({
       showReply: !this.state.showReply,
     })
   }
 
   _gettimeDif = comment => {
-    const timeDif = calculateTimeDifference(comment.created_at)
-    if (timeDif.year) {
-      return timeDif.year + ' years ago'
-    }
-    if (timeDif.month) {
-      return timeDif.month + ' months ago'
-    }
-    if (timeDif.week) {
-      return timeDif.week + ' weeks ago'
-    }
-    if (timeDif.days) {
-      return timeDif.days + ' days ago'
-    }
-    if (timeDif.minutes) {
-      return timeDif.minutes + ' minutes ago'
-    } else {
-      return ' Less than a minutes ago'
-    }
+    return countlongCreate(comment.created_at)
+  }
+  _handleLike = () => {
+    const { comment, likeComments } = this.props
+
+    likeComments({ postId: comment.post_id, commentId: comment.id })
+    this.setState({
+      is_liked: !this.state.is_liked,
+    })
   }
 
-  render() {
-    const { style, comment } = this.props
-    const timeDif = calculateTimeDifference(comment.created_at)
+  _closeModal = () => {
+    this.setState({ isModalOpen: false })
+  }
+  _openModal = () => {
+    if (this.tooltip) {
+      this.tooltip.toggleTooltip()
+    }
+    this.setState({ isModalOpen: true })
+  }
 
+  _toolTipAction = () => {
+    const { is_liked, isModalOpen, modalType } = this.state
+    if (modalType === 'delete') {
+      return (
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <Icon name="close" size={14} />
+          <TouchableOpacity onPress={this._openModal}>
+            <Text style={[fontStyle.helvetica, { marginLeft: 8 }]}>
+              {' '}
+              Delete{' '}
+            </Text>
+          </TouchableOpacity>
+        </View>
+      )
+    } else {
+      return (
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
+          <Icon name="close" size={14} />
+          <TouchableOpacity onPress={this._openModal}>
+            <Text style={[fontStyle.helvetica, { marginLeft: 8 }]}>
+              {' '}
+              Report{' '}
+            </Text>
+          </TouchableOpacity>
+        </View>
+      )
+    }
+  }
+  render() {
+    const { style, comment, me } = this.props
+    const { is_liked, isModalOpen, modalType } = this.state
     return (
       <View style={{ ...style }}>
+        <ModalConfirmation
+          isOpen={isModalOpen}
+          data={this._modalData[modalType]}
+        />
         <View style={{ flexDirection: 'row' }}>
           <AvatarImage
             style={{ marginRight: 8 }}
@@ -213,12 +245,34 @@ export default class Comment extends Component<CommentListType, any> {
             )}
           </View>
           <View style={{ marginLeft: 16 }}>
-            <TouchableOpacity style={{ marginBottom: 8 }}>
-              <Icon name="heart" size={20} color={colors.black50} />
+            <TouchableOpacity
+              style={{ marginBottom: 8 }}
+              onPress={this._handleLike}>
+              <Icon
+                name="heart"
+                size={20}
+                color={is_liked ? colors.red1 : colors.black50}
+              />
             </TouchableOpacity>
-            <TouchableOpacity>
+            <Tooltip
+              actionType="press"
+              ref={ref => {
+                this.tooltip = ref
+              }}
+              withOverlay={false}
+              containerStyle={{
+                borderStyle: 'solid',
+                borderWidth: 1,
+                borderColor: colors.black50,
+              }}
+              backgroundColor={colors.white}
+              popover={
+                <View style={{ backgroundColor: 'white' }}>
+                  {this._toolTipAction()}
+                </View>
+              }>
               <Icon name="dots-horizontal" size={20} color={colors.black60} />
-            </TouchableOpacity>
+            </Tooltip>
           </View>
         </View>
         {/* padding left based on avatar image size */}
@@ -232,7 +286,7 @@ export default class Comment extends Component<CommentListType, any> {
             }}>
             {comment.replies?.map((_comm, idx) => {
               return (
-                <Comment
+                <EnhanceComments
                   key={idx}
                   comment={_comm}
                   style={{
@@ -245,7 +299,30 @@ export default class Comment extends Component<CommentListType, any> {
         ) : (
           <></>
         )}
+        {this.state.showReply && (
+          <View
+            style={{
+              paddingLeft: 48,
+              marginTop: 8,
+              flex: 1,
+            }}>
+            <CommentWrite commentId={comment.id} postId={comment.post_id} />
+          </View>
+        )}
       </View>
     )
   }
 }
+
+const mapStateToProps = state => {
+  return {
+    me: state.auth?.data?.user || {},
+  }
+}
+
+const mapDispatchToProps = dispatch =>
+  bindActionCreators({ likeComments, deleteComment }, dispatch)
+
+const EnhanceComments = connect(mapStateToProps, mapDispatchToProps)(Comment)
+
+export default EnhanceComments
