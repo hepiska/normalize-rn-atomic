@@ -99,7 +99,7 @@ export default class PostDetail extends React.Component<PostListItemType, any> {
   }
 
   _showLikers = ({ postLikes }) => {
-    if (postLikes.length < 3) {
+    if (postLikes?.length < 3) {
       return postLikes.length
     }
     return 3
@@ -127,20 +127,6 @@ export default class PostDetail extends React.Component<PostListItemType, any> {
     const owner = { ...user, createdAt: post.published_at }
 
     const comments = { comments: post.comments, user: userAuth }
-    const editorsPick = [
-      {
-        title:
-          'Lorem ipsum dolor sit amet consectetur adipisicing elit. Eligendi ab sapiente voluptatem fugiat ea tenetur.',
-      },
-      {
-        title:
-          'Lorem ipsum dolor sit amet consectetur adipisicing elit. Harum rem iste quasi nihil eius eos modi at et.',
-      },
-      {
-        title:
-          'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Doloremque nisi quam quis. Lorem, ipsum.',
-      },
-    ]
 
     return (
       <View style={{ padding: 16 }}>
@@ -206,110 +192,117 @@ export default class PostDetail extends React.Component<PostListItemType, any> {
               flexDirection: 'row',
               alignItems: 'center',
             }}>
-            <TouchableOpacity style={{ flexDirection: 'row' }} onPress={null}>
-              {/* only showing 3 liked user */}
-              {/* still need improve */}
+            {postLikes && (
+              <TouchableOpacity style={{ flexDirection: 'row' }} onPress={null}>
+                {/* only showing 3 liked user */}
+                {/* still need improve */}
+                <View
+                  style={{
+                    width:
+                      postLikes?.length < 3 ? postLikes?.length * 16 : 3 * 16,
+                    height: 20,
+                  }}>
+                  {/* still need improve */}
+                  {postLikes?.length < 3
+                    ? postLikes?.map((value, key) => {
+                        const img = value.user.photo_url
+                        return (
+                          <AvatarImage
+                            key={`user-like-${key}`}
+                            size={20}
+                            imgUrl={img}
+                            style={{
+                              position: 'absolute',
+                              left: key * 12,
+                              borderColor: colors.white,
+                              borderWidth: 1,
+                            }}
+                          />
+                        )
+                      })
+                    : postLikes?.slice(0, 3).map((value, key) => {
+                        const img = value.user.photo_url
+                        return (
+                          <AvatarImage
+                            key={`user-like-${key}`}
+                            size={20}
+                            imgUrl={img}
+                            style={{
+                              position: 'absolute',
+                              left: key * 12,
+                              borderColor: colors.white,
+                              borderWidth: 1,
+                            }}
+                          />
+                        )
+                      })}
+                </View>
+              </TouchableOpacity>
+            )}
+            {postLikes && (
               <View
                 style={{
-                  width: postLikes.length < 3 ? postLikes.length * 16 : 3 * 16,
-                  height: 20,
+                  marginLeft: 8,
+                  flexDirection: 'row',
+                  alignItems: 'flex-end',
                 }}>
-                {/* still need improve */}
-                {postLikes.length < 3
-                  ? postLikes.map((value, key) => {
-                      const img = value.user.photo_url
-                      return (
-                        <AvatarImage
-                          key={`user-like-${key}`}
-                          size={20}
-                          imgUrl={img}
-                          style={{
-                            position: 'absolute',
-                            left: key * 12,
-                            borderColor: colors.white,
-                            borderWidth: 1,
-                          }}
-                        />
-                      )
-                    })
-                  : postLikes.slice(0, 3).map((value, key) => {
-                      const img = value.user.photo_url
-                      return (
-                        <AvatarImage
-                          key={`user-like-${key}`}
-                          size={20}
-                          imgUrl={img}
-                          style={{
-                            position: 'absolute',
-                            left: key * 12,
-                            borderColor: colors.white,
-                            borderWidth: 1,
-                          }}
-                        />
-                      )
-                    })}
-              </View>
-            </TouchableOpacity>
-            <View
-              style={{
-                marginLeft: 8,
-                flexDirection: 'row',
-                alignItems: 'flex-end',
-              }}>
-              <Text
-                style={{
-                  ...fontStyle.helvetica,
-                  fontSize: 12,
-                  marginRight: 4,
-                }}>
-                Liked by
-              </Text>
-              <TouchableOpacity onPress={null}>
                 <Text
                   style={{
-                    ...fontStyle.helveticaBold,
-                    fontWeight: '700',
+                    ...fontStyle.helvetica,
                     fontSize: 12,
                     marginRight: 4,
-                    color: colors.black100,
                   }}>
-                  {postLikes[0].user.username || postLikes[0].user.name}
+                  Liked by
                 </Text>
-              </TouchableOpacity>
-              {likeCount > 1 && (
-                <>
+                <TouchableOpacity onPress={null}>
                   <Text
                     style={{
-                      ...fontStyle.helvetica,
+                      ...fontStyle.helveticaBold,
+                      fontWeight: '700',
                       fontSize: 12,
                       marginRight: 4,
+                      color: colors.black100,
                     }}>
-                    and
+                    {postLikes[0]?.user.username || postLikes[0]?.user.name}
                   </Text>
-                  <TouchableOpacity onPress={null}>
+                </TouchableOpacity>
+                {likeCount > 1 && (
+                  <>
                     <Text
                       style={{
-                        ...fontStyle.helveticaBold,
-                        fontWeight: '700',
+                        ...fontStyle.helvetica,
                         fontSize: 12,
                         marginRight: 4,
                       }}>
-                      {`${likeCount - 1} others`}
+                      and
                     </Text>
-                  </TouchableOpacity>
-                </>
-              )}
-            </View>
+                    <TouchableOpacity onPress={null}>
+                      <Text
+                        style={{
+                          ...fontStyle.helveticaBold,
+                          fontWeight: '700',
+                          fontSize: 12,
+                          marginRight: 4,
+                        }}>
+                        {`${likeCount - 1} others`}
+                      </Text>
+                    </TouchableOpacity>
+                  </>
+                )}
+              </View>
+            )}
           </View>
         </View>
 
         <ProfileWritten data={owner} />
         <PostComment
           data={comments}
+          user={userAuth}
+          postId={post.id}
           style={{ marginTop: 16, marginBottom: 24 }}
         />
-        <EditorPicks data={editorsPick} />
-        <RelatedPost data={editorsPick} style={{ marginVertical: 32 }} />
+        {/* <EditorPicks data={editorsPick} /> */}
+        <RelatedPost style={{ marginVertical: 32 }} postId={post.id} />
       </View>
     )
   }

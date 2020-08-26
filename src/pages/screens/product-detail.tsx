@@ -252,7 +252,7 @@ class ProductListPage extends React.Component<any, any> {
 
   componentDidUpdate(prevProps) {
     const { product, isAuth, route } = this.props
-    if (product && product.id !== prevProps.product.id) {
+    if (product && prevProps.product && product.id !== prevProps.product.id) {
       this.logData()
     }
   }

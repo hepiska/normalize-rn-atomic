@@ -13,7 +13,7 @@ import List from '@components/layouts/list-header'
 import Amplitude from 'amplitude-js'
 import { capitalEachWord } from '@utils/helpers'
 import { fetchFeed } from '@modules/post-feed/action'
-import PostListItem from '@src/components/molecules/post-card'
+import PostCardJournal from '@src/components/molecules/post-card-journal'
 import { postListData } from '@hocs/data/post'
 import EmtyState from '@components/molecules/order-empty-state'
 import TopInsider from '@components/organisms/insider-top'
@@ -38,14 +38,18 @@ import { fontStyle } from '../commont-styles'
 import ImageAutoSchale from '@components/atoms/image-autoschale'
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
 
-const PostItem = postListData(PostListItem)
+const PostItem = postListData(PostCardJournal)
 
 const { width, height } = Dimensions.get('screen')
 
 const styles = StyleSheet.create({
   itemStyle: {
-    width: '100%',
     paddingBottom: 16,
+    //condition styles for vertical post-card-journal
+    width: '100%',
+    marginBottom: 32,
+    borderBottomColor: colors.black50,
+    borderBottomWidth: 1,
   },
   productCard: {
     width: width / 2 - 16,
@@ -187,7 +191,6 @@ class FeedOrg extends React.PureComponent<any, any> {
           <PostItem
             style={styles.itemStyle}
             key={`horizontal-list-post-${index}`}
-            fullscreen
             postId={item}
             idx={index}
           />
@@ -309,7 +312,7 @@ class FeedOrg extends React.PureComponent<any, any> {
         style={{
           width,
           flex: 1,
-          backgroundColor: colors.black10,
+          backgroundColor: colors.white,
         }}>
         {this.state.finishAnimation && firstLoading ? (
           <PostCardFull />

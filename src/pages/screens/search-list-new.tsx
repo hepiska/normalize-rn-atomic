@@ -111,7 +111,6 @@ class SearchList extends Component<any, any> {
         })
         batch(() => {
           this._fetchData(this.skip[activeTab] || 0)
-
           setSkip(newSkip)
         })
       }

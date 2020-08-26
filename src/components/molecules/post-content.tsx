@@ -5,7 +5,7 @@ import Html from 'react-native-render-html'
 import { fontStyle } from '@components/commont-styles'
 import Jumbotron from './post-content-jumbotron'
 import Oembed from './oembed'
-import HTMLView from 'react-native-htmlview'
+// import HTMLView from 'react-native-htmlview'
 import Config from 'react-native-config'
 import PostContentProduct from './post-content-product'
 const inserjumbotron = (content: string) => {
@@ -16,18 +16,24 @@ const renderJumbotron = props => <Jumbotron {...props} />
 const renderoembed = props => {
   if (props.url.includes(Config.SHONET_URI + '/products')) {
     const slug = props.url.replace(Config.SHONET_URI + '/products/', '')
-    return <PostContentProduct slug={slug} key={slug} />
+
+    return <PostContentProduct key={slug} slug={slug} />
   } else {
-    console.log('========', props)
-    return null
+    return <Text>sasasa</Text>
   }
 }
+
+// const renderoembed = props => (
+//   <View style={{ backgroundColor: 'red' }}>
+//     <Text>sasasa</Text>
+//   </View>
+// )
 
 const renderBlockQuote = (props, children, data, passProps) => {
   const content = passProps.html.match(
     /<figure class=\"media\"><blockquote (.|\n)*?<\/figure>/g,
   )
-  console.log('==blockquote====', passProps)
+  // console.log('==blockquote====', passProps)
 
   return null
 }
@@ -40,7 +46,7 @@ const PostContent = ({ content, style }: any) => {
         renderers={{
           jumbotron: renderJumbotron,
           oembed: renderoembed,
-          figure: renderBlockQuote,
+          // figure: renderBlockQuote,
         }}
         imagesMaxWidth={Dimensions.get('window').width - 32}
         tagsStyles={{

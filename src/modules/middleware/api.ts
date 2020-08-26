@@ -14,6 +14,7 @@ interface PayloadInterface {
   schema: any
   requestParams: any
   success: (normalizeData?: any, res?: any) => void
+  callback?: (data: any) => void
 }
 
 interface ActionType {
@@ -35,8 +36,11 @@ const api = ({ dispatch, getState }) => next => (action: ActionType) => {
     error,
     startNetwork,
     endNetwork,
+    callback,
   } = action.payload
-
+  if (callback) {
+    callback({ loading: true, status: 'pending' })
+  }
   if (startNetwork) {
     dispatch(startNetwork(label))
   }
@@ -52,6 +56,14 @@ const api = ({ dispatch, getState }) => next => (action: ActionType) => {
 
       if (success) {
         dispatch(success(normalizeData, res.data))
+        if (callback) {
+          callback({
+            loading: false,
+            status: 'success',
+            data: normalizeData,
+            rawData: res.data,
+          })
+        }
       }
 
       if (endNetwork) {
@@ -71,6 +83,13 @@ const api = ({ dispatch, getState }) => next => (action: ActionType) => {
         } else {
           dispatch(setGlobalError(err))
         }
+      }
+      if (callback) {
+        callback({
+          loading: false,
+          status: 'error',
+          error: err,
+        })
       }
       if (endNetwork) {
         dispatch(endNetwork('error', err))

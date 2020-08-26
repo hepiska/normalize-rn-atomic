@@ -108,6 +108,23 @@ export const getProductById = (id, type = 'id') => ({
   },
 })
 
+export const getPostProduct = (id, type = 'id', callback) => ({
+  type: API,
+  payload: {
+    url: '/products/' + id,
+    callback: callback,
+    requestParams: { params: { id_type: type } },
+    schema: schema.product,
+    success: data => {
+      return [
+        setBrandData(data.entities.brand),
+        setCategoryData(data.entities.category),
+        setProductData(data.entities.product),
+      ]
+    },
+  },
+})
+
 export const productApi = (params, url) => ({
   type: API,
   payload: {

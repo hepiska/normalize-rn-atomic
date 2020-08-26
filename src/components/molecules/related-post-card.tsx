@@ -2,7 +2,11 @@ import React, { Component } from 'react'
 import { Text, View, StyleSheet, ImageBackground } from 'react-native'
 import { fontStyle } from '../commont-styles'
 import { colors } from '@src/utils/constants'
-import { textElipsis as limitText } from '@utils/helpers'
+import {
+  textElipsis as limitText,
+  setImage,
+  countlongCreate,
+} from '@utils/helpers'
 
 const styles = StyleSheet.create({
   wrapper: {
@@ -24,7 +28,6 @@ const styles = StyleSheet.create({
   thumbWrap: {
     width: 130,
     height: 180,
-    backgroundColor: 'red',
     borderTopLeftRadius: 8,
     borderBottomLeftRadius: 8,
     overflow: 'hidden',
@@ -39,24 +42,25 @@ const styles = StyleSheet.create({
   },
 })
 
-export default class PostCard extends Component {
+export default class PostCard extends Component<any, any> {
   render() {
+    const { post, user } = this.props
     return (
       <View style={styles.wrapper}>
         <View style={styles.thumbWrap}>
           <ImageBackground
             style={{ width: 130, height: 180 }}
             resizeMode="cover"
-            source={require('@src/assets/placeholder/placeholder2.jpg')}
-            // source={
-            //   typeof img === 'string'
-            //     ? {
-            //         uri: changeImageUri(img, {
-            //           width: width * 2,
-            //         }),
-            //       }
-            //     : require('@src/assets/placeholder/bumper.png')
-            // }
+            // source={require('@src/assets/placeholder/placeholder2.jpg')}
+            source={
+              typeof post.image_url === 'string'
+                ? {
+                    uri: setImage(post.image_url, {
+                      width: 130 * 2,
+                    }),
+                  }
+                : require('@src/assets/placeholder/placeholder2.jpg')
+            }
           />
         </View>
         <View style={{ padding: 16, flex: 1 }}>
@@ -70,30 +74,26 @@ export default class PostCard extends Component {
               <ImageBackground
                 style={{ width: 30, height: 30 }}
                 resizeMode="cover"
-                source={require('@src/assets/placeholder/placeholder2.jpg')}
-                // source={
-                //   typeof img === 'string'
-                //     ? {
-                //         uri: changeImageUri(img, {
-                //           width: width * 2,
-                //         }),
-                //       }
-                //     : require('@src/assets/placeholder/bumper.png')
-                // }
+                source={
+                  typeof user.image_url === 'string'
+                    ? {
+                        uri: setImage(user.image_url, {
+                          width: 40 * 2,
+                        }),
+                      }
+                    : require('@src/assets/placeholder/placeholder2.jpg')
+                }
               />
             </View>
             <Text style={{ ...fontStyle.helveticaBold, fontSize: 16 }}>
-              The Shonet
+              {user.name}
             </Text>
           </View>
           <Text style={{ ...fontStyle.helvetica, fontSize: 16 }}>
-            {limitText(
-              'Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste exercitationem nulla minus non nesciunt culpa accusantium libero officiis necessitatibus perferendis labore asperiores commodi earum natus ab reprehenderit, sequi debitis placeat explicabo magnam, similique voluptatem. Saepe quos iste nisi, veritatis beatae atque in autem ea mollitia laudantium commodi iure repudiandae numquam debitis eum magni fugit odio tenetur delectus laborum. Architecto adipisci nihil cumque corporis debitis earum unde tempora, harum possimus iusto dicta expedita animi veritatis sunt, deleniti soluta alias? Magni expedita commodi voluptatum. Qui aliquam quos iusto deleniti, dolore doloribus tempora?',
-              80,
-            )}
+            {limitText(post.title, 80)}
           </Text>
           <Text style={{ paddingVertical: 16, color: colors.black70 }}>
-            3 days ago
+            {countlongCreate(post.published_at)}
           </Text>
         </View>
       </View>
