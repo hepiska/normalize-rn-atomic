@@ -45,9 +45,7 @@ class PostComment extends Component<CommentsType, any> {
 
     return (
       <View style={{ ...style }}>
-        <TouchableOpacity
-          disabled={comments?.length === 0}
-          onPress={this._showComment}>
+        <TouchableOpacity disabled={!comments} onPress={this._showComment}>
           <Text
             style={{
               ...fontStyle.helvetica,
@@ -55,7 +53,7 @@ class PostComment extends Component<CommentsType, any> {
               color: colors.black80,
               marginBottom: 8,
             }}>
-            All Comments ({comments?.length})
+            All Comments ({comments ? comments?.length : '0'})
           </Text>
         </TouchableOpacity>
         {this.state.showingComment ? (

@@ -6,6 +6,7 @@ import { PressAbbleDiv } from '../atoms/basic'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import AvatarImage from '../atoms/avatar-image'
 import { calculateDay } from '@src/utils/helpers'
+import HTML from 'react-native-render-html'
 
 interface ProfileType {
   small?: boolean
@@ -36,7 +37,7 @@ export default class ProfileWritten extends Component<ProfileType, any> {
       )
     }
 
-    const CardNormal = ({ data }) => {
+    const CardNormal = ({ user }) => {
       return (
         <View
           style={{
@@ -49,7 +50,7 @@ export default class ProfileWritten extends Component<ProfileType, any> {
           }}>
           <AvatarImage
             size={100}
-            imgUrl={data.photo_url}
+            imgUrl={user.photo_url}
             style={{ marginRight: 16 }}
           />
           <View style={{ flex: 1, alignItems: 'flex-start' }}>
@@ -75,12 +76,32 @@ export default class ProfileWritten extends Component<ProfileType, any> {
                     ...fontStyle.helveticaBold,
                     fontSize: 20,
                   }}>
-                  {data?.username}
+                  {user?.username}
                 </Text>
               </View>
               <Icon name="check-circle" size={18} color={'#e0b97c'} />
             </View>
-            <Text
+            <HTML
+              html={`<bio>${user.biography || 'Welcome to my page'}</bio>`}
+              renderers={{
+                // eslint-disable-next-line react/display-name
+                bio: (htmlAttribs, children, convertedCSSStyles, passProps) => {
+                  return (
+                    <Text
+                      key={`user-biography-${htmlAttribs}`}
+                      style={{
+                        ...fontStyle.helvetica,
+                        fontSize: 14,
+                        paddingVertical: 16,
+                        color: colors.black70,
+                      }}>
+                      {passProps?.rawChildren[0]?.children[0].data || ''}
+                    </Text>
+                  )
+                },
+              }}
+            />
+            {/* <Text
               style={{
                 paddingVertical: 16,
                 ...fontStyle.helveticaThin,
@@ -88,8 +109,8 @@ export default class ProfileWritten extends Component<ProfileType, any> {
                 fontSize: 14,
                 color: colors.black80,
               }}>
-              {data?.biography}
-            </Text>
+              {user?.biography}
+            </Text> */}
             <ActionButton />
           </View>
         </View>
@@ -164,6 +185,6 @@ export default class ProfileWritten extends Component<ProfileType, any> {
     if (small) {
       return <CardSmall data={data} />
     }
-    return <CardNormal data={data} />
+    return <CardNormal user={data} />
   }
 }
