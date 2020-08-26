@@ -42,7 +42,9 @@ const PostDetailPage = props => {
         <NavbarTop title={post?.title || title} leftContent={['back']} />
         <List
           data={activePost}
+          showScrollIndicator={false}
           renderItem={_renderItem}
+          showsVerticalScrollIndicator={false}
           keyExtractor={_keyExtractor}
         />
       </>

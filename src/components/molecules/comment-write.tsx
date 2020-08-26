@@ -80,8 +80,13 @@ const WriteComment = ({ me, postId, commentId, loading }) => {
 }
 
 const mapStateToProps = state => {
+  if (state.auth.data.user) {
+    return {
+      me: state.user.data[state.auth.data.user.id],
+      loading: state.post.commentLoading,
+    }
+  }
   return {
-    me: state.user.data[state.auth.data.user.id],
     loading: state.post.commentLoading,
   }
 }
