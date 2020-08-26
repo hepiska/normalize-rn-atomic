@@ -41,6 +41,9 @@ import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
 import RecommendList from '../molecules/recommend-follow-list'
 import { makeGetFeedPosts } from '@src/modules/post/selector'
 
+const PostItemJournal = postListData(PostCardJournal)
+const PostItemCollection = postListData(PostCardCollection)
+
 const { width, height } = Dimensions.get('screen')
 
 const styles = StyleSheet.create({
@@ -158,21 +161,29 @@ class FeedOrg extends React.PureComponent<any, any> {
   }
 
   _renderPostCard = (item, index) => {
-    let PostItem
     if (item.article_type === 'J') {
-      PostItem = postListData(PostCardJournal)
+      // PostItem = postListData(PostCardJournal)
+      return (
+        <PostItemJournal
+          style={styles.itemStyle}
+          key={`horizontal-list-post-${index}`}
+          fullscreen
+          postId={item.id}
+          idx={index}
+        />
+      )
     } else {
-      PostItem = postListData(PostCardCollection)
+      // PostItem = postListData(PostCardCollection)
+      return (
+        <PostItemCollection
+          style={styles.itemStyle}
+          key={`horizontal-list-post-${index}`}
+          fullscreen
+          postId={item.id}
+          idx={index}
+        />
+      )
     }
-    return (
-      <PostItem
-        style={styles.itemStyle}
-        key={`horizontal-list-post-${index}`}
-        fullscreen
-        postId={item.id}
-        idx={index}
-      />
-    )
   }
 
   _renderItem = ({ item, index }) => {
