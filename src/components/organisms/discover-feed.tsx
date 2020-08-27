@@ -13,7 +13,7 @@ import List from '@components/layouts/list-header'
 import Amplitude from 'amplitude-js'
 import { capitalEachWord } from '@utils/helpers'
 import { fetchFeed } from '@modules/post-feed/action'
-import PostCardJournal from '@src/components/molecules/post-card-journal'
+import PostCard from '@src/components/molecules/post-card-collection'
 import { postListData } from '@hocs/data/post'
 import EmtyState from '@components/molecules/order-empty-state'
 import TopInsider from '@components/organisms/insider-top'
@@ -24,16 +24,18 @@ import { colors } from '@utils/constants'
 import { Instagram } from 'react-content-loader/native'
 import PostCardFull from '@components/atoms/loaders/post-card-full'
 
-const PostItem = postListData(PostCardJournal)
+const PostItem = postListData(PostCard)
 
 const styles = StyleSheet.create({
   itemStyle: {
+    //condition styles for vertical post-card-collection
     paddingBottom: 16,
-    //condition styles for vertical post-card-journal
-    width: '100%',
     marginBottom: 32,
-    borderBottomColor: colors.black50,
-    borderBottomWidth: 1,
+    //condition styles for vertical post-card-journal
+    // marginBottom: 32,
+    // width: '100%',
+    // borderBottomColor: colors.black50,
+    // borderBottomWidth: 1,
   },
 })
 
