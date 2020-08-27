@@ -24,22 +24,13 @@ import HorizontalListLookBook from '@components/organisms/horzontal-list-lookboo
 import { colors } from '@utils/constants'
 import { Instagram } from 'react-content-loader/native'
 import PostCardFull from '@components/atoms/loaders/post-card-full'
-import HorizontalList from './horizontal-list'
-import { fetchRecommendedUser } from '@src/modules/user/action'
-import { makeGetRecommendedUserOrder } from '@src/modules/user/selector'
-import { getTrendingProduct } from '@src/modules/product/action'
 import { productListData } from '@src/hocs/data/product'
 import ProductCard from '@components/molecules/product-card-new'
-import {
-  makeGetRecommendedBeautyOrder,
-  makeGetRecommendedFashionOrder,
-} from '@src/modules/product/selector'
-import { Font } from '../atoms/basic'
-import { fontStyle } from '../commont-styles'
 import ImageAutoSchale from '@components/atoms/image-autoschale'
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
 import RecommendList from '../molecules/recommend-follow-list'
 import { makeGetFeedPosts } from '@src/modules/post/selector'
+import ProductRecommendation from './product-recommendation'
 
 const PostItemJournal = postListData(PostCardJournal)
 const PostItemCollection = postListData(PostCardCollection)
@@ -101,20 +92,6 @@ class FeedOrg extends React.PureComponent<any, any> {
     this.props.fetchFeed(params)
   }
 
-  _fetchUserRecommendation = () => {
-    this.props.fetchRecommendedUser()
-  }
-
-  _fetchProductRecommendation = type => {
-    this.props.getTrendingProduct(
-      {
-        limit: 6,
-        offset: 0,
-      },
-      type,
-    )
-  }
-
   _fetchMore = () => {
     if (!this.props.loading) {
       const newskip = this.skip + 1
@@ -145,10 +122,6 @@ class FeedOrg extends React.PureComponent<any, any> {
     this.skip = 0
     this.lastskip = 0
     this._fetchData(this.skip, null)
-    // user recommendation, beauty product recommendation, and fashion product recommendation
-    this._fetchUserRecommendation()
-    this._fetchProductRecommendation('fashion')
-    this._fetchProductRecommendation('beauty')
   }
 
   _emptyState = () => (
@@ -200,12 +173,6 @@ class FeedOrg extends React.PureComponent<any, any> {
   }
 
   _renderItem = ({ item, index }) => {
-    const {
-      recommendedUserOrder,
-      recommendedBeautyOrder,
-      recommendedFashionOrder,
-    } = this.props
-
     if (index === 0) {
       return (
         <View>
@@ -219,13 +186,6 @@ class FeedOrg extends React.PureComponent<any, any> {
             />
           </TouchableWithoutFeedback>
           {this._renderPostCard(item, index)}
-          {/* <PostItem
-            style={styles.itemStyle}
-            key={`horizontal-list-post-${index}`}
-            fullscreen
-            postId={item.id}
-            idx={index}
-          /> */}
         </View>
       )
     }
@@ -234,14 +194,8 @@ class FeedOrg extends React.PureComponent<any, any> {
         <View>
           {/* <TopInsider navigation={this.props.navigation} /> */}
           {this._renderPostCard(item, index)}
-          {/* <PostItem
-            style={styles.itemStyle}
-            key={`horizontal-list-post-${index}`}
-            postId={item.id}
-            idx={index}
-          /> */}
           {/* notes: recommended user horizontal list here using recommendedUserOrder */}
-          <RecommendList data={recommendedUserOrder} />
+          <RecommendList />
         </View>
       )
     }
@@ -249,33 +203,11 @@ class FeedOrg extends React.PureComponent<any, any> {
       return (
         <View>
           {/* <HorizontalListLookBook navigation={this.props.navigation} /> */}
-
-          {/* <PostItem
-            style={styles.itemStyle}
-            key={`horizontal-list-post-${index}`}
-            fullscreen
-            postId={item.id}
-            idx={index}
-          /> */}
           {this._renderPostCard(item, index)}
-          <Font
-            size={24}
-            fontFamily={fontStyle.playfairBold.fontFamily}
-            textAlign="center"
-            _margin="20px 0px 25px 0px">
-            Recommended Fashion Product
-          </Font>
-          <View style={styles.productWrapper}>
-            {recommendedFashionOrder.map((_item, _index) => {
-              return (
-                <ProductWithCardHoc
-                  productId={_item}
-                  key={'feed-prod-fashion-list' + _item + _index}
-                  style={styles.productCard}
-                />
-              )
-            })}
-          </View>
+          <ProductRecommendation
+            category="fashion"
+            title="Recommended Fashion Product"
+          />
         </View>
       )
     }
@@ -284,44 +216,16 @@ class FeedOrg extends React.PureComponent<any, any> {
       return (
         <View>
           {/* <ProductTrending navigation={this.props.navigation} /> */}
-          {/* <PostItem
-            style={styles.itemStyle}
-            key={`horizontal-list-post-${index}`}
-            fullscreen
-            postId={item.id}
-            idx={index}
-          /> */}
           {this._renderPostCard(item, index)}
-          <Font
-            size={24}
-            fontFamily={fontStyle.playfairBold.fontFamily}
-            textAlign="center"
-            _margin="20px 0px 25px 0px">
-            Recommended Beauty Product
-          </Font>
-          <View style={styles.productWrapper}>
-            {recommendedBeautyOrder.map((_item, _index) => {
-              return (
-                <ProductWithCardHoc
-                  productId={_item}
-                  key={'feed-prod-beauty-list' + _item + _index}
-                  style={styles.productCard}
-                />
-              )
-            })}
-          </View>
+          <ProductRecommendation
+            category="beauty"
+            title="Recommended Beauty Product"
+          />
         </View>
       )
     }
 
     return this._renderPostCard(item, index)
-    // <PostItem
-    //   style={styles.itemStyle}
-    //   key={`horizontal-list-post-${index}`}
-    //   fullscreen
-    //   postId={item.id}
-    //   idx={index}
-    // />
   }
 
   _hanleScroll = e => {
@@ -400,15 +304,9 @@ const mapStateToProps = state => {
     posts: getFeedPosts(state),
     loading: state.feed.loading,
     pagination: state.feed.pagination,
-    recommendedUserOrder: makeGetRecommendedUserOrder()(state),
-    recommendedBeautyOrder: makeGetRecommendedBeautyOrder()(state),
-    recommendedFashionOrder: makeGetRecommendedFashionOrder()(state),
   }
 }
 const mapDispatchToProps = dispatch =>
-  bindActionCreators(
-    { fetchFeed, fetchRecommendedUser, getTrendingProduct },
-    dispatch,
-  )
+  bindActionCreators({ fetchFeed }, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(FeedOrg)

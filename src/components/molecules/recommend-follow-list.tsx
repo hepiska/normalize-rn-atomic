@@ -1,12 +1,23 @@
 import React, { Component } from 'react'
-import { Text, View, FlatList, TouchableOpacity } from 'react-native'
+import {
+  Text,
+  View,
+  FlatList,
+  TouchableOpacity,
+  InteractionManager,
+} from 'react-native'
 import FollowCard from '@src/components/molecules/recommend-follow-card'
 import { colors } from '@src/utils/constants'
 import { fontStyle } from '../commont-styles'
 import { userListData } from '@src/hocs/data/user'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import { makeGetRecommendedUserOrder } from '@src/modules/user/selector'
+import { fetchRecommendedUser } from '@src/modules/user/action'
 
 interface RecommendUserListType {
-  data?: number[]
+  fetchRecommendedUser?: any
+  recommendedUserOrder?: any
 }
 
 const Card = userListData(FollowCard)
@@ -23,13 +34,25 @@ const _renderItem = ({ item }) => {
 const _separator = () => {
   return <View style={{ width: 16 }} />
 }
-export default class RecommendList extends Component<
-  RecommendUserListType,
-  any
-> {
+class RecommendList extends Component<RecommendUserListType, any> {
+  componentDidMount() {
+    InteractionManager.runAfterInteractions(() => {
+      // this.setState({ finishAnimation: true })
+      this._freshfetch()
+    })
+  }
+
+  _freshfetch() {
+    this._fetchUserRecommendation()
+  }
+
+  _fetchUserRecommendation = () => {
+    this.props.fetchRecommendedUser()
+  }
+
   render() {
     // const data = [{ title: '1' }, { title: '2' }, { title: '3' }]
-    const { data } = this.props
+    const { recommendedUserOrder } = this.props
     return (
       <View style={{ alignItems: 'center', marginBottom: 30 }}>
         <Text
@@ -44,7 +67,7 @@ export default class RecommendList extends Component<
           Recommended to Follow{' '}
         </Text>
         <FlatList
-          data={data}
+          data={recommendedUserOrder}
           ItemSeparatorComponent={_separator}
           showsHorizontalScrollIndicator={false}
           horizontal
@@ -61,3 +84,21 @@ export default class RecommendList extends Component<
     )
   }
 }
+
+const mapStateToProps = state => {
+  const getRecommendedUserOrder = makeGetRecommendedUserOrder()
+  return {
+    recommendedUserOrder: getRecommendedUserOrder(state),
+  }
+}
+
+const mapDispatchToProps = dispatch => {
+  return bindActionCreators(
+    {
+      fetchRecommendedUser,
+    },
+    dispatch,
+  )
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(RecommendList)
