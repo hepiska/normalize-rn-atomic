@@ -162,7 +162,7 @@ class FeedOrg extends React.PureComponent<any, any> {
   }
 
   _renderPostCard = (item, index) => {
-    if (item.article_type === 'J') {
+    if (item.post_type === 'article') {
       // PostItem = postListData(PostCardJournal)
       return (
         <PostItemJournal
@@ -173,10 +173,20 @@ class FeedOrg extends React.PureComponent<any, any> {
           idx={index}
         />
       )
-    } else {
+    } else if (item.post_type === 'collection') {
       // PostItem = postListData(PostCardCollection)
       return (
         <PostItemCollection
+          style={styles.itemStyle}
+          key={`horizontal-list-post-${index}`}
+          fullscreen
+          postId={item.id}
+          idx={index}
+        />
+      )
+    } else {
+      return (
+        <PostItemJournal
           style={styles.itemStyle}
           key={`horizontal-list-post-${index}`}
           fullscreen
