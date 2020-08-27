@@ -14,6 +14,7 @@ import AvatarImage from '../atoms/avatar-image'
 import CommentWrite from './comment-write'
 import { likeComments, deleteComment } from '@modules/post/action'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
+import { textElipsis as textLimit } from '@utils/helpers'
 import ModalConfirmation from '@components/organisms/modal-confirmation'
 import Tooltip from 'rn-tooltip'
 import { calculateTimeDifference, countlongCreate } from '@utils/helpers'
@@ -33,6 +34,7 @@ interface CommentListType {
   deleteComment?: (props: any) => void
   comment?: any
   me: any
+  isCard: boolean
 }
 
 class Comment extends Component<CommentListType, any> {
@@ -130,6 +132,7 @@ class Comment extends Component<CommentListType, any> {
     this.setState({ isModalOpen: false })
   }
   _openModal = () => {
+    console.log(this.tooltip)
     if (this.tooltip) {
       this.tooltip.toggleTooltip()
     }
@@ -140,43 +143,70 @@ class Comment extends Component<CommentListType, any> {
     const { is_liked, isModalOpen, modalType } = this.state
     if (modalType === 'delete') {
       return (
-        <View
+        <TouchableOpacity
+          onPress={this._openModal}
           style={{
+            backgroundColor: 'red',
             flexDirection: 'row',
             justifyContent: 'center',
             alignItems: 'center',
           }}>
           <Icon name="close" size={14} />
-          <TouchableOpacity onPress={this._openModal}>
-            <Text style={[fontStyle.helvetica, { marginLeft: 8 }]}>
-              {' '}
-              Delete{' '}
-            </Text>
-          </TouchableOpacity>
-        </View>
+          <Text style={[fontStyle.helvetica, { marginLeft: 8 }]}> Delete </Text>
+        </TouchableOpacity>
       )
     } else {
       return (
-        <View
+        <TouchableOpacity
+          onPress={this._openModal}
           style={{
+            backgroundColor: 'red',
             flexDirection: 'row',
             justifyContent: 'center',
             alignItems: 'center',
           }}>
           <Icon name="close" size={14} />
-          <TouchableOpacity onPress={this._openModal}>
-            <Text style={[fontStyle.helvetica, { marginLeft: 8 }]}>
-              {' '}
-              Report{' '}
-            </Text>
-          </TouchableOpacity>
-        </View>
+          <Text style={[fontStyle.helvetica, { marginLeft: 8 }]}> Delete </Text>
+        </TouchableOpacity>
       )
     }
   }
   render() {
-    const { style, comment, me } = this.props
+    const { style, comment, me, isCard } = this.props
     const { is_liked, isModalOpen, modalType } = this.state
+
+    const SimpleComment = () => {
+      return (
+        <View
+          style={{ ...style, flexDirection: 'row', alignItems: 'flex-start' }}>
+          <Text
+            style={{
+              flex: 1,
+              ...fontStyle.helveticaBold,
+              fontSize: 12,
+              lineHeight: 16,
+            }}>
+            {comment.user.name}{' '}
+            <Text style={{ ...fontStyle.helvetica, color: colors.black70 }}>
+              {textLimit(comment.content, 117)}
+            </Text>
+          </Text>
+          <TouchableOpacity
+            onPress={this._handleLike}
+            style={{ marginLeft: 10 }}>
+            <Icon
+              name={'heart'}
+              size={16}
+              color={is_liked ? colors.red1 : colors.black50}
+            />
+          </TouchableOpacity>
+        </View>
+      )
+    }
+
+    if (isCard) {
+      return <SimpleComment />
+    }
     return (
       <View style={{ ...style }}>
         <ModalConfirmation

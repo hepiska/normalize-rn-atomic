@@ -13,6 +13,7 @@ import Comment from '../molecules/comment-post'
 import { commentsData } from '@hocs/data/post'
 import { connect } from 'react-redux'
 import CommentWrite from './comment-write'
+import { navigate } from '@src/root-navigation'
 
 const CommentWithData = commentsData(Comment)
 
@@ -22,6 +23,7 @@ interface CommentsType {
   user: any
   comments: any
   postId: number
+  isCard: boolean
 }
 
 class PostComment extends Component<CommentsType, any> {
@@ -40,46 +42,87 @@ class PostComment extends Component<CommentsType, any> {
     })
   }
 
+  _goToPost = () => {
+    const { postId } = this.props
+
+    navigate('Screens', {
+      screen: 'PostDetail',
+      params: { postId: postId },
+    })
+  }
+
   render() {
-    const { style, comments } = this.props
+    const { style, comments, isCard } = this.props
 
     return (
       <View style={{ ...style }}>
-        <TouchableOpacity
-          disabled={comments?.length === 0}
-          onPress={this._showComment}>
+        {isCard ? (
           <Text
-            style={{
-              ...fontStyle.helvetica,
-              fontWeight: '300',
-              color: colors.black80,
-              marginBottom: 8,
-            }}>
-            All Comments ({comments?.length})
+            onPress={this._goToPost}
+            style={{ fontSize: 12, paddingHorizontal: 16 }}>
+            View all {comments ? comments?.length : '0'} comments
           </Text>
-        </TouchableOpacity>
-        {this.state.showingComment ? (
+        ) : (
+          <TouchableOpacity disabled={!comments} onPress={this._showComment}>
+            <Text
+              style={{
+                ...fontStyle.helvetica,
+                fontWeight: '300',
+                color: colors.black80,
+                marginBottom: 8,
+              }}>
+              All Comments ({comments ? comments?.length : '0'})
+            </Text>
+          </TouchableOpacity>
+        )}
+
+        {this.state.showingComment && (
           <View
             style={{
               marginVertical: 8,
               // backgroundColor: 'red',
             }}>
             {comments?.map((res, idx) => {
+              const isCardMargin = isCard ? 8 : 16
               return (
                 <CommentWithData
+                  isCard={isCard}
                   key={'comment' + res + idx}
                   commentId={res}
                   style={{
-                    marginBottom: idx === comments?.length - 1 ? 0 : 16,
+                    marginBottom:
+                      idx === comments?.length - 1 ? 0 : isCardMargin,
                   }}
                 />
               )
             })}
           </View>
-        ) : (
-          <></>
         )}
-        <CommentWrite postId={this.props.postId} />
+        {isCard && (
+          <View
+            style={{
+              marginVertical: 8,
+              paddingHorizontal: 16,
+              // backgroundColor: 'red',
+            }}>
+            {comments?.map((res, idx) => {
+              const isCardMargin = isCard ? 8 : 16
+              return (
+                <CommentWithData
+                  isCard={isCard}
+                  key={'comment' + res + idx}
+                  commentId={res}
+                  style={{
+                    marginBottom:
+                      idx === comments?.length - 1 ? 0 : isCardMargin,
+                  }}
+                />
+              )
+            })}
+          </View>
+        )}
+
+        <CommentWrite isCard={isCard} postId={this.props.postId} />
       </View>
     )
   }

@@ -48,12 +48,14 @@ const { width, height } = Dimensions.get('screen')
 
 const styles = StyleSheet.create({
   itemStyle: {
+    //condition styles for vertical post-card-collection
     paddingBottom: 16,
-    //condition styles for vertical post-card-journal
-    width: '100%',
     marginBottom: 32,
-    borderBottomColor: colors.black50,
-    borderBottomWidth: 1,
+    //condition styles for vertical post-card-journal
+    // marginBottom: 32,
+    // width: '100%',
+    // borderBottomColor: colors.black50,
+    // borderBottomWidth: 1,
   },
   productCard: {
     width: width / 2 - 16,
@@ -390,16 +392,19 @@ class FeedOrg extends React.PureComponent<any, any> {
   }
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = state => {
   // posts: state.feed.order,
   // NOTES: NEED CONFIRM WITH MAS EGO ABOUT PERFORMACE IMPACT
-  posts: makeGetFeedPosts()(state),
-  loading: state.feed.loading,
-  pagination: state.feed.pagination,
-  recommendedUserOrder: makeGetRecommendedUserOrder()(state),
-  recommendedBeautyOrder: makeGetRecommendedBeautyOrder()(state),
-  recommendedFashionOrder: makeGetRecommendedFashionOrder()(state),
-})
+  const getFeedPosts = makeGetFeedPosts()
+  return {
+    posts: getFeedPosts(state),
+    loading: state.feed.loading,
+    pagination: state.feed.pagination,
+    recommendedUserOrder: makeGetRecommendedUserOrder()(state),
+    recommendedBeautyOrder: makeGetRecommendedBeautyOrder()(state),
+    recommendedFashionOrder: makeGetRecommendedFashionOrder()(state),
+  }
+}
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     { fetchFeed, fetchRecommendedUser, getTrendingProduct },
