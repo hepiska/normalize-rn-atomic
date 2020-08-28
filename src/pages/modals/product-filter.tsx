@@ -29,11 +29,11 @@ import {
 
 const { height, width } = Dimensions.get('screen')
 
-const FilterBrandOrgData = collectionFilterCategoriesData(FilterCategoryOrg)
+const FilterCategoryOrgData = collectionFilterCategoriesData(FilterCategoryOrg)
 
 const ProductFilterActionWithData = productFilterActionData(ProductFilterAction)
 
-const ProductFilterWithData = productFilterPriceData(FilterPriceOrg)
+const ProductFilterPriceWithData = productFilterPriceData(FilterPriceOrg)
 
 const Tab = createMaterialTopTabNavigator()
 
@@ -86,7 +86,12 @@ const Header = props => {
   )
 }
 
-const snapPoints = [Math.ceil(height * 0.92), Math.max(360, height * 0.5), 0]
+const snapPoints = [
+  Math.ceil(height * 0.92),
+  Math.max(360, height * 0.5),
+  10,
+  0,
+]
 const totalheaderheight = 90
 
 class ProductFilterBottomSheet extends React.Component<any, any> {
@@ -99,10 +104,10 @@ class ProductFilterBottomSheet extends React.Component<any, any> {
   componentDidMount() {
     InteractionManager.runAfterInteractions(() => {
       this.setState({ finishAnimation: true })
+      setTimeout(() => {
+        this.bottomSheet.snapTo(0)
+      }, 300)
     })
-    setTimeout(() => {
-      this.bottomSheet.snapTo(0)
-    }, 300)
   }
 
   componentWillUnmount() {
@@ -135,9 +140,9 @@ class ProductFilterBottomSheet extends React.Component<any, any> {
           initialRouteName={route.params.section}
           lazy
           tabBar={props => <TabMenuCursor {...props} />}>
-          <Tab.Screen name="Category" component={FilterBrandOrgData} />
+          <Tab.Screen name="Category" component={FilterCategoryOrgData} />
           <Tab.Screen name="Brand" component={FilterBrandOrg} />
-          <Tab.Screen name="Price" component={ProductFilterWithData} />
+          <Tab.Screen name="Price" component={ProductFilterPriceWithData} />
         </Tab.Navigator>
         <ProductFilterActionWithData style={{ bottom: totalheaderheight }} />
       </View>
