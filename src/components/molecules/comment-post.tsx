@@ -146,7 +146,6 @@ class Comment extends Component<CommentListType, any> {
         <TouchableOpacity
           onPress={this._openModal}
           style={{
-            backgroundColor: 'red',
             flexDirection: 'row',
             justifyContent: 'center',
             alignItems: 'center',
@@ -160,7 +159,6 @@ class Comment extends Component<CommentListType, any> {
         <TouchableOpacity
           onPress={this._openModal}
           style={{
-            backgroundColor: 'red',
             flexDirection: 'row',
             justifyContent: 'center',
             alignItems: 'center',
@@ -178,10 +176,14 @@ class Comment extends Component<CommentListType, any> {
     const SimpleComment = () => {
       return (
         <View
-          style={{ ...style, flexDirection: 'row', alignItems: 'flex-start' }}>
+          style={{
+            ...style,
+            width: '100%',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+          }}>
           <Text
             style={{
-              flex: 1,
               ...fontStyle.helveticaBold,
               fontSize: 12,
               lineHeight: 16,
@@ -213,7 +215,7 @@ class Comment extends Component<CommentListType, any> {
           isOpen={isModalOpen}
           data={this._modalData[modalType]}
         />
-        <View style={{ flexDirection: 'row' }}>
+        <View style={{ flexDirection: 'row', width: '100%' }}>
           <AvatarImage
             style={{ marginRight: 8 }}
             size={40}

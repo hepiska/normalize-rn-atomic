@@ -67,6 +67,7 @@ interface PostListItemType {
   style?: any
   isAuth?: boolean
   userAuth?: any
+  isCard?: boolean
 }
 
 const JournalCard = ({
@@ -77,7 +78,12 @@ const JournalCard = ({
   style,
   onPress,
   onUserPress,
+  isCard,
 }: any) => {
+  const category = post.category.name
+    ? post.category.name.toUpperCase()
+    : 'UNCATEGORIZED'
+
   return (
     <View style={{ ...styles.container, ...style }} onLayout={onLayout}>
       {width && (
@@ -109,21 +115,22 @@ const JournalCard = ({
           }}>
           <View style={{ flexDirection: 'row', flex: 1 }}>
             <Text style={styles.cat}>
-              {'Fashion'.toUpperCase()}{' '}
-              <Text style={{ fontStyle: 'italic' }}>by</Text>{' '}
+              {category} <Text style={{ fontStyle: 'italic' }}>by</Text>{' '}
             </Text>
             <TouchableOpacity onPress={onUserPress}>
               <Text style={styles.cat}>{user.username.toUpperCase()}</Text>
             </TouchableOpacity>
           </View>
-          <Text
-            style={{
-              ...fontStyle.helveticaThin,
-              fontSize: 10,
-              color: colors.black80,
-            }}>
-            {calculateDay(post.published_at)}
-          </Text>
+          {!isCard && (
+            <Text
+              style={{
+                ...fontStyle.helveticaThin,
+                fontSize: 10,
+                color: colors.black80,
+              }}>
+              {calculateDay(post.published_at)}
+            </Text>
+          )}
         </View>
         <Text
           style={{
@@ -131,10 +138,21 @@ const JournalCard = ({
             fontSize: 18,
             lineHeight: 25,
             color: colors.black100,
-            marginBottom: 32,
+            marginBottom: isCard ? 8 : 32,
           }}>
           {post.title}
         </Text>
+        {isCard && (
+          <Text
+            style={{
+              ...fontStyle.helveticaThin,
+              fontSize: 10,
+              color: colors.black80,
+              marginBottom: 32,
+            }}>
+            {calculateDay(post.published_at)}
+          </Text>
+        )}
 
         <TouchableOpacity onPress={onPress}>
           <Text
@@ -209,6 +227,7 @@ class PostCardJournal extends React.Component<PostListItemType, any> {
       onUserPress,
       style,
       type = 'default',
+      isCard,
     } = this.props
     const { width } = this.state
 
@@ -223,6 +242,7 @@ class PostCardJournal extends React.Component<PostListItemType, any> {
           style={style}
           type={type}
           onLayout={this._onLayout}
+          isCard={isCard}
         />
       )
     }

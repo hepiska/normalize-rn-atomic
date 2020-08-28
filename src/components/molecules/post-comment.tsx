@@ -55,13 +55,19 @@ class PostComment extends Component<CommentsType, any> {
     const { style, comments, isCard } = this.props
 
     return (
-      <View style={{ ...style }}>
+      <View style={{ ...style, alignItems: 'flex-start' }}>
         {isCard ? (
-          <Text
-            onPress={this._goToPost}
-            style={{ fontSize: 12, paddingHorizontal: 16 }}>
-            View all {comments ? comments?.length : '0'} comments
-          </Text>
+          <TouchableOpacity onPress={this._goToPost}>
+            <Text
+              style={{
+                fontSize: 12,
+                height: comments ? 12 : 0,
+                paddingHorizontal: comments ? 16 : 0,
+                marginBottom: comments ? 4 : 0,
+              }}>
+              {comments ? 'View all ' + comments?.length + ' comments' : ''}
+            </Text>
+          </TouchableOpacity>
         ) : (
           <TouchableOpacity disabled={!comments} onPress={this._showComment}>
             <Text
@@ -80,6 +86,7 @@ class PostComment extends Component<CommentsType, any> {
           <View
             style={{
               marginVertical: 8,
+              flex: 1,
               // backgroundColor: 'red',
             }}>
             {comments?.map((res, idx) => {
@@ -90,6 +97,7 @@ class PostComment extends Component<CommentsType, any> {
                   key={'comment' + res + idx}
                   commentId={res}
                   style={{
+                    width: '100%',
                     marginBottom:
                       idx === comments?.length - 1 ? 0 : isCardMargin,
                   }}
@@ -103,6 +111,7 @@ class PostComment extends Component<CommentsType, any> {
             style={{
               marginVertical: 8,
               paddingHorizontal: 16,
+              flex: 1,
               // backgroundColor: 'red',
             }}>
             {comments?.map((res, idx) => {
