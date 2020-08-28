@@ -1,6 +1,13 @@
 import React, { Component } from 'react'
-import { Text, View, StyleSheet, ImageBackground } from 'react-native'
+import {
+  Text,
+  View,
+  StyleSheet,
+  ImageBackground,
+  TouchableOpacity,
+} from 'react-native'
 import { fontStyle } from '../commont-styles'
+import { push, navigate } from '@src/root-navigation'
 import { colors } from '@src/utils/constants'
 import {
   textElipsis as limitText,
@@ -43,6 +50,19 @@ const styles = StyleSheet.create({
 })
 
 export default class PostCard extends Component<any, any> {
+  _goToUser = () => {
+    navigate('Screens', {
+      screen: 'UserDetail',
+      params: { userId: this.props.user.id },
+    })
+  }
+
+  _goToPost = () => {
+    push('Screens', {
+      screen: 'PostDetail',
+      params: { postId: this.props.post.id },
+    })
+  }
   render() {
     const { post, user } = this.props
     return (
@@ -64,7 +84,8 @@ export default class PostCard extends Component<any, any> {
           />
         </View>
         <View style={{ padding: 16, flex: 1 }}>
-          <View
+          <TouchableOpacity
+            onPress={this._goToUser}
             style={{
               flexDirection: 'row',
               marginBottom: 8,
@@ -88,10 +109,12 @@ export default class PostCard extends Component<any, any> {
             <Text style={{ ...fontStyle.helveticaBold, fontSize: 16 }}>
               {user.name}
             </Text>
-          </View>
-          <Text style={{ ...fontStyle.helvetica, fontSize: 16 }}>
-            {limitText(post.title, 80)}
-          </Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={this._goToPost}>
+            <Text style={{ ...fontStyle.helvetica, fontSize: 16 }}>
+              {limitText(post.title, 80)}
+            </Text>
+          </TouchableOpacity>
           <Text style={{ paddingVertical: 16, color: colors.black70 }}>
             {countlongCreate(post.published_at)}
           </Text>

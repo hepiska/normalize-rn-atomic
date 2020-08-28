@@ -14,6 +14,7 @@ import InitialPage from '../page-initial.config'
 import LookbookDetail from './look-book'
 import Test from './test'
 import ProductDetail from './product-detail'
+import MyWebView from './web-view'
 // import ProductList from './product-list-old'
 import PaymentMethod from './payment-method'
 import PaymentDetails from './payment-details'
@@ -95,6 +96,7 @@ function InsiderStack() {
       <Stack.Screen name="Coupons" component={CouponsPage} />
       <Stack.Screen name="CouponDetail" component={CouponDetail} />
       <Stack.Screen name="Maintenance" component={Maintenance} />
+      <Stack.Screen name="WebView" component={MyWebView} />
       {/* <Stack.Screen name="ProductList" component={ProductList} /> */}
       <Stack.Screen name="PaymentWaiting" component={PaymentWaiting} />
       <Stack.Screen name="Cart" component={Cart} />
