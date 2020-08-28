@@ -74,6 +74,13 @@ function ModalStack() {
         }}
         component={QRModal}
       />
+      <Stack.Screen
+        name="QR"
+        component={QRModal}
+        options={{
+          cardStyle: { backgroundColor: 'rgba(0,0,0,0.7)' },
+        }}
+      />
 
       <Stack.Screen
         name="PostMore"
