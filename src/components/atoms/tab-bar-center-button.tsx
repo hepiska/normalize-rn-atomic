@@ -34,7 +34,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     zIndex: 3,
   },
-  itemContainer: { flex: 1, justifyContent: 'center', alignItems: 'center' },
+  itemContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   buttontext: {
     fontSize: 12,
     marginTop: 8,

@@ -7,11 +7,12 @@ import {
   StyleSheet,
 } from 'react-native'
 import { colors } from '@utils/constants'
+import { navigate } from '@src/root-navigation'
 
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    paddingVertical: 5,
+    paddingVertical: 10,
     backgroundColor: 'white',
     borderStyle: 'solid',
     borderColor: colors.black50,
@@ -51,7 +52,7 @@ const MyTabBar = ({ state, descriptors, navigation }) => {
               navigation.navigate(route.name)
             }
           }
-          const color = isFocused ? colors.purple1 : colors.gray3
+          const color = isFocused ? colors.black100 : colors.black60
           const onLongPress = () => {
             navigation.emit({
               type: 'tabLongPress',
@@ -60,22 +61,27 @@ const MyTabBar = ({ state, descriptors, navigation }) => {
           }
           const icon = options.tabBarIcon ? options.tabBarIcon : () => null
 
+          const goToCreate = () => {
+            navigate('Screens', { screen: 'CreateCollection' })
+          }
+
           if (centerIndex === index) {
             return (
-              <View
+              <TouchableOpacity
                 key={'tabroute' + index}
                 accessibilityLabel={options.tabBarAccessibilityLabel}
                 testID={options.tabBarTestID}
-                style={styles.button}>
+                style={styles.button}
+                onPress={goToCreate}>
                 {icon({ color })}
                 <Text
                   style={{
                     fontSize: 10,
-                    color: colors.black100,
+                    color: colors.black80,
                   }}>
                   {label}
                 </Text>
-              </View>
+              </TouchableOpacity>
             )
           }
 

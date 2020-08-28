@@ -48,6 +48,7 @@
 		F95C89844F7B634CA17FAA53 /* libPods-shonet-tvOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 47146A0A7C0603E935EC9F57 /* libPods-shonet-tvOSTests.a */; };
 		B7088CB578A343B4B48230BF /* Chronicle-Display-Roman.otf in Resources */ = {isa = PBXBuildFile; fileRef = AA8F30AA4A854EF8AC0977D7 /* Chronicle-Display-Roman.otf */; };
 		F45F610DC5A24DBE9DBF91D9 /* Georgia-Regular-font.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 37E03280CEA045DA8B20069B /* Georgia-Regular-font.ttf */; };
+		0A77916DE3F54435A79E6122 /* navbar.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 2AC237D166004114B1FD817B /* navbar.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -141,6 +142,7 @@
 		FB7653FB23C749AD828FB4E0 /* Ionicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Ionicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Ionicons.ttf"; sourceTree = "<group>"; };
 		AA8F30AA4A854EF8AC0977D7 /* Chronicle-Display-Roman.otf */ = {isa = PBXFileReference; name = "Chronicle-Display-Roman.otf"; path = "../src/assets/fonts/Chronicle-Display-Roman.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		37E03280CEA045DA8B20069B /* Georgia-Regular-font.ttf */ = {isa = PBXFileReference; name = "Georgia-Regular-font.ttf"; path = "../src/assets/fonts/Georgia-Regular-font.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		2AC237D166004114B1FD817B /* navbar.ttf */ = {isa = PBXFileReference; name = "navbar.ttf"; path = "../src/assets/fonts/navbar.ttf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -240,6 +242,7 @@
 				DEF96C629DB94C14B80D7B6B /* PlayfairDisplay-SemiBoldItalic.ttf */,
 				AA8F30AA4A854EF8AC0977D7 /* Chronicle-Display-Roman.otf */,
 				37E03280CEA045DA8B20069B /* Georgia-Regular-font.ttf */,
+				2AC237D166004114B1FD817B /* navbar.ttf */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -508,6 +511,7 @@
 				CD7C8A4459044258957F920A /* PlayfairDisplay-SemiBoldItalic.ttf in Resources */,
 				B7088CB578A343B4B48230BF /* Chronicle-Display-Roman.otf in Resources */,
 				F45F610DC5A24DBE9DBF91D9 /* Georgia-Regular-font.ttf in Resources */,
+				0A77916DE3F54435A79E6122 /* navbar.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

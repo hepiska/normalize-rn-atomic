@@ -1,9 +1,9 @@
 import * as React from 'react'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import { View, Text } from 'react-native'
+import { View, Text, StyleSheet } from 'react-native'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import Icon from 'react-native-vector-icons/FontAwesome'
+import Icon from '@assets/fonts/custom-icons'
 import { colors } from '@utils/constants'
 import CenterButton from '@components/atoms/tab-bar-center-button'
 import { CommonActions } from '@react-navigation/native'
@@ -18,6 +18,11 @@ import MyTabBar from '@components/molecules/navigation-bottom'
 
 const Tab = createBottomTabNavigator()
 
+const styles = StyleSheet.create({
+  icon: {
+    marginBottom: 4,
+  },
+})
 class MainPages extends React.Component<any, any> {
   state = {}
 
@@ -49,7 +54,12 @@ class MainPages extends React.Component<any, any> {
           options={{
             tabBarLabel: 'Discover',
             tabBarIcon: ({ color, size }) => (
-              <Icon name="compass" color={color} size={16} />
+              <Icon
+                style={styles.icon}
+                name={'discover'}
+                color={color}
+                size={24}
+              />
             ),
           }}
           component={DiscoverPage}
@@ -60,7 +70,7 @@ class MainPages extends React.Component<any, any> {
           options={{
             tabBarLabel: 'Shop',
             tabBarIcon: ({ color, size }) => (
-              <Icon name="shopping-bag" color={color} size={16} />
+              <Icon style={styles.icon} name={'shop'} color={color} size={24} />
             ),
           }}
         />
@@ -69,7 +79,15 @@ class MainPages extends React.Component<any, any> {
           component={CreatePage}
           options={{
             tabBarLabel: 'Create',
-            tabBarIcon: ({ color, size }) => <CenterButton />,
+            tabBarIcon: ({ color, size }) => (
+              <Icon
+                style={styles.icon}
+                name={'create'}
+                color={colors.black100}
+                size={24}
+              />
+            ),
+            // tabBarIcon: ({ color, size }) => <CenterButton />,
           }}
         />
         <Tab.Screen
@@ -78,7 +96,7 @@ class MainPages extends React.Component<any, any> {
           options={{
             tabBarLabel: 'Notifications',
             tabBarIcon: ({ color, size }) => (
-              <Icon name="bell" color={color} size={16} />
+              <Icon style={styles.icon} name="bell" color={color} size={24} />
             ),
           }}
         />
@@ -88,7 +106,12 @@ class MainPages extends React.Component<any, any> {
           options={{
             tabBarLabel: 'Profile',
             tabBarIcon: ({ color, size }) => (
-              <Icon name="user" color={color} size={16} />
+              <Icon
+                style={styles.icon}
+                name="profile"
+                color={color}
+                size={24}
+              />
             ),
           }}
         />
