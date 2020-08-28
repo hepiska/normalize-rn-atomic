@@ -13,7 +13,8 @@ import List from '@components/layouts/list-header'
 import Amplitude from 'amplitude-js'
 import { capitalEachWord } from '@utils/helpers'
 import { fetchFeed } from '@modules/post-feed/action'
-import PostCard from '@src/components/molecules/post-card-collection'
+import PostCardJournal from '@src/components/molecules/post-card-journal'
+import PostCardCollection from '@src/components/molecules/post-card-collection'
 import { postListData } from '@hocs/data/post'
 import EmtyState from '@components/molecules/order-empty-state'
 import TopInsider from '@components/organisms/insider-top'
@@ -23,8 +24,18 @@ import HorizontalListLookBook from '@components/organisms/horzontal-list-lookboo
 import { colors } from '@utils/constants'
 import { Instagram } from 'react-content-loader/native'
 import PostCardFull from '@components/atoms/loaders/post-card-full'
+import { productListData } from '@src/hocs/data/product'
+import ProductCard from '@components/molecules/product-card-new'
+import ImageAutoSchale from '@components/atoms/image-autoschale'
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
+import RecommendList from '../molecules/recommend-follow-list'
+import { makeGetFeedPosts } from '@src/modules/post/selector'
+import ProductRecommendation from './product-recommendation'
 
-const PostItem = postListData(PostCard)
+const PostItemJournal = postListData(PostCardJournal)
+const PostItemCollection = postListData(PostCardCollection)
+
+const { width, height } = Dimensions.get('screen')
 
 const styles = StyleSheet.create({
   itemStyle: {
@@ -37,11 +48,21 @@ const styles = StyleSheet.create({
     // borderBottomColor: colors.black50,
     // borderBottomWidth: 1,
   },
+  productCard: {
+    width: width / 2 - 16,
+    minHeight: 220,
+    margin: 8,
+  },
+  productWrapper: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    marginBottom: 25,
+  },
 })
 
-const { width, height } = Dimensions.get('screen')
+const ProductWithCardHoc = productListData(ProductCard)
 
-class FeedOrg extends React.Component<any, any> {
+class FeedOrg extends React.PureComponent<any, any> {
   state = {
     selectedFilter: this.props.userPostStatus,
     finishAnimation: false,
@@ -110,17 +131,71 @@ class FeedOrg extends React.Component<any, any> {
     />
   )
 
+  _onPressBanner = () => {
+    // notes: supposedly to social commerce page
+    // this.props.navigation
+  }
+
+  _renderPostCard = (item, index) => {
+    if (item.post_type === 'article') {
+      // PostItem = postListData(PostCardJournal)
+      return (
+        <PostItemJournal
+          style={styles.itemStyle}
+          key={`horizontal-list-post-${index}`}
+          fullscreen
+          postId={item.id}
+          idx={index}
+        />
+      )
+    } else if (item.post_type === 'collection') {
+      // PostItem = postListData(PostCardCollection)
+      return (
+        <PostItemCollection
+          style={styles.itemStyle}
+          key={`horizontal-list-post-${index}`}
+          fullscreen
+          postId={item.id}
+          idx={index}
+        />
+      )
+    } else {
+      return (
+        <PostItemJournal
+          style={styles.itemStyle}
+          key={`horizontal-list-post-${index}`}
+          fullscreen
+          postId={item.id}
+          idx={index}
+        />
+      )
+    }
+  }
+
   _renderItem = ({ item, index }) => {
+    if (index === 0) {
+      return (
+        <View>
+          <TouchableWithoutFeedback onPress={this._onPressBanner}>
+            <ImageAutoSchale
+              source={{
+                uri:
+                  'https://shonet.imgix.net/banners/sos-com-banner.jpeg?q=75&w=800',
+              }}
+              width={width}
+            />
+          </TouchableWithoutFeedback>
+          {this._renderPostCard(item, index)}
+        </View>
+      )
+    }
     if (index === 3) {
       return (
         <View>
           {/* <TopInsider navigation={this.props.navigation} /> */}
-          <PostItem
-            style={styles.itemStyle}
-            key={`horizontal-list-post-${index}`}
-            postId={item}
-            idx={index}
-          />
+          {this._renderPostCard(item, index)}
+          {/* notes: recommended user horizontal list here using recommendedUserOrder */}
+          <RecommendList />
         </View>
       )
     }
@@ -128,13 +203,10 @@ class FeedOrg extends React.Component<any, any> {
       return (
         <View>
           {/* <HorizontalListLookBook navigation={this.props.navigation} /> */}
-
-          <PostItem
-            style={styles.itemStyle}
-            key={`horizontal-list-post-${index}`}
-            fullscreen
-            postId={item}
-            idx={index}
+          {this._renderPostCard(item, index)}
+          <ProductRecommendation
+            category="fashion"
+            title="Recommended Fashion Product"
           />
         </View>
       )
@@ -143,27 +215,17 @@ class FeedOrg extends React.Component<any, any> {
     if (index === 9) {
       return (
         <View>
-          <ProductTrending navigation={this.props.navigation} />
-          <PostItem
-            style={styles.itemStyle}
-            key={`horizontal-list-post-${index}`}
-            fullscreen
-            postId={item}
-            idx={index}
+          {/* <ProductTrending navigation={this.props.navigation} /> */}
+          {this._renderPostCard(item, index)}
+          <ProductRecommendation
+            category="beauty"
+            title="Recommended Beauty Product"
           />
         </View>
       )
     }
 
-    return (
-      <PostItem
-        style={styles.itemStyle}
-        key={`horizontal-list-post-${index}`}
-        fullscreen
-        postId={item}
-        idx={index}
-      />
-    )
+    return this._renderPostCard(item, index)
   }
 
   _hanleScroll = e => {
@@ -196,6 +258,7 @@ class FeedOrg extends React.Component<any, any> {
   render() {
     const { posts, scrollEnabled, loading } = this.props
     const firstLoading = loading && !this.skip
+
     return (
       <View
         style={{
@@ -233,11 +296,16 @@ class FeedOrg extends React.Component<any, any> {
   }
 }
 
-const mapStateToProps = state => ({
-  posts: state.feed.order,
-  loading: state.feed.loading,
-  pagination: state.feed.pagination,
-})
+const mapStateToProps = state => {
+  // posts: state.feed.order,
+  // NOTES: NEED CONFIRM WITH MAS EGO ABOUT PERFORMACE IMPACT
+  const getFeedPosts = makeGetFeedPosts()
+  return {
+    posts: getFeedPosts(state),
+    loading: state.feed.loading,
+    pagination: state.feed.pagination,
+  }
+}
 const mapDispatchToProps = dispatch =>
   bindActionCreators({ fetchFeed }, dispatch)
 

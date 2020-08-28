@@ -14,10 +14,12 @@ import { colors } from '@src/utils/constants'
 import { fontStyle } from '../commont-styles'
 import { textElipsis as textLimit } from '@utils/helpers'
 import { Button } from '../atoms/button'
+import HTML from 'react-native-render-html'
 
 interface RecommendFollowType {
   style?: ViewStyle
   horizontal?: boolean
+  user?: any
 }
 
 const styles = StyleSheet.create({
@@ -40,7 +42,7 @@ export default class FollowCard extends Component<RecommendFollowType, any> {
       { color: colors.gray2 },
     ]
 
-    const { style, horizontal } = this.props
+    const { style, horizontal, user } = this.props
 
     const maxDesc = horizontal ? 80 : 100
     return (
@@ -55,7 +57,11 @@ export default class FollowCard extends Component<RecommendFollowType, any> {
           // width: '100%', //300 for horizontal list
           width: horizontal ? 300 : '100%', //300 for horizontal list
         }}>
-        <AvatarImage imgUrl={''} size={72} style={{ marginBottom: 16 }} />
+        <AvatarImage
+          imgUrl={user.photo_url}
+          size={72}
+          style={{ marginBottom: 16 }}
+        />
         <TouchableOpacity
           onPress={null}
           style={{
@@ -69,7 +75,7 @@ export default class FollowCard extends Component<RecommendFollowType, any> {
               fontSize: 18,
               color: colors.black100,
             }}>
-            The Shonet
+            {user.name}
           </Text>
           <Icon
             style={{
@@ -83,17 +89,49 @@ export default class FollowCard extends Component<RecommendFollowType, any> {
             color={colors.black100}
           />
         </TouchableOpacity>
-        <Text
+        {/* <Text
           style={{
             textAlign: 'center',
             color: colors.black60,
             marginBottom: 32,
-          }}>
-          {textLimit(
+          }}> */}
+        <HTML
+          html={`<bio>${user.biography} || LOL</bio>`}
+          renderers={{
+            // eslint-disable-next-line react/display-name
+            bio: (htmlAttribs, children, convertedCSSStyles, passProps) => {
+              // console.log('pass props', passProps?.rawChildren[0].children)
+              return (
+                <Text
+                  key={`user-biography-${htmlAttribs}`}
+                  style={{
+                    textAlign: 'center',
+                    color: colors.black60,
+                    marginBottom: 32,
+                  }}>
+                  {/* {passProps?.rawChildren[0].children
+                    ? textLimit(
+                        passProps?.rawChildren[0]?.children[0]?.data,
+                        maxDesc,
+                      )
+                    : ''} */}
+                  {passProps?.rawChildren[0].children
+                    ? textLimit(
+                        passProps?.rawChildren[0]?.children[0]?.data || '',
+                        maxDesc,
+                      )
+                    : ''}
+                  {/* {passProps?.rawChildren[0]} */}
+                </Text>
+              )
+            },
+          }}
+        />
+        {/* {textLimit(
             'Lorem, ipsum dolor sit amet consectetur adipisicing elit. Ad,dignissimos! Lorem ipsum dolor sit amet consectetur, adipisicing elit. Culpa, impedit?',
             maxDesc,
-          )}
-        </Text>
+          )} */}
+        {/* </Text> */}
         <View
           style={{
             height: 80, // 80 for horizontal list

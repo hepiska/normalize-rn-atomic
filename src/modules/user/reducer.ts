@@ -16,6 +16,7 @@ interface UserState {
   loadings: Object
   readonly loading: Boolean
   readonly error?: ErrorType
+  readonly recommendedUserOrer?: Array<number>
 }
 const initialState: UserState = {
   data: Immutable({}),
@@ -29,6 +30,7 @@ const initialState: UserState = {
   loadings: {},
   loading: false,
   error: null,
+  recommendedUserOrer: Immutable([])
 }
 
 const userReducer: Reducer<UserState> = (
@@ -113,6 +115,9 @@ const userReducer: Reducer<UserState> = (
         newState.notification,
         action.payload,
       )
+      return newState
+    case userActionType.SET_RECOMMENDED_USER_ORDER:
+      newState.recommendedUserOrer = Immutable.merge(action.payload)
       return newState
     default:
       return state
