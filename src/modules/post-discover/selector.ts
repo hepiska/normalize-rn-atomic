@@ -1,34 +1,27 @@
 import { createSelector } from 'reselect'
 
-const getSpecificPagination = state => state.discover.specificPagination || {}
+const getSpecificPagination = (state, query) =>
+  state.discover.specificPagination[query] || ''
 
-const getSpecificQueryPost = state => state.discover.specificQueryPost || {}
+const getSpecificQueryPost = (state, query) =>
+  state.discover.specificQueryPost[query] || []
 
-const getSpecificLoading = state => state.discover.specificLoading || {}
+const getSpecificLoading = (state, query) =>
+  state.discover.specificLoading[query] || false
 
 const getPostData = state => state.post.data
 
-const getTabname = state => state.discover.tabName
-
 export const makeGetSpecificPagination = () =>
-  createSelector([getSpecificPagination, getTabname], (pagination, query) => {
-    return pagination[query]
-  })
-
-export const makeGetSpecificQueryPost = () =>
-  createSelector([getSpecificQueryPost, getTabname], (postQuery, query) => {
-    return postQuery[query]
+  createSelector([getSpecificPagination], pagination => {
+    return pagination
   })
 
 export const makeGetSpecificLoading = () =>
-  createSelector([getSpecificLoading, getTabname], (loading, query) => {
-    return loading[query]
+  createSelector([getSpecificLoading], loading => {
+    return loading
   })
 
 export const makeGetSpecificPost = () =>
-  createSelector(
-    [getSpecificQueryPost, getTabname, getPostData],
-    (order, query, data) => {
-      return order[query] ? order[query].map(id => data[id]) : []
-    },
-  )
+  createSelector([getSpecificQueryPost, getPostData], (order, data) => {
+    return order.map(id => data[id])
+  })

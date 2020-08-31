@@ -181,9 +181,9 @@ const mapStateToProps = (state, props) => {
   const getSpecificPosts = makeGetSpecificPost()
   const getSpecificPagination = makeGetSpecificPagination()
   return {
-    loading: getSpecificLoading(state),
-    posts: getSpecificPosts(state),
-    pagination: getSpecificPagination(state),
+    loading: getSpecificLoading(state, 'fashion'),
+    posts: getSpecificPosts(state, 'fashion'),
+    pagination: getSpecificPagination(state, 'fashion'),
   }
 }
 

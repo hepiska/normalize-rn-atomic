@@ -27,23 +27,6 @@ interface TabMenuUnderlineType {
 }
 
 class TabMenuUnderline extends React.PureComponent<TabMenuUnderlineType, any> {
-  componentDidMount() {
-    this._onTabChange(this._tabNameInit())
-  }
-
-  _onTabChange(name) {
-    this.props.setTabName(name.toLowerCase())
-  }
-
-  _tabNameInit() {
-    const { routes, index } = this.props.state
-    for (let idx = 0; idx < routes.length; idx++) {
-      if (idx === index) {
-        return routes[idx].name.toLowerCase()
-      }
-    }
-  }
-
   render() {
     const {
       state,
@@ -89,8 +72,6 @@ class TabMenuUnderline extends React.PureComponent<TabMenuUnderlineType, any> {
                 if (!isFocused && !event.defaultPrevented) {
                   navigation.navigate(route.name)
                 }
-
-                this._onTabChange(route.name)
               }
 
               const onLongPress = () => {
