@@ -16,6 +16,7 @@ export const actionType = {
   SET_SPECIFIC_LOADING: 'post-discover/SET_SPECIFIC_LOADING',
   SET_SPECIFIC_QUERY: 'post-discover/SET_SPECIFIC_QUERY',
   SET_SPECIFIC_PAGINATION: 'post-discover/SET_SPECIFIC_PAGINATION',
+  SET_TAB_NAME: 'post-discover/SET_TAB_NAME',
 }
 
 export const setDicoverOrder = (data: any) => ({
@@ -50,6 +51,11 @@ export const setSpecificQuery = (data: any) => ({
 
 export const setSpecificPagination = (data: any) => ({
   type: actionType.SET_SPECIFIC_PAGINATION,
+  payload: data,
+})
+
+export const setTabName = (data: any) => ({
+  type: actionType.SET_TAB_NAME,
   payload: data,
 })
 

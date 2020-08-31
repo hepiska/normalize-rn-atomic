@@ -3,6 +3,9 @@ import { StyleSheet, View, Text, TouchableOpacity } from 'react-native'
 import Animated, { Extrapolate } from 'react-native-reanimated'
 import { colors } from '@utils/constants'
 import { fontStyle } from '@components/commont-styles'
+import { setTabName } from '@src/modules/post-discover/action'
+import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 
 const styles = StyleSheet.create({
   active: {
@@ -20,9 +23,27 @@ interface TabMenuUnderlineType {
   position: any
   rightAction?: any
   onChangeTab?: (activeTab: any) => void
+  setTabName?: (argh: any) => void
 }
 
 class TabMenuUnderline extends React.PureComponent<TabMenuUnderlineType, any> {
+  componentDidMount() {
+    this._onTabChange(this._tabNameInit())
+  }
+
+  _onTabChange(name) {
+    this.props.setTabName(name)
+  }
+
+  _tabNameInit() {
+    const { routes, index } = this.props.state
+    for (let idx = 0; idx < routes.length; idx++) {
+      if (idx === index) {
+        return routes[idx].name
+      }
+    }
+  }
+
   render() {
     const {
       state,
@@ -68,6 +89,8 @@ class TabMenuUnderline extends React.PureComponent<TabMenuUnderlineType, any> {
                 if (!isFocused && !event.defaultPrevented) {
                   navigation.navigate(route.name)
                 }
+
+                this._onTabChange(route.name)
               }
 
               const onLongPress = () => {
@@ -136,4 +159,7 @@ class TabMenuUnderline extends React.PureComponent<TabMenuUnderlineType, any> {
   }
 }
 
-export default TabMenuUnderline
+const mapDispatchToProps = dispatch =>
+  bindActionCreators({ setTabName }, dispatch)
+
+export default connect(null, mapDispatchToProps)(TabMenuUnderline)

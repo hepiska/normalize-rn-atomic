@@ -27,6 +27,7 @@ interface DiscoverState {
   specificQueryPost?: SpecificQuery
   specificLoading?: SpecificLoading
   specificPagination?: SpecificPagination
+  tabName?: string
 }
 
 const initialState: any = {
@@ -38,6 +39,7 @@ const initialState: any = {
   specificQueryPost: {},
   specificLoading: {},
   specificPagination: {},
+  tabName: '',
 }
 
 const discoverReducer: Reducer<DiscoverState> = (
@@ -78,6 +80,8 @@ const discoverReducer: Reducer<DiscoverState> = (
     case actionType.SET_SPECIFIC_PAGINATION:
       newState.specificPagination[action.payload.uri] = action.payload.data
       return newState
+    case actionType.SET_TAB_NAME:
+      newState.tabName = action.payload
     default:
       return state
   }
