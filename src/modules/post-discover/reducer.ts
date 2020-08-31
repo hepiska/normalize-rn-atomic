@@ -82,6 +82,7 @@ const discoverReducer: Reducer<DiscoverState> = (
       return newState
     case actionType.SET_TAB_NAME:
       newState.tabName = action.payload
+      return newState
     default:
       return state
   }
