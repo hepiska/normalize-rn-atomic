@@ -1,10 +1,10 @@
 import React from 'react'
 import {
-  Text,
   View,
   RefreshControl,
   InteractionManager,
   Dimensions,
+  StyleSheet,
 } from 'react-native'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
@@ -12,18 +12,27 @@ import { fetchSpecificPosts } from '@src/modules/post-discover/action'
 import List from '@components/layouts/list-header'
 import {
   makeGetSpecificLoading,
-  makeGetSpecificQueryPost,
   makeGetSpecificPagination,
+  makeGetSpecificPost,
 } from '@src/modules/post-discover/selector'
 import { colors } from '@src/utils/constants'
 import PostCardFull from '@components/atoms/loaders/post-card-full'
 import EmtyState from '@components/molecules/order-empty-state'
 import PostCardCollection from '@src/components/molecules/post-card-collection'
+import PostCardJournal from '@src/components/molecules/post-card-journal'
 import { postListData } from '@hocs/data/post'
 
-const PostItem = postListData(PostCardCollection)
+const PostItemCollection = postListData(PostCardCollection)
+
+const PostItemJournal = postListData(PostCardJournal)
 
 const { width } = Dimensions.get('screen')
+
+const styles = StyleSheet.create({
+  postItem: {
+    marginBottom: 32,
+  },
+})
 
 class DiscoverFashion extends React.PureComponent<any> {
   state = {
@@ -62,15 +71,40 @@ class DiscoverFashion extends React.PureComponent<any> {
   }
 
   _renderItem = ({ item, index }) => {
-    return (
-      // <Text>LOL</Text>
-      <PostItem
-        key={`discover-fashion-post-${index}`}
-        fullscreen
-        postId={item}
-        idx={index}
-      />
-    )
+    return this._renderPostCard(item, index)
+  }
+
+  _renderPostCard = (item, index) => {
+    if (item.post_type === 'article') {
+      return (
+        <PostItemJournal
+          key={`discover-fashion-post-${index}`}
+          fullscreen
+          postId={item.id}
+          idx={index}
+          style={styles.postItem}
+        />
+      )
+    } else if (item.post_type === 'collection') {
+      return (
+        <PostItemCollection
+          key={`discover-fashion-post-${index}`}
+          fullscreen
+          postId={item.id}
+          idx={index}
+        />
+      )
+    } else {
+      return (
+        <PostItemJournal
+          key={`discover-fashion-post-${index}`}
+          fullscreen
+          postId={item.id}
+          idx={index}
+          style={styles.postItem}
+        />
+      )
+    }
   }
 
   _hanleScroll = e => {
@@ -144,11 +178,11 @@ const mapDispatchToProps = dispatch =>
 
 const mapStateToProps = (state, props) => {
   const getSpecificLoading = makeGetSpecificLoading()
-  const getSpecificQuery = makeGetSpecificQueryPost()
+  const getSpecificPosts = makeGetSpecificPost()
   const getSpecificPagination = makeGetSpecificPagination()
   return {
     loading: getSpecificLoading(state, 'fashion'),
-    posts: getSpecificQuery(state, 'fashion'),
+    posts: getSpecificPosts(state, 'fashion'),
     pagination: getSpecificPagination(state, 'fashion'),
   }
 }

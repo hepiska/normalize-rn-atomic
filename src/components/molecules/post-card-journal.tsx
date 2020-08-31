@@ -113,7 +113,9 @@ const JournalCard = ({
               <Text style={{ fontStyle: 'italic' }}>by</Text>{' '}
             </Text>
             <TouchableOpacity onPress={onUserPress}>
-              <Text style={styles.cat}>{user.username.toUpperCase()}</Text>
+              <Text style={styles.cat}>
+                {user.username ? user.username.toUpperCase() : ''}
+              </Text>
             </TouchableOpacity>
           </View>
           <Text
