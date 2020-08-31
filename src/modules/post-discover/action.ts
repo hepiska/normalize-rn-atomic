@@ -109,22 +109,6 @@ export const fetchSpecificPosts = (
     case 'beauty':
       newParams['category_id'] = categoryIds.beauty
       break
-    case 'fashion-collection':
-      newParams['category_id'] = categoryIds.fashion
-      newParams['type'] = 'collection'
-      break
-    case 'fashion-editorial':
-      newParams['category_id'] = categoryIds.fashion
-      newParams['type'] = 'journal'
-      break
-    case 'beauty-collection':
-      newParams['category_id'] = categoryIds.beauty
-      newParams['type'] = 'collection'
-      break
-    case 'beauty-editorial':
-      newParams['category_id'] = categoryIds.beauty
-      newParams['type'] = 'journal'
-      break
     default:
       break
   }

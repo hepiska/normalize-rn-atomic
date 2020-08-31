@@ -21,6 +21,8 @@ import EmtyState from '@components/molecules/order-empty-state'
 import PostCardCollection from '@src/components/molecules/post-card-collection'
 import PostCardJournal from '@src/components/molecules/post-card-journal'
 import { postListData } from '@hocs/data/post'
+import PostTopDiscover from './post-top-discover'
+import Amplitude from 'amplitude-js'
 
 const PostItemCollection = postListData(PostCardCollection)
 
@@ -42,6 +44,7 @@ class DiscoverFashion extends React.PureComponent<any> {
   skip = 0
 
   componentDidMount() {
+    Amplitude.getInstance().logEvent('discover fashion')
     InteractionManager.runAfterInteractions(() => {
       this.setState({ finishAnimation: true })
       this._freshFetch()
@@ -57,21 +60,26 @@ class DiscoverFashion extends React.PureComponent<any> {
 
   _fetchMore = () => {
     if (!this.props.loading && this.skip !== 0) {
-      this._fetchData({}, 'fashion', false)
+      this._fetchData({ next_token: this.props.pagination }, 'fashion', false)
     }
     this.skip += 1
   }
 
   _fetchData = (params, type, isFresh) => {
-    this.props.fetchSpecificPosts(
-      { ...params, next_token: this.props.pagination },
-      type,
-      isFresh,
-    )
+    this.props.fetchSpecificPosts({ ...params }, type, isFresh)
   }
 
   _renderItem = ({ item, index }) => {
-    return this._renderPostCard(item, index)
+    if (index === 0) {
+      return (
+        <>
+          <PostTopDiscover />
+          {this._renderPostCard(item, index)}
+        </>
+      )
+    } else {
+      return this._renderPostCard(item, index)
+    }
   }
 
   _renderPostCard = (item, index) => {
@@ -176,7 +184,7 @@ class DiscoverFashion extends React.PureComponent<any> {
 const mapDispatchToProps = dispatch =>
   bindActionCreators({ fetchSpecificPosts }, dispatch)
 
-const mapStateToProps = (state, props) => {
+const mapStateToProps = state => {
   const getSpecificLoading = makeGetSpecificLoading()
   const getSpecificPosts = makeGetSpecificPost()
   const getSpecificPagination = makeGetSpecificPagination()
