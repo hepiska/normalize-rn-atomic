@@ -6,12 +6,27 @@ import { actionType } from './action'
 import AsyncStorage from '@react-native-community/async-storage'
 import CONFIG from 'react-native-config'
 
-interface FeedState {
+interface SpecificQuery {
+  [key: string]: any
+}
+
+interface SpecificPagination {
+  [key: string]: string //next_token
+}
+
+interface SpecificLoading {
+  [key: string]: boolean
+}
+
+interface DiscoverState {
   readonly data: Object
   readonly order: Object
   readonly loading: Boolean
   pagination: any
   readonly error?: ErrorType
+  specificQueryPost?: SpecificQuery
+  specificLoading?: SpecificLoading
+  specificPagination?: SpecificPagination
 }
 
 const initialState: any = {
@@ -20,9 +35,12 @@ const initialState: any = {
   loading: false,
   pagination: {},
   error: null,
+  specificQueryPost: {},
+  specificLoading: {},
+  specificPagination: {},
 }
 
-const FeedReducer: Reducer<FeedState> = (
+const discoverReducer: Reducer<DiscoverState> = (
   state: any = { ...initialState },
   action: AnyAction,
 ) => {
@@ -42,6 +60,24 @@ const FeedReducer: Reducer<FeedState> = (
       return newState
     case actionType.CLEAR_DISCOVER:
       return initialState
+    case actionType.SET_SPECIFIC_LOADING:
+      newState.specificLoading[action.payload.uri] = action.payload.data
+      return newState
+    case actionType.SET_SPECIFIC_QUERY:
+      const data = newState.specificQueryPost[action.payload.uri]
+      if (action.payload.isFresh || !data) {
+        newState.specificQueryPost[action.payload.uri] = Immutable(
+          action.payload.data,
+        )
+      } else {
+        newState.specificQueryPost[action.payload.uri] = data.concat(
+          Immutable(action.payload.data),
+        )
+      }
+      return newState
+    case actionType.SET_SPECIFIC_PAGINATION:
+      newState.specificPagination[action.payload.uri] = action.payload.data
+      return newState
     default:
       return state
   }
@@ -54,7 +90,7 @@ const presistConfig = {
 
 const exportReducer =
   CONFIG.USE_PRESIST !== 'false'
-    ? persistReducer(presistConfig, FeedReducer)
-    : FeedReducer
+    ? persistReducer(presistConfig, discoverReducer)
+    : discoverReducer
 
 export default exportReducer

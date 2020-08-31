@@ -188,3 +188,8 @@ export const nestedScreenMap = (key, params?) => {
   }
   return map[key]
 }
+
+export const categoryIds = {
+  beauty: 199,
+  fashion: 37,
+}

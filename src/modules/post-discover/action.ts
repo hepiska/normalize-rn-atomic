@@ -1,6 +1,7 @@
 import { dispatchPostEntities } from '../entities-action-dispacer'
 import { API } from '../action-types'
 import * as schema from '../normalize-schema'
+import { categoryIds } from '@src/utils/constants'
 
 export const actionType = {
   FETCH: 'post-discover/FETCH',
@@ -12,6 +13,9 @@ export const actionType = {
   ADD_DISCOVER_ORDER: 'post-discover/ADD_ORDER',
   ERROR: 'post-discover/ERROR',
   DEFAULT: 'post-discover/DEFAULT',
+  SET_SPECIFIC_LOADING: 'post-discover/SET_SPECIFIC_LOADING',
+  SET_SPECIFIC_QUERY: 'post-discover/SET_SPECIFIC_QUERY',
+  SET_SPECIFIC_PAGINATION: 'post-discover/SET_SPECIFIC_PAGINATION',
 }
 
 export const setDicoverOrder = (data: any) => ({
@@ -31,6 +35,21 @@ export const addDicoverOrder = (data: any) => ({
 
 export const setDicoverLoading = (data: any) => ({
   type: actionType.SET_DISCOVER_LOADING,
+  payload: data,
+})
+
+export const setSpecificLoading = (data: any) => ({
+  type: actionType.SET_SPECIFIC_LOADING,
+  payload: data,
+})
+
+export const setSpecificQuery = (data: any) => ({
+  type: actionType.SET_SPECIFIC_QUERY,
+  payload: data,
+})
+
+export const setSpecificPagination = (data: any) => ({
+  type: actionType.SET_SPECIFIC_PAGINATION,
   payload: data,
 })
 
@@ -59,6 +78,73 @@ export const fetchDicover = (params: any = {}) => {
         } else {
           composeAction.push(addDicoverOrder(data.result))
         }
+        return composeAction
+      },
+    },
+  }
+}
+
+export const fetchSpecificPosts = (
+  params: any = {},
+  type,
+  isFresh: boolean = true,
+) => {
+  const url = '/posts/v2'
+  const newParams = isFresh
+    ? { limit: params.limit, offset: params.offset }
+    : params.next_token
+    ? { next_token: params.next_token }
+    : { limit: params.limit, offset: params.offset }
+
+  switch (type) {
+    case 'fashion':
+      newParams['category_id'] = categoryIds.fashion
+      break
+    case 'beauty':
+      newParams['category_id'] = categoryIds.beauty
+      break
+    case 'fashion-collection':
+      newParams['category_id'] = categoryIds.fashion
+      newParams['type'] = 'collection'
+      break
+    case 'fashion-editorial':
+      newParams['category_id'] = categoryIds.fashion
+      newParams['type'] = 'journal'
+      break
+    case 'beauty-collection':
+      newParams['category_id'] = categoryIds.beauty
+      newParams['type'] = 'collection'
+      break
+    case 'beauty-editorial':
+      newParams['category_id'] = categoryIds.beauty
+      newParams['type'] = 'journal'
+      break
+    default:
+      break
+  }
+
+  return {
+    type: API,
+    payload: {
+      url,
+      schema: [schema.post],
+      requestParams: { params: newParams },
+      startNetwork: () => {
+        return setSpecificLoading({ uri: type, data: true })
+      },
+      endNetwork: () => {
+        return setSpecificLoading({ uri: type, data: false })
+      },
+      success: (data, { pagination }) => {
+        const composeAction = [
+          ...dispatchPostEntities(data.entities),
+          setSpecificPagination({ uri: type, data: pagination.next_token }),
+          setSpecificQuery({
+            uri: type,
+            data: data.result,
+            isFresh,
+          }),
+        ]
         return composeAction
       },
     },
