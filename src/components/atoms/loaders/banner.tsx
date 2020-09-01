@@ -1,15 +1,14 @@
 import React, { useState } from 'react'
-import { View, ViewStyle } from 'react-native'
+import { View, ViewStyle, Dimensions } from 'react-native'
 import ContentLoader from 'react-content-loader/native'
-import { shimmerLoader } from '@utils/constants'
+import { Rect, Circle } from 'react-native-svg'
 
-import { Rect } from 'react-native-svg'
-
-interface LikeListPropsType {
+const { width } = Dimensions.get('screen')
+interface LoaderPropsType {
   style?: ViewStyle
 }
 
-const HorizontalImageLoader = (props: LikeListPropsType) => {
+const Banner = (props: LoaderPropsType) => {
   const [layout, setLayout] = useState(null)
 
   const _setLayout = ({ nativeEvent }) => {
@@ -21,22 +20,26 @@ const HorizontalImageLoader = (props: LikeListPropsType) => {
       style={{
         justifyContent: 'center',
         alignItems: 'center',
-        marginLeft: 16,
         ...props.style,
       }}>
       {layout && (
         <>
           <ContentLoader
-            {...shimmerLoader}
-            viewBox={`0 0 ${layout.width} 168`}
-            height="168"
+            viewBox={`0 0 ${layout.width} ${layout.height}`}
+            height={layout.height}
             width={layout.width}>
-            <Rect x="0" y="0" rx="8" ry="8" width={280} height="168" />
-            <Rect x="295" y="0" rx="8" ry="8" width={280} height="168" />
+            <Rect
+              x={4}
+              width={width}
+              height={layout.height}
+              y="4"
+              rx="8"
+              ry="8"
+            />
           </ContentLoader>
         </>
       )}
     </View>
   )
 }
-export default HorizontalImageLoader
+export default Banner
