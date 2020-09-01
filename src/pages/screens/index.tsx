@@ -66,6 +66,7 @@ import BrandProductList from './brand-product-list'
 import TopicInterest from './topic-interest'
 import WithdrawEarnings from './withdraw-earnings'
 import DanaConfirmWithdraw from './dana-confirm-withdraw'
+import LandingRegister from './landing-register'
 
 const Stack = createStackNavigator()
 
@@ -151,6 +152,7 @@ function InsiderStack() {
         name="AddNewAddressManual"
         component={AddNewAddressManual}
       />
+      <Stack.Screen name="LandingRegister" component={LandingRegister} />
       <Stack.Screen name="Test" component={Test} />
     </Stack.Navigator>
   )
