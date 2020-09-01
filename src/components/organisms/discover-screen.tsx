@@ -17,6 +17,7 @@ class DiscoverScreen extends React.PureComponent {
           <Tab.Navigator
             tabBar={props => <TabMenuUnderline {...props} />}
             lazy={true}>
+            <Tab.Screen name="ALL" component={DiscoverBeauty} />
             <Tab.Screen name="FASHION" component={DiscoverFashion} />
             <Tab.Screen name="BEAUTY" component={DiscoverBeauty} />
           </Tab.Navigator>

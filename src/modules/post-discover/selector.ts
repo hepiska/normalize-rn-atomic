@@ -11,6 +11,10 @@ const getSpecificLoading = (state, query) =>
 
 const getPostData = state => state.post.data
 
+const getTabName = state => state.discover.tabname
+
+const getSpecificMenu = (state, query) => state.discover.specificMenu[query]
+
 export const makeGetSpecificPagination = () =>
   createSelector([getSpecificPagination], pagination => {
     return pagination
@@ -25,3 +29,11 @@ export const makeGetSpecificPost = () =>
   createSelector([getSpecificQueryPost, getPostData], (order, data) => {
     return order.map(id => data[id])
   })
+
+export const makeGetTabName = () =>
+  createSelector([getTabName], name => {
+    return name
+  })
+
+export const makeGetSpecificMenu = () =>
+  createSelector([getSpecificMenu], name => name)

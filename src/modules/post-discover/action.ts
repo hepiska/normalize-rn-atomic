@@ -17,6 +17,7 @@ export const actionType = {
   SET_SPECIFIC_QUERY: 'post-discover/SET_SPECIFIC_QUERY',
   SET_SPECIFIC_PAGINATION: 'post-discover/SET_SPECIFIC_PAGINATION',
   SET_TAB_NAME: 'post-discover/SET_TAB_NAME',
+  SET_SPECIFIC_MENU: 'post-discover/SET_SPECIFIC_MENU',
 }
 
 export const setDicoverOrder = (data: any) => ({
@@ -56,6 +57,11 @@ export const setSpecificPagination = (data: any) => ({
 
 export const setTabName = (data: any) => ({
   type: actionType.SET_TAB_NAME,
+  payload: data,
+})
+
+export const setMenu = (data: any) => ({
+  type: actionType.SET_SPECIFIC_MENU,
   payload: data,
 })
 

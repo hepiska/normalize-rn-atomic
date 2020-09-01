@@ -3,9 +3,13 @@ import { StyleSheet, View, Text, TouchableOpacity } from 'react-native'
 import Animated, { Extrapolate } from 'react-native-reanimated'
 import { colors } from '@utils/constants'
 import { fontStyle } from '@components/commont-styles'
-import { setTabName } from '@src/modules/post-discover/action'
+import { setTabName, setMenu } from '@src/modules/post-discover/action'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
+import {
+  makeGetSpecificMenu,
+  makeGetTabName,
+} from '@src/modules/post-discover/selector'
 
 const styles = StyleSheet.create({
   active: {
@@ -13,6 +17,13 @@ const styles = StyleSheet.create({
   },
   fontActive: {
     color: colors.white,
+  },
+  subNav: {
+    color: colors.black60,
+    ...fontStyle.helveticaBold,
+    fontSize: 12,
+    paddingRight: 10,
+    fontWeight: '400',
   },
 })
 
@@ -23,10 +34,31 @@ interface TabMenuUnderlineType {
   position: any
   rightAction?: any
   onChangeTab?: (activeTab: any) => void
-  setTabName?: (argh: any) => void
+  setMenu?: (argh: any) => void
+  tabname: string
+  fashionMenu: string
+  beautyMenu: string
 }
 
 class TabMenuUnderline extends React.PureComponent<TabMenuUnderlineType, any> {
+  // _onChangeTab(name) {
+  //   this.props.setTabName(name.toLowerCase())
+  // }
+
+  _onChangeMenu(query, name) {
+    if (name === this.props[`${query}Menu`]) {
+      this.props.setMenu({
+        uri: query,
+        data: '',
+      })
+    } else {
+      this.props.setMenu({
+        uri: query,
+        data: name,
+      })
+    }
+  }
+
   render() {
     const {
       state,
@@ -35,16 +67,22 @@ class TabMenuUnderline extends React.PureComponent<TabMenuUnderlineType, any> {
       position,
       rightAction,
       onChangeTab,
+      fashionMenu,
+      beautyMenu,
     } = this.props
     return (
       <>
         <View
           style={{
             flexDirection: 'row',
-            paddingVertical: 8,
+            // paddingVertical: 8,
             paddingHorizontal: 16,
             justifyContent: 'space-between',
             alignItems: 'center',
+            height: 44,
+            borderTopWidth: 1,
+            borderBottomWidth: 1,
+            borderColor: colors.black50,
           }}>
           <View style={{ flexDirection: 'row' }}>
             {state.routes.map((route, index) => {
@@ -72,6 +110,8 @@ class TabMenuUnderline extends React.PureComponent<TabMenuUnderlineType, any> {
                 if (!isFocused && !event.defaultPrevented) {
                   navigation.navigate(route.name)
                 }
+
+                // this._onChangeTab(route.name)
               }
 
               const onLongPress = () => {
@@ -135,12 +175,104 @@ class TabMenuUnderline extends React.PureComponent<TabMenuUnderlineType, any> {
           </View>
           {rightAction && rightAction}
         </View>
+        {state.index === 1 && (
+          <View
+            style={{
+              flexDirection: 'row',
+              height: 36,
+              paddingHorizontal: 32,
+              alignItems: 'center',
+            }}>
+            <TouchableOpacity
+              onPress={() => this._onChangeMenu('fashion', 'collection')}>
+              <Text
+                style={{
+                  ...styles.subNav,
+                  ...{
+                    fontWeight: fashionMenu === 'collection' ? '500' : '400',
+                    color:
+                      fashionMenu === 'collection'
+                        ? colors.black100
+                        : colors.black60,
+                  },
+                }}>
+                COLLECTION
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => this._onChangeMenu('fashion', 'journal')}>
+              <Text
+                style={{
+                  ...styles.subNav,
+                  ...{
+                    fontWeight: fashionMenu === 'journal' ? '500' : '400',
+                    color:
+                      fashionMenu === 'journal'
+                        ? colors.black100
+                        : colors.black60,
+                  },
+                }}>
+                EDITORIAL
+              </Text>
+            </TouchableOpacity>
+          </View>
+        )}
+        {state.index === 2 && (
+          <View
+            style={{
+              flexDirection: 'row',
+              height: 36,
+              paddingHorizontal: 32,
+              alignItems: 'center',
+            }}>
+            <TouchableOpacity
+              onPress={() => this._onChangeMenu('beauty', 'collection')}>
+              <Text
+                style={{
+                  ...styles.subNav,
+                  ...{
+                    fontWeight: beautyMenu === 'collection' ? '500' : '400',
+                    color:
+                      beautyMenu === 'collection'
+                        ? colors.black100
+                        : colors.black60,
+                  },
+                }}>
+                COLLECTION
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => this._onChangeMenu('beauty', 'journal')}>
+              <Text
+                style={{
+                  ...styles.subNav,
+                  ...{
+                    fontWeight: beautyMenu === 'journal' ? '500' : '400',
+                    color:
+                      beautyMenu === 'journal'
+                        ? colors.black100
+                        : colors.black60,
+                  },
+                }}>
+                EDITORIAL
+              </Text>
+            </TouchableOpacity>
+          </View>
+        )}
       </>
     )
   }
 }
 
 const mapDispatchToProps = dispatch =>
-  bindActionCreators({ setTabName }, dispatch)
+  bindActionCreators({ setTabName, setMenu }, dispatch)
 
-export default connect(null, mapDispatchToProps)(TabMenuUnderline)
+const mapStateToProps = state => {
+  const getManuName = makeGetSpecificMenu()
+  return {
+    fashionMenu: getManuName(state, 'fashion'),
+    beautyMenu: getManuName(state, 'beauty'),
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(TabMenuUnderline)
