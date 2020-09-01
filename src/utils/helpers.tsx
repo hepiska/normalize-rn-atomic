@@ -261,7 +261,7 @@ export const calculateDay = day => {
     convertion = 'years'
   }
 
-  return 'about ' + res + ' ' + convertion + ' ago'
+  return res + ' ' + convertion + ' ago'
 }
 
 export const countlongCreate = time => {

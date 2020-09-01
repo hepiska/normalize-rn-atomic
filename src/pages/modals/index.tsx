@@ -72,7 +72,7 @@ function ModalStack() {
         options={{
           cardStyle: { backgroundColor: 'rgba(0,0,0,0.7)' },
         }}
-        component={QRModal}
+        component={ShareProductModal}
       />
       <Stack.Screen
         name="QR"

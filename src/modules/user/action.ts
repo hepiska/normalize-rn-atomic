@@ -23,6 +23,7 @@ export const userActionType = {
   SET_INSIDER_DATA: 'user/SET_INSIDER_DATA',
   ERROR: 'user/ERROR',
   DEFAULT: 'user/DEFAULT',
+  SET_RECOMMENDED_USER_ORDER: 'user/SET_RECOMMENDED_USER_ORDER',
 }
 
 export const setUserData = (data: any) => {
@@ -92,6 +93,11 @@ export const removeUserOrder = (data: any) => ({
 
 export const setUserLoading = (data: Boolean) => ({
   type: userActionType.SET_USER_LOADING,
+  payload: data,
+})
+
+export const setRecommendedUserOrder = (data: any) => ({
+  type: userActionType.SET_RECOMMENDED_USER_ORDER,
   payload: data,
 })
 
@@ -346,6 +352,38 @@ export const getInsiderStatus = () => {
       },
       error: error => {
         return [setUserLoading(false)]
+      },
+    },
+  }
+}
+
+export const fetchRecommendedUser = () => {
+  const id = getMe().id
+  return {
+    type: API,
+    payload: {
+      url: `/users/${id}/followings/recommendations`,
+      schema: [schema.user],
+      // requestParams: {
+      //   params: {
+      //     id_type,
+      //   },
+      // },
+      startNetwork: () => {
+        return setUserLoading(true)
+      },
+      endNetwork: () => {
+        return setUserLoading(false)
+      },
+      success: data => {
+        return [
+          setUserData(data.entities.user),
+          setRecommendedUserOrder(data.result),
+          setUserLoading(false),
+        ]
+      },
+      error: err => {
+        return setUserLoading(false)
       },
     },
   }
