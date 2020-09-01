@@ -103,10 +103,10 @@ export const fetchSpecificPosts = (
 ) => {
   const url = '/posts/v2'
   const newParams = isFresh
-    ? { limit: params.limit, offset: params.offset }
+    ? { limit: params.limit, offset: params.offset, type: params.type }
     : params.next_token
     ? { next_token: params.next_token }
-    : { limit: params.limit, offset: params.offset }
+    : { limit: params.limit, offset: params.offset, type: params.type }
 
   switch (type) {
     case 'fashion':
@@ -116,6 +116,7 @@ export const fetchSpecificPosts = (
       newParams['category_id'] = categoryIds.beauty
       break
     default:
+      newParams['category_id'] = params.category_id
       break
   }
 

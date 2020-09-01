@@ -12,6 +12,7 @@ import { fetchSpecificPosts } from '@src/modules/post-discover/action'
 import List from '@components/layouts/list-header'
 import {
   makeGetSpecificLoading,
+  makeGetSpecificMenu,
   makeGetSpecificPagination,
   makeGetSpecificPost,
 } from '@src/modules/post-discover/selector'
@@ -52,10 +53,21 @@ class DiscoverFashion extends React.PureComponent<any> {
     })
   }
 
+  componentDidUpdate(prevProps) {
+    if (this.props.fashionMenu !== prevProps.fashionMenu) {
+      console.log('laol', prevProps.fashionMenu)
+      this._freshFetch()
+    }
+  }
+
   _freshFetch = () => {
     this.skip = 0
     if (!this.props.loading) {
-      this._fetchData({ limit: 0, offset: 10 }, 'fashion', true)
+      const type =
+        this.props.fashionMenu === '' || this.props.fashionMenu === 'collection'
+          ? 'collection'
+          : 'journal'
+      this._fetchData({ limit: 0, offset: 10, type }, 'fashion', true)
     }
   }
 
@@ -196,10 +208,12 @@ const mapStateToProps = state => {
   const getSpecificLoading = makeGetSpecificLoading()
   const getSpecificPosts = makeGetSpecificPost()
   const getSpecificPagination = makeGetSpecificPagination()
+  const getMenuName = makeGetSpecificMenu()
   return {
     loading: getSpecificLoading(state, 'fashion'),
     posts: getSpecificPosts(state, 'fashion'),
     pagination: getSpecificPagination(state, 'fashion'),
+    fashionMenu: getMenuName(state, 'fashion'),
   }
 }
 

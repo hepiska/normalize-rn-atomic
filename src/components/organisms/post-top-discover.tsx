@@ -3,7 +3,10 @@ import { InteractionManager, View } from 'react-native'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { fetchSpecificPosts } from '@src/modules/post-discover/action'
-import { makeGetSpecificPost } from '@src/modules/post-discover/selector'
+import {
+  makeGetSpecificPost,
+  makeGetSpecificMenu,
+} from '@src/modules/post-discover/selector'
 import PostCardJournal from '@src/components/molecules/post-card-journal'
 import { postListData } from '@hocs/data/post'
 import { colors } from '@src/utils/constants'
@@ -56,22 +59,29 @@ class PostTopDiscover extends React.PureComponent<any> {
   onPress = () => {}
 
   render() {
-    const { posts } = this.props
+    const { posts, fashionMenu } = this.props
     const bannerPost = posts[0]
     const postslist = posts.slice(1, posts.length)
     return (
       <>
-        {bannerPost && (
-          <PostItem
-            key={`discover-post-top-banner-${bannerPost.id}`}
-            fullscreen
-            postId={bannerPost.id}
-            idx={bannerPost.id}
-            type="banner"
-            style={{ marginBottom: 20 }}
-          />
+        {fashionMenu != 'collection' && (
+          <>
+            {bannerPost && (
+              <PostItem
+                key={`discover-post-top-banner-${bannerPost.id}`}
+                fullscreen
+                postId={bannerPost.id}
+                idx={bannerPost.id}
+                type="banner"
+                style={{ marginBottom: 20 }}
+              />
+            )}
+            <PostHorizontalList
+              data={postslist}
+              renderItem={this._renderItem}
+            />
+          </>
         )}
-        <PostHorizontalList data={postslist} renderItem={this._renderItem} />
       </>
     )
   }
@@ -82,8 +92,10 @@ const mapDispatchToProps = dispatch =>
 
 const mapStateToProps = state => {
   const getSpecificPosts = makeGetSpecificPost()
+  const getMenuName = makeGetSpecificMenu()
   return {
     posts: getSpecificPosts(state, 'discover-post-top'),
+    fashionMenu: getMenuName(state, 'fashion'),
   }
 }
 
