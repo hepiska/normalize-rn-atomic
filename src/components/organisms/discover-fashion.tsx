@@ -55,7 +55,6 @@ class DiscoverFashion extends React.PureComponent<any> {
 
   componentDidUpdate(prevProps) {
     if (this.props.fashionMenu !== prevProps.fashionMenu) {
-      console.log('laol', prevProps.fashionMenu)
       this._freshFetch()
     }
   }

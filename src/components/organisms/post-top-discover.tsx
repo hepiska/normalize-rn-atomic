@@ -76,11 +76,10 @@ class PostTopDiscover extends React.PureComponent<any> {
                 style={{ marginBottom: 20 }}
               />
             )}
-            <PostHorizontalList
-              data={postslist}
-              renderItem={this._renderItem}
-            />
           </>
+        )}
+        {fashionMenu != 'journal' && fashionMenu != 'collection' && (
+          <PostHorizontalList data={postslist} renderItem={this._renderItem} />
         )}
       </>
     )

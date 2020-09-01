@@ -9,6 +9,10 @@ import TabMenuUnderline from '../molecules/tab-menu-underline'
 
 const Tab = createMaterialTopTabNavigator()
 
+const Placeholder = () => {
+  return <Text>LOL</Text>
+}
+
 class DiscoverScreen extends React.PureComponent {
   render() {
     return (
@@ -17,7 +21,7 @@ class DiscoverScreen extends React.PureComponent {
           <Tab.Navigator
             tabBar={props => <TabMenuUnderline {...props} />}
             lazy={true}>
-            <Tab.Screen name="ALL" component={DiscoverBeauty} />
+            <Tab.Screen name="ALL" component={Placeholder} />
             <Tab.Screen name="FASHION" component={DiscoverFashion} />
             <Tab.Screen name="BEAUTY" component={DiscoverBeauty} />
           </Tab.Navigator>
