@@ -68,6 +68,7 @@ const styles = StyleSheet.create({
     color: colors.white,
     fontSize: 14,
     fontWeight: 'bold',
+    marginLeft: -1,
   },
 })
 
@@ -94,6 +95,7 @@ const JournalCard = ({
   type,
 }: any) => {
   const isBannerType = type === 'banner'
+  const isHorizontalListType = type === 'horizontal-list'
   return (
     <View style={{ ...styles.container, ...style }} onLayout={onLayout}>
       {width && (
@@ -112,7 +114,7 @@ const JournalCard = ({
                 uri: setImage(post.image_url, { width: 32, height: 32 }),
               }}
               width={width}
-              height={isBannerType && 360}
+              height={isBannerType ? 360 : isHorizontalListType ? 200 : null}
             />
           </TouchableWithoutFeedback>
         </View>
@@ -128,7 +130,8 @@ const JournalCard = ({
             style={{
               flexDirection: 'row',
               flex: 1,
-              justifyContent: isBannerType ? 'center' : 'flex-start',
+              justifyContent:
+                isBannerType || isHorizontalListType ? 'center' : 'flex-start',
             }}>
             <Text style={styles.cat}>
               {'Fashion'.toUpperCase()}{' '}
@@ -140,16 +143,17 @@ const JournalCard = ({
               </Text>
             </TouchableOpacity>
           </View>
-          {!isBannerType && (
-            <Text
-              style={{
-                ...fontStyle.helveticaThin,
-                fontSize: 10,
-                color: colors.black80,
-              }}>
-              {calculateDay(post.published_at)}
-            </Text>
-          )}
+          {!isBannerType ||
+            (!isHorizontalListType && (
+              <Text
+                style={{
+                  ...fontStyle.helveticaThin,
+                  fontSize: 10,
+                  color: colors.black80,
+                }}>
+                {calculateDay(post.published_at)}
+              </Text>
+            ))}
         </View>
         <Text
           style={{
@@ -158,7 +162,7 @@ const JournalCard = ({
             lineHeight: 25,
             color: colors.black100,
             marginBottom: 32,
-            textAlign: isBannerType ? 'center' : 'left',
+            textAlign: isBannerType || isHorizontalListType ? 'center' : 'left',
           }}>
           {post.title}
         </Text>
@@ -181,6 +185,8 @@ const JournalCard = ({
                 fontSize: 16,
                 ...fontStyle.helveticaThin,
                 color: colors.black100,
+                textAlign: isHorizontalListType ? 'center' : 'left',
+                marginBottom: isHorizontalListType ? 10 : 0,
               }}>
               {'Read & Shop'}
             </Text>
