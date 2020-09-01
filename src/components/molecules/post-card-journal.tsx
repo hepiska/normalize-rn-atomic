@@ -143,17 +143,16 @@ const JournalCard = ({
               </Text>
             </TouchableOpacity>
           </View>
-          {!isBannerType ||
-            (!isHorizontalListType && (
-              <Text
-                style={{
-                  ...fontStyle.helveticaThin,
-                  fontSize: 10,
-                  color: colors.black80,
-                }}>
-                {calculateDay(post.published_at)}
-              </Text>
-            ))}
+          {!isBannerType && !isHorizontalListType && (
+            <Text
+              style={{
+                ...fontStyle.helveticaThin,
+                fontSize: 10,
+                color: colors.black80,
+              }}>
+              {calculateDay(post.published_at)}
+            </Text>
+          )}
         </View>
         <Text
           style={{
