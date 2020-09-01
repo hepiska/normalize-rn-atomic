@@ -23,6 +23,7 @@ import PostCardJournal from '@src/components/molecules/post-card-journal'
 import { postListData } from '@hocs/data/post'
 import PostTopDiscover from './post-top-discover'
 import Amplitude from 'amplitude-js'
+import PostMidDisover from './post-mid-disover'
 
 const PostItemCollection = postListData(PostCardCollection)
 
@@ -75,6 +76,13 @@ class DiscoverFashion extends React.PureComponent<any> {
         <>
           <PostTopDiscover />
           {this._renderPostCard(item, index)}
+        </>
+      )
+    } else if (index === 2) {
+      return (
+        <>
+          {this._renderPostCard(item, index)}
+          <PostMidDisover />
         </>
       )
     } else {

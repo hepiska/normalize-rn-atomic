@@ -11,7 +11,7 @@ import PostHorizontalList from './post-horizontal-list'
 
 const PostItem = postListData(PostCardJournal)
 
-class PostTopDiscover extends React.PureComponent<any> {
+class PostMidDiscover extends React.PureComponent<any> {
   state = {
     finishAnimation: false,
   }
@@ -26,7 +26,7 @@ class PostTopDiscover extends React.PureComponent<any> {
   _freshFetch = () => {
     this._fetchData(
       { limit: 0, offset: 10, category_id: 1, type: 'journal' },
-      'discover-post-top',
+      'discover-post-mid',
       true,
     )
   }
@@ -38,7 +38,7 @@ class PostTopDiscover extends React.PureComponent<any> {
   _renderItem = ({ item, index }) => {
     return (
       <PostItem
-        key={`discover-post-top-horizontal-${item.id}`}
+        key={`discover-post-mid-horizontal-${item.id}`}
         fullscreen
         postId={item.id}
         idx={index}
@@ -46,7 +46,6 @@ class PostTopDiscover extends React.PureComponent<any> {
         style={{
           width: 300,
           borderWidth: 1,
-          borderColor: colors.black50,
           borderRadius: 6,
         }}
       />
@@ -57,21 +56,14 @@ class PostTopDiscover extends React.PureComponent<any> {
 
   render() {
     const { posts } = this.props
-    const bannerPost = posts[0]
-    const postslist = posts.slice(1, posts.length)
     return (
       <>
-        {bannerPost && (
-          <PostItem
-            key={`discover-post-top-banner-${bannerPost.id}`}
-            fullscreen
-            postId={bannerPost.id}
-            idx={bannerPost.id}
-            type="banner"
-            style={{ marginBottom: 20 }}
-          />
-        )}
-        <PostHorizontalList data={postslist} renderItem={this._renderItem} />
+        <PostHorizontalList
+          data={posts}
+          renderItem={this._renderItem}
+          title="Trending Fashion Editorial"
+          darkMode
+        />
       </>
     )
   }
@@ -83,8 +75,8 @@ const mapDispatchToProps = dispatch =>
 const mapStateToProps = state => {
   const getSpecificPosts = makeGetSpecificPost()
   return {
-    posts: getSpecificPosts(state, 'discover-post-top'),
+    posts: getSpecificPosts(state, 'discover-post-mid'),
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(PostTopDiscover)
+export default connect(mapStateToProps, mapDispatchToProps)(PostMidDiscover)

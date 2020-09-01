@@ -9,6 +9,7 @@ interface PostHorizontalListType {
   style?: any
   renderItem: any
   title?: string
+  darkMode?: boolean
 }
 
 class PostHorizontalList extends React.PureComponent<PostHorizontalListType> {
@@ -19,9 +20,29 @@ class PostHorizontalList extends React.PureComponent<PostHorizontalListType> {
   onPress = () => {}
 
   render() {
-    const { data, style, renderItem, title } = this.props
+    const { data, style, renderItem, title, darkMode } = this.props
     return (
-      <View style={style}>
+      <View
+        style={{
+          ...style,
+          ...{
+            marginBottom: 40,
+            backgroundColor: darkMode ? colors.black100 : colors.white,
+          },
+        }}>
+        {title && (
+          <Text
+            style={{
+              ...fontStyle.playfairBold,
+              fontSize: 24,
+              paddingTop: 20,
+              paddingBottom: 20,
+              color: darkMode ? colors.white : colors.black100,
+              textAlign: 'center',
+            }}>
+            {title}
+          </Text>
+        )}
         <FlatList
           data={data}
           ItemSeparatorComponent={this._separator}
@@ -37,9 +58,10 @@ class PostHorizontalList extends React.PureComponent<PostHorizontalListType> {
               textDecorationColor: colors.black80,
               fontSize: 16,
               ...fontStyle.helveticaThin,
-              color: colors.black100,
+              color: darkMode ? colors.white : colors.black100,
+              borderBottomColor: darkMode ? colors.white : colors.black60,
               textAlign: 'center',
-              marginBottom: 40,
+              marginBottom: darkMode ? 20 : 0,
             }}>
             Lihat Semua
           </Text>

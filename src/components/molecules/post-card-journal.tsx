@@ -115,6 +115,14 @@ const JournalCard = ({
               }}
               width={width}
               height={isBannerType ? 360 : isHorizontalListType ? 200 : null}
+              style={{
+                borderTopLeftRadius: style.borderRadius
+                  ? style.borderRadius
+                  : 0,
+                borderTopRightRadius: style.borderRadius
+                  ? style.borderRadius
+                  : 0,
+              }}
             />
           </TouchableWithoutFeedback>
         </View>
