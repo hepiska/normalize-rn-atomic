@@ -1,5 +1,11 @@
 import React from 'react'
-import { View, Text, ScrollView, Dimensions } from 'react-native'
+import {
+  View,
+  Text,
+  ScrollView,
+  Dimensions,
+  TouchableOpacity,
+} from 'react-native'
 import {
   changesRightSideBar,
   changeRightSideBarSection,
@@ -22,6 +28,7 @@ import EditorPicks from '@src/components/molecules/editor-picks'
 import RelatedPost from '@src/components/molecules/related-post'
 import PostComment from '@src/components/molecules/post-comment'
 import ListJournal from '@src/components/molecules/horizontal-article-list'
+import { navigate } from '@src/root-navigation'
 
 const TestPage = props => {
   const [image, setImage] = React.useState(null)
@@ -53,16 +60,15 @@ const TestPage = props => {
   //       'Lorem ipsum dolor sit amet consectetur, adipisicing elit. Doloremque nisi quam quis. Lorem, ipsum.',
   //   },
   // ]
+  const _trigger = () => {
+    navigate('modals', { screen: 'FirstIntroduceRegister' })
+  }
+
   return (
     <ScrollView style={{ flex: 1, marginTop: 62 }} ref={toolTipsParent}>
-      <ListJournal
-        title={'The Latest Fashion'}
-        categoryId={1}
-        typePost={'journal'}
-        onPress={() => {
-          console.log('see all editorial')
-        }}
-      />
+      <TouchableOpacity onPress={_trigger}>
+        <Text>skajkdjfa</Text>
+      </TouchableOpacity>
       {/* <FilterList /> */}
       {/* <CircleLoader r={50} /> */}
       {/* <ConnectionsLoader /> */}

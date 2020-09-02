@@ -19,6 +19,7 @@ import QRModal from './qr-code'
 import ShareModal from '@pages/modals/share'
 import ShareAndEarn from '@src/pages/modals/share-and-earn'
 import ShareProductModal from './share-product'
+import FirstIntroduceRegister from '@src/components/organisms/introduce-register'
 
 const Stack = createStackNavigator()
 
@@ -115,6 +116,11 @@ function ModalStack() {
         name="ShareAndEarn"
         options={{ cardStyle: { backgroundColor: 'transparent' } }}
         component={ShareAndEarn}
+      />
+      <Stack.Screen
+        name="FirstIntroduceRegister"
+        options={{ cardStyle: { backgroundColor: 'white' } }}
+        component={FirstIntroduceRegister}
       />
     </Stack.Navigator>
   )
