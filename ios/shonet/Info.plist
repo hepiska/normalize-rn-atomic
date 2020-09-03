@@ -100,7 +100,7 @@
 	<string>The Shonet need access for the location.
   </string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string/>
+	<string></string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>$(PRODUCT_NAME) wants to save photos</string>
 	<key>NSPhotoLibraryUsageDescription</key>
@@ -149,7 +149,7 @@
 		<string>PlayfairDisplay-SemiBoldItalic.ttf</string>
 		<string>Chronicle-Display-Roman.otf</string>
 		<string>Georgia-Regular-font.ttf</string>
-		<string>navbar.ttf</string>
+		<string>social-commerce.ttf</string>
 	</array>
 	<key>UIBackgroundModes</key>
 	<array>
