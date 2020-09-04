@@ -14,6 +14,7 @@ import InitialPage from '../page-initial.config'
 import LookbookDetail from './look-book'
 import Test from './test'
 import ProductDetail from './product-detail'
+import MyWebView from './web-view'
 // import ProductList from './product-list-old'
 import PaymentMethod from './payment-method'
 import PaymentDetails from './payment-details'
@@ -65,6 +66,7 @@ import BrandProductList from './brand-product-list'
 import TopicInterest from './topic-interest'
 import WithdrawEarnings from './withdraw-earnings'
 import DanaConfirmWithdraw from './dana-confirm-withdraw'
+import LandingRegister from './landing-register'
 
 const Stack = createStackNavigator()
 
@@ -95,6 +97,7 @@ function InsiderStack() {
       <Stack.Screen name="Coupons" component={CouponsPage} />
       <Stack.Screen name="CouponDetail" component={CouponDetail} />
       <Stack.Screen name="Maintenance" component={Maintenance} />
+      <Stack.Screen name="WebView" component={MyWebView} />
       {/* <Stack.Screen name="ProductList" component={ProductList} /> */}
       <Stack.Screen name="PaymentWaiting" component={PaymentWaiting} />
       <Stack.Screen name="Cart" component={Cart} />
@@ -149,6 +152,7 @@ function InsiderStack() {
         name="AddNewAddressManual"
         component={AddNewAddressManual}
       />
+      <Stack.Screen name="LandingRegister" component={LandingRegister} />
       <Stack.Screen name="Test" component={Test} />
     </Stack.Navigator>
   )

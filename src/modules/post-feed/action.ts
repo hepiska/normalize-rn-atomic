@@ -72,3 +72,20 @@ export const fetchFeed = (params: any = {}) => {
     },
   }
 }
+
+export const fetchLatestPost = (params: any = {}, callback) => {
+  let url = '/posts'
+  return {
+    type: API,
+    payload: {
+      url,
+      callback,
+      schema: [schema.post],
+      requestParams: { params },
+      success: (data) => {
+        const composeAction = [...dispatchPostEntities(data.entities)]
+        return composeAction
+      },
+    },
+  }
+}

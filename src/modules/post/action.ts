@@ -63,13 +63,15 @@ export const setPostLoading = (data: any) => ({
   payload: data,
 })
 
-export const getPostById = (data: any) => ({
+export const getPostById = (data: any, callback, params?: any) => ({
   type: API,
   payload: {
     url: '/posts/' + data,
     schema: schema.post,
+    callback: callback,
     requestParams: {
       method: 'GET',
+      params,
     },
     startNetwork: () => {
       return setPostLoading(true)
@@ -78,12 +80,7 @@ export const getPostById = (data: any) => ({
       return setPostLoading(false)
     },
     success: data => {
-      return [
-        dispatchPostEntities(data.entities),
-
-        setActivePost(data.result),
-        setPostLoading(false),
-      ]
+      return [dispatchPostEntities(data.entities), setPostLoading(false)]
     },
     error: err => {
       return [setPostLoading(false)]
@@ -91,11 +88,12 @@ export const getPostById = (data: any) => ({
   },
 })
 
-export const getNextPost = (data: any) => ({
+export const getNextPost = (data: any, callback) => ({
   type: API,
   payload: {
     url: '/posts/' + data + '/next',
     schema: schema.post,
+    callback,
     requestParams: {
       method: 'GET',
     },
@@ -106,11 +104,7 @@ export const getNextPost = (data: any) => ({
       return setPostLoading(false)
     },
     success: data => {
-      return [
-        dispatchPostEntities(data.entities),
-        setActivePost(data.result),
-        setPostLoading(false),
-      ]
+      return [dispatchPostEntities(data.entities), setPostLoading(false)]
     },
     error: err => {
       return [setPostLoading(false)]

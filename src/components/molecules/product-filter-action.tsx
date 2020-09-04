@@ -49,20 +49,25 @@ const ProductFilterAction = ({
   fetchCountProduct,
   searchKey,
   clearFilter,
+  selectedCategories,
   applyFilter,
 }: any) => {
   const navigation = useNavigation()
 
   useEffect(() => {
     if (fetchCountProduct) {
-      fetchCountProduct({ ...selectedFilter, query: searchKey })
+      fetchCountProduct({
+        ...selectedFilter,
+        category_ids: selectedCategories,
+        query: searchKey,
+      })
     }
   }, [
     selectedFilter.brand_ids,
     selectedFilter.color_ids,
     selectedFilter.maximum_price,
     selectedFilter.minimum_price,
-    selectedFilter.category_ids,
+    selectedCategories,
   ])
 
   const _applyFilter = () => {

@@ -26,11 +26,11 @@ export const setSection = (data: any) => {
   return { type: pageActionType.SET_SECTION, payload: data }
 }
 export const clearPageData = () => ({ type: pageActionType.CLEAR_PAGE })
-export const getPage = pagename => ({
+export const getPage = (pagename, params?) => ({
   type: API,
   payload: {
     url: '/pages',
-    requestParams: { params: { client: 'web', page: pagename } },
+    requestParams: { params: { client: 'web', page: pagename, ...params } },
     schema: schema.page,
     startNetwork: () => {
       return setPageLoading({ key: pagename, value: true })

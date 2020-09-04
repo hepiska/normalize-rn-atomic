@@ -1,7 +1,7 @@
 export default {
   root: 'RootScreens',
   index: 'Main',
-  main: 'Home',
+  main: 'Main',
   screens: 'Test',
   modal: 'ProductFilter',
   shop: 'Shop',

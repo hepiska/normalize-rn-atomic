@@ -1,10 +1,18 @@
 import React, { Component } from 'react'
-import { Text, View, Image, ImageBackground } from 'react-native'
+import {
+  Text,
+  View,
+  Image,
+  ImageBackground,
+  FlatList,
+  Dimensions,
+} from 'react-native'
 import { fontStyle } from '../commont-styles'
-import ImageAutoSchale from '@components/atoms/image-autoschale'
 import { colors } from '@src/utils/constants'
 import { Button } from '../atoms/button'
+import { navigate } from '@src/root-navigation'
 
+const { width } = Dimensions.get('screen')
 const RegisterCard = ({ style }: any) => {
   return (
     <ImageBackground
@@ -57,6 +65,7 @@ const RegisterCard = ({ style }: any) => {
     </ImageBackground>
   )
 }
+
 const Line = () => {
   return (
     <View
@@ -69,46 +78,93 @@ const Line = () => {
     />
   )
 }
-const Placeholder = ({ type }: any) => {
-  return (
-    <View style={{ alignItems: 'center' }}>
-      <ImageBackground
-        style={{
-          width: 200,
-          height: 200,
-          marginBottom: 16,
-        }}
-        resizeMode={'contain'}
-        source={
-          type === 'follow'
-            ? require('@assets/placeholder/p-follow.png')
-            : require('@assets/placeholder/p-find.png')
-        }
-      />
-      <Text
-        style={{
-          ...fontStyle.playfair,
-          color: colors.black100,
-          fontSize: 18,
-          marginBottom: 8,
-          height: 70,
-          textAlign: 'center',
-        }}>
-        {type === 'follow'
-          ? 'Follow and Get Update from Fashion Influencer'
-          : 'Find Products You Love'}
-      </Text>
-      <Line />
-    </View>
-  )
-}
-export default class FeedPlaceholder extends Component {
-  render() {
+
+export default class FeedPlaceholder extends Component<any, any> {
+  _renderItem = ({ item }) => {
+    console.log('type', item)
+
     return (
-      <>
-        <RegisterCard style={{ marginBottom: 32 }} />
-        <Placeholder type={'find'} />
-      </>
+      <View
+        style={{
+          alignItems: 'center',
+          width: width,
+          paddingVertical: 32,
+        }}>
+        <ImageBackground
+          style={{
+            width: 200,
+            height: 200,
+            marginBottom: 16,
+          }}
+          resizeMode={'contain'}
+          source={
+            item.type === 'find'
+              ? require('@assets/placeholder/p-find.png')
+              : require('@assets/placeholder/p-follow.png')
+          }
+        />
+        <Text
+          style={{
+            ...fontStyle.playfair,
+            color: colors.black100,
+            fontSize: 18,
+            marginBottom: 8,
+            height: 70,
+            width: '80%',
+            textAlign: 'center',
+          }}>
+          {item.desc}
+        </Text>
+        <Line />
+      </View>
+    )
+  }
+  _keyExtractor = (item, index) => {
+    return `key-placeholder-${index}`
+  }
+
+  _triggerRegister = () => {
+    navigate('modals', { screen: 'RegisterModal' })
+  }
+
+  render() {
+    const { style } = this.props
+    const data = [
+      {
+        type: 'follow',
+        desc: 'Follow and Get Update from Fashion Influencer',
+      },
+      {
+        type: 'find',
+        desc: 'Find Products You Love',
+      },
+    ]
+    return (
+      <View style={{ ...style }}>
+        {/* <RegisterCard style={{ marginBottom: 32 }} /> */}
+        <FlatList
+          style={{ marginBottom: 32 }}
+          data={data}
+          pagingEnabled
+          showsHorizontalScrollIndicator={false}
+          keyExtractor={this._keyExtractor}
+          renderItem={this._renderItem}
+          horizontal
+        />
+        <Button
+          onPress={this._triggerRegister}
+          title={'Register Now'}
+          style={{
+            backgroundColor: colors.black100,
+            marginHorizontal: 16,
+            height: 46,
+          }}
+          fontStyle={{
+            ...fontStyle.helveticaBold,
+            color: colors.white,
+          }}
+        />
+      </View>
     )
   }
 }

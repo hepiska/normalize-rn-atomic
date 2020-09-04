@@ -26,15 +26,17 @@ const Jumbotron = () => {
 
     return { jumbotron }
   })
+
   const displayitem =
-    jumbotron &&
-    jumbotron.images[
-      Math.floor(Math.random() * Math.floor(jumbotron.images.length))
-    ]
+    jumbotron && jumbotron.images
+      ? jumbotron.images[
+          Math.floor(Math.random() * Math.floor(jumbotron.images?.length))
+        ]
+      : ' '
   const _onPress = () => {
     const parsedUri = displayitem.target_url.split('/')
-    const screenKey = parsedUri[parsedUri.length - 2]
-    const screenParams = parsedUri[parsedUri.length - 1]
+    const screenKey = parsedUri[parsedUri?.length - 2]
+    const screenParams = parsedUri[parsedUri?.length - 1]
     const params = { from: screenKey }
     params[
       Number(screenParams) ? `${screenKey}Id` : `${screenKey}Slug`
@@ -47,7 +49,7 @@ const Jumbotron = () => {
   if (!jumbotron) {
     return null
   }
-  if (!jumbotron.images[0]) {
+  if (!jumbotron.images) {
     return null
   }
   return (

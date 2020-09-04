@@ -20,6 +20,7 @@ import Line from '@components/atoms/line'
 import { textElipsis as textLimit } from '@utils/helpers'
 import AvatarImage from '../atoms/avatar-image'
 import { fontStyle } from '../commont-styles'
+import PostComment from '../molecules/post-comment'
 
 interface PostListItemType {
   post: any
@@ -76,6 +77,8 @@ const CollectionCard = ({
   onBookmark,
   likeCount,
   postLikes,
+  comments,
+  userAuth,
 }: any) => {
   const maxTitle = 3000
   const maxSubtitle = 200
@@ -287,7 +290,7 @@ const CollectionCard = ({
         </TouchableOpacity>
       </View>
       {/* title subtitle section */}
-      <View style={styles.content}>
+      <View style={{ ...styles.content, marginBottom: 16 }}>
         <Text
           style={{
             ...fontStyle.playfairMedium,
@@ -308,67 +311,13 @@ const CollectionCard = ({
           </Text>
         )}
       </View>
-      {/* comment list here */}
-      {post.comment_count !== 0 && (
-        <View style={{ ...styles.content, marginTop: 16 }}>
-          <Text onPress={onPress} style={{ fontSize: 12, marginBottom: 8 }}>
-            View all {post.comment_count} comments
-          </Text>
-          {post.comments &&
-            post.comments.slice(0, 2).map((res, idx) => {
-              return (
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    alignItems: 'flex-start',
-                    marginBottom: idx === 1 ? 0 : 8,
-                  }}
-                  key={'comment' + res}>
-                  <Text
-                    style={{
-                      flex: 1,
-                      ...fontStyle.helveticaBold,
-                      fontSize: 12,
-                      lineHeight: 16,
-                    }}>
-                    {res}{' '}
-                    <Text
-                      style={{ ...fontStyle.helvetica, color: colors.black70 }}>
-                      {textLimit(
-                        ' Lorem ipsum dolor sit amet, consectetur adipisicing elit. Soluta earum magni nobis a aut cum, numquam quidem vitae voluptates delectus laboriosam quod ea facilis deserunt, porro voluptatem non unde eum magnam voluptas beatae pariatur ipsam eveniet! Velit, illo. Dolorum, reprehenderit. Quis ut soluta asperiores, voluptate blanditiis commodi dolorem, iusto reiciendis minus deserunt, ad dolor nulla autem molestiae vel nostrum! Minima.',
-                        117,
-                      )}
-                    </Text>
-                  </Text>
-                  <TouchableOpacity onPress={null}>
-                    <Icon name={'heart'} size={16} color={colors.red1} />
-                  </TouchableOpacity>
-                </View>
-              )
-            })}
-        </View>
-      )}
       {/* comment section */}
-      <Line style={{ marginTop: 16 }} />
-      {/* comment-write here */}
-
-      {/* <View
-        style={{
-          flex: 1,
-          flexDirection: 'row',
-          paddingHorizontal: 16,
-          paddingVertical: 4,
-          alignItems: 'center',
-        }}>
-        <TextInput
-          placeholder={'Add your comment...'}
-          style={{ height: 40, flex: 1 }}
-        />
-        <TouchableOpacity onPress={null}>
-          <Text style={{ ...fontStyle.helveticaBold }}>POST</Text>
-        </TouchableOpacity>
-      </View> */}
-      <Line />
+      <PostComment
+        data={comments}
+        isCard
+        user={userAuth}
+        postId={post.id}
+      />
     </View>
   )
 }
@@ -493,6 +442,7 @@ class PostListItem extends React.Component<PostListItemType, any> {
       fullscreen = false,
       style,
       type = 'default',
+      userAuth,
     } = this.props
     const {
       width,
@@ -501,6 +451,8 @@ class PostListItem extends React.Component<PostListItemType, any> {
       likeCount,
       postLikes,
     } = this.state
+
+    const comments = { comments: post.comments, user: userAuth }
 
     if (post) {
       return (
@@ -521,6 +473,8 @@ class PostListItem extends React.Component<PostListItemType, any> {
           isBookmarked={isPostBookmarked}
           likeCount={likeCount}
           postLikes={postLikes}
+          userAuth={userAuth}
+          comments={comments}
         />
       )
     } else return null

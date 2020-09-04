@@ -39,6 +39,9 @@ const collectionFilterCategoriesState = () => {
   return state => {
     return {
       categories: mapCategoriesfilter(state),
+      // categories: state.productFilter.data.categories.map(
+      //   _cat => state.categories.data[_cat],
+      // ),
       selectedPrice: state.productFilter.selected.price,
       activeCollection: state.productFilter.activePage.collection_ids || '',
       selectedBrand:
@@ -102,10 +105,13 @@ export function globalSearchCategoriesData(WrappedComponent) {
 }
 
 const productFilterActionDispatch = dispatch =>
-  bindActionCreators({ clearFilter, applyFilter }, dispatch)
+  bindActionCreators({ clearFilter, applyFilter, fetchCountProduct }, dispatch)
 
 const productFilterActionState = state => {
+  console.log(state.productFilter.selected)
   return {
+    selectedFilter: state.productFilter.selected,
+    selectedCategories: state.productFilter.selected.category_ids,
     count: state.productFilter.countedProducts.count,
     isLoading: state.productFilter.countedProducts.isLoading,
   }

@@ -1,9 +1,10 @@
 import React from 'react'
-import { View, Text, Dimensions } from 'react-native'
+import { View, Text, Dimensions, TouchableOpacity } from 'react-native'
 import { colors } from '@utils/constants'
 import Html from 'react-native-render-html'
 import { fontStyle } from '@components/commont-styles'
 import Jumbotron from './post-content-jumbotron'
+import { navigate, push } from '@src/root-navigation'
 import Oembed from './oembed'
 // import HTMLView from 'react-native-htmlview'
 import Config from 'react-native-config'
@@ -29,13 +30,20 @@ const renderoembed = props => {
 //   </View>
 // )
 
-const renderBlockQuote = (props, children, data, passProps) => {
-  const content = passProps.html.match(
-    /<figure class=\"media\"><blockquote (.|\n)*?<\/figure>/g,
+const renderBlockQuote = props => {
+  return (
+    <TouchableOpacity
+      onPress={() =>
+        navigate('Screens', {
+          screen: 'WebView',
+          params: {
+            uri: props['data-instgrm-permalink'],
+          },
+        })
+      }>
+      <Text>{props['data-instgrm-permalink']}</Text>
+    </TouchableOpacity>
   )
-  // console.log('==blockquote====', passProps)
-
-  return null
 }
 
 const PostContent = ({ content, style }: any) => {
@@ -46,10 +54,25 @@ const PostContent = ({ content, style }: any) => {
         renderers={{
           jumbotron: renderJumbotron,
           oembed: renderoembed,
-          figure: renderBlockQuote,
+          blockquote: renderBlockQuote,
         }}
         imagesMaxWidth={Dimensions.get('window').width - 32}
-        decodeEntities={false}
+        onLinkPress={(e, href) => {
+          if (href.includes(Config.SHONET_URI + '/products/')) {
+            const slug = href.replace(Config.SHONET_URI + '/products/', '')
+            navigate('Screens', {
+              screen: 'ProductDetail',
+              params: { productSlug: slug },
+            })
+          } else if (href.includes(Config.SHONET_URI + '/articles/')) {
+            console.log('=====masuk sini')
+            const slug = href.replace(Config.SHONET_URI + '/articles/', '')
+            push('Screens', {
+              screen: 'PostDetail',
+              params: { postSlug: slug },
+            })
+          }
+        }}
         tagsStyles={{
           p: {
             ...fontStyle.ChronicleDisplay,

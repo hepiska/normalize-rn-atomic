@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useMemo } from 'react'
+import React, { useEffect, useRef, useState, useMemo, useCallback } from 'react'
 import WebView from 'react-native-webview'
 import Config from 'react-native-config'
 import { connect } from 'react-redux'
@@ -20,10 +20,37 @@ const PostDetailWithData = postListData(PostDetailOrg)
 
 const PostDetailPage = props => {
   const [title, setTitle] = useState('')
-  const { post, url, getPostById, getNextPost, postId, activePost } = props
+  const [loading, setLoading] = useState(false)
+  const [activeposts, setActivePost] = useState([])
+  const { post, url, getPostById, getNextPost, postId, route } = props
 
   useEffect(() => {
-    getPostById(postId)
+    if (postId) {
+      getPostById(postId, res => {
+        setLoading(res.loading)
+        if (res.status === 'success') {
+          setActivePost(postids => {
+            return [...postids, res.data.result]
+          })
+          setTitle(_title => res.data.entities.post[res.data.result].title)
+        }
+      })
+    } else {
+      getPostById(
+        route.params.postSlug,
+        res => {
+          setLoading(res.loading)
+          if (res.status === 'success') {
+            setActivePost(postids => {
+              return [...postids, res.data.result]
+            })
+            setTitle(_title => res.data.entities.post[res.data.result].title)
+          }
+        },
+        { id_type: 'slug' },
+      )
+    }
+
     return () => {}
   }, [])
 
@@ -34,23 +61,39 @@ const PostDetailPage = props => {
     [],
   )
 
-  const _keyExtractor = useMemo(() => ({ item }) => 'post-detail' + item, [])
+  const _onReachEnd = useCallback(() => {
+    if (!loading) {
+      getNextPost(activeposts[activeposts.length - 1], res => {
+        setLoading(res.loading)
+        if (res.status === 'success') {
+          setActivePost(postids => {
+            return [...postids, res.data.result]
+          })
+          setTitle(_title => res.data.entities.post[res.data.result].title)
+        }
+      })
+    }
+  }, [activeposts, loading])
 
-  if (post || url) {
-    return (
-      <>
-        <NavbarTop title={post?.title || title} leftContent={['back']} />
-        <List
-          data={activePost}
-          showScrollIndicator={false}
-          renderItem={_renderItem}
-          showsVerticalScrollIndicator={false}
-          keyExtractor={_keyExtractor}
-        />
-      </>
-    )
-  }
-  return null
+  const _keyExtractor = useMemo(() => item => 'post-detail' + item, [
+    activeposts,
+  ])
+
+  return (
+    <>
+      <NavbarTop title={title} leftContent={['back']} />
+      <List
+        data={activeposts}
+        showScrollIndicator={false}
+        onEndReached={_onReachEnd}
+        renderItem={_renderItem}
+        showsVerticalScrollIndicator={false}
+        keyExtractor={_keyExtractor}
+      />
+    </>
+  )
+
+  // return null
 }
 const mapStateToProps = (state, ownProps) => {
   let post = null
