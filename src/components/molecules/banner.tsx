@@ -53,7 +53,6 @@ const Banner = (props: BannerPropsStyle) => {
   const _setLayout = ({ nativeEvent }) => {
     setLayout(nativeEvent.layout)
   }
-  console.log('image lol', img)
   return (
     <View onLayout={_setLayout}>
       <ImageBackground
