@@ -13,6 +13,7 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import { colors } from '@utils/constants'
 import DiscoverTab from '@src/components/molecules/tab-menu-chip'
 import { navigate } from '@src/root-navigation'
+import DiscoverScreen from '@src/components/organisms/discover-screen'
 
 const { width } = Dimensions.get('window')
 
@@ -36,6 +37,7 @@ const DiscoverPage = () => {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
       <Tab.Navigator
+        lazy={true}
         tabBar={props => (
           <DiscoverTab
             {...props}
@@ -43,7 +45,7 @@ const DiscoverPage = () => {
           />
         )}>
         <Tab.Screen name="Feed" component={Feed} />
-        {/* <Tab.Screen name="Discover" component={Discover} /> */}
+        <Tab.Screen name="Discover" component={DiscoverScreen} />
       </Tab.Navigator>
     </SafeAreaView>
   )

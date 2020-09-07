@@ -9,7 +9,6 @@ import {
 } from 'react-native'
 import { colors } from '@src/utils/constants'
 import { Button } from '../atoms/button'
-import { PressAbbleDiv } from '../atoms/basic'
 import { fontStyle } from '../commont-styles'
 import { setImage as changeImageUri } from '@utils/helpers'
 
@@ -20,25 +19,32 @@ const styles = StyleSheet.create({
   wrapper: {
     alignItems: 'center',
     justifyContent: 'center',
+    padding: 16,
   },
   imgBg: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
     width: width,
+    backgroundColor: colors.black50,
   },
   h1: {
     ...fontStyle.playfairBold,
     fontSize: 32,
+    marginBottom: 16,
+    textAlign: 'center',
+  },
+  h2: {
+    ...fontStyle.helvetica,
+    fontSize: 14,
+    textAlign: 'center',
   },
 })
 
 interface BannerPropsStyle {
   style?: ViewStyle
-  title?: String
-  btn?: ReactElement
+  title?: string
+  desc?: string
+  btnTitle?: string
+  img?: string
+  onPress?: () => void
 }
 
 const Banner = (props: BannerPropsStyle) => {
@@ -48,23 +54,34 @@ const Banner = (props: BannerPropsStyle) => {
     setLayout(nativeEvent.layout)
   }
   return (
-    <View style={{ ...props.style, ...styles.wrapper }}>
+    <View onLayout={_setLayout}>
       <ImageBackground
-        style={styles.imgBg}
+        style={{ ...props.style, ...styles.imgBg, ...styles.wrapper }}
         resizeMode="cover"
-        source={require('@src/assets/placeholder/bumper.png')}
-        // source={
-        //   typeof img === 'string'
-        //     ? {
-        //         uri: changeImageUri(img, {
-        //           width: width * 2,
-        //         }),
-        //       }
-        //     : require('@src/assets/placeholder/bumper.png')
-        // }
-      />
-      <Text style={styles.h1}> {props.title}</Text>
-      {props.btn}
+        source={
+          typeof props.img === 'string'
+            ? {
+                uri: changeImageUri(props.img, {
+                  width: width * 2,
+                }),
+              }
+            : require('@src/assets/placeholder/bumper.png')
+        }>
+        <Text style={styles.h1}> {props.title}</Text>
+        <Text style={styles.h2}> {props.desc}</Text>
+        <Button
+          onPress={props.onPress}
+          title={props.btnTitle}
+          style={{
+            position: 'absolute',
+            bottom: 24,
+            backgroundColor: colors.black100,
+            width: 150,
+            height: 46,
+          }}
+          fontStyle={{ marginLeft: 0, color: colors.white }}
+        />
+      </ImageBackground>
     </View>
   )
 }

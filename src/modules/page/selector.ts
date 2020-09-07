@@ -7,7 +7,7 @@ const initialData = {}
 
 const getshopPage = state => state.page.data.shop
 const getSection = state => state.page.section
-const getfeedPage = state => state.page.data.feed
+const getDiscoverPage = state => state.page.data.discover
 
 export const makeGetShopPage = () =>
   createSelector([getshopPage, getSection], (shop, section) => {
@@ -25,18 +25,19 @@ export const makeGetShopPage = () =>
     return denormalizedPage
   })
 
-export const makeGetFeedPage = () =>
-  createSelector([getfeedPage, getSection], (feed, section) => {
+export const makeGetDiscoverPage = () =>
+  createSelector([getDiscoverPage, getSection], (feed, section) => {
     let denormalizedPage: any = {}
     if (feed) {
       denormalizedPage = deepClone(feed)
-      denormalizedPage.section = denormalizedPage.section
-        .map(sectionId => section[sectionId])
-        .sort((a, b) => {
-          if (a.order > b.order) return 1
-          if (a.order < b.order) return -1
-          return 0
-        })
+      denormalizedPage.section = denormalizedPage.section.map(
+        sectionId => section[sectionId],
+      )
+      // .sort((a, b) => {
+      //   if (a.order > b.order) return 1
+      //   if (a.order < b.order) return -1
+      //   return 0
+      // })
     }
     return denormalizedPage
   })

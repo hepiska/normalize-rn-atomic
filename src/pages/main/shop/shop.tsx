@@ -102,7 +102,6 @@ class ShopPage extends React.Component<any, any> {
 
   render() {
     const { page, navigation, loading } = this.props
-
     if (!this.state.finishAnimation || loading) {
       return <ShopLoader />
     }

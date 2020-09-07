@@ -12,6 +12,7 @@ import { fontStyle } from '../commont-styles'
 import ImageAutoSchale from '../atoms/image-autoschale'
 import { setImage, calculateDay } from '@src/utils/helpers'
 import { navigate } from '@src/root-navigation'
+import { Button } from '@components/atoms/button'
 
 //condition styles for horizonal
 //  marginBottom: 32,
@@ -55,6 +56,20 @@ const styles = StyleSheet.create({
     letterSpacing: 2,
     color: colors.black80,
   },
+  btnSubmit: {
+    width: 'auto',
+    backgroundColor: colors.black100,
+    height: 46,
+    marginBottom: 25,
+    paddingLeft: 20,
+    paddingRight: 20,
+  },
+  btnSubmitText: {
+    color: colors.white,
+    fontSize: 14,
+    fontWeight: 'bold',
+    marginLeft: -1,
+  },
 })
 
 interface PostListItemType {
@@ -78,8 +93,11 @@ const JournalCard = ({
   style,
   onPress,
   onUserPress,
+  type,
   isCard,
 }: any) => {
+  const isBannerType = type === 'banner'
+  const isHorizontalListType = type === 'horizontal-list'
   const category = post.category.name
     ? post.category.name.toUpperCase()
     : 'UNCATEGORIZED'
@@ -102,6 +120,15 @@ const JournalCard = ({
                 uri: setImage(post.image_url, { width: 32, height: 32 }),
               }}
               width={width}
+              height={isBannerType ? 360 : isHorizontalListType ? 200 : null}
+              style={{
+                borderTopLeftRadius: style.borderRadius
+                  ? style.borderRadius
+                  : 0,
+                borderTopRightRadius: style.borderRadius
+                  ? style.borderRadius
+                  : 0,
+              }}
             />
           </TouchableWithoutFeedback>
         </View>
@@ -111,26 +138,38 @@ const JournalCard = ({
           style={{
             flexDirection: 'row',
             alignItems: 'center',
+            justifyContent:
+              isBannerType || isHorizontalListType || isCard
+                ? 'center'
+                : 'space-between',
             marginBottom: 8,
           }}>
-          <View style={{ flexDirection: 'row', flex: 1 }}>
+          <View
+            style={{
+              flexDirection: 'row',
+              // flex: 1,
+              justifyContent:
+                isBannerType || isHorizontalListType ? 'center' : 'flex-start',
+            }}>
             <Text style={styles.cat}>
               {category} <Text style={{ fontStyle: 'italic' }}>by</Text>{' '}
             </Text>
             <TouchableOpacity onPress={onUserPress}>
-              <Text style={styles.cat}>{user.username.toUpperCase()}</Text>
+              <Text style={styles.cat}>
+                {user.username ? user.username.toUpperCase() : ''}
+              </Text>
             </TouchableOpacity>
           </View>
-          {!isCard && (
-            <Text
-              style={{
-                ...fontStyle.helveticaThin,
-                fontSize: 10,
-                color: colors.black80,
-              }}>
-              {calculateDay(post.published_at)}
-            </Text>
-          )}
+          {/* {!isBannerType && !isHorizontalListType && !isCard && ( */}
+          <Text
+            style={{
+              ...fontStyle.helveticaThin,
+              fontSize: 10,
+              color: colors.black80,
+            }}>
+            {calculateDay(post.published_at)}
+          </Text>
+          {/* )} */}
         </View>
         <Text
           style={{
@@ -138,6 +177,7 @@ const JournalCard = ({
             fontSize: 18,
             lineHeight: 25,
             color: colors.black100,
+            textAlign: isBannerType || isHorizontalListType ? 'center' : 'left',
             marginBottom: isCard ? 8 : 32,
           }}>
           {post.title}
@@ -154,18 +194,31 @@ const JournalCard = ({
           </Text>
         )}
 
-        <TouchableOpacity onPress={onPress}>
-          <Text
-            style={{
-              textDecorationLine: 'underline',
-              textDecorationColor: colors.black80,
-              fontSize: 16,
-              ...fontStyle.helveticaThin,
-              color: colors.black100,
-            }}>
-            {'Read & Shop'}
-          </Text>
-        </TouchableOpacity>
+        {isBannerType ? (
+          <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+            <Button
+              title="Read & Shop"
+              onPress={onPress}
+              style={styles.btnSubmit}
+              fontStyle={styles.btnSubmitText}
+            />
+          </View>
+        ) : (
+          <TouchableOpacity onPress={onPress}>
+            <Text
+              style={{
+                textDecorationLine: 'underline',
+                textDecorationColor: colors.black80,
+                fontSize: 16,
+                ...fontStyle.helveticaThin,
+                color: colors.black100,
+                textAlign: isHorizontalListType ? 'center' : 'left',
+                marginBottom: isHorizontalListType ? 10 : 0,
+              }}>
+              {'Read & Shop'}
+            </Text>
+          </TouchableOpacity>
+        )}
       </View>
     </View>
   )
