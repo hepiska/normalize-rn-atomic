@@ -53,15 +53,16 @@ const Banner = (props: BannerPropsStyle) => {
   const _setLayout = ({ nativeEvent }) => {
     setLayout(nativeEvent.layout)
   }
+  console.log('image lol', img)
   return (
     <View onLayout={_setLayout}>
       <ImageBackground
         style={{ ...props.style, ...styles.imgBg, ...styles.wrapper }}
         resizeMode="cover"
         source={
-          typeof img === 'string'
+          typeof props.img === 'string'
             ? {
-                uri: changeImageUri(img, {
+                uri: changeImageUri(props.img, {
                   width: width * 2,
                 }),
               }

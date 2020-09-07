@@ -37,20 +37,6 @@ class PostTop extends React.PureComponent<PostTopType> {
               />
             )
           })}
-        {/* {fashionMenu != 'collection' && (
-          <>
-            {bannerPost && (
-              <PostItem
-                key={`discover-post-top-banner-${bannerPost.id}`}
-                fullscreen
-                postId={bannerPost.id}
-                idx={bannerPost.id}
-                type="banner"
-                style={{ marginBottom: 20 }}
-              />
-            )}
-          </>
-        )} */}
       </>
     )
   }

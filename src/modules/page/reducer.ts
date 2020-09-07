@@ -34,7 +34,7 @@ const pagereducer: Reducer<PageDataType> = (
       return newState
     case pageActionType.SET_SECTION:
       newState = { ...state }
-      newState.section = Immutable.merge(newState.data, action.payload)
+      newState.section = Immutable.merge(newState.section, action.payload)
       return newState
     case pageActionType.SET_LOADING:
       newState = { ...state }

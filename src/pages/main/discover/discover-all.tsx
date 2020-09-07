@@ -16,11 +16,16 @@ import ShopLoader from '@components/atoms/loaders/shop'
 import List from '@components/layouts/list-header'
 import { colors } from '@src/utils/constants'
 import PostTop from './post-top'
+import PostMid from './post-mid'
+import Banner from './banner'
+import HorizontalList from '@components/organisms/horizontal-list'
+import RecommendList from '@components/molecules/recommend-follow-list'
 
 interface DiscoverAllType {
   page?: any
   loading?: boolean
   getPage?: (pagename: string, params?: any) => void
+  navigation?: any
 }
 
 const { width } = Dimensions.get('screen')
@@ -43,9 +48,34 @@ class DiscoverAll extends React.PureComponent<DiscoverAllType, any> {
   }
 
   _renderItem = ({ item, index }) => {
-    // console.log('render item', item)
     if (item.component === 'banner' && item.type === 'post') {
       return <PostTop posts={item.item_ids} />
+    } else if (item.component === 'banner' && item.type === 'image') {
+      return <Banner banners={item.images} />
+    } else if (
+      item.component === 'section-horizontal-list' &&
+      item.type === 'product'
+    ) {
+      return (
+        <HorizontalList
+          key={`discover-${item.component}-${index}`}
+          navigation={this.props.navigation}
+          data={item}
+          style={{
+            marginBottom: 30,
+          }}
+        />
+      )
+    } else if (
+      item.component === 'section-horizontal-list' &&
+      item.type === 'post'
+    ) {
+      return <PostMid item={item} />
+    } else if (
+      item.component === 'section-horizontal-list' &&
+      item.type === 'user'
+    ) {
+      return <RecommendList />
     }
     return (
       <View>
@@ -57,10 +87,6 @@ class DiscoverAll extends React.PureComponent<DiscoverAllType, any> {
   render() {
     const { page, loading } = this.props
 
-    if (!this.state.finishAnimation || loading) {
-      return <ShopLoader />
-    }
-
     return (
       <View
         style={{
@@ -68,6 +94,7 @@ class DiscoverAll extends React.PureComponent<DiscoverAllType, any> {
           flex: 1,
           backgroundColor: colors.white,
         }}>
+        {!this.state.finishAnimation || (loading && <ShopLoader />)}
         {page.section && (
           <List
             data={page.section}

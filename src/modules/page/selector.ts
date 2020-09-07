@@ -30,13 +30,14 @@ export const makeGetDiscoverPage = () =>
     let denormalizedPage: any = {}
     if (feed) {
       denormalizedPage = deepClone(feed)
-      denormalizedPage.section = denormalizedPage.section
-        .map(sectionId => section[sectionId])
-        .sort((a, b) => {
-          if (a.order > b.order) return 1
-          if (a.order < b.order) return -1
-          return 0
-        })
+      denormalizedPage.section = denormalizedPage.section.map(
+        sectionId => section[sectionId],
+      )
+      // .sort((a, b) => {
+      //   if (a.order > b.order) return 1
+      //   if (a.order < b.order) return -1
+      //   return 0
+      // })
     }
     return denormalizedPage
   })
