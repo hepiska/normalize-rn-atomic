@@ -138,12 +138,16 @@ const JournalCard = ({
           style={{
             flexDirection: 'row',
             alignItems: 'center',
+            justifyContent:
+              isBannerType || isHorizontalListType || isCard
+                ? 'center'
+                : 'space-between',
             marginBottom: 8,
           }}>
           <View
             style={{
               flexDirection: 'row',
-              flex: 1,
+              // flex: 1,
               justifyContent:
                 isBannerType || isHorizontalListType ? 'center' : 'flex-start',
             }}>
@@ -156,16 +160,16 @@ const JournalCard = ({
               </Text>
             </TouchableOpacity>
           </View>
-          {!isBannerType && !isHorizontalListType && !isCard && (
-            <Text
-              style={{
-                ...fontStyle.helveticaThin,
-                fontSize: 10,
-                color: colors.black80,
-              }}>
-              {calculateDay(post.published_at)}
-            </Text>
-          )}
+          {/* {!isBannerType && !isHorizontalListType && !isCard && ( */}
+          <Text
+            style={{
+              ...fontStyle.helveticaThin,
+              fontSize: 10,
+              color: colors.black80,
+            }}>
+            {calculateDay(post.published_at)}
+          </Text>
+          {/* )} */}
         </View>
         <Text
           style={{

@@ -6,6 +6,7 @@ import DiscoverFashion from './discover-fashion'
 import DiscoverBeauty from './discover-beauty'
 import { colors } from '@utils/constants'
 import TabMenuUnderline from '../molecules/tab-menu-underline'
+import DiscoverAll from '@src/pages/main/discover/discover-all'
 
 const Tab = createMaterialTopTabNavigator()
 
@@ -21,7 +22,7 @@ class DiscoverScreen extends React.PureComponent {
           <Tab.Navigator
             tabBar={props => <TabMenuUnderline {...props} />}
             lazy={true}>
-            <Tab.Screen name="ALL" component={Placeholder} />
+            <Tab.Screen name="ALL" component={DiscoverAll} />
             <Tab.Screen name="FASHION" component={DiscoverFashion} />
             <Tab.Screen name="BEAUTY" component={DiscoverBeauty} />
           </Tab.Navigator>
