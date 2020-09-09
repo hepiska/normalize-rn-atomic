@@ -49,9 +49,13 @@ class DiscoverAll extends React.PureComponent<DiscoverAllType, any> {
 
   _renderItem = ({ item, index }) => {
     if (item.component === 'banner' && item.type === 'post') {
-      return <PostTop posts={item.item_ids} />
+      return (
+        <PostTop key={`post-top-discover-all-${index}`} posts={item.item_ids} />
+      )
     } else if (item.component === 'banner' && item.type === 'image') {
-      return <Banner banners={item.images} />
+      return (
+        <Banner key={`banner-discover-all-${index}`} banners={item.images} />
+      )
     } else if (
       item.component === 'section-horizontal-list' &&
       item.type === 'product'
@@ -70,18 +74,15 @@ class DiscoverAll extends React.PureComponent<DiscoverAllType, any> {
       item.component === 'section-horizontal-list' &&
       item.type === 'post'
     ) {
-      return <PostMid item={item} />
+      return <PostMid key={`post-mid-discover-all-${index}`} item={item} />
     } else if (
       item.component === 'section-horizontal-list' &&
       item.type === 'user'
     ) {
-      return <RecommendList />
+      return <RecommendList key={`recommend-list-discover-all-${index}`} />
+    } else {
+      return <View />
     }
-    return (
-      <View>
-        <Text>LOL</Text>
-      </View>
-    )
   }
 
   render() {
