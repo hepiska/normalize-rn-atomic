@@ -139,6 +139,7 @@ class DiscoverFashion extends React.PureComponent<any> {
           postId={item.id}
           idx={index}
           style={styles.postItem}
+          isCard
         />
       )
     } else if (item.post_type === 'collection') {
@@ -158,6 +159,7 @@ class DiscoverFashion extends React.PureComponent<any> {
           postId={item.id}
           idx={index}
           style={styles.postItem}
+          isCard
         />
       )
     }
