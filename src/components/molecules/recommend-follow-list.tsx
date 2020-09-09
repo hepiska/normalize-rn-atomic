@@ -22,9 +22,10 @@ interface RecommendUserListType {
 
 const Card = userListData(FollowCard)
 
-const _renderItem = ({ item }) => {
+const _renderItem = ({ item, index }) => {
   return (
     <Card
+      key={`card-recommend-list-${index}`}
       horizontal
       style={{ backgroundColor: colors.black10 }}
       userId={item}

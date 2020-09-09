@@ -35,6 +35,8 @@ class DiscoverAll extends React.PureComponent<DiscoverAllType, any> {
     finishAnimation: false,
   }
 
+  offset = 0
+
   componentDidMount() {
     Amplitude.getInstance().logEvent('discover')
     InteractionManager.runAfterInteractions(() => {
@@ -81,8 +83,17 @@ class DiscoverAll extends React.PureComponent<DiscoverAllType, any> {
     ) {
       return <RecommendList key={`recommend-list-discover-all-${index}`} />
     } else {
-      return <View />
+      return <View key={`discover-empty-${index}`} />
     }
+  }
+
+  _onscroll(event) {
+    console.log(this.offset)
+    const currentOffset = event.nativeEvent.contentOffset.y
+    const direction = currentOffset > this.offset ? 'down' : 'up'
+    console.log('direction', direction)
+    this.offset = currentOffset
+    console.log('offset', this.offset)
   }
 
   render() {
@@ -110,6 +121,7 @@ class DiscoverAll extends React.PureComponent<DiscoverAllType, any> {
                 onRefresh={this._fetchData}
               />
             }
+            onScroll={this._onscroll.bind(this)}
           />
         )}
       </View>

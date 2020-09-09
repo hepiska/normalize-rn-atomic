@@ -36,7 +36,6 @@ class PostMid extends React.PureComponent<PostMidType> {
 
   render() {
     const { item } = this.props
-    console.log('item', item.posts)
     return (
       <>
         <PostHorizontalList

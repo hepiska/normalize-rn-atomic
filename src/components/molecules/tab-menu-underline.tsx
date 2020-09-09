@@ -71,7 +71,7 @@ class TabMenuUnderline extends React.PureComponent<TabMenuUnderlineType, any> {
       beautyMenu,
     } = this.props
     return (
-      <>
+      <View style={{}}>
         <View
           style={{
             flexDirection: 'row',
@@ -200,14 +200,14 @@ class TabMenuUnderline extends React.PureComponent<TabMenuUnderlineType, any> {
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => this._onChangeMenu('fashion', 'journal')}>
+              onPress={() => this._onChangeMenu('fashion', 'article')}>
               <Text
                 style={{
                   ...styles.subNav,
                   ...{
-                    fontWeight: fashionMenu === 'journal' ? '500' : '400',
+                    fontWeight: fashionMenu === 'article' ? '500' : '400',
                     color:
-                      fashionMenu === 'journal'
+                      fashionMenu === 'article'
                         ? colors.black100
                         : colors.black60,
                   },
@@ -242,14 +242,14 @@ class TabMenuUnderline extends React.PureComponent<TabMenuUnderlineType, any> {
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => this._onChangeMenu('beauty', 'journal')}>
+              onPress={() => this._onChangeMenu('beauty', 'article')}>
               <Text
                 style={{
                   ...styles.subNav,
                   ...{
-                    fontWeight: beautyMenu === 'journal' ? '500' : '400',
+                    fontWeight: beautyMenu === 'article' ? '500' : '400',
                     color:
-                      beautyMenu === 'journal'
+                      beautyMenu === 'article'
                         ? colors.black100
                         : colors.black60,
                   },
@@ -259,7 +259,7 @@ class TabMenuUnderline extends React.PureComponent<TabMenuUnderlineType, any> {
             </TouchableOpacity>
           </View>
         )}
-      </>
+      </View>
     )
   }
 }
