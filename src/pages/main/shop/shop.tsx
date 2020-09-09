@@ -4,6 +4,7 @@ import {
   StyleSheet,
   RefreshControl,
   InteractionManager,
+  SafeAreaView,
 } from 'react-native'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
@@ -18,7 +19,7 @@ import { globalDimention } from '@utils/constants'
 import Amplitude from 'amplitude-js'
 import { onScroll } from 'react-native-redash'
 import NavbarTopAnimated from '@components/molecules/navbar-top-animated'
-import FeaturedCategory from '@components/organisms/featured-category'
+import FeaturedCategory from '@components/organisms/featured-category-new'
 import ShopLoader from '@components/atoms/loaders/shop'
 import { makeGetShopPage } from '@modules/page/selector'
 
@@ -45,6 +46,7 @@ const y = new Value(0)
 class ShopPage extends React.Component<any, any> {
   state = {
     finishAnimation: false,
+    navbarLayout: {},
   }
   componentDidMount() {
     Amplitude.getInstance().logEvent('shop')
@@ -100,6 +102,12 @@ class ShopPage extends React.Component<any, any> {
     }
   }
 
+  setLayout = layout => {
+    this.setState({
+      navbarLayout: layout,
+    })
+  }
+
   render() {
     const { page, navigation, loading } = this.props
     if (!this.state.finishAnimation || loading) {
@@ -112,36 +120,40 @@ class ShopPage extends React.Component<any, any> {
           parentDim={{ coverheight: this.dimentionConstant.imageHeight }}
           showSearch
           showCart
+          showLogo
+          getLayout={this.setLayout}
           y={y}
         />
+
         <View style={styles.container}>
-          <Animated.ScrollView
-            refreshControl={
-              <RefreshControl
-                refreshing={loading}
-                onRefresh={this._fetchData}
+          <SafeAreaView
+            style={{ marginTop: this.state.navbarLayout.height || 0 }}>
+            {/* <FeaturedCategory
+              key={'sections' + 'featured'}
+              style={{ marginVertical: 6 }}
+              navigation={navigation}
+            /> */}
+            <Animated.ScrollView
+              refreshControl={
+                <RefreshControl
+                  refreshing={loading}
+                  onRefresh={this._fetchData}
+                />
+              }
+              onScroll={onScroll({ y })}
+              scrollEventThrottle={5}>
+              <FeaturedCategory
+                key={'sections' + 'featured'}
+                style={{ marginVertical: 6 }}
+                navigation={navigation}
               />
-            }
-            onScroll={onScroll({ y })}
-            scrollEventThrottle={5}>
-            {page.section &&
-              page.section.map((_section, key) => {
-                if (key === 0)
-                  return (
-                    <View key={'sections' + key}>
-                      {this._renderSection(_section, key)}
-                      {key === 0 && (
-                        <FeaturedCategory
-                          key={'sections' + key}
-                          style={{ marginVertical: 6 }}
-                          navigation={navigation}
-                        />
-                      )}
-                    </View>
-                  )
-                return this._renderSection(_section, key)
-              })}
-          </Animated.ScrollView>
+              {page.section &&
+                page.section.map((_section, key) => {
+                  console.log('section', page.section)
+                  return this._renderSection(_section, key)
+                })}
+            </Animated.ScrollView>
+          </SafeAreaView>
         </View>
       </>
     )

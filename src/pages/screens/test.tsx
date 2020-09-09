@@ -30,6 +30,7 @@ import PostComment from '@src/components/molecules/post-comment'
 import ListJournal from '@src/components/molecules/horizontal-article-list'
 import { navigate } from '@src/root-navigation'
 
+const { width, height } = Dimensions.get('screen')
 const TestPage = props => {
   const [image, setImage] = React.useState(null)
   const toolTipsParent = React.useRef(null)

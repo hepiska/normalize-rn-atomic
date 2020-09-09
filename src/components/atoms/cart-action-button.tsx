@@ -10,7 +10,7 @@ import { getAllCart } from '@modules/cart/action'
 import { bindActionCreators } from 'redux'
 import { synchronizeCart } from '@modules/cart/action'
 
-import Icon from 'react-native-vector-icons/FontAwesome'
+import Icon from '@assets/fonts/custom-icons'
 
 const styles = StyleSheet.create({
   rightAction: {
@@ -57,7 +57,7 @@ const CartActionButton = props => {
   }
   return (
     <PressAbbleDiv onPress={_gotoCart} style={styles.rightAction}>
-      <Icon name="shopping-cart" size={20} color={colors.black100} />
+      <Icon name="shop" size={22} color={colors.black100} />
       {Boolean(props.totalCart) && (
         <LinearGradient
           start={{ x: 0, y: 0 }}

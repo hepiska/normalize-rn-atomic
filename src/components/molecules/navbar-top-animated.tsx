@@ -1,11 +1,18 @@
 import React from 'react'
 import DeviceInfo from 'react-native-device-info'
-import { Dimensions, StyleSheet, SafeAreaView, View, Text } from 'react-native'
+import {
+  Dimensions,
+  StyleSheet,
+  SafeAreaView,
+  View,
+  Text,
+  ImageBackground,
+} from 'react-native'
 import { Div, Font, Image, PressAbbleDiv } from '@components/atoms/basic'
 import LinearGradient from 'react-native-linear-gradient'
 import { globalDimention, colors } from '@utils/constants'
 import TopBaner from '@components/molecules/top-baner'
-import Icon from 'react-native-vector-icons/FontAwesome'
+import Icon from '@assets/fonts/custom-icons'
 import Animated from 'react-native-reanimated'
 import styled from 'styled-components/native'
 import { fontStyle } from '@components/commont-styles'
@@ -52,7 +59,9 @@ interface NavbarBottomProps {
   showCart?: boolean
   showBack?: boolean
   showBars?: boolean
+  showLogo?: boolean
   title?: string | React.ReactType<any>
+  getLayout?: (layout) => void
 }
 
 const headerHeight = 55
@@ -66,8 +75,10 @@ const NavbarTopAnimated: React.SFC<NavbarBottomProps> = ({
   showSearch,
   showCart,
   showBars,
+  showLogo,
   y,
   parentDim,
+  getLayout,
 }) => {
   const backgroundColor = interpolate(y, {
     inputRange: [
@@ -108,11 +119,15 @@ const NavbarTopAnimated: React.SFC<NavbarBottomProps> = ({
 
   return (
     <AnimatedSaveArea
+      onLayout={event => {
+        if (getLayout) {
+          getLayout(event.nativeEvent.layout)
+        }
+      }}
       style={{
         position: 'absolute',
         top: 0,
         left: 0,
-        backgroundColor: backgroundColor,
         zIndex: 10,
       }}>
       <TopBaner />
@@ -139,6 +154,22 @@ const NavbarTopAnimated: React.SFC<NavbarBottomProps> = ({
             </PressAbbleDiv>
           )}
         </LeftDiv>
+        {showLogo && (
+          <View
+            style={{
+              alignItems: 'flex-start',
+              flex: 1,
+              paddingLeft: 16,
+            }}>
+            <Image
+              style={{
+                width: width / 2.5,
+                height: width / 19,
+              }}
+              source={require('@assets/icons/theshonet-logo-black.png')}
+            />
+          </View>
+        )}
         <Div
           padd="16px 12px"
           overflow="visible"
