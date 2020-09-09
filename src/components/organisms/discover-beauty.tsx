@@ -138,6 +138,7 @@ class DiscoverBeauty extends React.PureComponent<any> {
           postId={item.id}
           idx={index}
           style={styles.postItem}
+          isCard
         />
       )
     } else if (item.post_type === 'collection') {
@@ -157,6 +158,7 @@ class DiscoverBeauty extends React.PureComponent<any> {
           postId={item.id}
           idx={index}
           style={styles.postItem}
+          isCard
         />
       )
     }
@@ -208,7 +210,11 @@ class DiscoverBeauty extends React.PureComponent<any> {
                   />
                 }
                 onScroll={this._hanleScroll}
-                onEndReached={this._fetchMore}
+                onEndReached={({ distanceFromEnd }) => {
+                  if (distanceFromEnd > 0) {
+                    this._fetchMore()
+                  }
+                }}
                 ListEmptyComponent={this._emptyState}
                 layoutType="list"
                 columnStyle={{ flex: 1, marginHorizontal: 8 }}
