@@ -44,19 +44,30 @@ const shareData = [
     share_type: Share.Social.WHATSAPP,
   },
 ]
-
 const moreData = {
   name: 'More',
   id: 'more',
   image: require('@assets/icons/more-icon-large.png'),
 }
 
+const widthCart = width / 5.5 - 32 // +1 moreData
+
 const ShareCart = ({ name, image, onPress }: any) => {
   return (
-    <View style={{ alignItems: 'center', marginHorizontal: 16 }}>
+    <View
+      style={{
+        alignItems: 'center',
+      }}>
       <PressAbbleDiv onPress={onPress}>
-        <Image source={image} style={{ width: 48, height: 48 }} />
-        <Text style={{ fontSize: 10, fontFamily: 'Helvetica Neue' }}>
+        <Image
+          source={image}
+          style={{
+            width: widthCart,
+            height: widthCart,
+            marginBottom: 8,
+          }}
+        />
+        <Text style={{ fontSize: 12, fontFamily: 'Helvetica Neue' }}>
           {name}
         </Text>
       </PressAbbleDiv>
@@ -243,9 +254,11 @@ class ShareModal extends React.Component<any, any> {
               style={{
                 display: 'flex',
                 width,
-                paddingVertical: 16,
+                padding: 16,
                 justifyContent:
                   this.state.currentPos === 2 ? 'flex-start' : 'space-between',
+                // justifyContent:
+                //   this.state.currentPos === 2 ? 'flex-start' : 'space-between',
                 backgroundColor: 'white',
                 flexDirection: this.state.currentPos === 1 ? 'row' : 'column',
                 height: '100%',

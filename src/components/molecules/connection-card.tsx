@@ -5,13 +5,14 @@ import {
   View,
   TouchableOpacity,
   Text,
+  Dimensions,
 } from 'react-native'
 import { fontStyle } from '@components/commont-styles'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import { colors } from '@src/utils/constants'
 import { navigate } from '@src/root-navigation'
-import UserPp from '@components/atoms/user-profile-picture'
+import UserPp from '@components/atoms/user-profile-picture-new'
 import { getFollowerFollowing, getUser } from '@modules/user/action'
 import { userListData } from '@src/hocs/data/user'
 import ConnectionsLoader from '@components/atoms/loaders/connection'
@@ -20,27 +21,12 @@ const UserPpHoc = userListData(UserPp)
 
 const styles = StyleSheet.create({
   container: {
-    width: '100%',
     backgroundColor: colors.white,
   },
-  image: {
-    width: 40,
-    height: 40,
-    borderRadius: 100,
-  },
-  buttonText: {
-    color: colors.white,
-    fontSize: 14,
-    fontWeight: 'bold',
-  },
-  playfairBold28: {
-    ...fontStyle.playfairBold,
-    fontWeight: '700',
-    fontSize: 28,
-  },
-  playfairBold20: {
-    ...fontStyle.playfairBold,
-    fontWeight: '700',
+
+  playfair: {
+    ...fontStyle.playfair,
+    fontWeight: '500',
     fontSize: 20,
   },
   helvetica12: {
@@ -51,29 +37,19 @@ const styles = StyleSheet.create({
     ...fontStyle.helvetica,
     fontSize: 14,
   },
-  button: {
-    height: 36,
-    borderColor: colors.black50,
-  },
-  buttonBlack: {
-    height: 36,
-    backgroundColor: colors.black100,
-  },
   photoCollections: {
     flexDirection: 'row',
-    marginTop: 24,
-    justifyContent: 'space-between',
+    marginTop: 16,
   },
   morePhotoContainer: {
     backgroundColor: colors.black100,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  margin: {
-    marginHorizontal: 8,
-  },
 })
 
+const { width } = Dimensions.get('screen')
+const imgSize = (width - 32) / 8
 const navigateTo = (screen, screenName, params = {}) => {
   return navigate(screen, {
     screen: screenName,
@@ -96,6 +72,7 @@ interface ConnectionCardType {
 
 class ConnectionCard extends React.Component<ConnectionCardType, any> {
   connectionLimit = 7
+
   componentDidMount() {
     const params = {
       offset: 0,
@@ -136,6 +113,7 @@ class ConnectionCard extends React.Component<ConnectionCardType, any> {
 
   render() {
     const { user, style, follows, navigation } = this.props
+
     if (!follows || !user) {
       return null
     }
@@ -147,19 +125,27 @@ class ConnectionCard extends React.Component<ConnectionCardType, any> {
             justifyContent: 'space-between',
             alignItems: 'center',
           }}>
-          <Text style={{ ...styles.playfairBold20 }}>Connections</Text>
+          <Text style={{ ...styles.playfair }}>Connections</Text>
           {user?.following_count > this.connectionLimit && (
             <TouchableOpacity onPress={this.gotoFollowPage('Following')}>
               <Text
                 style={{
                   ...styles.helvetica12,
                 }}>
-                See All
+                Lihat Semua
               </Text>
             </TouchableOpacity>
           )}
         </View>
-        <View style={{ ...styles.photoCollections }}>
+        <View
+          style={{
+            ...styles.photoCollections,
+            justifyContent:
+              follows?.length < this.connectionLimit ||
+              follows?.length === this.connectionLimit
+                ? 'flex-start'
+                : 'space-between',
+          }}>
           {follows.length
             ? follows?.map((value, key) => {
                 return key < this.connectionLimit ? (
@@ -167,6 +153,8 @@ class ConnectionCard extends React.Component<ConnectionCardType, any> {
                     userId={value}
                     key={`user-pp-${key}`}
                     navigation={navigation}
+                    size={imgSize}
+                    style={{ borderColor: 'white', borderWidth: 2 }}
                   />
                 ) : null
               })
@@ -174,8 +162,13 @@ class ConnectionCard extends React.Component<ConnectionCardType, any> {
           {user?.following_count > this.connectionLimit && (
             <View
               style={{
-                ...styles.image,
                 ...styles.morePhotoContainer,
+                width: imgSize,
+                height: imgSize,
+                borderRadius: imgSize / 2,
+                borderColor: 'white',
+                borderWidth: 2,
+                // width: imgSize,
               }}>
               <Text
                 style={{

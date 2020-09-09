@@ -20,6 +20,7 @@ import ShareModal from '@pages/modals/share'
 import ShareAndEarn from '@src/pages/modals/share-and-earn'
 import ShareProductModal from './share-product'
 import FirstIntroduceRegister from '@src/components/organisms/introduce-register'
+import ConfigProfileModal from './config-profile'
 
 const Stack = createStackNavigator()
 
@@ -121,6 +122,11 @@ function ModalStack() {
         name="FirstIntroduceRegister"
         options={{ cardStyle: { backgroundColor: 'white' } }}
         component={FirstIntroduceRegister}
+      />
+      <Stack.Screen
+        name="ConfigProfile"
+        options={{ cardStyle: { backgroundColor: 'transparent' } }}
+        component={ConfigProfileModal}
       />
     </Stack.Navigator>
   )

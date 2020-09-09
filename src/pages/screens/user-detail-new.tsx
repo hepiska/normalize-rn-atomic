@@ -18,9 +18,10 @@ import ProfileEmptyState from '@components/molecules/profile-empty-state'
 import ProfileCard from '@components/molecules/profile-card'
 import ProfileLoader from '@src/components/atoms/loaders/profile-loader'
 // import MyPost from '@components/organisms/my-post'
-import MyPost from '@components/organisms/my-post-new'
+import MyPost from '@src/components/organisms/my-post-2'
 import ConnectionCard from '@src/components/molecules/connection-card'
 import { followUser, unfollowUser } from '@modules/user/action'
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 
 const initialActiveTab = 'userpost'
 
@@ -68,7 +69,12 @@ class ProfilPage extends React.PureComponent<any, any> {
       this.setState({ finishAnimation: true })
     })
   }
-
+  _goToConfig = () => {
+    navigate('modals', {
+      screen: 'ConfigProfile',
+      params: { isOtherUser: false },
+    })
+  }
   render() {
     const { finishAnimation } = this.state
     const { user, auth_data, navigation } = this.props
@@ -87,6 +93,15 @@ class ProfilPage extends React.PureComponent<any, any> {
         <NavbarTop
           title={user.username || user.name}
           leftContent={['back']}
+          rightAction={
+            <Icon
+              style={{ marginRight: 16 }}
+              name="dots-horizontal"
+              size={24}
+              color={colors.black100}
+              onPress={this._goToConfig}
+            />
+          }
           style={{ zIndex: 2 }}
           saveAreaStyle={{ backgroundColor: 'white' }}
         />

@@ -7,6 +7,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
 import AvatarImage from '../atoms/avatar-image'
 import { calculateDay } from '@src/utils/helpers'
 import HTML from 'react-native-render-html'
+import { textElipsis as textLimit } from '@utils/helpers'
 
 interface ProfileType {
   small?: boolean
@@ -82,7 +83,7 @@ export default class ProfileWritten extends Component<ProfileType, any> {
               <Icon name="check-circle" size={18} color={'#e0b97c'} />
             </View>
             <HTML
-              html={`<bio>${user.biography || 'Welcome to my page'}</bio>`}
+              html={`<bio>${user?.biography || 'Welcome to my page'}</bio>`}
               renderers={{
                 // eslint-disable-next-line react/display-name
                 bio: (htmlAttribs, children, convertedCSSStyles, passProps) => {
@@ -95,7 +96,12 @@ export default class ProfileWritten extends Component<ProfileType, any> {
                         paddingVertical: 16,
                         color: colors.black70,
                       }}>
-                      {passProps?.rawChildren[0]?.children[0].data || ''}
+                      {passProps?.rawChildren[0]?.children
+                        ? textLimit(
+                            passProps?.rawChildren[0]?.children[0]?.data || '',
+                            65,
+                          )
+                        : ''}
                     </Text>
                   )
                 },

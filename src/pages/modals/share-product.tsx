@@ -63,6 +63,8 @@ const shareData = [
 
 const shonetUri = Config.SHONET_URI
 
+const widthCart = width / 5.5 - 32 // +1 for more option
+
 const styles = StyleSheet.create({
   imgBg: {
     position: 'absolute',
@@ -128,11 +130,13 @@ const ShareCart = ({ name, image, onPress }: any) => {
     <View
       style={{
         alignItems: 'center',
-        marginHorizontal: 16,
       }}>
       <PressAbbleDiv onPress={onPress}>
-        <Image source={image} style={{ width: 48, height: 48 }} />
-        <Text style={{ fontSize: 10, fontFamily: 'Helvetica Neue' }}>
+        <Image
+          source={image}
+          style={{ width: widthCart, height: widthCart, marginBottom: 8 }}
+        />
+        <Text style={{ fontSize: 12, fontFamily: 'Helvetica Neue' }}>
           {name}
         </Text>
       </PressAbbleDiv>
@@ -391,9 +395,7 @@ class ShareProductModal extends React.Component<any, any> {
             title="Share">
             <View
               style={{
-                display: 'flex',
-                width,
-                paddingVertical: 16,
+                padding: 16,
                 justifyContent:
                   this.state.currentPos === 2 ? 'flex-start' : 'space-between',
                 backgroundColor: 'white',

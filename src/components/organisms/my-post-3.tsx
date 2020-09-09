@@ -3,31 +3,45 @@ import { View, Text, Dimensions } from 'react-native'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { getUserPosts } from '@modules/user-post/action'
-import PostListItem from '@src/components/molecules/post-card-journal'
+import PostListItem from '@src/components/molecules/post-card'
 import { postListData } from '@hocs/data/post'
-import EmptyState from '@components/molecules/order-empty-state'
-import List from '@components/layouts/list-header'
+import EmtyState from '@components/molecules/order-empty-state'
+import { FlatList } from '../atoms/basic'
 import { Instagram } from 'react-content-loader/native'
 import TabMenu from '@src/components/layouts/tab-menu-profile'
+import { productListData } from '@src/hocs/data/product'
+import ProductCard from '@components/molecules/product-card-new'
+import { productApi } from '@modules/product/action'
 
 const PostItem = postListData(PostListItem)
+const ProductWithCardHoc = productListData(ProductCard)
 
-class Post extends React.Component<any, any> {
+const initialActiveTab = 'Post'
+const { width } = Dimensions.get('screen')
+
+class MyPost extends React.Component<any, any> {
   state = {
     selectedFilter: this.props.userPostStatus,
+    activeTab: initialActiveTab,
   }
-  limit = 3
+
+  limit = 30
   skip = 0
   lastskip = 0
 
   shouldComponentUpdate(nextProps) {
-    const { posts, activity } = this.props
+    const { posts, products, loading } = this.props
     if (posts && posts.length !== nextProps.posts.length) {
       return true
     }
-    if (nextProps.activity !== activity) {
-      console.log('trigger by parent', activity)
-      this._freshfetch()
+    if (loading !== nextProps.loading) {
+      return true
+    }
+    if (this.state.activeTab) {
+      return true
+    }
+    if (products && products.length !== nextProps.products.length) {
+      return true
     }
     return false
   }
@@ -64,6 +78,7 @@ class Post extends React.Component<any, any> {
     }
 
     this.props.getUserPosts(PostParams, this.props.userid)
+    this.props.productApi()
   }
 
   _fetchMore = () => {
@@ -87,22 +102,44 @@ class Post extends React.Component<any, any> {
   }
 
   _emptyState = () => {
+    if (this.state.activeTab === 'Post') {
+      return (
+        <EmtyState
+          title={`No Post`}
+          description="You Dont Have Post in this Section"
+        />
+      )
+    }
     return (
-      <EmptyState
-        title={`No Post`}
-        description="You Dont Have Post in this Section"
+      <EmtyState
+        title={`No Product`}
+        description="You Dont Have Product in this Section"
       />
     )
   }
-
+  _renderItme
   _renderItem = ({ item, index }) => {
+    if (this.state.activeTab === 'Post') {
+      return (
+        <PostItem
+          style={{ width: '100%', marginBottom: 16 }}
+          key={`horizontal-list-post-${index}`}
+          postId={item}
+          idx={index}
+          fullscreen
+        />
+      )
+    }
     return (
-      <PostItem
-        style={{ width: '100%', marginBottom: 16 }}
-        key={`horizontal-list-post-${index}`}
-        postId={item}
-        idx={index}
-        fullscreen
+      <ProductWithCardHoc
+        productId={item}
+        key={'prod-list' + item + index}
+        style={{
+          maxWidth: width / 2 - 16,
+          minHeight: 220,
+          margin: 8,
+          flex: 1,
+        }}
       />
     )
   }
@@ -119,22 +156,61 @@ class Post extends React.Component<any, any> {
       </View>
     )
   }
+  _items = () => {
+    return [
+      {
+        name: 'Post',
+        title: `Posts`,
+      },
+      {
+        name: 'Product',
+        title: `Products`,
+      },
+    ]
+  }
+
+  onChangeTab = item => {
+    this.setState({
+      activeTab: item.name,
+    })
+  }
+
+  _header = () => {
+    const { header } = this.props
+    return (
+      <>
+        {header}
+        <TabMenu
+          items={this._items()}
+          selectedItem={this.state.activeTab}
+          onChangeTab={this.onChangeTab}
+          textMenuAlign="center"
+          isScrollEnabled={true}
+          isLazyload
+        />
+      </>
+    )
+  }
 
   render() {
-    const { posts, style } = this.props
+    const { posts, products, loading, style } = this.props
+    const data = this.state.activeTab === 'Post' ? posts : products
     return (
       <View style={{ ...style }}>
-        <List
+        <FlatList
           onEndReached={this._fetchMore}
+          refreshing={loading}
+          onRefresh={this._freshfetch}
           onEndReachedThreshold={0.97}
           showsHorizontalScrollIndicator={false}
           decelerationRate="fast"
           snapToAlignment="center"
-          data={posts}
-          numColumns={1}
-          nestedScrollEnabled
+          data={data}
+          numColumns={2}
           keyExtractor={this._keyExtractor}
           renderItem={this._renderItem}
+          scrollIndicatorInsets={{ right: 1 }}
+          ListHeaderComponent={this._header}
           ListFooterComponent={this._renderFooter}
           ListEmptyComponent={this._emptyState}
         />
@@ -144,19 +220,27 @@ class Post extends React.Component<any, any> {
 }
 
 const mapStateToProps = (state, ownProps) => {
+  // console.log('state redux ====> ', state)
+
   let posts = state.userPosts.order
+  let products = state.products.order
+
   if (ownProps.userid) {
     posts = state.userPosts.specificOrder[ownProps.userid]
+    products = state.products.order[ownProps.userid]
   }
+
+  console.log('----products-----', state)
+
   return {
     userPostStatus: state.userPosts.status,
     posts,
-    products: state.products.order,
+    products,
     isEndReached: state.userPosts.isEndReached,
     loading: state.userPosts.loading,
   }
 }
 const mapDispatchToProps = dispatch =>
-  bindActionCreators({ getUserPosts }, dispatch)
+  bindActionCreators({ getUserPosts, productApi }, dispatch)
 
-export default connect(mapStateToProps, mapDispatchToProps)(Post)
+export default connect(mapStateToProps, mapDispatchToProps)(MyPost)

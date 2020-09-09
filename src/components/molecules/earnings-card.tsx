@@ -1,10 +1,12 @@
-import React, { Component } from 'react'
+import React, { Component, useMemo, useState } from 'react'
 import { Text, View, StyleSheet, ImageBackground } from 'react-native'
 import { colors } from '@src/utils/constants'
 import { fontStyle } from '@components/commont-styles'
 import { Button } from '../atoms/button'
 import { navigate } from '@src/root-navigation'
 import { formatCur } from '@src/utils/helpers'
+import { earningData } from '@hocs/data/earning'
+import { connect, useDispatch } from 'react-redux'
 
 const styles = StyleSheet.create({
   container: {
@@ -61,36 +63,44 @@ interface EarningCard {
   balance?: number
 }
 
-class EarningsCard extends React.PureComponent<EarningCard, any> {
-  goDetailEarning() {
+const Card = ({ balance }) => {
+  const goDetailEarning = () => {
     navigateTo('Screens', 'MyEarnings')
   }
 
-  render() {
-    const { balance } = this.props
-    return (
-      <ImageBackground
-        style={styles.card}
-        resizeMode={'cover'}
-        source={require('@assets/placeholder/earnings-card-bg.png')}>
-        <View style={styles.cardWrap}>
-          <View style={{ flex: 2 }}>
-            <Text style={styles.fs16}>My Earnings Balance</Text>
-            <Text style={[styles.fs16, fontStyle.helveticaBold]}>
-              IDR {formatCur(Math.abs(balance))}
-            </Text>
-          </View>
-          <Button
-            title={'See Details'}
-            onPress={this.goDetailEarning}
-            style={styles.btnDetail}
-            fontStyle={styles.btnTxt}
-            loaderColor={colors.white}
-          />
+  return (
+    <ImageBackground
+      style={styles.card}
+      resizeMode={'cover'}
+      source={require('@assets/placeholder/earnings-card-bg.png')}>
+      <View style={styles.cardWrap}>
+        <View style={{ flex: 2 }}>
+          <Text style={styles.fs16}>Saldo Komisi Saya</Text>
+          <Text style={[styles.fs16, fontStyle.helveticaBold]}>
+            IDR {formatCur(Math.abs(balance))}
+          </Text>
         </View>
-      </ImageBackground>
-    )
-  }
+        <Button
+          title={'Lihat Detail'}
+          onPress={goDetailEarning}
+          style={styles.btnDetail}
+          fontStyle={styles.btnTxt}
+          loaderColor={colors.white}
+        />
+      </View>
+    </ImageBackground>
+  )
 }
 
-export default EarningsCard
+const EarningsCard = props => {
+  return <Card balance={props.earningSummary.balance} />
+}
+
+const mapStateToProps = state => ({
+  earningHistories: state.earnings.order,
+  earningSummary: state.earnings.summary,
+  loading: state.earnings.loadings.general,
+  total: state.earnings.pagination.total || 0,
+})
+
+export default connect(mapStateToProps)(EarningsCard)

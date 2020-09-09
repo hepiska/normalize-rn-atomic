@@ -1,5 +1,14 @@
 import React from 'react'
-import { Text, StyleSheet, View, InteractionManager } from 'react-native'
+import {
+  Text,
+  StyleSheet,
+  View,
+  InteractionManager,
+  TouchableOpacity,
+  ScrollView,
+  Dimensions,
+  RefreshControl,
+} from 'react-native'
 import NavbarTop from '@components/molecules/navbar-top'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
@@ -11,14 +20,16 @@ import { setLogout } from '@modules/auth/action'
 import ProfileEmptyState from '@components/molecules/profile-empty-state'
 import ProfileCard from '@components/molecules/profile-card'
 import ProfileLoader from '@src/components/atoms/loaders/profile-loader'
-// import MyPost from '@components/organisms/my-post'
-import MyPost from '@components/organisms/my-post-new'
+import TabMenu from '@src/components/layouts/tab-menu-profile'
+// import MyPost from '@src/components/organisms/my-post-new-archive'
 import ConnectionCard from '@src/components/molecules/connection-card'
 import EarningsCard from '@src/components/molecules/earnings-card'
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons'
+import Post from '@src/components/organisms/my-post'
+import Product from '@src/components/organisms/my-product'
 
-const initialActiveTab = 'userpost'
-
+const initialActiveTab = 'Post'
+const { width } = Dimensions.get('screen')
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -29,12 +40,21 @@ const styles = StyleSheet.create({
   image: {
     borderRadius: 100,
   },
-  playfairBold20: {
-    ...fontStyle.playfairBold,
-    fontWeight: '700',
+  playfair: {
+    ...fontStyle.playfair,
+    fontWeight: '500',
     fontSize: 20,
   },
 })
+
+// const Product = () => {
+//   return (
+//     <View
+//       style={{ width: width, flex: 1, height: 200, backgroundColor: 'green' }}>
+//       <Text>Put Product List Here</Text>
+//     </View>
+//   )
+// }
 
 class ProfilPage extends React.PureComponent<any, any> {
   state = {
@@ -45,6 +65,7 @@ class ProfilPage extends React.PureComponent<any, any> {
     showName: false,
     enableScrollContent: false,
     finishAnimation: false,
+    loading: false,
   }
 
   headerLayout = null
@@ -78,11 +99,45 @@ class ProfilPage extends React.PureComponent<any, any> {
       }
     }
   }
-  _goToConfigAccout = () => {
+  _goToConfigAccount = () => {
     navigate('modals', { screen: 'ConfigProfile' })
   }
+
+  _items = () => {
+    return [
+      {
+        name: 'Post',
+        Component: <Post activity={null} style={{ width: width }} />,
+        title: `Posts`,
+      },
+      {
+        name: 'Product',
+        Component: <Product />,
+        title: `Products`,
+      },
+    ]
+  }
+  _refresh = () => {
+    this.setState({
+      loading: true,
+    })
+    console.log('should fetch fresh data', this.state.loading)
+    setTimeout(() => {
+      this.setState({
+        loading: false,
+      })
+      console.log('loading done')
+    }, 2000)
+  }
+
+  onChangeTab = item => {
+    this.setState({
+      activeTab: item.name,
+    })
+  }
+
   render() {
-    const { finishAnimation } = this.state
+    const { finishAnimation, activeTab, loading } = this.state
     const { isAuth, user } = this.props
 
     if (!isAuth) {
@@ -107,29 +162,45 @@ class ProfilPage extends React.PureComponent<any, any> {
               name="dots-horizontal"
               size={24}
               color={colors.black100}
-              onPress={this._goToConfigAccout}
+              onPress={this._goToConfigAccount}
             />
           }
           saveAreaStyle={{ backgroundColor: 'white' }}
         />
         {finishAnimation ? (
-          <MyPost
-            header={
-              <View style={{ marginHorizontal: 16 }}>
-                <ProfileCard />
-                <ConnectionCard />
-                <View style={{ paddingVertical: 20 }}>
-                  <Text style={[styles.playfairBold20, { marginBottom: 16 }]}>
-                    My Earnings
-                  </Text>
-                  <EarningsCard />
-                </View>
-                <View style={{ marginBottom: 8 }}>
-                  <Text style={{ ...styles.playfairBold20 }}>Latest Post</Text>
-                </View>
-              </View>
-            }
-          />
+          <ScrollView
+            removeClippedSubviews={false}
+            nestedScrollEnabled={true}
+            refreshControl={
+              <RefreshControl refreshing={loading} onRefresh={this._refresh} />
+            }>
+            <ProfileCard />
+            <ConnectionCard style={{ marginHorizontal: 16 }} />
+            <View style={{ paddingVertical: 20, marginHorizontal: 16 }}>
+              <Text style={{ ...styles.playfair, marginBottom: 16 }}>
+                Komisi Saya
+              </Text>
+              <EarningsCard />
+            </View>
+            <View style={{ marginBottom: 16, marginHorizontal: 16 }}>
+              <Text style={{ ...styles.playfair }}>Post Terbaru</Text>
+            </View>
+            <TabMenu
+              items={this._items()}
+              selectedItem={activeTab}
+              onChangeTab={this.onChangeTab}
+              textMenuAlign="center"
+              isScrollEnabled={true}
+              isLazyload
+            />
+            <View>
+              {this.state.activeTab === 'Post' ? (
+                <Post activity={loading} style={{ width: width }} />
+              ) : (
+                <Product activity={loading} style={{ width: width }} />
+              )}
+            </View>
+          </ScrollView>
         ) : (
           <ProfileLoader
             style={{

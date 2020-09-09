@@ -12,6 +12,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFF7E7',
     flexDirection: 'row',
     justifyContent: 'center',
+    alignItems: 'center',
   },
   text: {
     color: colors.black100,
@@ -28,8 +29,7 @@ const styles = StyleSheet.create({
   },
   close: {
     position: 'absolute',
-    right: 4,
-    top: 4,
+    right: 8,
   },
 })
 
@@ -63,7 +63,7 @@ const TopBaner = (props: any) => {
       <IconFa
         onPress={() => setisOpen(false)}
         name="close"
-        size={12}
+        size={16}
         style={[styles.close]}
       />
     </View>

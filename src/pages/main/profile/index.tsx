@@ -3,7 +3,7 @@ import {
   createStackNavigator,
   TransitionPresets,
 } from '@react-navigation/stack'
-import ProfilPage from './profile'
+import ProfilPage from './profile-new'
 
 const Stack = createStackNavigator()
 

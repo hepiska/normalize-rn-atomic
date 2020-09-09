@@ -136,10 +136,6 @@ class ProfileCard extends React.Component<ProfileCardType, any> {
     navigateTo('Screens', 'EditProfile', {})
   }
 
-  gotoAccountSetting = () => {
-    navigateTo('Screens', 'AccountSetting', {})
-  }
-
   _openModal = () => this.setState({ isVisible: true })
 
   _closeModal = () => this.setState({ isVisible: false })
@@ -188,12 +184,12 @@ class ProfileCard extends React.Component<ProfileCardType, any> {
   }
   render() {
     const { isVisible, isFollow } = this.state
-    const { user, type, onEditProfile } = this.props
+    const { user, type, onEditProfile, style } = this.props
     if (!user) {
       return null
     }
     return (
-      <View style={styles.container}>
+      <View style={{ ...styles.container, ...style }}>
         <TouchableWithoutFeedback
           onPress={user.photo_url ? this._openModal : null}>
           <View style={{ marginTop: 16 }}>
@@ -296,10 +292,6 @@ class ProfileCard extends React.Component<ProfileCardType, any> {
                     fontSize: 12,
                     lineHeight: 12,
                   }}
-                />
-                <ButtonIcon
-                  onPress={this.gotoAccountSetting}
-                  icon={<Icon name="cog" size={14} color={colors.black70} />}
                 />
               </>
             )}

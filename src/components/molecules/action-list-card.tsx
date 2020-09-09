@@ -8,8 +8,8 @@ import {
   TouchableOpacity,
 } from 'react-native'
 import { colors } from '@utils/constants'
-import Icon from 'react-native-vector-icons/FontAwesome5'
-import IconMi from 'react-native-vector-icons/MaterialIcons'
+import Icon from '@assets/fonts/custom-icons'
+import IconM from 'react-native-vector-icons/FontAwesome5'
 import { fontStyle, borderStyle } from '@src/components/commont-styles'
 import ListItemCard from '@src/components/molecules/list-item-card'
 
@@ -45,19 +45,16 @@ const styles = StyleSheet.create({
 })
 
 const ActionListCard = ({
-  isFirst,
   source,
   icon,
   title,
   desc,
-  index,
   backgroundColor,
   backgroundImage,
   borderRadius,
   style,
   onPress,
 }: ActionListCartType) => {
-  const IconComponent = source === 'material-icon' ? IconMi : Icon
   return (
     <ListItemCard
       onPress={onPress}
@@ -68,13 +65,7 @@ const ActionListCard = ({
             flexDirection: 'row',
             alignItems: 'center',
           }}>
-          {icon &&
-            (typeof icon === 'string' ? (
-              <IconComponent name={icon} size={18} color={colors.black100} />
-            ) : (
-              <Image source={icon} style={{ width: 18, height: 18 }} />
-            ))}
-
+          <Icon name={icon} size={18} color={colors.black100} />
           <View style={{ marginLeft: icon ? 22 : 0 }}>
             <Text style={{ ...styles.helveticaBold14, color: colors.black100 }}>
               {title}
@@ -90,15 +81,12 @@ const ActionListCard = ({
         </View>
       }
       rightContent={
-        <Icon name="chevron-right" size={16} color={colors.black100} />
+        <IconM name="chevron-right" size={16} color={colors.black100} />
       }
       style={{
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        borderTopColor: isFirst && index === 0 ? colors.black50 : colors.white,
-        borderTopWidth: 1,
-        ...borderStyle.bottom,
         paddingVertical: 24,
         backgroundColor,
         borderRadius,
