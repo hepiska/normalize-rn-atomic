@@ -24,6 +24,7 @@ const styles = StyleSheet.create({
     borderColor: colors.black50,
     borderWidth: 1,
     backgroundColor: colors.black10,
+    marginBottom: 16,
   },
   productWrap: {
     flexDirection: 'row',
