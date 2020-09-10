@@ -120,7 +120,9 @@ const JournalCard = ({
                 uri: setImage(post.image_url, { width: 32, height: 32 }),
               }}
               width={width}
-              height={isBannerType ? 360 : isHorizontalListType ? 200 : null}
+              height={
+                isBannerType ? width * 1.1 : isHorizontalListType ? 200 : null
+              }
               style={{
                 borderTopLeftRadius: style.borderRadius
                   ? style.borderRadius
