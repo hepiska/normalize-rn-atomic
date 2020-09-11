@@ -174,7 +174,7 @@ const CollectionCard = ({
                 uri: setImage(post.image_url, { width: 32, height: 32 }),
               }}
               width={width}
-              height={style.imageHeight}
+              height={style ? style.imageHeight : undefined}
             />
           </TouchableWithoutFeedback>
         </View>
