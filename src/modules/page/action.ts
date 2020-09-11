@@ -37,7 +37,6 @@ export const getPage = (pagename, params?) => ({
       return setPageLoading({ key: pagename, value: true })
     },
     success: data => {
-      console.log('comment entities', data.entities.comment)
       return [
         setUserData(data.entities.user),
         setBrandData(data.entities.brand),

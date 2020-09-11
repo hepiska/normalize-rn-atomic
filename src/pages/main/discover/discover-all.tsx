@@ -88,12 +88,9 @@ class DiscoverAll extends React.PureComponent<DiscoverAllType, any> {
   }
 
   _onscroll(event) {
-    console.log(this.offset)
     const currentOffset = event.nativeEvent.contentOffset.y
     const direction = currentOffset > this.offset ? 'down' : 'up'
-    console.log('direction', direction)
     this.offset = currentOffset
-    console.log('offset', this.offset)
   }
 
   render() {
