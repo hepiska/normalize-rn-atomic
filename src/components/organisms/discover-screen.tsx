@@ -7,12 +7,9 @@ import DiscoverBeauty from './discover-beauty'
 import { colors } from '@utils/constants'
 import TabMenuUnderline from '../molecules/tab-menu-underline'
 import DiscoverAll from '@src/pages/main/discover/discover-all'
+import { useRoute } from '@react-navigation/native'
 
 const Tab = createMaterialTopTabNavigator()
-
-const Placeholder = () => {
-  return <Text>LOL</Text>
-}
 
 class DiscoverScreen extends React.PureComponent {
   render() {

@@ -11,6 +11,7 @@ import { bindActionCreators } from 'redux'
 import {
   fetchSpecificPosts,
   fetchSpecificPostsMore,
+  setScroll,
 } from '@src/modules/post-discover/action'
 import List from '@components/layouts/list-header'
 import {
@@ -47,6 +48,7 @@ class DiscoverFashion extends React.PureComponent<any> {
   }
 
   skip = 0
+  offset = 0
 
   componentDidMount() {
     Amplitude.getInstance().logEvent('discover fashion')
@@ -165,10 +167,16 @@ class DiscoverFashion extends React.PureComponent<any> {
     }
   }
 
-  _hanleScroll = e => {
-    if (e.nativeEvent.contentOffset.y < 2) {
-      this.props.disableScroll && this.props.disableScroll()
+  _hanleScroll = event => {
+    // if (e.nativeEvent.contentOffset.y < 2) {
+    //   this.props.disableScroll && this.props.disableScroll()
+    // }
+    const currentOffset = event.nativeEvent.contentOffset.y
+    const direction = currentOffset > this.offset ? 'down' : 'up'
+    if (currentOffset > 0) {
+      this.props.setScroll(direction)
     }
+    this.offset = currentOffset
   }
 
   _emptyState = () => (
@@ -210,7 +218,7 @@ class DiscoverFashion extends React.PureComponent<any> {
                     refreshing={loading}
                   />
                 }
-                onScroll={this._hanleScroll}
+                onScroll={this._hanleScroll.bind(this)}
                 onEndReached={({ distanceFromEnd }) => {
                   if (distanceFromEnd > 0) {
                     this._fetchMore()
@@ -232,7 +240,10 @@ class DiscoverFashion extends React.PureComponent<any> {
 }
 
 const mapDispatchToProps = dispatch =>
-  bindActionCreators({ fetchSpecificPosts, fetchSpecificPostsMore }, dispatch)
+  bindActionCreators(
+    { fetchSpecificPosts, fetchSpecificPostsMore, setScroll },
+    dispatch,
+  )
 
 const mapStateToProps = state => {
   const getSpecificLoading = makeGetSpecificLoading()

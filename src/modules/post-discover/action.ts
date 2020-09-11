@@ -19,6 +19,7 @@ export const actionType = {
   SET_SPECIFIC_PAGINATION: 'post-discover/SET_SPECIFIC_PAGINATION',
   SET_TAB_NAME: 'post-discover/SET_TAB_NAME',
   SET_SPECIFIC_MENU: 'post-discover/SET_SPECIFIC_MENU',
+  ON_SCROLL: 'post-discover/ON_SCROLL',
 }
 
 export const setDicoverOrder = (data: any) => ({
@@ -68,6 +69,11 @@ export const setTabName = (data: any) => ({
 
 export const setMenu = (data: any) => ({
   type: actionType.SET_SPECIFIC_MENU,
+  payload: data,
+})
+
+export const setScroll = (data: any) => ({
+  type: actionType.ON_SCROLL,
   payload: data,
 })
 

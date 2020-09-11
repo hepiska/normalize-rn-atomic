@@ -32,6 +32,7 @@ interface DiscoverState {
   specificPagination?: SpecificPagination
   tabname?: string
   specificMenu?: any
+  scrollDirection?: string
 }
 
 const initialState: any = {
@@ -48,6 +49,7 @@ const initialState: any = {
     fashion: '',
     beauty: '',
   },
+  scrollDirection: '',
 }
 
 const discoverReducer: Reducer<DiscoverState> = (
@@ -92,6 +94,9 @@ const discoverReducer: Reducer<DiscoverState> = (
       return newState
     case actionType.SET_SPECIFIC_MENU:
       newState.specificMenu[action.payload.uri] = action.payload.data
+      return newState
+    case actionType.ON_SCROLL:
+      newState.scrollDirection = action.payload
       return newState
     default:
       return state
