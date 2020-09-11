@@ -8,7 +8,11 @@ import {
 } from 'react-native'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
-import { fetchSpecificPosts } from '@src/modules/post-discover/action'
+import {
+  fetchSpecificPosts,
+  fetchSpecificPostsMore,
+  setScroll,
+} from '@src/modules/post-discover/action'
 import List from '@components/layouts/list-header'
 import {
   makeGetSpecificLoading,
@@ -16,7 +20,7 @@ import {
   makeGetSpecificPagination,
   makeGetSpecificPost,
 } from '@src/modules/post-discover/selector'
-import { colors } from '@src/utils/constants'
+import { categoryIds, colors } from '@src/utils/constants'
 import PostCardFull from '@components/atoms/loaders/post-card-full'
 import EmtyState from '@components/molecules/order-empty-state'
 import PostCardCollection from '@src/components/molecules/post-card-collection'
@@ -24,7 +28,7 @@ import PostCardJournal from '@src/components/molecules/post-card-journal'
 import { postListData } from '@hocs/data/post'
 import PostTopDiscover from './post-top-discover'
 import Amplitude from 'amplitude-js'
-import PostMidDisover from './post-mid-disover'
+import PostMidDiscover from './post-mid-disover'
 
 const PostItemCollection = postListData(PostCardCollection)
 
@@ -44,6 +48,7 @@ class DiscoverFashion extends React.PureComponent<any> {
   }
 
   skip = 0
+  offset = 0
 
   componentDidMount() {
     Amplitude.getInstance().logEvent('discover fashion')
@@ -65,35 +70,61 @@ class DiscoverFashion extends React.PureComponent<any> {
       const type =
         this.props.fashionMenu === '' || this.props.fashionMenu === 'collection'
           ? 'collection'
-          : 'journal'
-      this._fetchData({ limit: 0, offset: 10, type }, 'fashion', true)
+          : 'article'
+      this._fetchData(
+        {
+          limit: 10,
+          offset: 0,
+          post_type: type,
+          category_id: categoryIds.fashion,
+        },
+        'fashion',
+      )
     }
   }
 
   _fetchMore = () => {
-    if (!this.props.loading && this.skip !== 0) {
-      this._fetchData({ next_token: this.props.pagination }, 'fashion', false)
+    console.log('fetch more')
+    if (!this.props.loading) {
+      const type =
+        this.props.fashionMenu === '' || this.props.fashionMenu === 'collection'
+          ? 'collection'
+          : 'article'
+      this.props.fetchSpecificPostsMore(
+        {
+          limit: 10,
+          offset: this.props.posts.length,
+          post_type: type,
+          category_id: categoryIds.fashion,
+        },
+        'fashion',
+      )
     }
     this.skip += 1
   }
 
-  _fetchData = (params, type, isFresh) => {
-    this.props.fetchSpecificPosts({ ...params }, type, isFresh)
+  _fetchData = (params, key) => {
+    this.props.fetchSpecificPosts({ ...params }, key)
   }
 
   _renderItem = ({ item, index }) => {
     if (index === 0) {
       return (
         <>
-          <PostTopDiscover />
-          {this._renderPostCard(item, index)}
+          <PostTopDiscover
+            key={`post-top-discover-fashion-${index}`}
+            category="fashion"
+            uri="post-top-fashion"
+          />
+          {this.props.fashionMenu !== 'article' &&
+            this._renderPostCard(item, index)}
         </>
       )
     } else if (index === 2) {
       return (
         <>
           {this._renderPostCard(item, index)}
-          <PostMidDisover />
+          <PostMidDiscover key={`post-mid-discover-fashion-${index}`} />
         </>
       )
     } else {
@@ -105,17 +136,18 @@ class DiscoverFashion extends React.PureComponent<any> {
     if (item.post_type === 'article') {
       return (
         <PostItemJournal
-          key={`discover-fashion-post-${index}`}
+          key={`fashion-post-discover-${index}`}
           fullscreen
           postId={item.id}
           idx={index}
           style={styles.postItem}
+          isCard
         />
       )
     } else if (item.post_type === 'collection') {
       return (
         <PostItemCollection
-          key={`discover-fashion-post-${index}`}
+          key={`fashion-post-discover-${index}`}
           fullscreen
           postId={item.id}
           idx={index}
@@ -124,20 +156,27 @@ class DiscoverFashion extends React.PureComponent<any> {
     } else {
       return (
         <PostItemJournal
-          key={`discover-fashion-post-${index}`}
+          key={`fashion-post-discover-${index}`}
           fullscreen
           postId={item.id}
           idx={index}
           style={styles.postItem}
+          isCard
         />
       )
     }
   }
 
-  _hanleScroll = e => {
-    if (e.nativeEvent.contentOffset.y < 2) {
-      this.props.disableScroll && this.props.disableScroll()
+  _hanleScroll = event => {
+    // if (e.nativeEvent.contentOffset.y < 2) {
+    //   this.props.disableScroll && this.props.disableScroll()
+    // }
+    const currentOffset = event.nativeEvent.contentOffset.y
+    const direction = currentOffset > this.offset ? 'down' : 'up'
+    if (currentOffset > 0) {
+      this.props.setScroll(direction)
     }
+    this.offset = currentOffset
   }
 
   _emptyState = () => (
@@ -179,7 +218,7 @@ class DiscoverFashion extends React.PureComponent<any> {
                     refreshing={loading}
                   />
                 }
-                onScroll={this._hanleScroll}
+                onScroll={this._hanleScroll.bind(this)}
                 onEndReached={({ distanceFromEnd }) => {
                   if (distanceFromEnd > 0) {
                     this._fetchMore()
@@ -201,7 +240,10 @@ class DiscoverFashion extends React.PureComponent<any> {
 }
 
 const mapDispatchToProps = dispatch =>
-  bindActionCreators({ fetchSpecificPosts }, dispatch)
+  bindActionCreators(
+    { fetchSpecificPosts, fetchSpecificPostsMore, setScroll },
+    dispatch,
+  )
 
 const mapStateToProps = state => {
   const getSpecificLoading = makeGetSpecificLoading()

@@ -35,6 +35,8 @@ class DiscoverAll extends React.PureComponent<DiscoverAllType, any> {
     finishAnimation: false,
   }
 
+  offset = 0
+
   componentDidMount() {
     Amplitude.getInstance().logEvent('discover')
     InteractionManager.runAfterInteractions(() => {
@@ -49,9 +51,13 @@ class DiscoverAll extends React.PureComponent<DiscoverAllType, any> {
 
   _renderItem = ({ item, index }) => {
     if (item.component === 'banner' && item.type === 'post') {
-      return <PostTop posts={item.item_ids} />
+      return (
+        <PostTop key={`post-top-discover-all-${index}`} posts={item.item_ids} />
+      )
     } else if (item.component === 'banner' && item.type === 'image') {
-      return <Banner banners={item.images} />
+      return (
+        <Banner key={`banner-discover-all-${index}`} banners={item.images} />
+      )
     } else if (
       item.component === 'section-horizontal-list' &&
       item.type === 'product'
@@ -70,18 +76,24 @@ class DiscoverAll extends React.PureComponent<DiscoverAllType, any> {
       item.component === 'section-horizontal-list' &&
       item.type === 'post'
     ) {
-      return <PostMid item={item} />
+      return <PostMid key={`post-mid-discover-all-${index}`} item={item} />
     } else if (
       item.component === 'section-horizontal-list' &&
       item.type === 'user'
     ) {
-      return <RecommendList />
+      return <RecommendList key={`recommend-list-discover-all-${index}`} />
+    } else {
+      return <View key={`discover-empty-${index}`} />
     }
-    return (
-      <View>
-        <Text>LOL</Text>
-      </View>
-    )
+  }
+
+  _onscroll(event) {
+    console.log(this.offset)
+    const currentOffset = event.nativeEvent.contentOffset.y
+    const direction = currentOffset > this.offset ? 'down' : 'up'
+    console.log('direction', direction)
+    this.offset = currentOffset
+    console.log('offset', this.offset)
   }
 
   render() {
@@ -109,6 +121,7 @@ class DiscoverAll extends React.PureComponent<DiscoverAllType, any> {
                 onRefresh={this._fetchData}
               />
             }
+            onScroll={this._onscroll.bind(this)}
           />
         )}
       </View>

@@ -18,7 +18,7 @@ class PostMid extends React.PureComponent<PostMidType> {
   _renderItem = ({ item, index }) => {
     return (
       <PostItem
-        key={`discover-post-mid-horizontal-${item.id}`}
+        key={`discover-post-mid-horizontal-${item}`}
         fullscreen
         postId={item}
         idx={index}
@@ -39,7 +39,7 @@ class PostMid extends React.PureComponent<PostMidType> {
     return (
       <>
         <PostHorizontalList
-          data={item.item_ids}
+          data={item.posts}
           renderItem={this._renderItem}
           title={item.title}
           darkMode

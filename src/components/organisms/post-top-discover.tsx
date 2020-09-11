@@ -1,5 +1,5 @@
 import React from 'react'
-import { InteractionManager, View } from 'react-native'
+import { InteractionManager, View, Text } from 'react-native'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import { fetchSpecificPosts } from '@src/modules/post-discover/action'
@@ -9,8 +9,9 @@ import {
 } from '@src/modules/post-discover/selector'
 import PostCardJournal from '@src/components/molecules/post-card-journal'
 import { postListData } from '@hocs/data/post'
-import { colors } from '@src/utils/constants'
+import { categoryIds, colors } from '@src/utils/constants'
 import PostHorizontalList from './post-horizontal-list'
+import ImageAutoSchale from '../atoms/image-autoschale'
 
 const PostItem = postListData(PostCardJournal)
 
@@ -28,20 +29,27 @@ class PostTopDiscover extends React.PureComponent<any> {
 
   _freshFetch = () => {
     this._fetchData(
-      { limit: 0, offset: 10, category_id: 1, type: 'journal' },
-      'discover-post-top',
-      true,
+      {
+        limit: 7,
+        offset: 0,
+        post_type: 'article',
+        category_id:
+          this.props.category === 'fashion'
+            ? categoryIds.fashion
+            : categoryIds.beauty,
+      },
+      this.props.uri,
     )
   }
 
-  _fetchData = (params, type, isFresh) => {
-    this.props.fetchSpecificPosts({ ...params }, type, isFresh)
+  _fetchData = (params, type) => {
+    this.props.fetchSpecificPosts({ ...params }, type)
   }
 
   _renderItem = ({ item, index }) => {
     return (
       <PostItem
-        key={`discover-post-top-horizontal-${item.id}`}
+        key={`post-top-horizontal-discover-${item.id}`}
         fullscreen
         postId={item.id}
         idx={index}
@@ -59,16 +67,26 @@ class PostTopDiscover extends React.PureComponent<any> {
   onPress = () => {}
 
   render() {
-    const { posts, fashionMenu } = this.props
+    const { posts, menu } = this.props
     const bannerPost = posts[0]
     const postslist = posts.slice(1, posts.length)
     return (
       <>
-        {fashionMenu != 'collection' && (
+        {menu === 'article' && (
+          <ImageAutoSchale
+            source={require('@assets/placeholder/editorial.png')}
+            style={{
+              backgroundColor: colors.white,
+              marginTop: 20,
+              marginBottom: 25,
+            }}
+          />
+        )}
+        {menu != 'collection' && (
           <>
             {bannerPost && (
               <PostItem
-                key={`discover-post-top-banner-${bannerPost.id}`}
+                key={`post-top-banner-discover-${bannerPost.id}`}
                 fullscreen
                 postId={bannerPost.id}
                 idx={bannerPost.id}
@@ -78,8 +96,12 @@ class PostTopDiscover extends React.PureComponent<any> {
             )}
           </>
         )}
-        {fashionMenu != 'journal' && fashionMenu != 'collection' && (
-          <PostHorizontalList data={postslist} renderItem={this._renderItem} />
+        {menu != 'article' && menu != 'collection' && (
+          <PostHorizontalList
+            key={`post-horizontal-discover`}
+            data={postslist}
+            renderItem={this._renderItem}
+          />
         )}
       </>
     )
@@ -89,12 +111,12 @@ class PostTopDiscover extends React.PureComponent<any> {
 const mapDispatchToProps = dispatch =>
   bindActionCreators({ fetchSpecificPosts }, dispatch)
 
-const mapStateToProps = state => {
+const mapStateToProps = (state, props) => {
   const getSpecificPosts = makeGetSpecificPost()
   const getMenuName = makeGetSpecificMenu()
   return {
-    posts: getSpecificPosts(state, 'discover-post-top'),
-    fashionMenu: getMenuName(state, 'fashion'),
+    posts: getSpecificPosts(state, props.uri),
+    menu: getMenuName(state, props.category),
   }
 }
 

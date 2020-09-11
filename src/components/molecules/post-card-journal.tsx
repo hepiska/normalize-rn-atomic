@@ -120,7 +120,9 @@ const JournalCard = ({
                 uri: setImage(post.image_url, { width: 32, height: 32 }),
               }}
               width={width}
-              height={isBannerType ? 360 : isHorizontalListType ? 200 : null}
+              height={
+                isBannerType ? width * 1.1 : isHorizontalListType ? 200 : null
+              }
               style={{
                 borderTopLeftRadius: style.borderRadius
                   ? style.borderRadius
@@ -177,12 +179,15 @@ const JournalCard = ({
             fontSize: 18,
             lineHeight: 25,
             color: colors.black100,
-            textAlign: isBannerType || isHorizontalListType ? 'center' : 'left',
+            textAlign:
+              isBannerType || isHorizontalListType || isCard
+                ? 'center'
+                : 'left',
             marginBottom: isCard ? 8 : 32,
           }}>
           {post.title}
         </Text>
-        {isCard && (
+        {/* {isCard && (
           <Text
             style={{
               ...fontStyle.helveticaThin,
@@ -192,7 +197,7 @@ const JournalCard = ({
             }}>
             {calculateDay(post.published_at)}
           </Text>
-        )}
+        )} */}
 
         {isBannerType ? (
           <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
@@ -212,8 +217,9 @@ const JournalCard = ({
                 fontSize: 16,
                 ...fontStyle.helveticaThin,
                 color: colors.black100,
-                textAlign: isHorizontalListType ? 'center' : 'left',
+                textAlign: isHorizontalListType || isCard ? 'center' : 'left',
                 marginBottom: isHorizontalListType ? 10 : 0,
+                marginTop: isCard ? 10 : 0,
               }}>
               {'Read & Shop'}
             </Text>

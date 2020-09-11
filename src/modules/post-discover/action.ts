@@ -15,9 +15,11 @@ export const actionType = {
   DEFAULT: 'post-discover/DEFAULT',
   SET_SPECIFIC_LOADING: 'post-discover/SET_SPECIFIC_LOADING',
   SET_SPECIFIC_QUERY: 'post-discover/SET_SPECIFIC_QUERY',
+  APPEND_SPECIFIC_QUERY: 'post-discover/APPEND_SPECIFIC_QUERY',
   SET_SPECIFIC_PAGINATION: 'post-discover/SET_SPECIFIC_PAGINATION',
   SET_TAB_NAME: 'post-discover/SET_TAB_NAME',
   SET_SPECIFIC_MENU: 'post-discover/SET_SPECIFIC_MENU',
+  ON_SCROLL: 'post-discover/ON_SCROLL',
 }
 
 export const setDicoverOrder = (data: any) => ({
@@ -50,6 +52,11 @@ export const setSpecificQuery = (data: any) => ({
   payload: data,
 })
 
+export const appendSpecificQuery = (data: any) => ({
+  type: actionType.APPEND_SPECIFIC_QUERY,
+  payload: data,
+})
+
 export const setSpecificPagination = (data: any) => ({
   type: actionType.SET_SPECIFIC_PAGINATION,
   payload: data,
@@ -62,6 +69,11 @@ export const setTabName = (data: any) => ({
 
 export const setMenu = (data: any) => ({
   type: actionType.SET_SPECIFIC_MENU,
+  payload: data,
+})
+
+export const setScroll = (data: any) => ({
+  type: actionType.ON_SCROLL,
   payload: data,
 })
 
@@ -96,50 +108,58 @@ export const fetchDicover = (params: any = {}) => {
   }
 }
 
-export const fetchSpecificPosts = (
-  params: any = {},
-  type,
-  isFresh: boolean = true,
-) => {
-  const url = '/posts/v2'
-  const newParams = isFresh
-    ? { limit: params.limit, offset: params.offset, type: params.type }
-    : params.next_token
-    ? { next_token: params.next_token }
-    : { limit: params.limit, offset: params.offset, type: params.type }
-
-  switch (type) {
-    case 'fashion':
-      newParams['category_id'] = categoryIds.fashion
-      break
-    case 'beauty':
-      newParams['category_id'] = categoryIds.beauty
-      break
-    default:
-      newParams['category_id'] = params.category_id
-      break
-  }
+export const fetchSpecificPosts = (params: any = {}, key) => {
+  const url = '/posts'
 
   return {
     type: API,
     payload: {
       url,
       schema: [schema.post],
-      requestParams: { params: newParams },
+      requestParams: { params },
       startNetwork: () => {
-        return setSpecificLoading({ uri: type, data: true })
+        return setSpecificLoading({ uri: key, data: true })
       },
       endNetwork: () => {
-        return setSpecificLoading({ uri: type, data: false })
+        return setSpecificLoading({ uri: key, data: false })
       },
       success: (data, { pagination }) => {
         const composeAction = [
           ...dispatchPostEntities(data.entities),
-          setSpecificPagination({ uri: type, data: pagination.next_token }),
+          setSpecificPagination({ uri: key, data: pagination.next_token }),
           setSpecificQuery({
-            uri: type,
+            uri: key,
             data: data.result,
-            isFresh,
+          }),
+        ]
+        return composeAction
+      },
+    },
+  }
+}
+
+export const fetchSpecificPostsMore = (params: any = {}, key) => {
+  const url = '/posts'
+
+  return {
+    type: API,
+    payload: {
+      url,
+      schema: [schema.post],
+      requestParams: { params },
+      startNetwork: () => {
+        return setSpecificLoading({ uri: key, data: true })
+      },
+      endNetwork: () => {
+        return setSpecificLoading({ uri: key, data: false })
+      },
+      success: (data, { pagination }) => {
+        const composeAction = [
+          ...dispatchPostEntities(data.entities),
+          setSpecificPagination({ uri: key, data: pagination.next_token }),
+          appendSpecificQuery({
+            uri: key,
+            data: data.result,
           }),
         ]
         return composeAction
