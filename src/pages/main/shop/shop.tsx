@@ -81,14 +81,27 @@ class ShopPage extends React.Component<any, any> {
           />
         )
       case 'section-horizontal-list':
-        return (
-          <HorizontalList
-            key={`shop-${section.component}-${key}`}
-            navigation={this.props.navigation}
-            style={styles.sectionMargin}
-            data={section}
-          />
-        )
+        if (section.type === 'post') {
+          return (
+            <HorizontalList
+              key={`shop-${section.component}-${key}`}
+              navigation={this.props.navigation}
+              style={styles.sectionMargin}
+              data={section}
+              darkMode
+              displayComment={false}
+            />
+          )
+        } else {
+          return (
+            <HorizontalList
+              key={`shop-${section.component}-${key}`}
+              navigation={this.props.navigation}
+              style={styles.sectionMargin}
+              data={section}
+            />
+          )
+        }
       case 'section-grid-list':
         return (
           <SectionGridList
@@ -149,7 +162,6 @@ class ShopPage extends React.Component<any, any> {
               />
               {page.section &&
                 page.section.map((_section, key) => {
-                  console.log('section', page.section)
                   return this._renderSection(_section, key)
                 })}
             </Animated.ScrollView>

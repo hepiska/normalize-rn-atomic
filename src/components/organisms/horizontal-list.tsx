@@ -1,5 +1,12 @@
 import React from 'react'
-import { FlatList, StyleSheet, Dimensions, ViewStyle, View } from 'react-native'
+import {
+  FlatList,
+  StyleSheet,
+  Dimensions,
+  ViewStyle,
+  View,
+  Text,
+} from 'react-native'
 import { Div, Font } from '@components/atoms/basic'
 import {
   futuraTitleFont,
@@ -8,7 +15,7 @@ import {
 } from '@components/commont-styles'
 import { OutlineButton } from '@components/atoms/button'
 import { colors } from '@utils/constants'
-import PostCard from '@components/molecules/post-card'
+// import PostCard from '@components/molecules/post-card'
 import CollectionCard from '@components/molecules/post-card-old'
 import BrandCard from '@components/molecules/brand-card'
 import ProductCard from '@components/molecules/product-card-new'
@@ -22,6 +29,7 @@ import { navigate } from '@src/root-navigation'
 import ImageCard from '@components/molecules/image-card'
 import AnnouncementCard from '../molecules/announcement-card'
 import { announcementListData } from '@hocs/data/announcement'
+import PostCardNew from '@components/molecules/post-card-new'
 
 const { width } = Dimensions.get('window')
 
@@ -29,13 +37,16 @@ interface HorizontalListType {
   data: any
   navigation?: any
   style?: ViewStyle
+  darkMode?: boolean
+  displayComment?: boolean
 }
 
-const PostHoc = postListData(PostCard)
+// const PostHoc = postListData(PostCard)
 const CollectionHoc = collectionListData(CollectionCard)
 const ProductHoc = productListData(ProductCard)
 const BrandHoc = brandListData(BrandCard)
 const AnnouncementHoc = announcementListData(AnnouncementCard)
+const PostNewHoc = postListData(PostCardNew)
 
 const styles = StyleSheet.create({
   button: {
@@ -76,7 +87,7 @@ class HorizontalList extends React.Component<HorizontalListType, any> {
         if (this.props.data.posts) {
           return (
             <View>
-              <PostHoc
+              <PostNewHoc
                 key={`horizontal-list-post-${index}`}
                 postId={item}
                 style={{
@@ -84,8 +95,11 @@ class HorizontalList extends React.Component<HorizontalListType, any> {
                   marginHorizontal: 8,
                   width: width * 0.8,
                   marginLeft: index === 0 ? 16 : 8,
+                  imageHeight: width * 0.7,
+                  borderRadius: 6,
                 }}
                 idx={index}
+                displayComment={this.props.displayComment}
                 fullscreen
               />
             </View>
@@ -175,16 +189,22 @@ class HorizontalList extends React.Component<HorizontalListType, any> {
   }
 
   render() {
-    const { data, style } = this.props
+    const { data, style, darkMode } = this.props
     return (
-      <Div _width="100%" align="flex-start" style={style}>
-        <Font
-          style={fontStyle.playfairBold}
-          size="24px"
-          mar="0 0 16px 16px"
-          color={colors.black100}>
+      <View style={[style, { backgroundColor: darkMode && colors.black100 }]}>
+        <Text
+          style={[
+            fontStyle.playfairMedium,
+            {
+              textAlign: 'center',
+              fontSize: 24,
+              marginBottom: 16,
+              marginTop: 16,
+              color: darkMode ? colors.white : colors.black100,
+            },
+          ]}>
           {data.title}
-        </Font>
+        </Text>
         <FlatList
           horizontal
           showsHorizontalScrollIndicator={false}
@@ -193,9 +213,12 @@ class HorizontalList extends React.Component<HorizontalListType, any> {
           data={this._renderData()} // revisi: based on API response, every type has different key object
           keyExtractor={this._keyExtractor}
           renderItem={this._renderItem}
+          style={{
+            marginBottom: 24,
+          }}
         />
         {this._renderButton(data)}
-      </Div>
+      </View>
     )
   }
 }

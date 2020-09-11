@@ -37,6 +37,7 @@ interface PostListItemType {
   style?: any
   isAuth?: boolean
   userAuth?: any
+  displayComment?: boolean
 }
 
 const styles = StyleSheet.create({
@@ -79,6 +80,7 @@ const CollectionCard = ({
   postLikes,
   comments,
   userAuth,
+  displayComment,
 }: any) => {
   const maxTitle = 3000
   const maxSubtitle = 200
@@ -172,6 +174,7 @@ const CollectionCard = ({
                 uri: setImage(post.image_url, { width: 32, height: 32 }),
               }}
               width={width}
+              height={style.imageHeight}
             />
           </TouchableWithoutFeedback>
         </View>
@@ -312,12 +315,9 @@ const CollectionCard = ({
         )}
       </View>
       {/* comment section */}
-      <PostComment
-        data={comments}
-        isCard
-        user={userAuth}
-        postId={post.id}
-      />
+      {displayComment !== false && (
+        <PostComment data={comments} isCard user={userAuth} postId={post.id} />
+      )}
     </View>
   )
 }
@@ -443,6 +443,7 @@ class PostListItem extends React.Component<PostListItemType, any> {
       style,
       type = 'default',
       userAuth,
+      displayComment,
     } = this.props
     const {
       width,
@@ -475,6 +476,7 @@ class PostListItem extends React.Component<PostListItemType, any> {
           postLikes={postLikes}
           userAuth={userAuth}
           comments={comments}
+          displayComment={displayComment}
         />
       )
     } else return null
