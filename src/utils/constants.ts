@@ -65,6 +65,7 @@ export const colors = {
   black90: '#949494',
   black100: '#1A1A1A',
   gold100: '#E0BC85',
+  gold70: '#d4a65f',
   gold50: '#ECDEC3',
   gold20: '#F9F7F3',
   gold10: '#FCFBF9',

@@ -11,6 +11,7 @@ import { bindActionCreators } from 'redux'
 import {
   fetchSpecificPosts,
   fetchSpecificPostsMore,
+  setScroll,
 } from '@src/modules/post-discover/action'
 import List from '@components/layouts/list-header'
 import {
@@ -45,6 +46,8 @@ class DiscoverBeauty extends React.PureComponent<any> {
   state = {
     finishAnimation: false,
   }
+
+  offset = 0
 
   skip = 0
 
@@ -164,10 +167,16 @@ class DiscoverBeauty extends React.PureComponent<any> {
     }
   }
 
-  _hanleScroll = e => {
-    if (e.nativeEvent.contentOffset.y < 2) {
-      this.props.disableScroll && this.props.disableScroll()
+  _hanleScroll = event => {
+    // if (e.nativeEvent.contentOffset.y < 2) {
+    //   this.props.disableScroll && this.props.disableScroll()
+    // }
+    const currentOffset = event.nativeEvent.contentOffset.y
+    const direction = currentOffset > this.offset ? 'down' : 'up'
+    if (currentOffset > 0) {
+      this.props.setScroll(direction)
     }
+    this.offset = currentOffset
   }
 
   _emptyState = () => (
@@ -195,7 +204,12 @@ class DiscoverBeauty extends React.PureComponent<any> {
     const firstLoading = loading && this.skip === 0
     return (
       <>
-        <View style={{ width, flex: 1, backgroundColor: colors.white }}>
+        <View
+          style={{
+            width,
+            flex: 1,
+            backgroundColor: colors.white,
+          }}>
           {this.state.finishAnimation && firstLoading ? (
             <PostCardFull />
           ) : (
@@ -207,9 +221,10 @@ class DiscoverBeauty extends React.PureComponent<any> {
                   <RefreshControl
                     onRefresh={this._freshFetch}
                     refreshing={loading}
+                    style={{ height: 80 }}
                   />
                 }
-                onScroll={this._hanleScroll}
+                onScroll={this._hanleScroll.bind(this)}
                 onEndReached={({ distanceFromEnd }) => {
                   if (distanceFromEnd > 0) {
                     this._fetchMore()
@@ -231,7 +246,10 @@ class DiscoverBeauty extends React.PureComponent<any> {
 }
 
 const mapDispatchToProps = dispatch =>
-  bindActionCreators({ fetchSpecificPosts, fetchSpecificPostsMore }, dispatch)
+  bindActionCreators(
+    { fetchSpecificPosts, fetchSpecificPostsMore, setScroll },
+    dispatch,
+  )
 
 const mapStateToProps = state => {
   const getSpecificLoading = makeGetSpecificLoading()

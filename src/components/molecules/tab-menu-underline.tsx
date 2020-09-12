@@ -45,23 +45,15 @@ interface TabMenuUnderlineType {
   fashionMenu: string
   beautyMenu: string
   scrollDirection: string
+  offset: number
 }
 
 class TabMenuUnderline extends React.PureComponent<TabMenuUnderlineType, any> {
-  // _onChangeTab(name) {
-  //   this.props.setTabName(name.toLowerCase())
-  // }
+  y
 
   constructor(props) {
     super(props)
-    // this._height = new Value(200)
-    // this._config = {
-    //   duration: 300,
-    //   easing: Easing.inOut(Easing.ease),
-    // }
-    // this._style = {
-    //   maxHeight: timing(this._height, this._config),
-    // }
+    this.y = new Animated.Value(0)
   }
 
   _onChangeMenu(query, name) {
@@ -79,13 +71,19 @@ class TabMenuUnderline extends React.PureComponent<TabMenuUnderlineType, any> {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.scrollDirection != this.props.scrollDirection) {
-      if (this.props.scrollDirection === 'down') {
-        // this._anim.start()
-      } else {
-        // this._anim.start()
-      }
+    if (prevProps.scrollDirection !== this.props.scrollDirection) {
+      this._tabAnimate(this.props.scrollDirection)
     }
+  }
+
+  _tabAnimate = scrollTo => {
+    this.y.setValue(0)
+    const val = scrollTo === 'down' ? 1 : 0
+    Animated.timing(this.y, {
+      toValue: val,
+      duration: 150,
+      easing: Easing.linear,
+    }).start()
   }
 
   render() {
@@ -100,8 +98,21 @@ class TabMenuUnderline extends React.PureComponent<TabMenuUnderlineType, any> {
       beautyMenu,
     } = this.props
 
+    const posTab = this.y.interpolate({
+      inputRange: [0, 1],
+      outputRange: [0, -80],
+    })
+
     return (
-      <Animated.View style={[]}>
+      <Animated.View
+        style={{
+          position: 'absolute',
+          top: posTab,
+          left: 0,
+          right: 0,
+          zIndex: 2,
+          backgroundColor: 'white',
+        }}>
         <View
           style={{
             flexDirection: 'row',
@@ -155,11 +166,6 @@ class TabMenuUnderline extends React.PureComponent<TabMenuUnderlineType, any> {
               if (inputRange.length < 2) {
                 inputRange.push(1)
               }
-              // console.log(
-              //   '====',
-              //   inputRange,
-              //   inputRange.map(i => (i === index ? 1 : 0)),
-              // )
               const opacity = Animated.interpolate(position, {
                 inputRange,
                 outputRange: inputRange.map(i => (i === index ? 1 : 0)),
@@ -299,6 +305,7 @@ const mapDispatchToProps = dispatch =>
 
 const mapStateToProps = state => {
   const getManuName = makeGetSpecificMenu()
+
   return {
     fashionMenu: getManuName(state, 'fashion'),
     beautyMenu: getManuName(state, 'beauty'),

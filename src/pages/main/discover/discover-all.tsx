@@ -15,6 +15,7 @@ import { getPage } from '@src/modules/page/action'
 import ShopLoader from '@components/atoms/loaders/shop'
 import List from '@components/layouts/list-header'
 import { colors } from '@src/utils/constants'
+import { setScroll } from '@src/modules/post-discover/action'
 import PostTop from './post-top'
 import PostMid from './post-mid'
 import Banner from './banner'
@@ -30,7 +31,7 @@ interface DiscoverAllType {
 
 const { width } = Dimensions.get('screen')
 
-class DiscoverAll extends React.PureComponent<DiscoverAllType, any> {
+class DiscoverAll extends React.PureComponent<any, any> {
   state = {
     finishAnimation: false,
   }
@@ -87,9 +88,15 @@ class DiscoverAll extends React.PureComponent<DiscoverAllType, any> {
     }
   }
 
-  _onscroll(event) {
+  _handleScroll = event => {
+    // if (e.nativeEvent.contentOffset.y < 2) {
+    //   this.props.disableScroll && this.props.disableScroll()
+    // }
     const currentOffset = event.nativeEvent.contentOffset.y
     const direction = currentOffset > this.offset ? 'down' : 'up'
+    if (currentOffset > 0) {
+      this.props.setScroll(direction)
+    }
     this.offset = currentOffset
   }
 
@@ -116,9 +123,10 @@ class DiscoverAll extends React.PureComponent<DiscoverAllType, any> {
               <RefreshControl
                 refreshing={loading}
                 onRefresh={this._fetchData}
+                style={{ marginTop: 45 }}
               />
             }
-            onScroll={this._onscroll.bind(this)}
+            onScroll={this._handleScroll.bind(this)}
           />
         )}
       </View>
@@ -134,6 +142,7 @@ const mapStateToProps = state => {
   }
 }
 
-const mapDispatchToProps = dispatch => bindActionCreators({ getPage }, dispatch)
+const mapDispatchToProps = dispatch =>
+  bindActionCreators({ getPage, setScroll }, dispatch)
 
 export default connect(mapStateToProps, mapDispatchToProps)(DiscoverAll)

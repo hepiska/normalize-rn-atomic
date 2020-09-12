@@ -34,6 +34,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 8,
+    backgroundColor: colors.gold70,
   },
 })
 
@@ -59,15 +60,11 @@ const CartActionButton = props => {
     <PressAbbleDiv onPress={_gotoCart} style={styles.rightAction}>
       <Icon name="shop" size={22} color={colors.black100} />
       {Boolean(props.totalCart) && (
-        <LinearGradient
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 0 }}
-          colors={['#3067E4', '#8131E2']}
-          style={styles.indikator}>
+        <View style={styles.indikator}>
           <Font family="HelveticaNeue" size="10px" style={styles.fontStyle}>
             {props.totalCart || 1}
           </Font>
-        </LinearGradient>
+        </View>
       )}
     </PressAbbleDiv>
   )

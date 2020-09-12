@@ -167,7 +167,7 @@ class DiscoverFashion extends React.PureComponent<any> {
     }
   }
 
-  _hanleScroll = event => {
+  _handleScroll = event => {
     // if (e.nativeEvent.contentOffset.y < 2) {
     //   this.props.disableScroll && this.props.disableScroll()
     // }
@@ -216,9 +216,10 @@ class DiscoverFashion extends React.PureComponent<any> {
                   <RefreshControl
                     onRefresh={this._freshFetch}
                     refreshing={loading}
+                    style={{ height: 80 }}
                   />
                 }
-                onScroll={this._hanleScroll.bind(this)}
+                onScroll={this._handleScroll.bind(this)}
                 onEndReached={({ distanceFromEnd }) => {
                   if (distanceFromEnd > 0) {
                     this._fetchMore()
