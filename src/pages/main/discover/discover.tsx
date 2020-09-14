@@ -8,7 +8,7 @@ import {
 } from 'react-native'
 import HorizontalListLookBook from '@components/organisms/horzontal-list-lookbook'
 import Feed from '@components/organisms/discover-feed'
-import Icon from 'react-native-vector-icons/FontAwesome'
+import Icon from '@assets/fonts/custom-icons'
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs'
 import { colors } from '@utils/constants'
 import DiscoverTab from '@src/components/molecules/tab-menu-home'
