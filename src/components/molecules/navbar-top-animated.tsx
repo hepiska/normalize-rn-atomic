@@ -145,7 +145,7 @@ const NavbarTopAnimated: React.SFC<NavbarBottomProps> = ({
         <LeftDiv zIndex="2" _direction="row">
           {showBack && (
             <PressAbbleDiv onPress={_onBack} style={{ width: 36, height: 52 }}>
-              <Icon name="chevron-left" size={20} color={colors.black100} />
+              <Icon name="chevron-right" size={20} color={colors.black100} />
             </PressAbbleDiv>
           )}
           {showBars && (
