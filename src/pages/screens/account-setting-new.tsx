@@ -301,7 +301,7 @@ class AccountSetting extends Component<any, any> {
       },
       {
         desc: 'Total Views',
-        icon: 'view_count',
+        icon: 'viewer',
         title: user.posts_count || 0,
         onPress: () => {},
       },
@@ -314,210 +314,208 @@ class AccountSetting extends Component<any, any> {
     ]
 
     return (
-      <View>
+      <SafeAreaView style={{ paddingTop: 0, flex: 1 }}>
         <NavbarTop title="Account Settings" leftContent={['back']} />
-        <SafeAreaView style={{ paddingTop: 0 }}>
-          {finishAnimation ? (
-            <ScrollView
+        {finishAnimation ? (
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{
+              paddingHorizontal: 16,
+              paddingVertical: 24,
+            }}>
+            {/* user basic Profile */}
+            <View
               style={{
-                paddingHorizontal: 16,
-                paddingVertical: 24,
-                marginBottom: 200,
+                marginBottom: 24,
+                flexDirection: 'row',
+                alignItems: 'center',
               }}>
-              {/* user basic Profile */}
-              <View
-                style={{
-                  marginBottom: 24,
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                }}>
-                <View>
-                  <TouchableWithoutFeedback
-                    onPress={user.photo_url ? this._openModal : null}>
-                    <Image
-                      source={
-                        user.photo_url
-                          ? { uri: user.photo_url }
-                          : require('@src/assets/placeholder/placeholder2.jpg')
-                      }
-                      style={{ ...styles.image }}
-                    />
-                  </TouchableWithoutFeedback>
-                  <ModalPreviewImage
-                    image={[
+              <View>
+                <TouchableWithoutFeedback
+                  onPress={user.photo_url ? this._openModal : null}>
+                  <Image
+                    source={
                       user.photo_url
-                        ? {
-                            url: changeImageUri(user.photo_url, {
-                              width: width,
-                              height: width,
-                            }),
-                          }
-                        : {},
-                    ]}
-                    isVisible={isVisible}
-                    onCloseModal={this._closeModal}
+                        ? { uri: user.photo_url }
+                        : require('@src/assets/placeholder/placeholder2.jpg')
+                    }
+                    style={{ ...styles.image }}
                   />
-                </View>
-                <View style={{ marginLeft: 16 }}>
-                  {user.name && (
-                    <Text style={{ ...fontStyle.playfairBold, fontSize: 18 }}>
-                      {user.name}
-                    </Text>
-                  )}
-                  {user.username && (
-                    <Text
-                      style={{
-                        ...fontStyle.helvetica,
-                        fontSize: 14,
-                        color: colors.black60,
-                        marginTop: 8,
-                      }}>
-                      {`@${user.username}`}
-                    </Text>
-                  )}
-                </View>
+                </TouchableWithoutFeedback>
+                <ModalPreviewImage
+                  image={[
+                    user.photo_url
+                      ? {
+                          url: changeImageUri(user.photo_url, {
+                            width: width,
+                            height: width,
+                          }),
+                        }
+                      : {},
+                  ]}
+                  isVisible={isVisible}
+                  onCloseModal={this._closeModal}
+                />
+              </View>
+              <View style={{ marginLeft: 16 }}>
+                {user.name && (
+                  <Text style={{ ...fontStyle.playfairBold, fontSize: 18 }}>
+                    {user.name}
+                  </Text>
+                )}
+                {user.username && (
+                  <Text
+                    style={{
+                      ...fontStyle.helvetica,
+                      fontSize: 14,
+                      color: colors.black60,
+                      marginTop: 8,
+                    }}>
+                    {`@${user.username}`}
+                  </Text>
+                )}
+              </View>
+            </View>
+
+            {/* user stats */}
+            <View
+              style={{
+                flexDirection: 'row',
+                flexWrap: 'wrap',
+              }}>
+              {statusList?.map((res, idx) => {
+                return (
+                  <StatsCard
+                    desc={res.desc}
+                    icon={res.icon}
+                    title={res.title}
+                    onPress={res.onPress}
+                  />
+                )
+              })}
+            </View>
+
+            {/* earning cards  */}
+            <View style={{ marginTop: 16, marginBottom: 24 }}>
+              <EarningsCard />
+            </View>
+            {/* my shopping */}
+            <View style={{ marginBottom: 24 }}>
+              <TitleHeader title={'My Shopping'}></TitleHeader>
+              <View style={{ marginVertical: 16 }}>
+                <TransactionOrderAction />
               </View>
 
-              {/* user stats */}
-              <View
-                style={{
-                  flexDirection: 'row',
-                  flexWrap: 'wrap',
-                }}>
-                {statusList?.map((res, idx) => {
+              <View>
+                {this.myOrderList.map((value, idx) => {
                   return (
-                    <StatsCard
-                      desc={res.desc}
-                      icon={res.icon}
-                      title={res.title}
-                      onPress={res.onPress}
+                    <ActionListCard
+                      key={`orderlist-card-${idx}`}
+                      icon={value.icon}
+                      title={value.title}
+                      desc={value.desc}
+                      index={idx}
+                      onPress={value.onPress}
+                      style={{
+                        borderBottomColor:
+                          idx === this.myOrderList.length - 1
+                            ? colors.white
+                            : colors.black50,
+                        borderBottomWidth: 1,
+                      }}
                     />
                   )
                 })}
               </View>
+            </View>
+            {/* My Social */}
+            <View style={{ marginBottom: 24 }}>
+              <TitleHeader title={'My Social'}></TitleHeader>
+              <>
+                {this.mySocialList.map((value, idx) => {
+                  return (
+                    <ActionListCard
+                      key={`sociallist-card-${idx}`}
+                      icon={value.icon}
+                      title={value.title}
+                      desc={value.desc}
+                      index={idx}
+                      onPress={value.onPress}
+                      style={{
+                        borderBottomColor:
+                          idx === this.mySocialList.length - 1
+                            ? colors.white
+                            : colors.black50,
+                        borderBottomWidth: 1,
+                      }}
+                    />
+                  )
+                })}
+              </>
+            </View>
+            {/* Support */}
+            <View style={{ marginBottom: 24 }}>
+              <TitleHeader title={'Support'}></TitleHeader>
+              <>
+                {this.supportList.map((value, idx) => {
+                  return (
+                    <ActionListCard
+                      key={`support-card-${idx}`}
+                      icon={value.icon}
+                      title={value.title}
+                      desc={value.desc}
+                      index={idx}
+                      onPress={value.onPress}
+                      style={{
+                        borderBottomColor:
+                          idx === this.supportList.length - 1
+                            ? colors.white
+                            : colors.black50,
+                        borderBottomWidth: 1,
+                      }}
+                    />
+                  )
+                })}
+              </>
+            </View>
 
-              {/* earning cards  */}
-              <View style={{ marginTop: 16, marginBottom: 24 }}>
-                <EarningsCard />
-              </View>
-              {/* my shopping */}
-              <View style={{ marginBottom: 24 }}>
-                <TitleHeader title={'My Shopping'}></TitleHeader>
-                <View style={{ marginVertical: 16 }}>
-                  <TransactionOrderAction />
-                </View>
-
-                <View>
-                  {this.myOrderList.map((value, idx) => {
-                    return (
-                      <ActionListCard
-                        key={`orderlist-card-${idx}`}
-                        icon={value.icon}
-                        title={value.title}
-                        desc={value.desc}
-                        index={idx}
-                        onPress={value.onPress}
-                        style={{
-                          borderBottomColor:
-                            idx === this.myOrderList.length - 1
-                              ? colors.white
-                              : colors.black50,
-                          borderBottomWidth: 1,
-                        }}
-                      />
-                    )
-                  })}
-                </View>
-              </View>
-              {/* My Social */}
-              <View style={{ marginBottom: 24 }}>
-                <TitleHeader title={'My Social'}></TitleHeader>
-                <>
-                  {this.mySocialList.map((value, idx) => {
-                    return (
-                      <ActionListCard
-                        key={`sociallist-card-${idx}`}
-                        icon={value.icon}
-                        title={value.title}
-                        desc={value.desc}
-                        index={idx}
-                        onPress={value.onPress}
-                        style={{
-                          borderBottomColor:
-                            idx === this.mySocialList.length - 1
-                              ? colors.white
-                              : colors.black50,
-                          borderBottomWidth: 1,
-                        }}
-                      />
-                    )
-                  })}
-                </>
-              </View>
-              {/* Support */}
-              <View style={{ marginBottom: 24 }}>
-                <TitleHeader title={'Support'}></TitleHeader>
-                <>
-                  {this.supportList.map((value, idx) => {
-                    return (
-                      <ActionListCard
-                        key={`support-card-${idx}`}
-                        icon={value.icon}
-                        title={value.title}
-                        desc={value.desc}
-                        index={idx}
-                        onPress={value.onPress}
-                        style={{
-                          borderBottomColor:
-                            idx === this.supportList.length - 1
-                              ? colors.white
-                              : colors.black50,
-                          borderBottomWidth: 1,
-                        }}
-                      />
-                    )
-                  })}
-                </>
-              </View>
+            <View>
+              <Text
+                style={{
+                  ...fontStyle.playfair,
+                  fontSize: 20,
+                  color: colors.black100,
+                }}>
+                Others
+              </Text>
 
               <View>
-                <Text
-                  style={{
-                    ...fontStyle.playfair,
-                    fontSize: 20,
-                    color: colors.black100,
-                  }}>
-                  Others
-                </Text>
-
-                <View>
-                  {this.othersList.map((value, idx) => {
-                    return (
-                      <ActionListCard
-                        key={`otherlist-card-${idx}`}
-                        icon={value.icon}
-                        title={value.title}
-                        desc={value.desc}
-                        index={idx}
-                        onPress={value.onPress}
-                        style={{
-                          borderBottomColor:
-                            idx === this.othersList.length - 1
-                              ? colors.white
-                              : colors.black50,
-                          borderBottomWidth: 1,
-                        }}
-                      />
-                    )
-                  })}
-                </View>
+                {this.othersList.map((value, idx) => {
+                  return (
+                    <ActionListCard
+                      key={`otherlist-card-${idx}`}
+                      icon={value.icon}
+                      title={value.title}
+                      desc={value.desc}
+                      index={idx}
+                      onPress={value.onPress}
+                      style={{
+                        borderBottomColor:
+                          idx === this.othersList.length - 1
+                            ? colors.white
+                            : colors.black50,
+                        borderBottomWidth: 1,
+                      }}
+                    />
+                  )
+                })}
               </View>
-            </ScrollView>
-          ) : (
-            <AccountSettingPageLoader style={{ marginHorizontal: 16 }} />
-          )}
-        </SafeAreaView>
-      </View>
+            </View>
+          </ScrollView>
+        ) : (
+          <AccountSettingPageLoader style={{ marginHorizontal: 16 }} />
+        )}
+      </SafeAreaView>
     )
   }
 }
