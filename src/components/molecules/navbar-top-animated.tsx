@@ -13,7 +13,7 @@ import LinearGradient from 'react-native-linear-gradient'
 import { globalDimention, colors } from '@utils/constants'
 import TopBaner from '@components/molecules/top-baner'
 import Icon from '@assets/fonts/custom-icons'
-import Animated from 'react-native-reanimated'
+import Animated, { Extrapolate } from 'react-native-reanimated'
 import styled from 'styled-components/native'
 import { fontStyle } from '@components/commont-styles'
 import CartAction from '@components/atoms/cart-action-button'
@@ -21,7 +21,7 @@ import { useNavigation } from '@react-navigation/native'
 import { navigate } from '@src/root-navigation'
 import HTML from 'react-native-render-html'
 
-const { interpolate, Extrapolate } = Animated
+const { interpolate, interpolateColors } = Animated
 
 const styles = StyleSheet.create({
   rightAction: {
@@ -80,13 +80,12 @@ const NavbarTopAnimated: React.SFC<NavbarBottomProps> = ({
   parentDim,
   getLayout,
 }) => {
-  const backgroundColor = interpolate(y, {
+  const backgroundColor = interpolateColors(y, {
     inputRange: [
       parentDim.coverheight - headerHeight,
       parentDim.coverheight - headerHeight + 2,
     ],
-    outputRange: [Animated.color(0, 0, 0, 0), Animated.color(255, 255, 255, 1)],
-    extrapolate: Extrapolate.CLAMP,
+    outputColorRange: ['rgba(255,255,255,0)', 'rgba(255,255,255,1)'],
   })
   const navigation = useNavigation()
 
@@ -129,6 +128,7 @@ const NavbarTopAnimated: React.SFC<NavbarBottomProps> = ({
         top: 0,
         left: 0,
         zIndex: 10,
+        backgroundColor: backgroundColor,
       }}>
       <TopBaner />
       <Div
