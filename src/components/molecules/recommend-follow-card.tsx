@@ -41,8 +41,9 @@ export default class FollowCard extends Component<RecommendFollowType, any> {
       { color: colors.gold100 },
       { color: colors.gray2 },
     ]
-
     const { style, horizontal, user } = this.props
+
+    const userCollections = user.post_collections
 
     const maxDesc = horizontal ? 80 : 100
     return (
@@ -140,7 +141,30 @@ export default class FollowCard extends Component<RecommendFollowType, any> {
             flexDirection: 'row',
             justifyContent: 'space-between',
           }}>
-          {data.map((res, idx) => {
+          {userCollections &&
+            userCollections.map((coll, idx) => {
+              return (
+                <View
+                  key={'thumb' + idx}
+                  style={{
+                    width: '31%',
+                  }}>
+                  <ImageBackground
+                    style={{
+                      width: '100%',
+                      borderRadius: 4,
+                      overflow: 'hidden',
+                      height: '100%',
+                    }}
+                    resizeMode={'cover'}
+                    source={{
+                      uri: coll.image_url,
+                    }}
+                  />
+                </View>
+              )
+            })}
+          {/* {data.map((res, idx) => {
             return (
               <View
                 key={'thumb' + idx}
@@ -159,7 +183,7 @@ export default class FollowCard extends Component<RecommendFollowType, any> {
                 />
               </View>
             )
-          })}
+          })} */}
         </View>
         <Button
           title={'Follow'}
